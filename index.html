@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#101019" />
+    <title>WYRD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=IM+Fell+English:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+  </head>
+  <body>
+    <div id="cover" class="active">
+      <img class="cover-art" src="./assets/images/cover.jpg" alt="WYRD" />
+      <h1 class="cover-title">WYRD</h1>
+      <p class="cover-sub">Оракул духов леса</p>
+      <p class="cover-count">Шёпот чащи, тьма фольклора, одна карта в день</p>
+      <button class="cover-btn" data-action="enter">Войти в лес</button>
+    </div>
+
+    <main id="main">
+      <header class="hdr">
+        <h1 class="hdr-title">WYRD</h1>
+        <div class="hdr-line"></div>
+        <p class="hdr-desc">Тёмный оракул духов леса</p>
+      </header>
+
+      <div class="top-actions">
+        <button class="text-btn" data-action="toggle-sound">Звук леса: вкл</button>
+        <button class="text-btn" data-action="open-profile">Профиль / история</button>
+      </div>
+
+      <section class="deck-wrap" id="deck-wrap">
+        <p class="deck-hint">Сосредоточься на своём вопросе</p>
+        <div class="deck" data-action="draw">
+          <div class="dc"></div>
+          <div class="dc"></div>
+          <div class="dc"></div>
+          <div class="dc-top">
+            <div class="deck-mark">✦</div>
+          </div>
+        </div>
+        <button class="draw-btn" data-action="draw">Коснуться колоды</button>
+      </section>
+
+      <section id="ritual" class="ritual-panel" hidden>
+        <p class="deck-hint">Ритуал пробуждения</p>
+        <div class="ritual-count" id="ritual-countdown">3</div>
+        <p class="ritual-text">
+          Не отводи мысль. Лес уже выбирает того, кто заговорит с тобой.
+        </p>
+      </section>
+
+      <section id="result" hidden>
+        <div class="card-box">
+          <div class="card-img-wrap">
+            <img class="card-img" id="card-image" alt="" />
+            <div class="card-kw" id="card-keyword"></div>
+          </div>
+          <div class="card-body">
+            <h2 class="card-name" id="card-name"></h2>
+            <p class="card-en" id="card-subtitle"></p>
+            <div class="card-div"></div>
+            <p class="lbl">Послание</p>
+            <p class="card-msg" id="card-message"></p>
+            <div class="card-shd-wrap">
+              <p class="lbl">Тень</p>
+              <p class="card-shd" id="card-shadow"></p>
+            </div>
+            <div class="card-shd-wrap deep-wrap" id="deep-wrap" hidden>
+              <p class="lbl">Углубление</p>
+              <p class="card-shd" id="deep-message"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions-panel">
+          <button class="reset-btn" data-action="extra-draw">Вытянуть ещё карту</button>
+          <button class="reset-btn" data-action="deep-reading">Углубить значение</button>
+          <button class="reset-btn" data-action="spread-3">Расклад на 3 карты</button>
+          <button class="reset-btn" data-action="spread-5">Расклад на 5 карт</button>
+        </div>
+      </section>
+
+      <section id="spread-result" hidden>
+        <p class="gal-title" id="spread-title">Расклад</p>
+        <div class="gal-line"></div>
+        <div class="spread-grid" id="spread-grid"></div>
+      </section>
+
+      <section id="paywall" hidden>
+        <div class="paywall-box">
+          <p class="deck-hint">Ритуал доступа</p>
+          <h2 class="paywall-title" id="paywall-title"></h2>
+          <p class="paywall-copy" id="paywall-copy"></p>
+          <button class="cover-btn paywall-btn" id="paywall-cta"></button>
+        </div>
+      </section>
+
+      <section id="profile" hidden>
+        <div class="profile-box">
+          <p class="deck-hint">Профиль / история</p>
+          <p class="profile-name" id="profile-name">Странник</p>
+          <p class="profile-meta" id="profile-meta"></p>
+          <button class="reset-btn" data-action="close-profile">Вернуться к колоде</button>
+          <button class="reset-btn" data-action="reset-local">Очистить локальные данные</button>
+        </div>
+
+        <div class="history-list" id="history-list"></div>
+      </section>
+
+      <div class="ornament">✦ ✦ ✦</div>
+      <footer class="footer">Лес отвечает тем, кто умеет слушать тишину.</footer>
+    </main>
+
+    <script src="./assets/js/cards.js"></script>
+    <script src="./assets/js/app.js"></script>
+  </body>
+</html>

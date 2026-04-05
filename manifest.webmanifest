@@ -1,0 +1,16 @@
+{
+  "name": "WYRD",
+  "short_name": "WYRD",
+  "description": "Мистический оракул духов леса",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#101019",
+  "theme_color": "#101019",
+  "icons": [
+    {
+      "src": "./assets/images/cover.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}

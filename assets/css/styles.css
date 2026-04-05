@@ -1,0 +1,650 @@
+:root {
+  --ink: #101019;
+  --parchment: #f0e8d8;
+  --gold: #c9a14a;
+  --gold-light: #d8b15a;
+  --ash: #8a8070;
+  --fog: #161620;
+  --bg: #101019;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  background: var(--ink);
+  color: var(--parchment);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-image:
+    radial-gradient(circle at top, rgba(201, 161, 74, 0.08), transparent 34%),
+    linear-gradient(180deg, #141420 0%, #101019 100%);
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1000;
+}
+
+#cover {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  background: var(--ink);
+  transition: opacity 1.2s ease, transform 1.2s ease;
+  padding: 2rem;
+}
+
+#cover.gone {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(1.04);
+}
+
+.cover-art {
+  width: min(380px, 80vw);
+  height: min(380px, 80vw);
+  object-fit: cover;
+  object-position: center top;
+  filter: sepia(20%) contrast(1.05);
+  border: 1px solid rgba(201, 161, 74, 0.3);
+  margin-bottom: 2rem;
+  animation: coverFloat 7s ease-in-out infinite, glow 4.6s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    box-shadow: 0 0 40px rgba(201, 161, 74, 0.1);
+  }
+
+  50% {
+    box-shadow:
+      0 0 70px rgba(201, 161, 74, 0.22),
+      0 0 120px rgba(201, 161, 74, 0.08);
+  }
+}
+
+@keyframes coverFloat {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-8px) scale(1.012);
+  }
+}
+
+.cover-title {
+  font-family: "IM Fell English", serif;
+  font-size: clamp(3rem, 10vw, 5.5rem);
+  letter-spacing: 0.3em;
+  color: var(--parchment);
+  text-align: center;
+}
+
+.cover-sub {
+  font-size: 0.8rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 0.4rem 0 0.2rem;
+  text-align: center;
+}
+
+.cover-count {
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  color: var(--ash);
+  font-style: italic;
+  margin-bottom: 2.5rem;
+  text-align: center;
+}
+
+.cover-btn {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--gold);
+  border: none;
+  padding: 0.85rem 2.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cover-btn:hover {
+  background: var(--gold-light);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(201, 161, 74, 0.3);
+}
+
+#main {
+  min-height: 100vh;
+  padding: 3rem 1.5rem 5rem;
+  max-width: 860px;
+  margin: 0 auto;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+#main.on {
+  opacity: 1;
+}
+
+.hdr {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.hdr-title {
+  font-family: "IM Fell English", serif;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  letter-spacing: 0.22em;
+}
+
+.hdr-line {
+  width: 100px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 0.8rem auto;
+}
+
+.hdr-desc {
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  color: var(--ash);
+  font-style: italic;
+}
+
+.top-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2.4rem;
+}
+
+.text-btn {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ash);
+  background: transparent;
+  border: 1px solid rgba(201, 161, 74, 0.18);
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.text-btn:hover,
+.draw-btn:hover,
+.reset-btn:hover {
+  color: var(--parchment);
+  border-color: rgba(201, 161, 74, 0.3);
+}
+
+.deck-wrap {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+
+.deck-hint {
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1.8rem;
+  opacity: 0.8;
+}
+
+.deck {
+  position: relative;
+  width: 170px;
+  height: 265px;
+  margin: 0 auto 1.5rem;
+  cursor: pointer;
+}
+
+.dc {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: var(--fog);
+  border: 1px solid rgba(201, 161, 74, 0.2);
+  border-radius: 3px;
+}
+
+.dc:nth-child(1) {
+  transform: rotate(-3deg) translateY(6px);
+}
+
+.dc:nth-child(2) {
+  transform: rotate(-1.5deg) translateY(3px);
+}
+
+.dc:nth-child(3) {
+  transform: rotate(0.5deg);
+}
+
+.dc-top {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1b1a26, #0f0f17);
+  border: 1px solid rgba(201, 161, 74, 0.35);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.4s ease, box-shadow 0.4s ease, opacity 0.5s ease;
+  animation: deckBreath 4.8s ease-in-out infinite;
+}
+
+.deck:hover .dc-top {
+  transform: translateY(-10px) scale(1.012);
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.6),
+    0 0 30px rgba(201, 161, 74, 0.15);
+}
+
+@keyframes deckBreath {
+  0%,
+  100% {
+    transform: translateY(0);
+    box-shadow: 0 0 0 rgba(201, 161, 74, 0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+    box-shadow: 0 0 24px rgba(201, 161, 74, 0.08);
+  }
+}
+
+.deck-mark {
+  width: 75px;
+  height: 75px;
+  opacity: 0.3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+  font-size: 3rem;
+}
+
+.draw-btn {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--parchment);
+  background: transparent;
+  border: 1px solid rgba(201, 161, 74, 0.35);
+  padding: 0.65rem 1.8rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ritual-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 2rem;
+  animation: reveal 0.8s ease forwards;
+}
+
+.ritual-count {
+  font-family: "IM Fell English", serif;
+  font-size: clamp(4rem, 12vw, 6rem);
+  color: var(--gold);
+  text-shadow: 0 0 28px rgba(201, 161, 74, 0.28);
+  margin-bottom: 1rem;
+  animation: ritualPulse 1.6s ease-in-out infinite;
+}
+
+@keyframes ritualPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.92;
+  }
+
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+.ritual-text {
+  max-width: 460px;
+  color: var(--ash);
+  font-size: 1rem;
+  line-height: 1.7;
+  font-style: italic;
+}
+
+#result,
+#spread-result,
+#paywall,
+#profile {
+  animation: reveal 0.8s ease forwards;
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(25px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.card-box {
+  display: flex;
+  gap: 2.5rem;
+  align-items: flex-start;
+  padding: 2.2rem;
+  border: 1px solid rgba(201, 161, 74, 0.2);
+  background: linear-gradient(135deg, rgba(24, 24, 37, 0.84), rgba(10, 10, 16, 0.94));
+  position: relative;
+  margin-bottom: 1.2rem;
+  box-shadow:
+    0 18px 60px rgba(0, 0, 0, 0.35),
+    0 0 30px rgba(201, 161, 74, 0.05);
+}
+
+.card-box::before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgba(201, 161, 74, 0.07);
+  pointer-events: none;
+}
+
+.card-img-wrap {
+  flex-shrink: 0;
+  width: 190px;
+}
+
+.card-img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  object-position: top center;
+  filter: sepia(15%) contrast(1.05);
+  border: 1px solid rgba(201, 161, 74, 0.2);
+  display: block;
+}
+
+.card-kw {
+  text-align: center;
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-top: 0.5rem;
+  opacity: 0.8;
+}
+
+.card-body {
+  flex: 1;
+  padding-top: 0.3rem;
+}
+
+.card-name {
+  font-family: "IM Fell English", serif;
+  font-size: clamp(1.3rem, 3vw, 1.9rem);
+  line-height: 1.1;
+  margin-bottom: 0.2rem;
+}
+
+.card-en {
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  color: var(--ash);
+  font-style: italic;
+  margin-bottom: 1.3rem;
+}
+
+.card-div {
+  width: 55px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  margin-bottom: 1.3rem;
+}
+
+.lbl {
+  font-size: 0.62rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.7;
+  margin-bottom: 0.35rem;
+}
+
+.card-msg {
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  line-height: 1.75;
+  font-style: italic;
+  margin-bottom: 1.6rem;
+}
+
+.card-shd-wrap {
+  border-left: 1px solid rgba(201, 161, 74, 0.18);
+  padding-left: 0.9rem;
+  margin-top: 1rem;
+}
+
+.deep-wrap {
+  margin-top: 1.2rem;
+}
+
+.card-shd {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--ash);
+  font-style: italic;
+}
+
+.actions-panel {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.reset-btn {
+  display: block;
+  width: 100%;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ash);
+  background: transparent;
+  border: 1px solid rgba(138, 128, 112, 0.22);
+  padding: 0.75rem;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s ease;
+  margin-top: 0.6rem;
+}
+
+.paywall-box,
+.profile-box {
+  border: 1px solid rgba(201, 161, 74, 0.2);
+  background: linear-gradient(135deg, rgba(24, 24, 37, 0.84), rgba(10, 10, 16, 0.94));
+  padding: 2rem;
+  margin-bottom: 1.2rem;
+}
+
+.paywall-title,
+.profile-name {
+  font-family: "IM Fell English", serif;
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  margin-bottom: 0.8rem;
+}
+
+.paywall-copy,
+.profile-meta {
+  color: var(--ash);
+  line-height: 1.7;
+  font-size: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.paywall-btn {
+  width: 100%;
+}
+
+.gal-title {
+  text-align: center;
+  font-family: "IM Fell English", serif;
+  font-size: 1rem;
+  letter-spacing: 0.25em;
+  color: var(--ash);
+  margin: 4rem 0 0.5rem;
+}
+
+.gal-line {
+  width: 50px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--ash), transparent);
+  margin: 0.5rem auto 1.8rem;
+}
+
+.spread-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.8rem;
+}
+
+.spread-card {
+  border: 1px solid rgba(201, 161, 74, 0.12);
+  background: rgba(17, 17, 26, 0.84);
+  padding: 0.8rem;
+  animation: reveal 0.7s ease forwards;
+}
+
+.spread-card img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  object-position: top;
+  filter: sepia(15%) contrast(1.05);
+  margin-bottom: 0.8rem;
+}
+
+.spread-card h3 {
+  font-family: "IM Fell English", serif;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.spread-card p {
+  color: var(--ash);
+  line-height: 1.55;
+  font-size: 0.9rem;
+}
+
+.history-list {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.history-item {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 1rem;
+  border: 1px solid rgba(201, 161, 74, 0.1);
+  background: rgba(17, 17, 26, 0.76);
+  padding: 0.8rem;
+}
+
+.history-item img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  object-position: top;
+}
+
+.history-item h3 {
+  font-family: "IM Fell English", serif;
+  font-size: 1rem;
+  margin-bottom: 0.2rem;
+}
+
+.history-item p {
+  color: var(--ash);
+  line-height: 1.55;
+  font-size: 0.9rem;
+}
+
+.history-empty {
+  color: var(--ash);
+  text-align: center;
+  font-style: italic;
+  padding: 1rem 0;
+}
+
+.ornament {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--gold);
+  opacity: 0.35;
+  letter-spacing: 0.5em;
+  margin: 2rem 0;
+}
+
+.footer {
+  text-align: center;
+  margin-top: 4rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(201, 161, 74, 0.1);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  color: var(--ash);
+  opacity: 0.45;
+  font-style: italic;
+}
+
+@media (max-width: 580px) {
+  .card-box {
+    flex-direction: column;
+    align-items: center;
+    padding: 1.4rem;
+  }
+
+  .card-img-wrap {
+    width: 150px;
+  }
+}
+
+@media (max-width: 600px) {
+  .spread-grid {
+    grid-template-columns: 1fr;
+    gap: 0.7rem;
+  }
+}
