@@ -8,16 +8,30 @@ export function createForestAudioController() {
   let droneOscillator = null;
   let droneGain = null;
   let ambienceVolume = 0.58;
+  let melodyStep = 0;
 
-  const MELODY_NOTES = [
-    220,
-    246.94,
-    293.66,
-    329.63,
-    369.99,
-    440,
-    523.25,
-    587.33,
+  const PHRASES = [
+    {
+      root: 220,
+      notes: [220, 329.63, 392, 493.88, 392, 329.63],
+      harmonies: [110, 164.81, 196, 246.94, 196, 164.81],
+      spacing: [0.0, 0.9, 1.8, 2.85, 4.05, 5.0],
+      lengths: [2.6, 2.2, 2.15, 2.45, 2.35, 2.9],
+    },
+    {
+      root: 196,
+      notes: [246.94, 392, 440, 587.33, 440, 369.99],
+      harmonies: [123.47, 196, 220, 293.66, 220, 184.995],
+      spacing: [0.0, 0.85, 1.7, 2.7, 3.85, 4.95],
+      lengths: [2.3, 2.0, 2.15, 2.35, 2.25, 2.8],
+    },
+    {
+      root: 233.08,
+      notes: [293.66, 440, 523.25, 659.25, 523.25, 392],
+      harmonies: [146.83, 220, 261.63, 329.63, 261.63, 196],
+      spacing: [0.0, 0.95, 1.9, 3.0, 4.1, 5.15],
+      lengths: [2.2, 2.1, 2.15, 2.3, 2.25, 2.95],
+    },
   ];
 
   function sync(options = {}) {
@@ -195,7 +209,7 @@ export function createForestAudioController() {
       }
 
       playMelodicPhrase();
-    }, 7200);
+    }, 8200);
   }
 
   function scheduleForestBirds() {
@@ -215,21 +229,21 @@ export function createForestAudioController() {
   }
 
   function playMelodicPhrase() {
+    const phrase = PHRASES[melodyStep % PHRASES.length];
     const start = audioContext.currentTime + 0.15;
-    const phraseLength = 4 + Math.floor(Math.random() * 2);
-    let cursor = start;
-    let previousIndex = Math.floor(Math.random() * MELODY_NOTES.length);
 
-    for (let index = 0; index < phraseLength; index += 1) {
-      const nextIndex = clampNoteIndex(previousIndex + randomStep());
-      const note = MELODY_NOTES[nextIndex];
-      const harmony = MELODY_NOTES[clampNoteIndex(nextIndex + 2)] / 2;
-      const duration = 2 + Math.random() * 1.25;
-      const gap = 0.72 + Math.random() * 0.52;
-      playMistyNote(note, harmony, cursor, duration);
-      cursor += gap;
-      previousIndex = nextIndex;
+    playDroneRoot(phrase.root, start, 7.2);
+
+    for (let index = 0; index < phrase.notes.length; index += 1) {
+      playMistyNote(
+        phrase.notes[index],
+        phrase.harmonies[index],
+        start + phrase.spacing[index],
+        phrase.lengths[index],
+      );
     }
+
+    melodyStep += 1;
   }
 
   function playMistyNote(frequency, harmonyFrequency, start, duration) {
@@ -239,29 +253,37 @@ export function createForestAudioController() {
     const harmony = audioContext.createOscillator();
     const gain = audioContext.createGain();
     const shimmerGain = audioContext.createGain();
+    const bellGain = audioContext.createGain();
     const filter = audioContext.createBiquadFilter();
+    const bell = audioContext.createOscillator();
 
     carrier.type = "sine";
     carrier.frequency.value = frequency;
     shimmer.type = "sine";
-    shimmer.frequency.value = frequency * 1.5;
+    shimmer.frequency.value = frequency * 2;
     low.type = "sine";
     low.frequency.value = frequency / 2;
     harmony.type = "triangle";
     harmony.frequency.value = harmonyFrequency;
+    bell.type = "triangle";
+    bell.frequency.value = frequency * 3;
 
     filter.type = "lowpass";
-    filter.frequency.value = 1700;
+    filter.frequency.value = 2100;
     filter.Q.value = 0.35;
 
     gain.gain.setValueAtTime(0.0001, start);
-    gain.gain.exponentialRampToValueAtTime(0.018, start + 0.8);
-    gain.gain.exponentialRampToValueAtTime(0.0105, start + duration * 0.64);
+    gain.gain.exponentialRampToValueAtTime(0.022, start + 0.45);
+    gain.gain.exponentialRampToValueAtTime(0.013, start + duration * 0.52);
     gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
 
     shimmerGain.gain.setValueAtTime(0.0001, start);
-    shimmerGain.gain.exponentialRampToValueAtTime(0.0045, start + 0.45);
+    shimmerGain.gain.exponentialRampToValueAtTime(0.004, start + 0.22);
     shimmerGain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+
+    bellGain.gain.setValueAtTime(0.0001, start);
+    bellGain.gain.exponentialRampToValueAtTime(0.0035, start + 0.08);
+    bellGain.gain.exponentialRampToValueAtTime(0.0001, start + 0.7);
 
     carrier.connect(filter);
     low.connect(filter);
@@ -272,14 +294,19 @@ export function createForestAudioController() {
     shimmer.connect(shimmerGain);
     shimmerGain.connect(masterGain);
 
+    bell.connect(bellGain);
+    bellGain.connect(masterGain);
+
     carrier.start(start);
     shimmer.start(start);
     low.start(start);
     harmony.start(start);
+    bell.start(start);
     carrier.stop(start + duration);
     shimmer.stop(start + duration);
     low.stop(start + duration);
     harmony.stop(start + duration);
+    bell.stop(start + 0.72);
   }
 
   function playBirdCall() {
@@ -332,6 +359,27 @@ export function createForestAudioController() {
     droneOscillator.start();
   }
 
+  function playDroneRoot(frequency, start, duration) {
+    const osc = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    const filter = audioContext.createBiquadFilter();
+
+    osc.type = "sine";
+    osc.frequency.value = frequency / 2;
+    filter.type = "lowpass";
+    filter.frequency.value = 260;
+
+    gain.gain.setValueAtTime(0.0001, start);
+    gain.gain.exponentialRampToValueAtTime(0.006, start + 0.55);
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(masterGain);
+    osc.start(start);
+    osc.stop(start + duration);
+  }
+
   function createNoiseBuffer(context, seconds) {
     const buffer = context.createBuffer(1, context.sampleRate * seconds, context.sampleRate);
     const channel = buffer.getChannelData(0);
@@ -367,14 +415,5 @@ export function createForestAudioController() {
       droneGain.gain.cancelScheduledValues(now);
       droneGain.gain.setTargetAtTime(Math.max(droneTarget, 0.0001), now, 0.8);
     }
-  }
-
-  function randomStep() {
-    const steps = [-2, -1, 1, 2];
-    return steps[Math.floor(Math.random() * steps.length)];
-  }
-
-  function clampNoteIndex(index) {
-    return Math.max(0, Math.min(MELODY_NOTES.length - 1, index));
   }
 }
