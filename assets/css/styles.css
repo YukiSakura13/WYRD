@@ -555,6 +555,60 @@ body::after {
   margin-bottom: 1.2rem;
 }
 
+.paywall-preview {
+  display: grid;
+  gap: 0.8rem;
+  margin: 1.4rem 0 1.2rem;
+}
+
+.paywall-preview[data-layout="triple"] {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.paywall-preview[data-layout="five"] {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.paywall-preview-card {
+  border: 1px solid rgba(201, 161, 74, 0.12);
+  background: rgba(15, 15, 23, 0.72);
+  padding: 0.7rem;
+}
+
+.paywall-preview-image {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  margin-bottom: 0.65rem;
+  background:
+    linear-gradient(180deg, rgba(24, 24, 37, 0.9), rgba(12, 12, 19, 0.96)),
+    linear-gradient(135deg, rgba(201, 161, 74, 0.08), transparent 45%);
+  border: 1px solid rgba(201, 161, 74, 0.12);
+  filter: blur(10px);
+  opacity: 0.8;
+}
+
+.paywall-preview-role {
+  color: var(--gold);
+  font-size: 0.58rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+  opacity: 0.82;
+}
+
+.paywall-preview-text {
+  color: var(--ash);
+  font-style: italic;
+  line-height: 1.4;
+  font-size: 0.88rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  filter: blur(2.4px);
+  opacity: 0.85;
+}
+
 .paywall-btn {
   width: 100%;
 }
@@ -601,6 +655,15 @@ body::after {
   font-family: "IM Fell English", serif;
   font-size: 1rem;
   margin-bottom: 0.25rem;
+}
+
+.spread-role {
+  color: var(--gold);
+  font-size: 0.58rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  opacity: 0.78;
+  margin-bottom: 0.45rem;
 }
 
 .spread-card p {
@@ -686,5 +749,10 @@ body::after {
   .spread-grid {
     grid-template-columns: 1fr;
     gap: 0.7rem;
+  }
+
+  .paywall-preview[data-layout="triple"],
+  .paywall-preview[data-layout="five"] {
+    grid-template-columns: 1fr;
   }
 }

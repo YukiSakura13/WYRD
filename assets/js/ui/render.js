@@ -31,6 +31,7 @@ export function getElements(doc = document) {
     spreadTitle: doc.getElementById("spread-title"),
     paywallTitle: doc.getElementById("paywall-title"),
     paywallCopy: doc.getElementById("paywall-copy"),
+    paywallPreview: doc.getElementById("paywall-preview"),
     paywallCta: doc.getElementById("paywall-cta"),
   };
 }
@@ -147,6 +148,10 @@ export function createRenderer(elements) {
       const title = document.createElement("h3");
       title.textContent = card.name;
 
+      const role = document.createElement("p");
+      role.className = "spread-role";
+      role.textContent = card.spreadLabel || layerLabel(card.layer);
+
       const subtitle = document.createElement("p");
       subtitle.className = "card-en";
       subtitle.textContent = card.subtitle;
@@ -154,7 +159,7 @@ export function createRenderer(elements) {
       const message = document.createElement("p");
       message.textContent = card.message;
 
-      item.append(image, title, subtitle, message);
+      item.append(image, role, title, subtitle, message);
       elements.spreadGrid.appendChild(item);
     });
   }
@@ -200,6 +205,7 @@ export function createRenderer(elements) {
     if (!paywallOffer) {
       elements.paywallTitle.textContent = "";
       elements.paywallCopy.textContent = "";
+      elements.paywallPreview.replaceChildren();
       elements.paywallCta.textContent = "";
       return;
     }
@@ -207,6 +213,7 @@ export function createRenderer(elements) {
     const offer = PAYWALL_COPY[paywallOffer];
     elements.paywallTitle.textContent = offer.title;
     elements.paywallCopy.textContent = offer.text;
+    renderPaywallPreview(paywallOffer);
     elements.paywallCta.textContent = offer.cta;
   }
 
@@ -223,6 +230,87 @@ export function createRenderer(elements) {
 
 function getCardImage(card) {
   return card.image || EMPTY_CARD_IMAGE;
+}
+
+function layerLabel(layer) {
+  if (layer === "past") {
+    return "Прошлое";
+  }
+
+  if (layer === "future") {
+    return "Будущее";
+  }
+
+  return "Настоящее";
+}
+
+function renderPaywallPreview(offer) {
+  const container = document.getElementById("paywall-preview");
+  if (!container) {
+    return;
+  }
+
+  container.replaceChildren();
+
+  const preset = getPaywallPreviewPreset(offer);
+  container.dataset.layout = preset.layout;
+
+  preset.items.forEach(function (item) {
+    const card = document.createElement("article");
+    card.className = "paywall-preview-card";
+
+    const image = document.createElement("div");
+    image.className = "paywall-preview-image";
+
+    const role = document.createElement("p");
+    role.className = "paywall-preview-role";
+    role.textContent = item.role;
+
+    const line = document.createElement("p");
+    line.className = "paywall-preview-text";
+    line.textContent = item.line;
+
+    card.append(image, role, line);
+    container.appendChild(card);
+  });
+}
+
+function getPaywallPreviewPreset(offer) {
+  if (offer === "deep-reading") {
+    return {
+      layout: "single",
+      items: [{ role: "Второй слой", line: "Лес говорит больше, но..." }],
+    };
+  }
+
+  if (offer === "spread-3") {
+    return {
+      layout: "triple",
+      items: [
+        { role: "Прошлое", line: "То, что держало..." },
+        { role: "Настоящее", line: "То, что происходит..." },
+        { role: "Будущее", line: "То, что ведёт..." },
+      ],
+    };
+  }
+
+  if (offer === "spread-5") {
+    return {
+      layout: "five",
+      items: [
+        { role: "Ты", line: "Точка входа..." },
+        { role: "Что держит", line: "Старый узел..." },
+        { role: "Что ведёт", line: "Текущий импульс..." },
+        { role: "Что скрыто", line: "Лес прячет..." },
+        { role: "Куда ведёт", line: "Дальнейший путь..." },
+      ],
+    };
+  }
+
+  return {
+    layout: "single",
+    items: [{ role: "Следующий знак", line: "Лес говорит больше..." }],
+  };
 }
 
 function createEmptyCardImage() {

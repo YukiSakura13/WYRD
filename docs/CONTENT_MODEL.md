@@ -18,6 +18,8 @@
   name,
   subtitle,
   keyword,
+  state,
+  layer,
   message,
   shadow,
   image
@@ -31,6 +33,8 @@
 - `42–48` уже описаны и готовы к следующему расширению
 - master-roster теперь непрерывен в диапазоне `1–48`
 - часть новых карт пока содержит пустой `image` и рендерится как пустой visual-slot
+- `layer` использует значения `past | present | future`
+- `state` хранит смысловое состояние карты
 
 ### Cover Content
 
