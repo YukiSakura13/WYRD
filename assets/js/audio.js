@@ -1,41 +1,56 @@
-const AMBIENCE_TRACK_URL = new URL("../audio/WYRD.m4a", import.meta.url).href;
-
 export function createForestAudioController() {
-  let ambienceAudio = null;
-  let rustleContext = null;
-  let ambienceVolume = 0.58;
-  let shouldPlay = false;
-  let unlockListenersBound = false;
+  let audioContext = null;
+  let forestGain = null;
+  let forestNoiseSource = null;
+  let forestToneTimer = null;
 
   function sync(options = {}) {
-    const { enabled, allowInit = false, ambienceVolume: nextAmbienceVolume } = options;
-
-    if (typeof nextAmbienceVolume === "number") {
-      ambienceVolume = clamp(nextAmbienceVolume, 0, 1);
-      applyVolume();
-    }
-
-    shouldPlay = Boolean(enabled);
+    const { enabled, allowInit = false } = options;
 
     if (!enabled) {
-      pauseAmbience();
+      stop();
       return;
     }
 
-    if (!allowInit && !ambienceAudio) {
+    if (!allowInit && !audioContext) {
       return;
     }
 
-    ensureAmbienceAudio();
-    applyVolume();
-    attemptPlayback();
+    if (!audioContext) {
+      startForestAudio();
+      return;
+    }
+
+    if (audioContext.state === "suspended") {
+      audioContext.resume().catch(function () {
+        return undefined;
+      });
+    }
   }
 
   function stop() {
-    shouldPlay = false;
-    pauseAmbience();
-    if (ambienceAudio) {
-      ambienceAudio.currentTime = 0;
+    if (forestToneTimer) {
+      clearInterval(forestToneTimer);
+      forestToneTimer = null;
+    }
+
+    if (forestNoiseSource) {
+      try {
+        forestNoiseSource.stop();
+      } catch (error) {
+        void error;
+      }
+
+      forestNoiseSource.disconnect();
+      forestNoiseSource = null;
+    }
+
+    if (audioContext) {
+      audioContext.close().catch(function () {
+        return undefined;
+      });
+      audioContext = null;
+      forestGain = null;
     }
   }
 
@@ -49,17 +64,10 @@ export function createForestAudioController() {
       return;
     }
 
-    rustleContext = rustleContext || new AudioContextClass();
-
-    if (rustleContext.state === "suspended") {
-      rustleContext.resume().catch(function () {
-        return undefined;
-      });
-    }
-
+    const context = audioContext || new AudioContextClass();
     const duration = 0.42;
-    const sampleRate = rustleContext.sampleRate;
-    const buffer = rustleContext.createBuffer(1, sampleRate * duration, sampleRate);
+    const sampleRate = context.sampleRate;
+    const buffer = context.createBuffer(1, sampleRate * duration, sampleRate);
     const data = buffer.getChannelData(0);
 
     for (let index = 0; index < data.length; index += 1) {
@@ -67,19 +75,27 @@ export function createForestAudioController() {
       data[index] = (Math.random() * 2 - 1) * fade * 0.18;
     }
 
-    const source = rustleContext.createBufferSource();
-    const filter = rustleContext.createBiquadFilter();
-    const gain = rustleContext.createGain();
+    const source = context.createBufferSource();
+    const filter = context.createBiquadFilter();
+    const gain = context.createGain();
 
     source.buffer = buffer;
     filter.type = "bandpass";
     filter.frequency.value = 1200;
-    gain.gain.value = 0.095;
+    gain.gain.value = 0.16;
 
     source.connect(filter);
     filter.connect(gain);
-    gain.connect(rustleContext.destination);
+    gain.connect(context.destination);
     source.start();
+
+    if (!audioContext) {
+      source.onended = function () {
+        context.close().catch(function () {
+          return undefined;
+        });
+      };
+    }
   }
 
   return {
@@ -88,112 +104,73 @@ export function createForestAudioController() {
     sync,
   };
 
-  function ensureAmbienceAudio() {
-    if (ambienceAudio) {
+  function startForestAudio() {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) {
       return;
     }
 
-    ambienceAudio = new Audio();
-    ambienceAudio.src = AMBIENCE_TRACK_URL;
-    ambienceAudio.loop = true;
-    ambienceAudio.preload = "auto";
-    ambienceAudio.playsInline = true;
-    ambienceAudio.setAttribute("playsinline", "");
+    audioContext = new AudioContextClass();
+    const buffer = createNoiseBuffer(audioContext, 6);
+    forestNoiseSource = audioContext.createBufferSource();
+    forestNoiseSource.buffer = buffer;
+    forestNoiseSource.loop = true;
 
-    ambienceAudio.addEventListener("canplay", function () {
-      if (shouldPlay && ambienceAudio.paused) {
-        attemptPlayback();
+    const filter = audioContext.createBiquadFilter();
+    filter.type = "lowpass";
+    filter.frequency.value = 480;
+
+    const highpass = audioContext.createBiquadFilter();
+    highpass.type = "highpass";
+    highpass.frequency.value = 90;
+
+    forestGain = audioContext.createGain();
+    forestGain.gain.value = 0.028;
+
+    forestNoiseSource.connect(filter);
+    filter.connect(highpass);
+    highpass.connect(forestGain);
+    forestGain.connect(audioContext.destination);
+    forestNoiseSource.start();
+
+    scheduleForestTones();
+  }
+
+  function scheduleForestTones() {
+    if (!audioContext) {
+      return;
+    }
+
+    forestToneTimer = setInterval(function () {
+      if (!audioContext) {
+        return;
       }
-    });
 
-    ambienceAudio.addEventListener("error", function () {
-      ambienceAudio.load();
-      if (shouldPlay) {
-        bindUnlockListeners();
-      }
-    });
+      const now = audioContext.currentTime;
+      const osc = audioContext.createOscillator();
+      const gain = audioContext.createGain();
 
-    ambienceAudio.load();
+      osc.type = "sine";
+      osc.frequency.value = 180 + Math.random() * 80;
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(0.012, now + 0.5);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.6);
+
+      osc.connect(gain);
+      gain.connect(audioContext.destination);
+      osc.start(now);
+      osc.stop(now + 2.7);
+    }, 9000);
   }
 
-  function attemptPlayback() {
-    if (!ambienceAudio || !shouldPlay) {
-      return;
+  function createNoiseBuffer(context, seconds) {
+    const buffer = context.createBuffer(1, context.sampleRate * seconds, context.sampleRate);
+    const channel = buffer.getChannelData(0);
+
+    for (let index = 0; index < channel.length; index += 1) {
+      channel[index] = (Math.random() * 2 - 1) * 0.4;
     }
 
-    const maybePromise = ambienceAudio.play();
-    if (maybePromise && typeof maybePromise.catch === "function") {
-      maybePromise
-        .then(function () {
-          unbindUnlockListeners();
-        })
-        .catch(function () {
-          bindUnlockListeners();
-          return undefined;
-        });
-      return;
-    }
-
-    unbindUnlockListeners();
-  }
-
-  function bindUnlockListeners() {
-    if (unlockListenersBound) {
-      return;
-    }
-
-    unlockListenersBound = true;
-    document.addEventListener("pointerdown", handleUnlock, true);
-    document.addEventListener("touchend", handleUnlock, true);
-    document.addEventListener("click", handleUnlock, true);
-    document.addEventListener("keydown", handleUnlock, true);
-    document.addEventListener("visibilitychange", handleVisibilityChange, true);
-  }
-
-  function unbindUnlockListeners() {
-    if (!unlockListenersBound) {
-      return;
-    }
-
-    unlockListenersBound = false;
-    document.removeEventListener("pointerdown", handleUnlock, true);
-    document.removeEventListener("touchend", handleUnlock, true);
-    document.removeEventListener("click", handleUnlock, true);
-    document.removeEventListener("keydown", handleUnlock, true);
-    document.removeEventListener("visibilitychange", handleVisibilityChange, true);
-  }
-
-  function handleUnlock() {
-    if (!shouldPlay) {
-      return;
-    }
-
-    attemptPlayback();
-  }
-
-  function handleVisibilityChange() {
-    if (document.visibilityState === "visible" && shouldPlay) {
-      attemptPlayback();
-    }
-  }
-
-  function pauseAmbience() {
-    if (!ambienceAudio) {
-      return;
-    }
-
-    ambienceAudio.pause();
-  }
-
-  function applyVolume() {
-    if (!ambienceAudio) {
-      return;
-    }
-
-    ambienceAudio.volume = ambienceVolume;
-  }
-
-  function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
+    return buffer;
   }
 }

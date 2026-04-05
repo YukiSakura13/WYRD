@@ -25,9 +25,6 @@ export function getElements(doc = document) {
     deepMessage: doc.getElementById("deep-message"),
     deckTop: doc.querySelector(".dc-top"),
     soundButton: doc.querySelector('[data-action="toggle-sound"]'),
-    ambienceSlider: doc.querySelector('[data-action="set-ambience-volume"]'),
-    ambienceValue: doc.getElementById("ambience-volume-value"),
-    ambienceKnob: doc.getElementById("ambience-knob"),
     profileName: doc.getElementById("profile-name"),
     profileMeta: doc.getElementById("profile-meta"),
     historyList: doc.getElementById("history-list"),
@@ -105,19 +102,6 @@ export function createRenderer(elements) {
 
   function renderProfile(state) {
     elements.soundButton.textContent = state.soundEnabled ? "Звук леса: вкл" : "Звук леса: выкл";
-    if (elements.ambienceSlider) {
-      elements.ambienceSlider.value = String(Math.round(state.ambienceVolume * 100));
-    }
-    if (elements.ambienceValue) {
-      elements.ambienceValue.textContent = `${Math.round(state.ambienceVolume * 100)}%`;
-    }
-    if (elements.ambienceKnob) {
-      const percent = Math.round(state.ambienceVolume * 100);
-      const angle = -135 + state.ambienceVolume * 270;
-      elements.ambienceKnob.style.setProperty("--knob-angle", `${angle}deg`);
-      elements.ambienceKnob.setAttribute("aria-valuenow", String(percent));
-      elements.ambienceKnob.setAttribute("aria-valuetext", `${percent}%`);
-    }
     elements.profileName.textContent = state.profileName;
     elements.profileMeta.textContent = state.dailyFreeUsedAt
       ? "Сегодняшняя бесплатная карта уже раскрыта."

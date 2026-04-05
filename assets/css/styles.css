@@ -182,7 +182,6 @@ body::after {
   gap: 1rem;
   flex-wrap: wrap;
   margin-bottom: 2.4rem;
-  align-items: center;
 }
 
 .text-btn {
@@ -196,104 +195,6 @@ body::after {
   padding: 0.75rem 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
-}
-
-.ambience-control {
-  display: inline-flex;
-  align-items: center;
-  gap: 1rem;
-  border: 1px solid rgba(201, 161, 74, 0.18);
-  padding: 0.72rem 0.95rem;
-  color: var(--ash);
-  background: rgba(16, 16, 25, 0.62);
-}
-
-.ambience-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 0.24rem;
-}
-
-.ambience-label,
-.ambience-value {
-  font-family: "Cormorant Garamond", serif;
-  font-size: 0.78rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
-.ambience-value {
-  color: var(--gold);
-  min-width: 3ch;
-  text-align: left;
-}
-
-.ambience-knob-shell {
-  position: relative;
-  width: 74px;
-  height: 74px;
-}
-
-.ambience-knob {
-  --knob-angle: 21.6deg;
-  width: 74px;
-  height: 74px;
-  position: relative;
-  border: 1px solid rgba(201, 161, 74, 0.3);
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 32% 28%, rgba(255, 246, 214, 0.2), transparent 34%),
-    radial-gradient(circle at 50% 50%, rgba(201, 161, 74, 0.18), rgba(19, 18, 30, 0.94) 66%);
-  box-shadow:
-    inset 0 0 20px rgba(0, 0, 0, 0.42),
-    0 0 22px rgba(201, 161, 74, 0.08);
-  cursor: grab;
-  touch-action: none;
-}
-
-.ambience-knob::before {
-  content: "";
-  position: absolute;
-  inset: 6px;
-  border-radius: 50%;
-  border: 1px solid rgba(201, 161, 74, 0.12);
-}
-
-.ambience-knob:active {
-  cursor: grabbing;
-}
-
-.ambience-knob-core {
-  position: absolute;
-  inset: 13px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 50% 35%, rgba(255, 251, 229, 0.16), rgba(19, 18, 30, 0.92) 70%);
-  box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.48);
-}
-
-.ambience-knob-dot {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--gold);
-  box-shadow: 0 0 14px rgba(201, 161, 74, 0.42);
-  transform: translate(-50%, -50%) rotate(var(--knob-angle)) translateY(-26px);
-  transform-origin: center;
-}
-
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
 }
 
 .text-btn:hover,
