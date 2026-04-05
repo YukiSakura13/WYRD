@@ -1,11 +1,19 @@
-const CACHE_NAME = "wyrd-static-v1";
+const CACHE_NAME = "wyrd-static-v2";
 const CORE_ASSETS = [
   "./",
   "./index.html",
+  "./manifest.webmanifest",
   "./assets/css/styles.css",
-  "./assets/js/cards.js",
-  "./assets/js/app.js",
   "./assets/images/cover.jpg",
+  "./assets/js/audio.js",
+  "./assets/js/cards/reading.js",
+  "./assets/js/data/cards.js",
+  "./assets/js/main.js",
+  "./assets/js/pwa.js",
+  "./assets/js/ritual.js",
+  "./assets/js/state/storage.js",
+  "./assets/js/ui/actions.js",
+  "./assets/js/ui/render.js",
 ];
 
 self.addEventListener("install", (event) => {

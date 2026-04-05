@@ -19,7 +19,7 @@
   </head>
   <body>
     <div id="cover" class="active">
-      <img class="cover-art" src="./assets/images/cover.jpg" alt="WYRD" />
+      <img class="cover-art" id="cover-art" src="" alt="WYRD" />
       <h1 class="cover-title">WYRD</h1>
       <p class="cover-sub">Оракул духов леса</p>
       <p class="cover-count">Шёпот чащи, тьма фольклора, одна карта в день</p>
@@ -101,7 +101,7 @@
           <p class="deck-hint">Ритуал доступа</p>
           <h2 class="paywall-title" id="paywall-title"></h2>
           <p class="paywall-copy" id="paywall-copy"></p>
-          <button class="cover-btn paywall-btn" id="paywall-cta"></button>
+          <button class="cover-btn paywall-btn" id="paywall-cta" data-action="confirm-paywall"></button>
         </div>
       </section>
 
@@ -121,7 +121,6 @@
       <footer class="footer">Лес отвечает тем, кто умеет слушать тишину.</footer>
     </main>
 
-    <script src="./assets/js/cards.js"></script>
-    <script src="./assets/js/app.js"></script>
+    <script type="module" src="./assets/js/main.js"></script>
   </body>
 </html>
