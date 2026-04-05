@@ -1,9 +1,8 @@
 import { createForestAudioController } from "./audio.js";
 import { CARDS, COVER_IMAGE } from "./data/cards.js";
 import { registerServiceWorker } from "./pwa.js";
-import { createRitualController } from "./ritual.js";
 import { createStateStore } from "./state/storage.js";
-import { createActionHandler, createInitialUIState, resolveRitual } from "./ui/actions.js";
+import { createActionHandler, createInitialUIState } from "./ui/actions.js";
 import { createRenderer, deriveContentPanel, getElements } from "./ui/render.js";
 
 const store = createStateStore();
@@ -22,28 +21,6 @@ function renderApp() {
   renderer.render(state, uiState);
 }
 
-const ritual = createRitualController({
-  duration: 3,
-  onTick(value) {
-    uiState.overlay = "ritual";
-    uiState.ritualCountdown = value;
-    renderApp();
-  },
-  onComplete(mode) {
-    resolveRitual(
-      {
-        audio,
-        cards: CARDS,
-        renderApp,
-        renderer,
-        store,
-        uiState,
-      },
-      mode,
-    );
-  },
-});
-
 document.addEventListener(
   "click",
   createActionHandler({
@@ -51,7 +28,6 @@ document.addEventListener(
     cards: CARDS,
     renderApp,
     renderer,
-    ritual,
     store,
     uiState,
   }),

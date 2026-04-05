@@ -9,8 +9,6 @@ export function getElements(doc = document) {
     coverArt: doc.getElementById("cover-art"),
     main: doc.getElementById("main"),
     deckWrap: doc.getElementById("deck-wrap"),
-    ritualSection: doc.getElementById("ritual"),
-    ritualCountdown: doc.getElementById("ritual-countdown"),
     resultSection: doc.getElementById("result"),
     spreadResultSection: doc.getElementById("spread-result"),
     paywallSection: doc.getElementById("paywall"),
@@ -97,7 +95,6 @@ export function createRenderer(elements) {
   function renderShell(uiState) {
     elements.cover.classList.toggle("gone", uiState.entered);
     elements.main.classList.toggle("on", uiState.entered);
-    elements.ritualCountdown.textContent = String(uiState.ritualCountdown);
   }
 
   function renderProfile(state) {
@@ -212,7 +209,6 @@ export function createRenderer(elements) {
     const contentPanel = deriveContentPanel(state);
     const overlay = uiState.overlay;
 
-    elements.ritualSection.hidden = overlay !== "ritual";
     elements.paywallSection.hidden = overlay !== "paywall";
     elements.profileSection.hidden = overlay !== "profile";
     elements.resultSection.hidden = overlay !== "none" || contentPanel !== "result";

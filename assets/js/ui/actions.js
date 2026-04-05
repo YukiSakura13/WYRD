@@ -2,7 +2,7 @@ import { createReading, createSpread } from "../cards/reading.js";
 import { deriveContentPanel } from "./render.js";
 
 export function createActionHandler(deps) {
-  const { audio, cards, renderApp, renderer, ritual, store, uiState } = deps;
+  const { audio, cards, renderApp, renderer, store, uiState } = deps;
 
   return function onClick(event) {
     const trigger = event.target.closest("[data-action]");
@@ -64,13 +64,11 @@ export function createActionHandler(deps) {
     }
 
     if (action === "reset-local") {
-      ritual.stop();
       audio.stop();
       store.reset();
       uiState.entered = false;
       uiState.overlay = "none";
       uiState.paywallOffer = null;
-      uiState.ritualCountdown = 3;
       renderApp();
     }
   };
@@ -83,11 +81,10 @@ export function createActionHandler(deps) {
   }
 
   function startRitual(mode) {
-    uiState.overlay = "ritual";
+    uiState.overlay = "none";
     uiState.paywallOffer = null;
-    uiState.ritualCountdown = 3;
     renderApp();
-    ritual.start(mode);
+    resolveRitual(deps, mode);
   }
 }
 
@@ -97,7 +94,6 @@ export function resolveRitual(deps, mode) {
 
   uiState.overlay = "none";
   uiState.paywallOffer = null;
-  uiState.ritualCountdown = 3;
   audio.playRustle(currentState.soundEnabled);
 
   if (mode === "free") {
@@ -140,7 +136,6 @@ export function createInitialUIState(state) {
     entered: false,
     overlay: "none",
     paywallOffer: null,
-    ritualCountdown: 3,
     contentPanel: deriveContentPanel(state),
   };
 }

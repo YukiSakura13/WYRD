@@ -224,6 +224,8 @@ body::after {
   height: 265px;
   margin: 0 auto 1.5rem;
   cursor: pointer;
+  transform-style: preserve-3d;
+  animation: deckHover 5.4s ease-in-out infinite;
 }
 
 .dc {
@@ -233,18 +235,22 @@ body::after {
   background: var(--fog);
   border: 1px solid rgba(201, 161, 74, 0.2);
   border-radius: 3px;
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.28);
 }
 
 .dc:nth-child(1) {
-  transform: rotate(-3deg) translateY(6px);
+  transform: translate3d(-8px, 10px, -18px) rotate(-8deg);
+  opacity: 0.72;
 }
 
 .dc:nth-child(2) {
-  transform: rotate(-1.5deg) translateY(3px);
+  transform: translate3d(-3px, 5px, -10px) rotate(-4deg);
+  opacity: 0.84;
 }
 
 .dc:nth-child(3) {
-  transform: rotate(0.5deg);
+  transform: translate3d(4px, 1px, -2px) rotate(3deg);
+  opacity: 0.92;
 }
 
 .dc-top {
@@ -258,26 +264,90 @@ body::after {
   align-items: center;
   justify-content: center;
   transition: transform 0.4s ease, box-shadow 0.4s ease, opacity 0.5s ease;
-  animation: deckBreath 4.8s ease-in-out infinite;
+  box-shadow:
+    0 26px 40px rgba(0, 0, 0, 0.42),
+    0 0 26px rgba(201, 161, 74, 0.1);
+  animation:
+    deckBreath 3.8s ease-in-out infinite,
+    deckShiver 6.2s ease-in-out infinite;
 }
 
-.deck:hover .dc-top {
-  transform: translateY(-10px) scale(1.012);
+.deck:hover .dc-top,
+.deck:active .dc-top {
+  transform: translateY(-12px) scale(1.025) rotate(1deg);
   box-shadow:
-    0 20px 50px rgba(0, 0, 0, 0.6),
-    0 0 30px rgba(201, 161, 74, 0.15);
+    0 26px 56px rgba(0, 0, 0, 0.62),
+    0 0 34px rgba(201, 161, 74, 0.18);
+}
+
+.deck:hover .dc:nth-child(1),
+.deck:active .dc:nth-child(1) {
+  transform: translate3d(-12px, 12px, -18px) rotate(-11deg);
+}
+
+.deck:hover .dc:nth-child(2),
+.deck:active .dc:nth-child(2) {
+  transform: translate3d(-5px, 6px, -10px) rotate(-6deg);
+}
+
+.deck:hover .dc:nth-child(3),
+.deck:active .dc:nth-child(3) {
+  transform: translate3d(7px, 2px, -2px) rotate(4deg);
+}
+
+@keyframes deckHover {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-6px) rotate(-0.6deg);
+  }
 }
 
 @keyframes deckBreath {
   0%,
   100% {
-    transform: translateY(0);
-    box-shadow: 0 0 0 rgba(201, 161, 74, 0);
+    transform: translateY(0) scale(1);
+    box-shadow:
+      0 24px 38px rgba(0, 0, 0, 0.38),
+      0 0 0 rgba(201, 161, 74, 0);
   }
 
   50% {
-    transform: translateY(-4px);
-    box-shadow: 0 0 24px rgba(201, 161, 74, 0.08);
+    transform: translateY(-7px) scale(1.018);
+    box-shadow:
+      0 30px 44px rgba(0, 0, 0, 0.46),
+      0 0 26px rgba(201, 161, 74, 0.12);
+  }
+}
+
+@keyframes deckShiver {
+  0%,
+  44%,
+  100% {
+    rotate: 0deg;
+  }
+
+  46% {
+    rotate: -0.9deg;
+  }
+
+  48% {
+    rotate: 0.9deg;
+  }
+
+  50% {
+    rotate: -0.65deg;
+  }
+
+  52% {
+    rotate: 0.5deg;
+  }
+
+  54% {
+    rotate: 0deg;
   }
 }
 
@@ -303,45 +373,6 @@ body::after {
   padding: 0.65rem 1.8rem;
   cursor: pointer;
   transition: all 0.3s ease;
-}
-
-.ritual-panel {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  margin-bottom: 2rem;
-  animation: reveal 0.8s ease forwards;
-}
-
-.ritual-count {
-  font-family: "IM Fell English", serif;
-  font-size: clamp(4rem, 12vw, 6rem);
-  color: var(--gold);
-  text-shadow: 0 0 28px rgba(201, 161, 74, 0.28);
-  margin-bottom: 1rem;
-  animation: ritualPulse 1.6s ease-in-out infinite;
-}
-
-@keyframes ritualPulse {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 0.92;
-  }
-
-  50% {
-    transform: scale(1.05);
-    opacity: 1;
-  }
-}
-
-.ritual-text {
-  max-width: 460px;
-  color: var(--ash);
-  font-size: 1rem;
-  line-height: 1.7;
-  font-style: italic;
 }
 
 #result,
