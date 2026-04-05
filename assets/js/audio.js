@@ -1,9 +1,11 @@
-const AMBIENCE_TRACK = "./assets/audio/WYRD.m4a";
+const AMBIENCE_TRACK_URL = new URL("../audio/WYRD.m4a", import.meta.url).href;
 
 export function createForestAudioController() {
   let ambienceAudio = null;
   let rustleContext = null;
   let ambienceVolume = 0.58;
+  let shouldPlay = false;
+  let unlockListenersBound = false;
 
   function sync(options = {}) {
     const { enabled, allowInit = false, ambienceVolume: nextAmbienceVolume } = options;
@@ -12,6 +14,8 @@ export function createForestAudioController() {
       ambienceVolume = clamp(nextAmbienceVolume, 0, 1);
       applyVolume();
     }
+
+    shouldPlay = Boolean(enabled);
 
     if (!enabled) {
       pauseAmbience();
@@ -22,16 +26,13 @@ export function createForestAudioController() {
       return;
     }
 
-    if (!ambienceAudio) {
-      start();
-      return;
-    }
-
+    ensureAmbienceAudio();
     applyVolume();
-    playAmbience();
+    attemptPlayback();
   }
 
   function stop() {
+    shouldPlay = false;
     pauseAmbience();
     if (ambienceAudio) {
       ambienceAudio.currentTime = 0;
@@ -87,28 +88,92 @@ export function createForestAudioController() {
     sync,
   };
 
-  function start() {
-    if (!ambienceAudio) {
-      ambienceAudio = new Audio(AMBIENCE_TRACK);
-      ambienceAudio.loop = true;
-      ambienceAudio.preload = "auto";
-      ambienceAudio.playsInline = true;
+  function ensureAmbienceAudio() {
+    if (ambienceAudio) {
+      return;
     }
 
-    applyVolume();
-    playAmbience();
+    ambienceAudio = new Audio();
+    ambienceAudio.src = AMBIENCE_TRACK_URL;
+    ambienceAudio.loop = true;
+    ambienceAudio.preload = "auto";
+    ambienceAudio.playsInline = true;
+    ambienceAudio.setAttribute("playsinline", "");
+
+    ambienceAudio.addEventListener("canplay", function () {
+      if (shouldPlay && ambienceAudio.paused) {
+        attemptPlayback();
+      }
+    });
+
+    ambienceAudio.addEventListener("error", function () {
+      ambienceAudio.load();
+      if (shouldPlay) {
+        bindUnlockListeners();
+      }
+    });
+
+    ambienceAudio.load();
   }
 
-  function playAmbience() {
-    if (!ambienceAudio) {
+  function attemptPlayback() {
+    if (!ambienceAudio || !shouldPlay) {
       return;
     }
 
     const maybePromise = ambienceAudio.play();
     if (maybePromise && typeof maybePromise.catch === "function") {
-      maybePromise.catch(function () {
-        return undefined;
-      });
+      maybePromise
+        .then(function () {
+          unbindUnlockListeners();
+        })
+        .catch(function () {
+          bindUnlockListeners();
+          return undefined;
+        });
+      return;
+    }
+
+    unbindUnlockListeners();
+  }
+
+  function bindUnlockListeners() {
+    if (unlockListenersBound) {
+      return;
+    }
+
+    unlockListenersBound = true;
+    document.addEventListener("pointerdown", handleUnlock, true);
+    document.addEventListener("touchend", handleUnlock, true);
+    document.addEventListener("click", handleUnlock, true);
+    document.addEventListener("keydown", handleUnlock, true);
+    document.addEventListener("visibilitychange", handleVisibilityChange, true);
+  }
+
+  function unbindUnlockListeners() {
+    if (!unlockListenersBound) {
+      return;
+    }
+
+    unlockListenersBound = false;
+    document.removeEventListener("pointerdown", handleUnlock, true);
+    document.removeEventListener("touchend", handleUnlock, true);
+    document.removeEventListener("click", handleUnlock, true);
+    document.removeEventListener("keydown", handleUnlock, true);
+    document.removeEventListener("visibilitychange", handleVisibilityChange, true);
+  }
+
+  function handleUnlock() {
+    if (!shouldPlay) {
+      return;
+    }
+
+    attemptPlayback();
+  }
+
+  function handleVisibilityChange() {
+    if (document.visibilityState === "visible" && shouldPlay) {
+      attemptPlayback();
     }
   }
 
