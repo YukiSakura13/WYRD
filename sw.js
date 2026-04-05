@@ -1,8 +1,9 @@
-const CACHE_NAME = "wyrd-static-v2";
+const CACHE_NAME = "wyrd-static-v3";
 const CORE_ASSETS = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
+  "./assets/audio/WYRD.m4a",
   "./assets/css/styles.css",
   "./assets/images/cover.jpg",
   "./assets/js/audio.js",

@@ -3,7 +3,13 @@ import { CARDS, COVER_IMAGE } from "./data/cards.js";
 import { registerServiceWorker } from "./pwa.js";
 import { createRitualController } from "./ritual.js";
 import { createStateStore } from "./state/storage.js";
-import { createActionHandler, createInitialUIState, createInputHandler, resolveRitual } from "./ui/actions.js";
+import {
+  createActionHandler,
+  createInitialUIState,
+  createInputHandler,
+  createKnobHandler,
+  resolveRitual,
+} from "./ui/actions.js";
 import { createRenderer, deriveContentPanel, getElements } from "./ui/render.js";
 
 const store = createStateStore();
@@ -64,6 +70,11 @@ document.addEventListener(
     store,
   }),
 );
+const handleKnobPointer = createKnobHandler();
+document.addEventListener("pointerdown", handleKnobPointer);
+document.addEventListener("pointermove", handleKnobPointer);
+document.addEventListener("pointerup", handleKnobPointer);
+document.addEventListener("pointercancel", handleKnobPointer);
 
 renderApp();
 registerServiceWorker();

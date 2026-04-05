@@ -123,6 +123,64 @@ export function createInputHandler(deps) {
   };
 }
 
+export function createKnobHandler(doc = document) {
+  let activeKnob = null;
+
+  return function onPointer(event) {
+    const knob = event.target.closest("#ambience-knob");
+
+    if (event.type === "pointerdown" && knob) {
+      activeKnob = knob;
+      knob.setPointerCapture(event.pointerId);
+      updateFromPointer(event, knob);
+      return;
+    }
+
+    if (!activeKnob) {
+      return;
+    }
+
+    if (event.type === "pointermove") {
+      updateFromPointer(event, activeKnob);
+      return;
+    }
+
+    if (event.type === "pointerup" || event.type === "pointercancel") {
+      updateFromPointer(event, activeKnob);
+      activeKnob.releasePointerCapture?.(event.pointerId);
+      activeKnob = null;
+    }
+  };
+
+  function updateFromPointer(event, knob) {
+    const input = doc.getElementById("ambience-volume");
+    if (!input) {
+      return;
+    }
+
+    const rect = knob.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const dx = event.clientX - centerX;
+    const dy = event.clientY - centerY;
+    let angle = (Math.atan2(dy, dx) * 180) / Math.PI + 90;
+
+    if (angle < 0) {
+      angle += 360;
+    }
+
+    if (angle < 135) {
+      angle += 360;
+    }
+
+    const normalized = Math.max(0, Math.min(1, (angle - 135) / 270));
+    const value = Math.round(normalized * 100);
+
+    input.value = String(value);
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+}
+
 export function resolveRitual(deps, mode) {
   const { audio, cards, renderApp, renderer, store, uiState } = deps;
   const currentState = store.getState();
