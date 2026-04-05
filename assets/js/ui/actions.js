@@ -98,7 +98,11 @@ export function resolveRitual(deps, mode) {
 
   if (mode === "free") {
     store.markDailyFreeUsed(new Date().toISOString());
-    store.saveReading(createReading(cards, true));
+    store.saveReading(
+      createReading(cards, true, new Date(), {
+        previousReading: currentState.history[0] || null,
+      }),
+    );
     renderApp();
     renderer.animateDeck();
     renderer.scrollTo("result");
@@ -106,7 +110,11 @@ export function resolveRitual(deps, mode) {
   }
 
   if (mode === "extra-draw") {
-    store.saveReading(createReading(cards, false));
+    store.saveReading(
+      createReading(cards, false, new Date(), {
+        previousReading: currentState.history[0] || null,
+      }),
+    );
     renderApp();
     renderer.animateDeck();
     renderer.scrollTo("result");
@@ -122,7 +130,11 @@ export function resolveRitual(deps, mode) {
 
   if (mode === "spread-3" || mode === "spread-5") {
     const count = mode === "spread-3" ? 3 : 5;
-    store.saveSpread(createSpread(cards, count));
+    store.saveSpread(
+      createSpread(cards, count, {
+        previousReading: currentState.history[0] || null,
+      }),
+    );
     renderApp();
     renderer.scrollTo("spread");
     return;

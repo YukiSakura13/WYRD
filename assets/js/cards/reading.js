@@ -21,9 +21,27 @@ export const PAYWALL_COPY = {
   },
 };
 
-export function createReading(cards, isFree, now = new Date()) {
-  const sourceCards = isFree ? cards.filter((card) => card.layer === "present") : cards;
-  const card = pickRandomCards(sourceCards, 1)[0];
+const TONE_WEIGHT_PRESETS = {
+  free_present: { light: 0.875, neutral: 1.0, dark: 0.625 },
+  past: { light: 0.08, neutral: 0.67, dark: 1.0 },
+  present: { light: 0.875, neutral: 1.0, dark: 0.625 },
+  future: { light: 1.0, neutral: 0.6, dark: 0.4 },
+  hidden: { light: 0.4, neutral: 0.6, dark: 1.0 },
+  any: { light: 1.0, neutral: 1.0, dark: 1.0 },
+};
+
+const SAME_SPREAD_STATE_MULTIPLIER = 0.25;
+const PREVIOUS_READING_STATE_MULTIPLIER = 0.6;
+const LINK_BONUS_MULTIPLIER = 1.35;
+
+export function createReading(cards, isFree, now = new Date(), options = {}) {
+  const previousReading = options.previousReading || null;
+  const card = pickWeightedCard({
+    cards,
+    layer: isFree ? "present" : null,
+    toneWeights: isFree ? TONE_WEIGHT_PRESETS.free_present : TONE_WEIGHT_PRESETS.any,
+    previousCard: previousReading ? previousReading.card : null,
+  });
 
   return {
     id: `${card.id}-${now.getTime()}`,
@@ -34,26 +52,49 @@ export function createReading(cards, isFree, now = new Date()) {
   };
 }
 
-export function createSpread(cards, count) {
+export function createSpread(cards, count, options = {}) {
   if (count === 3) {
-    return createThreeCardSpread(cards);
+    return createThreeCardSpread(cards, options.previousReading || null);
   }
 
   if (count === 5) {
-    return createFiveCardSpread(cards);
+    return createFiveCardSpread(cards, options.previousReading || null);
   }
 
-  return pickRandomCards(cards, count);
+  return pickDistinctCards(cards, count);
 }
 
-function pickRandomCards(cards, count) {
-  return shuffle(cards.slice()).slice(0, count);
-}
+function createThreeCardSpread(cards, previousReading) {
+  const selected = [];
 
-function createThreeCardSpread(cards) {
-  const present = takeOne(cards, "present");
-  const past = takeOne(cards, "past", [present.id]);
-  const future = takeOne(cards, "future", [present.id, past.id]);
+  const present = pickWeightedCard({
+    cards,
+    layer: "present",
+    toneWeights: TONE_WEIGHT_PRESETS.present,
+    previousCard: previousReading ? previousReading.card : null,
+    usedStates: collectStates(selected),
+    excludeIds: collectIds(selected),
+  });
+  selected.push(present);
+
+  const past = pickWeightedCard({
+    cards,
+    layer: "past",
+    toneWeights: TONE_WEIGHT_PRESETS.past,
+    previousCard: present,
+    usedStates: collectStates(selected),
+    excludeIds: collectIds(selected),
+  });
+  selected.push(past);
+
+  const future = pickWeightedCard({
+    cards,
+    layer: "future",
+    toneWeights: TONE_WEIGHT_PRESETS.future,
+    previousCard: present,
+    usedStates: collectStates(selected),
+    excludeIds: collectIds(selected),
+  });
 
   return [
     { ...past, slot: 1, revealOrder: 2, spreadRole: "past", spreadLabel: "Прошлое" },
@@ -62,12 +103,57 @@ function createThreeCardSpread(cards) {
   ];
 }
 
-function createFiveCardSpread(cards) {
-  const presentSelf = takeOne(cards, "present");
-  const past = takeOne(cards, "past", [presentSelf.id]);
-  const presentLead = takeOne(cards, "present", [presentSelf.id, past.id]);
-  const hidden = takeOne(cards, null, [presentSelf.id, past.id, presentLead.id]);
-  const future = takeOne(cards, "future", [presentSelf.id, past.id, presentLead.id, hidden.id]);
+function createFiveCardSpread(cards, previousReading) {
+  const selected = [];
+
+  const presentSelf = pickWeightedCard({
+    cards,
+    layer: "present",
+    toneWeights: TONE_WEIGHT_PRESETS.present,
+    previousCard: previousReading ? previousReading.card : null,
+    usedStates: collectStates(selected),
+    excludeIds: collectIds(selected),
+  });
+  selected.push(presentSelf);
+
+  const past = pickWeightedCard({
+    cards,
+    layer: "past",
+    toneWeights: TONE_WEIGHT_PRESETS.past,
+    previousCard: presentSelf,
+    usedStates: collectStates(selected),
+    excludeIds: collectIds(selected),
+  });
+  selected.push(past);
+
+  const presentLead = pickWeightedCard({
+    cards,
+    layer: "present",
+    toneWeights: TONE_WEIGHT_PRESETS.present,
+    previousCard: presentSelf,
+    usedStates: collectStates(selected),
+    excludeIds: collectIds(selected),
+  });
+  selected.push(presentLead);
+
+  const hidden = pickWeightedCard({
+    cards,
+    layer: null,
+    toneWeights: TONE_WEIGHT_PRESETS.hidden,
+    previousCard: past,
+    usedStates: collectStates(selected),
+    excludeIds: collectIds(selected),
+  });
+  selected.push(hidden);
+
+  const future = pickWeightedCard({
+    cards,
+    layer: "future",
+    toneWeights: TONE_WEIGHT_PRESETS.future,
+    previousCard: presentLead,
+    usedStates: collectStates(selected),
+    excludeIds: collectIds(selected),
+  });
 
   return [
     { ...presentSelf, slot: 1, revealOrder: 1, spreadRole: "present", spreadLabel: "Ты" },
@@ -78,20 +164,74 @@ function createFiveCardSpread(cards) {
   ];
 }
 
-function takeOne(cards, layer, excludedIds = []) {
-  const pool = cards.filter((card) => {
-    if (excludedIds.includes(card.id)) {
+function pickWeightedCard({ cards, layer, toneWeights, previousCard = null, usedStates = [], excludeIds = [] }) {
+  const pool = cards.filter(function filterCard(card) {
+    if (excludeIds.includes(card.id)) {
       return false;
     }
 
-    if (!layer) {
-      return true;
+    if (layer && card.layer !== layer) {
+      return false;
     }
 
-    return card.layer === layer;
+    return true;
   });
 
-  return pickRandomCards(pool, 1)[0];
+  const weightedPool = pool.map(function mapWeight(card) {
+    let weight = toneWeights[card.tone] ?? 1;
+
+    if (usedStates.includes(card.state)) {
+      weight *= SAME_SPREAD_STATE_MULTIPLIER;
+    }
+
+    if (previousCard && previousCard.state === card.state) {
+      weight *= PREVIOUS_READING_STATE_MULTIPLIER;
+    }
+
+    if (previousCard && Array.isArray(previousCard.links) && previousCard.links.includes(card.state)) {
+      weight *= LINK_BONUS_MULTIPLIER;
+    }
+
+    return {
+      card,
+      weight: Math.max(weight, 0.0001),
+    };
+  });
+
+  return weightedRandom(weightedPool);
+}
+
+function weightedRandom(weightedPool) {
+  const totalWeight = weightedPool.reduce(function sum(accumulator, entry) {
+    return accumulator + entry.weight;
+  }, 0);
+
+  let threshold = Math.random() * totalWeight;
+
+  for (const entry of weightedPool) {
+    threshold -= entry.weight;
+    if (threshold <= 0) {
+      return entry.card;
+    }
+  }
+
+  return weightedPool[weightedPool.length - 1].card;
+}
+
+function pickDistinctCards(cards, count) {
+  return shuffle(cards.slice()).slice(0, count);
+}
+
+function collectStates(cards) {
+  return cards.map(function mapState(card) {
+    return card.state;
+  });
+}
+
+function collectIds(cards) {
+  return cards.map(function mapId(card) {
+    return card.id;
+  });
 }
 
 function shuffle(items) {
