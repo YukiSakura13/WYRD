@@ -431,6 +431,15 @@ body::after {
   display: block;
 }
 
+.card-img.is-empty,
+.spread-card img.is-empty,
+.history-item img.is-empty {
+  object-fit: contain;
+  object-position: center;
+  filter: none;
+  background: linear-gradient(180deg, rgba(20, 20, 29, 0.96), rgba(12, 12, 18, 0.96));
+}
+
 .card-kw {
   text-align: center;
   font-size: 0.65rem;

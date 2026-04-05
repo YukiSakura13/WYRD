@@ -2,6 +2,7 @@ import { PAYWALL_COPY } from "../cards/reading.js";
 
 const DEEP_READING_TEXT =
   'Этот знак просит не ответа, а внутренней тишины. Вернись к нему вечером и проверь, где в течение дня уже проявился образ "%CARD_NAME%".';
+const EMPTY_CARD_IMAGE = createEmptyCardImage();
 
 export function getElements(doc = document) {
   return {
@@ -110,8 +111,10 @@ export function createRenderer(elements) {
       return;
     }
 
-    elements.cardImage.src = reading.card.image;
+    const hasImage = Boolean(reading.card.image);
+    elements.cardImage.src = getCardImage(reading.card);
     elements.cardImage.alt = reading.card.name;
+    elements.cardImage.classList.toggle("is-empty", !hasImage);
     elements.cardKeyword.textContent = `✦ ${reading.card.keyword} ✦`;
     elements.cardName.textContent = reading.card.name;
     elements.cardSubtitle.textContent = reading.card.subtitle;
@@ -137,8 +140,9 @@ export function createRenderer(elements) {
       item.className = "spread-card";
 
       const image = document.createElement("img");
-      image.src = card.image;
+      image.src = getCardImage(card);
       image.alt = card.name;
+      image.classList.toggle("is-empty", !card.image);
 
       const title = document.createElement("h3");
       title.textContent = card.name;
@@ -171,8 +175,9 @@ export function createRenderer(elements) {
       item.className = "history-item";
 
       const image = document.createElement("img");
-      image.src = reading.card.image;
+      image.src = getCardImage(reading.card);
       image.alt = reading.card.name;
+      image.classList.toggle("is-empty", !reading.card.image);
 
       const content = document.createElement("div");
       const keyword = document.createElement("p");
@@ -214,4 +219,20 @@ export function createRenderer(elements) {
     elements.resultSection.hidden = overlay !== "none" || contentPanel !== "result";
     elements.spreadResultSection.hidden = overlay !== "none" || contentPanel !== "spread";
   }
+}
+
+function getCardImage(card) {
+  return card.image || EMPTY_CARD_IMAGE;
+}
+
+function createEmptyCardImage() {
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400">
+      <rect width="300" height="400" fill="#14141d"/>
+      <rect x="10" y="10" width="280" height="380" rx="2" fill="none" stroke="rgba(201,161,74,0.26)"/>
+      <rect x="22" y="22" width="256" height="356" rx="2" fill="none" stroke="rgba(201,161,74,0.12)"/>
+    </svg>
+  `;
+
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 }
