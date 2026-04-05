@@ -3,7 +3,7 @@ import { CARDS, COVER_IMAGE } from "./data/cards.js";
 import { registerServiceWorker } from "./pwa.js";
 import { createRitualController } from "./ritual.js";
 import { createStateStore } from "./state/storage.js";
-import { createActionHandler, createInitialUIState, resolveRitual } from "./ui/actions.js";
+import { createActionHandler, createInitialUIState, createInputHandler, resolveRitual } from "./ui/actions.js";
 import { createRenderer, deriveContentPanel, getElements } from "./ui/render.js";
 
 const store = createStateStore();
@@ -54,6 +54,14 @@ document.addEventListener(
     ritual,
     store,
     uiState,
+  }),
+);
+document.addEventListener(
+  "input",
+  createInputHandler({
+    audio,
+    renderApp,
+    store,
   }),
 );
 

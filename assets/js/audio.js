@@ -5,6 +5,9 @@ export function createForestAudioController() {
   let windSource = null;
   let melodicTimer = null;
   let birdTimer = null;
+  let droneOscillator = null;
+  let droneGain = null;
+  let ambienceVolume = 0.58;
 
   const MELODY_NOTES = [
     220,
@@ -13,12 +16,17 @@ export function createForestAudioController() {
     329.63,
     369.99,
     440,
-    493.88,
+    523.25,
     587.33,
   ];
 
   function sync(options = {}) {
-    const { enabled, allowInit = false } = options;
+    const { enabled, allowInit = false, ambienceVolume: nextAmbienceVolume } = options;
+
+    if (typeof nextAmbienceVolume === "number") {
+      ambienceVolume = Math.max(0, Math.min(1, nextAmbienceVolume));
+      applyAmbienceVolume();
+    }
 
     if (!enabled) {
       stop();
@@ -39,6 +47,8 @@ export function createForestAudioController() {
         return undefined;
       });
     }
+
+    applyAmbienceVolume();
   }
 
   function stop() {
@@ -63,6 +73,16 @@ export function createForestAudioController() {
       windSource = null;
     }
 
+    if (droneOscillator) {
+      try {
+        droneOscillator.stop();
+      } catch (error) {
+        void error;
+      }
+      droneOscillator.disconnect();
+      droneOscillator = null;
+    }
+
     if (audioContext) {
       audioContext.close().catch(function () {
         return undefined;
@@ -70,6 +90,7 @@ export function createForestAudioController() {
       audioContext = null;
       masterGain = null;
       windGain = null;
+      droneGain = null;
     }
   }
 
@@ -101,7 +122,7 @@ export function createForestAudioController() {
     source.buffer = buffer;
     filter.type = "bandpass";
     filter.frequency.value = 1200;
-    gain.gain.value = 0.16;
+    gain.gain.value = 0.11;
 
     source.connect(filter);
     filter.connect(gain);
@@ -131,7 +152,7 @@ export function createForestAudioController() {
 
     audioContext = new AudioContextClass();
     masterGain = audioContext.createGain();
-    masterGain.gain.value = 0.34;
+    masterGain.gain.value = 0.001;
     masterGain.connect(audioContext.destination);
 
     const buffer = createNoiseBuffer(audioContext, 8);
@@ -148,7 +169,7 @@ export function createForestAudioController() {
     windHighpass.frequency.value = 130;
 
     windGain = audioContext.createGain();
-    windGain.gain.value = 0.018;
+    windGain.gain.value = 0.001;
 
     windSource.connect(windLowpass);
     windLowpass.connect(windHighpass);
@@ -156,8 +177,10 @@ export function createForestAudioController() {
     windGain.connect(masterGain);
     windSource.start();
 
+    startDrone();
     scheduleForestMelody();
     scheduleForestBirds();
+    applyAmbienceVolume();
   }
 
   function scheduleForestMelody() {
@@ -172,7 +195,7 @@ export function createForestAudioController() {
       }
 
       playMelodicPhrase();
-    }, 7800);
+    }, 7200);
   }
 
   function scheduleForestBirds() {
@@ -185,61 +208,78 @@ export function createForestAudioController() {
         return;
       }
 
-      if (Math.random() < 0.55) {
+      if (Math.random() < 0.68) {
         playBirdCall();
       }
-    }, 6200);
+    }, 5600);
   }
 
   function playMelodicPhrase() {
     const start = audioContext.currentTime + 0.15;
-    const phraseLength = 3 + Math.floor(Math.random() * 2);
+    const phraseLength = 4 + Math.floor(Math.random() * 2);
     let cursor = start;
+    let previousIndex = Math.floor(Math.random() * MELODY_NOTES.length);
 
     for (let index = 0; index < phraseLength; index += 1) {
-      const note = MELODY_NOTES[Math.floor(Math.random() * MELODY_NOTES.length)];
-      const duration = 1.8 + Math.random() * 1.1;
-      const gap = 0.55 + Math.random() * 0.45;
-      playMistyNote(note, cursor, duration);
+      const nextIndex = clampNoteIndex(previousIndex + randomStep());
+      const note = MELODY_NOTES[nextIndex];
+      const harmony = MELODY_NOTES[clampNoteIndex(nextIndex + 2)] / 2;
+      const duration = 2 + Math.random() * 1.25;
+      const gap = 0.72 + Math.random() * 0.52;
+      playMistyNote(note, harmony, cursor, duration);
       cursor += gap;
+      previousIndex = nextIndex;
     }
   }
 
-  function playMistyNote(frequency, start, duration) {
+  function playMistyNote(frequency, harmonyFrequency, start, duration) {
     const carrier = audioContext.createOscillator();
     const shimmer = audioContext.createOscillator();
     const low = audioContext.createOscillator();
+    const harmony = audioContext.createOscillator();
     const gain = audioContext.createGain();
+    const shimmerGain = audioContext.createGain();
     const filter = audioContext.createBiquadFilter();
 
-    carrier.type = "triangle";
+    carrier.type = "sine";
     carrier.frequency.value = frequency;
     shimmer.type = "sine";
-    shimmer.frequency.value = frequency * 2;
+    shimmer.frequency.value = frequency * 1.5;
     low.type = "sine";
     low.frequency.value = frequency / 2;
+    harmony.type = "triangle";
+    harmony.frequency.value = harmonyFrequency;
 
     filter.type = "lowpass";
-    filter.frequency.value = 1400;
-    filter.Q.value = 0.4;
+    filter.frequency.value = 1700;
+    filter.Q.value = 0.35;
 
     gain.gain.setValueAtTime(0.0001, start);
-    gain.gain.exponentialRampToValueAtTime(0.022, start + 0.6);
-    gain.gain.exponentialRampToValueAtTime(0.011, start + duration * 0.62);
+    gain.gain.exponentialRampToValueAtTime(0.018, start + 0.8);
+    gain.gain.exponentialRampToValueAtTime(0.0105, start + duration * 0.64);
     gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
 
+    shimmerGain.gain.setValueAtTime(0.0001, start);
+    shimmerGain.gain.exponentialRampToValueAtTime(0.0045, start + 0.45);
+    shimmerGain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+
     carrier.connect(filter);
-    shimmer.connect(filter);
     low.connect(filter);
+    harmony.connect(filter);
     filter.connect(gain);
     gain.connect(masterGain);
+
+    shimmer.connect(shimmerGain);
+    shimmerGain.connect(masterGain);
 
     carrier.start(start);
     shimmer.start(start);
     low.start(start);
+    harmony.start(start);
     carrier.stop(start + duration);
     shimmer.stop(start + duration);
     low.stop(start + duration);
+    harmony.stop(start + duration);
   }
 
   function playBirdCall() {
@@ -251,28 +291,45 @@ export function createForestAudioController() {
       const osc = audioContext.createOscillator();
       const gain = audioContext.createGain();
       const filter = audioContext.createBiquadFilter();
-      const startFreq = 1100 + Math.random() * 700;
-      const endFreq = startFreq + 260 + Math.random() * 220;
+      const startFreq = 1450 + Math.random() * 900;
+      const endFreq = startFreq + 220 + Math.random() * 240;
 
       osc.type = "sine";
       osc.frequency.setValueAtTime(startFreq, start);
-      osc.frequency.exponentialRampToValueAtTime(endFreq, start + 0.11);
-      osc.frequency.exponentialRampToValueAtTime(startFreq * 0.92, start + 0.19);
+      osc.frequency.exponentialRampToValueAtTime(endFreq, start + 0.08);
+      osc.frequency.exponentialRampToValueAtTime(startFreq * 0.95, start + 0.16);
 
       filter.type = "bandpass";
-      filter.frequency.value = 1800;
-      filter.Q.value = 1.4;
+      filter.frequency.value = 2100;
+      filter.Q.value = 1.25;
 
       gain.gain.setValueAtTime(0.0001, start);
-      gain.gain.exponentialRampToValueAtTime(0.0055, start + 0.04);
-      gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.19);
+      gain.gain.exponentialRampToValueAtTime(0.0038, start + 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.16);
 
       osc.connect(filter);
       filter.connect(gain);
       gain.connect(masterGain);
       osc.start(start);
-      osc.stop(start + 0.21);
+      osc.stop(start + 0.18);
     }
+  }
+
+  function startDrone() {
+    droneOscillator = audioContext.createOscillator();
+    droneGain = audioContext.createGain();
+    const droneFilter = audioContext.createBiquadFilter();
+
+    droneOscillator.type = "sine";
+    droneOscillator.frequency.value = 110;
+    droneFilter.type = "lowpass";
+    droneFilter.frequency.value = 220;
+    droneGain.gain.value = 0.001;
+
+    droneOscillator.connect(droneFilter);
+    droneFilter.connect(droneGain);
+    droneGain.connect(masterGain);
+    droneOscillator.start();
   }
 
   function createNoiseBuffer(context, seconds) {
@@ -286,5 +343,38 @@ export function createForestAudioController() {
     }
 
     return buffer;
+  }
+
+  function applyAmbienceVolume() {
+    if (!masterGain) {
+      return;
+    }
+
+    const now = audioContext.currentTime;
+    const masterTarget = 0.16 * ambienceVolume;
+    const windTarget = 0.06 * ambienceVolume;
+    const droneTarget = 0.028 * ambienceVolume;
+
+    masterGain.gain.cancelScheduledValues(now);
+    masterGain.gain.setTargetAtTime(Math.max(masterTarget, 0.0001), now, 0.8);
+
+    if (windGain) {
+      windGain.gain.cancelScheduledValues(now);
+      windGain.gain.setTargetAtTime(Math.max(windTarget, 0.0001), now, 0.8);
+    }
+
+    if (droneGain) {
+      droneGain.gain.cancelScheduledValues(now);
+      droneGain.gain.setTargetAtTime(Math.max(droneTarget, 0.0001), now, 0.8);
+    }
+  }
+
+  function randomStep() {
+    const steps = [-2, -1, 1, 2];
+    return steps[Math.floor(Math.random() * steps.length)];
+  }
+
+  function clampNoteIndex(index) {
+    return Math.max(0, Math.min(MELODY_NOTES.length - 1, index));
   }
 }

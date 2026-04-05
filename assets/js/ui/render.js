@@ -25,6 +25,8 @@ export function getElements(doc = document) {
     deepMessage: doc.getElementById("deep-message"),
     deckTop: doc.querySelector(".dc-top"),
     soundButton: doc.querySelector('[data-action="toggle-sound"]'),
+    ambienceSlider: doc.querySelector('[data-action="set-ambience-volume"]'),
+    ambienceValue: doc.getElementById("ambience-volume-value"),
     profileName: doc.getElementById("profile-name"),
     profileMeta: doc.getElementById("profile-meta"),
     historyList: doc.getElementById("history-list"),
@@ -102,6 +104,12 @@ export function createRenderer(elements) {
 
   function renderProfile(state) {
     elements.soundButton.textContent = state.soundEnabled ? "Звук леса: вкл" : "Звук леса: выкл";
+    if (elements.ambienceSlider) {
+      elements.ambienceSlider.value = String(Math.round(state.ambienceVolume * 100));
+    }
+    if (elements.ambienceValue) {
+      elements.ambienceValue.textContent = `${Math.round(state.ambienceVolume * 100)}%`;
+    }
     elements.profileName.textContent = state.profileName;
     elements.profileMeta.textContent = state.dailyFreeUsedAt
       ? "Сегодняшняя бесплатная карта уже раскрыта."

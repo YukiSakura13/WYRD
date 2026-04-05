@@ -36,6 +36,20 @@
       <div class="top-actions">
         <button class="text-btn" data-action="toggle-sound">Звук леса: вкл</button>
         <button class="text-btn" data-action="open-profile">Профиль / история</button>
+        <label class="ambience-control" for="ambience-volume">
+          <span class="ambience-label">Громкость леса</span>
+          <input
+            id="ambience-volume"
+            class="ambience-slider"
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            value="58"
+            data-action="set-ambience-volume"
+          />
+          <span class="ambience-value" id="ambience-volume-value">58%</span>
+        </label>
       </div>
 
       <section class="deck-wrap" id="deck-wrap">

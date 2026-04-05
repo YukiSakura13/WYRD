@@ -18,13 +18,17 @@ export function createActionHandler(deps) {
       audio.sync({
         allowInit: true,
         enabled: store.getState().soundEnabled,
+        ambienceVolume: store.getState().ambienceVolume,
       });
       return;
     }
 
     if (action === "toggle-sound") {
       const nextState = store.toggleSound();
-      audio.sync({ enabled: nextState.soundEnabled });
+      audio.sync({
+        enabled: nextState.soundEnabled,
+        ambienceVolume: nextState.ambienceVolume,
+      });
       renderApp();
       return;
     }
@@ -89,6 +93,34 @@ export function createActionHandler(deps) {
     renderApp();
     ritual.start(mode);
   }
+}
+
+export function createInputHandler(deps) {
+  const { audio, renderApp, store } = deps;
+
+  return function onInput(event) {
+    const trigger = event.target.closest("[data-action]");
+    if (!trigger) {
+      return;
+    }
+
+    const action = trigger.dataset.action;
+    if (action !== "set-ambience-volume") {
+      return;
+    }
+
+    const value = Number(trigger.value);
+    if (Number.isNaN(value)) {
+      return;
+    }
+
+    const nextState = store.setAmbienceVolume(value / 100);
+    audio.sync({
+      enabled: nextState.soundEnabled,
+      ambienceVolume: nextState.ambienceVolume,
+    });
+    renderApp();
+  };
 }
 
 export function resolveRitual(deps, mode) {

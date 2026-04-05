@@ -3,6 +3,7 @@ export const STORAGE_KEY = "wyrd-local-state-v2";
 const defaultState = Object.freeze({
   profileName: "Странник",
   soundEnabled: true,
+  ambienceVolume: 0.58,
   dailyFreeUsedAt: null,
   history: [],
   currentReading: null,
@@ -48,6 +49,12 @@ export function createStateStore(storage = window.localStorage) {
       return commit({
         ...state,
         soundEnabled: !state.soundEnabled,
+      });
+    },
+    setAmbienceVolume(ambienceVolume) {
+      return commit({
+        ...state,
+        ambienceVolume,
       });
     },
     markDailyFreeUsed(usedAt) {
@@ -127,6 +134,8 @@ function normalizeState(value) {
   next.dailyFreeUsedAt = typeof next.dailyFreeUsedAt === "string" ? next.dailyFreeUsedAt : null;
   next.profileName = typeof next.profileName === "string" ? next.profileName : base.profileName;
   next.soundEnabled = Boolean(next.soundEnabled);
+  next.ambienceVolume = typeof next.ambienceVolume === "number" ? next.ambienceVolume : base.ambienceVolume;
+  next.ambienceVolume = Math.max(0, Math.min(1, next.ambienceVolume));
 
   if (next.lastSpread.length) {
     next.currentReading = null;
