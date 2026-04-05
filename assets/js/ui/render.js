@@ -135,10 +135,20 @@ export function createRenderer(elements) {
   function renderSpread(lastSpread) {
     elements.spreadTitle.textContent = `Расклад на ${lastSpread.length} карт`;
     elements.spreadGrid.replaceChildren();
+    elements.spreadGrid.className = "spread-grid";
+
+    if (lastSpread.length === 3) {
+      elements.spreadGrid.classList.add("spread-grid--three");
+    } else if (lastSpread.length === 5) {
+      elements.spreadGrid.classList.add("spread-grid--five");
+    }
 
     lastSpread.forEach(function (card) {
       const item = document.createElement("article");
       item.className = "spread-card";
+      item.dataset.slot = String(card.slot || "");
+      item.dataset.layer = card.layer || "";
+      item.style.setProperty("--spread-delay", `${Math.max((card.revealOrder || 1) - 1, 0) * 420}ms`);
 
       const image = document.createElement("img");
       image.src = getCardImage(card);

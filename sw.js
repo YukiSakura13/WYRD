@@ -1,4 +1,4 @@
-const CACHE_NAME = "wyrd-static-v8";
+const CACHE_NAME = "wyrd-static-v9";
 const CORE_ASSETS = [
   "./",
   "./index.html",
