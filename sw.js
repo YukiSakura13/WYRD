@@ -1,4 +1,4 @@
-const CACHE_NAME = "wyrd-static-v10";
+const CACHE_NAME = "wyrd-static-v11";
 const CORE_ASSETS = [
   "./",
   "./index.html",
@@ -7,6 +7,7 @@ const CORE_ASSETS = [
   "./assets/images/cover.jpg",
   "./assets/js/audio.js",
   "./assets/js/cards/reading.js",
+  "./assets/js/cards/oracle-config.js",
   "./assets/js/data/cards.js",
   "./assets/js/main.js",
   "./assets/js/pwa.js",
