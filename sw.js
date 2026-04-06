@@ -1,10 +1,10 @@
-const CACHE_NAME = "wyrd-static-v17";
+const CACHE_NAME = "wyrd-static-v18";
 const CORE_ASSETS = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
   "./assets/css/styles.css",
-  "./assets/images/cover.jpg",
+  "./assets/images/cover.webp",
   "./assets/js/audio.js",
   "./assets/js/cards/card-meta.js",
   "./assets/js/cards/layer-map.js",
