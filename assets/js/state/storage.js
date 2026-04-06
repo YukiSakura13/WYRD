@@ -4,6 +4,7 @@ const defaultState = Object.freeze({
   profileName: "Странник",
   soundEnabled: true,
   ambienceVolume: 0.58,
+  selectedMode: "single",
   dailyFreeUsedAt: null,
   history: [],
   currentReading: null,
@@ -55,6 +56,12 @@ export function createStateStore(storage = window.localStorage) {
       return commit({
         ...state,
         ambienceVolume,
+      });
+    },
+    setSelectedMode(selectedMode) {
+      return commit({
+        ...state,
+        selectedMode,
       });
     },
     markDailyFreeUsed(usedAt) {
@@ -136,6 +143,8 @@ function normalizeState(value) {
   next.soundEnabled = Boolean(next.soundEnabled);
   next.ambienceVolume = typeof next.ambienceVolume === "number" ? next.ambienceVolume : base.ambienceVolume;
   next.ambienceVolume = Math.max(0, Math.min(1, next.ambienceVolume));
+  next.selectedMode =
+    next.selectedMode === "spread-3" || next.selectedMode === "spread-5" ? next.selectedMode : "single";
 
   if (next.lastSpread.length) {
     next.currentReading = null;

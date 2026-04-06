@@ -18,6 +18,10 @@
     <link rel="stylesheet" href="./assets/css/styles.css" />
   </head>
   <body>
+    <div class="scene-fog scene-fog--back" aria-hidden="true"></div>
+    <div class="scene-fog scene-fog--front" aria-hidden="true"></div>
+    <div class="transition-veil" id="transition-veil" aria-hidden="true"></div>
+
     <div id="cover" class="active">
       <img class="cover-art" id="cover-art" src="" alt="WYRD" />
       <h1 class="cover-title">WYRD</h1>
@@ -40,6 +44,11 @@
 
       <section class="deck-wrap" id="deck-wrap">
         <p class="deck-hint">Сосредоточься на своём вопросе</p>
+        <div class="mode-selector" role="group" aria-label="Выбор расклада">
+          <button class="mode-btn is-active" type="button" data-action="select-mode" data-mode="single">1 карта</button>
+          <button class="mode-btn" type="button" data-action="select-mode" data-mode="spread-3">3 карты</button>
+          <button class="mode-btn" type="button" data-action="select-mode" data-mode="spread-5">5 карт</button>
+        </div>
         <div class="deck" data-action="draw">
           <div class="dc"></div>
           <div class="dc"></div>
@@ -48,11 +57,12 @@
             <div class="deck-mark">✦</div>
           </div>
         </div>
-        <button class="draw-btn" data-action="draw">Коснуться колоды</button>
+        <button class="draw-btn" id="draw-button" data-action="draw">Коснуться колоды</button>
+        <p class="deck-mode-copy" id="deck-mode-copy">Одна карта из настоящего</p>
       </section>
 
       <section id="result" hidden>
-        <div class="card-box">
+        <div class="card-box" id="card-box">
           <div class="card-img-wrap">
             <img class="card-img" id="card-image" alt="" />
             <div class="card-kw" id="card-keyword"></div>
@@ -61,9 +71,9 @@
             <h2 class="card-name" id="card-name"></h2>
             <p class="card-en" id="card-subtitle"></p>
             <div class="card-div"></div>
-            <p class="lbl">Послание</p>
+            <p class="lbl card-copy-label">Послание</p>
             <p class="card-msg" id="card-message"></p>
-            <div class="card-shd-wrap">
+            <div class="card-shd-wrap" id="card-shadow-wrap">
               <p class="lbl">Тень</p>
               <p class="card-shd" id="card-shadow"></p>
             </div>

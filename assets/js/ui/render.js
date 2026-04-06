@@ -6,19 +6,26 @@ const EMPTY_CARD_IMAGE = createEmptyCardImage();
 
 export function getElements(doc = document) {
   return {
+    body: doc.body,
     cover: doc.getElementById("cover"),
     coverArt: doc.getElementById("cover-art"),
     main: doc.getElementById("main"),
+    transitionVeil: doc.getElementById("transition-veil"),
     deckWrap: doc.getElementById("deck-wrap"),
+    drawButton: doc.getElementById("draw-button"),
+    deckModeCopy: doc.getElementById("deck-mode-copy"),
+    modeButtons: Array.from(doc.querySelectorAll('[data-action="select-mode"]')),
     resultSection: doc.getElementById("result"),
     spreadResultSection: doc.getElementById("spread-result"),
     paywallSection: doc.getElementById("paywall"),
     profileSection: doc.getElementById("profile"),
+    cardBox: doc.getElementById("card-box"),
     cardImage: doc.getElementById("card-image"),
     cardKeyword: doc.getElementById("card-keyword"),
     cardName: doc.getElementById("card-name"),
     cardSubtitle: doc.getElementById("card-subtitle"),
     cardMessage: doc.getElementById("card-message"),
+    cardShadowWrap: doc.getElementById("card-shadow-wrap"),
     cardShadow: doc.getElementById("card-shadow"),
     deepWrap: doc.getElementById("deep-wrap"),
     deepMessage: doc.getElementById("deep-message"),
@@ -49,8 +56,12 @@ export function deriveContentPanel(state) {
 }
 
 export function createRenderer(elements) {
+  let readingRevealTimers = [];
+  let lastReadingId = null;
+
   function render(state, uiState) {
     renderShell(uiState);
+    renderModeSelector(state);
     renderProfile(state);
     renderCurrentReading(state.currentReading);
     renderSpread(state.lastSpread);
@@ -97,6 +108,34 @@ export function createRenderer(elements) {
   function renderShell(uiState) {
     elements.cover.classList.toggle("gone", uiState.entered);
     elements.main.classList.toggle("on", uiState.entered);
+    elements.transitionVeil.classList.toggle("is-active", Boolean(uiState.transitioning));
+    elements.body.dataset.scene = uiState.overlay !== "none" ? uiState.overlay : uiState.contentPanel;
+  }
+
+  function renderModeSelector(state) {
+    const selectedMode = state.selectedMode || "single";
+    const labels = {
+      single: "Одна карта из настоящего",
+      "spread-3": "Путь из трёх карт: прошлое, настоящее, будущее",
+      "spread-5": "Пять знаков леса в ритуальной композиции",
+    };
+    const buttonLabels = {
+      single: "Коснуться колоды",
+      "spread-3": "Открыть путь на 3 карты",
+      "spread-5": "Открыть путь на 5 карт",
+    };
+
+    elements.modeButtons.forEach(function updateButton(button) {
+      button.classList.toggle("is-active", button.dataset.mode === selectedMode);
+    });
+
+    if (elements.deckModeCopy) {
+      elements.deckModeCopy.textContent = labels[selectedMode] || labels.single;
+    }
+
+    if (elements.drawButton) {
+      elements.drawButton.textContent = buttonLabels[selectedMode] || buttonLabels.single;
+    }
   }
 
   function renderProfile(state) {
@@ -109,6 +148,8 @@ export function createRenderer(elements) {
 
   function renderCurrentReading(reading) {
     if (!reading) {
+      lastReadingId = null;
+      resetReadingReveal();
       return;
     }
 
@@ -125,11 +166,20 @@ export function createRenderer(elements) {
     if (reading.depthUnlocked) {
       elements.deepWrap.hidden = false;
       elements.deepMessage.textContent = DEEP_READING_TEXT.replace("%CARD_NAME%", reading.card.name);
-      return;
+      if (reading.id === lastReadingId) {
+        window.setTimeout(function revealDeepImmediately() {
+          elements.deepWrap?.classList.add("is-visible");
+        }, 120);
+      }
+    } else {
+      elements.deepWrap.hidden = true;
+      elements.deepMessage.textContent = "";
     }
 
-    elements.deepWrap.hidden = true;
-    elements.deepMessage.textContent = "";
+    if (reading.id !== lastReadingId) {
+      lastReadingId = reading.id;
+      startReadingReveal();
+    }
   }
 
   function renderSpread(lastSpread) {
@@ -235,6 +285,43 @@ export function createRenderer(elements) {
     elements.profileSection.hidden = overlay !== "profile";
     elements.resultSection.hidden = overlay !== "none" || contentPanel !== "result";
     elements.spreadResultSection.hidden = overlay !== "none" || contentPanel !== "spread";
+  }
+
+  function resetReadingReveal() {
+    readingRevealTimers.forEach(function clearTimer(timerId) {
+      window.clearTimeout(timerId);
+    });
+    readingRevealTimers = [];
+    elements.cardBox?.classList.remove("is-visible");
+    elements.cardMessage?.classList.remove("is-visible");
+    elements.cardShadowWrap?.classList.remove("is-visible");
+    elements.deepWrap?.classList.remove("is-visible");
+  }
+
+  function startReadingReveal() {
+    resetReadingReveal();
+    readingRevealTimers.push(
+      window.setTimeout(function revealCard() {
+        elements.cardBox?.classList.add("is-visible");
+      }, 40),
+    );
+    readingRevealTimers.push(
+      window.setTimeout(function revealMessage() {
+        elements.cardMessage?.classList.add("is-visible");
+      }, 420),
+    );
+    readingRevealTimers.push(
+      window.setTimeout(function revealShadow() {
+        elements.cardShadowWrap?.classList.add("is-visible");
+      }, 980),
+    );
+    if (!elements.deepWrap?.hidden) {
+      readingRevealTimers.push(
+        window.setTimeout(function revealDeep() {
+          elements.deepWrap?.classList.add("is-visible");
+        }, 1320),
+      );
+    }
   }
 }
 

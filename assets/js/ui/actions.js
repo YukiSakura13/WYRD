@@ -13,52 +13,77 @@ export function createActionHandler(deps) {
     const action = trigger.dataset.action;
 
     if (action === "enter") {
-      uiState.entered = true;
-      renderApp();
-      audio.sync({
-        allowInit: true,
-        enabled: store.getState().soundEnabled,
+      audio.playSelect(store.getState().soundEnabled);
+      runTransition(function enterForest() {
+        uiState.entered = true;
+        renderApp();
+        audio.sync({
+          allowInit: true,
+          enabled: store.getState().soundEnabled,
+          scene: "deck",
+        });
       });
       return;
     }
 
     if (action === "toggle-sound") {
       const nextState = store.toggleSound();
-      audio.sync({ enabled: nextState.soundEnabled });
+      audio.sync({ enabled: nextState.soundEnabled, scene: uiState.contentPanel });
+      renderApp();
+      return;
+    }
+
+    if (action === "select-mode") {
+      const mode = trigger.dataset.mode;
+      if (!mode) {
+        return;
+      }
+
+      audio.playSelect(store.getState().soundEnabled);
+      store.setSelectedMode(mode);
       renderApp();
       return;
     }
 
     if (action === "draw") {
-      if (store.hasFreeDraw()) {
+      const selectedMode = store.getState().selectedMode || "single";
+
+      if (selectedMode === "single" && store.hasFreeDraw()) {
         startRitual("free");
       } else {
-        openPaywall("extra-draw");
+        const paywallOffer = selectedMode === "single" ? "extra-draw" : selectedMode;
+        openPaywall(paywallOffer);
       }
       return;
     }
 
     if (action === "extra-draw" || action === "deep-reading" || action === "spread-3" || action === "spread-5") {
+      audio.playSelect(store.getState().soundEnabled);
       openPaywall(action);
       return;
     }
 
     if (action === "confirm-paywall") {
       if (uiState.paywallOffer) {
+        audio.playSelect(store.getState().soundEnabled);
         startRitual(uiState.paywallOffer);
       }
       return;
     }
 
     if (action === "open-profile") {
+      audio.playSelect(store.getState().soundEnabled);
       uiState.overlay = "profile";
+      audio.sync({ enabled: store.getState().soundEnabled, scene: "profile" });
       renderApp();
       renderer.scrollTo("profile");
       return;
     }
 
     if (action === "close-profile") {
+      audio.playSelect(store.getState().soundEnabled);
       uiState.overlay = "none";
+      audio.sync({ enabled: store.getState().soundEnabled, scene: uiState.contentPanel });
       renderApp();
       return;
     }
@@ -76,6 +101,7 @@ export function createActionHandler(deps) {
   function openPaywall(offer) {
     uiState.overlay = "paywall";
     uiState.paywallOffer = offer;
+    audio.sync({ enabled: store.getState().soundEnabled, scene: "paywall" });
     renderApp();
     renderer.scrollTo("paywall");
   }
@@ -84,7 +110,21 @@ export function createActionHandler(deps) {
     uiState.overlay = "none";
     uiState.paywallOffer = null;
     renderApp();
-    resolveRitual(deps, mode);
+    runTransition(function resolveAfterTransition() {
+      resolveRitual(deps, mode);
+    });
+  }
+
+  function runTransition(callback) {
+    uiState.transitioning = true;
+    renderApp();
+    window.setTimeout(function finishTransition() {
+      callback();
+      window.setTimeout(function clearTransition() {
+        uiState.transitioning = false;
+        renderApp();
+      }, 280);
+    }, 360);
   }
 }
 
@@ -105,6 +145,10 @@ export function resolveRitual(deps, mode) {
     );
     renderApp();
     renderer.animateDeck();
+    audio.sync({ enabled: currentState.soundEnabled, scene: "result" });
+    window.setTimeout(function playSingleReveal() {
+      audio.playReveal(currentState.soundEnabled);
+    }, 380);
     renderer.scrollTo("result");
     return;
   }
@@ -117,6 +161,10 @@ export function resolveRitual(deps, mode) {
     );
     renderApp();
     renderer.animateDeck();
+    audio.sync({ enabled: currentState.soundEnabled, scene: "result" });
+    window.setTimeout(function playSingleReveal() {
+      audio.playReveal(currentState.soundEnabled);
+    }, 380);
     renderer.scrollTo("result");
     return;
   }
@@ -136,6 +184,8 @@ export function resolveRitual(deps, mode) {
       }),
     );
     renderApp();
+    audio.sync({ enabled: currentState.soundEnabled, scene: "spread" });
+    playSpreadSequence(audio, currentState.soundEnabled, count);
     renderer.scrollTo("spread");
     return;
   }
@@ -149,5 +199,16 @@ export function createInitialUIState(state) {
     overlay: "none",
     paywallOffer: null,
     contentPanel: deriveContentPanel(state),
+    transitioning: false,
   };
+}
+
+function playSpreadSequence(audio, enabled, count) {
+  for (let index = 0; index < count; index += 1) {
+    window.setTimeout(function revealNextCard() {
+      audio.playReveal(enabled, {
+        bright: index === count - 1,
+      });
+    }, 260 + index * 420);
+  }
 }
