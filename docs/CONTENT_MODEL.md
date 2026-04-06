@@ -38,6 +38,7 @@
 - `tone` использует значения `light | neutral | dark`
 - `links` хранит массив смысловых состояний, которые стоит мягко усиливать после этой карты
 - probability-правила оракула теперь вынесены в отдельный конфиг `assets/js/cards/oracle-config.js`
+- смысловой meta-слой карт вынесен в `assets/js/cards/card-meta.js`
 
 ### Cover Content
 
