@@ -1,4 +1,5 @@
 import { CARD_META } from "../cards/card-meta.js";
+import { CARD_LAYERS } from "../cards/layer-map.js";
 
 export const COVER_IMAGE = "./assets/images/cover.jpg";
 
@@ -484,57 +485,6 @@ const RAW_CARDS = [
     image: "",
   },
 ];
-
-const CARD_LAYERS = {
-  Плакальщица: "past",
-  "Волк с Зеркалом": "past",
-  Уроборос: "past",
-  "Алтарь Пустоты": "past",
-  Корень: "past",
-  Водяной: "past",
-  Крыса: "past",
-  Разлом: "past",
-  "Древо Возрождения": "past",
-  "Хранитель Нитей": "past",
-  "Жертвенный Огонь": "past",
-  Леший: "past",
-  Выбор: "present",
-  Тишина: "present",
-  "Паук Звёздной Сети": "present",
-  Ёж: "present",
-  Жаба: "present",
-  Свеча: "present",
-  Туман: "present",
-  "Страж Ночи": "present",
-  "Лисица Девяти Хвостов": "present",
-  "Ткачиха Судьбы": "present",
-  "Хранитель Леса": "present",
-  "Лесной Знахарь": "present",
-  Круг: "present",
-  "Зимний Сон": "present",
-  "Искра Леса": "present",
-  "Собиратель Орехов": "present",
-  "Текущая Река": "present",
-  "Перо Ветра": "present",
-  "Соловей Рассвета": "present",
-  "Бурундук Лесных Троп": "present",
-  Светляк: "present",
-  "Хранитель Лунной Вуали": "present",
-  "Всевидящий Плащ": "present",
-  Грибница: "present",
-  Заря: "future",
-  "Золотой Олень": "future",
-  Орёл: "future",
-  "Цветущая Ветвь": "future",
-  "Страж Порога": "future",
-  "Страж с Ключом": "future",
-  "Вещий Ворон": "future",
-  Рой: "future",
-  "Хранитель Фонаря": "future",
-  "Хранитель Времени": "future",
-  "Вестник Чёрных Крыльев": "future",
-  Русалка: "future",
-};
 
 export const CARDS = RAW_CARDS.map(function enrichCard(card) {
   const meta = CARD_META[card.name] || {};

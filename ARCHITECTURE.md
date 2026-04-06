@@ -210,6 +210,7 @@
 - выбор карты больше не равновероятный: используется weight-модель по `layer + tone + anti-duplicate state + links`
 - веса, multipliers и схемы раскладов вынесены в `assets/js/cards/oracle-config.js`
 - `tone/state/links` вынесены из колоды в отдельный `assets/js/cards/card-meta.js`
+- `layer` вынесен из колоды в отдельный `assets/js/cards/layer-map.js`
 
 ## Полный список персонажей WYRD
 
