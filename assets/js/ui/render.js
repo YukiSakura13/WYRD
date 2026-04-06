@@ -31,11 +31,13 @@ export function getElements(doc = document) {
     deepMessage: doc.getElementById("deep-message"),
     deckTop: doc.querySelector(".dc-top"),
     soundButton: doc.querySelector('[data-action="toggle-sound"]'),
+    whisperButton: doc.querySelector('[data-action="toggle-whisper"]'),
     profileName: doc.getElementById("profile-name"),
     profileMeta: doc.getElementById("profile-meta"),
     historyList: doc.getElementById("history-list"),
     spreadGrid: doc.getElementById("spread-grid"),
     spreadTitle: doc.getElementById("spread-title"),
+    spreadStageNote: doc.getElementById("spread-stage-note"),
     paywallTitle: doc.getElementById("paywall-title"),
     paywallCopy: doc.getElementById("paywall-copy"),
     paywallPreview: doc.getElementById("paywall-preview"),
@@ -140,6 +142,9 @@ export function createRenderer(elements) {
 
   function renderProfile(state) {
     elements.soundButton.textContent = state.soundEnabled ? "Звук леса: вкл" : "Звук леса: выкл";
+    if (elements.whisperButton) {
+      elements.whisperButton.textContent = state.whisperEnabled ? "Шёпот: вкл" : "Шёпот: выкл";
+    }
     elements.profileName.textContent = state.profileName;
     elements.profileMeta.textContent = state.dailyFreeUsedAt
       ? "Сегодняшняя бесплатная карта уже раскрыта."
@@ -184,6 +189,7 @@ export function createRenderer(elements) {
 
   function renderSpread(lastSpread) {
     elements.spreadTitle.textContent = `Расклад на ${lastSpread.length} карт`;
+    elements.spreadStageNote.textContent = getSpreadStageNote(lastSpread.length);
     elements.spreadGrid.replaceChildren();
     elements.spreadGrid.className = "spread-grid";
 
@@ -198,7 +204,7 @@ export function createRenderer(elements) {
       item.className = "spread-card";
       item.dataset.slot = String(card.slot || "");
       item.dataset.layer = card.layer || "";
-      item.style.setProperty("--spread-delay", `${Math.max((card.revealOrder || 1) - 1, 0) * 420}ms`);
+      item.style.setProperty("--spread-delay", getSpreadDelay(card, lastSpread.length));
 
       const image = document.createElement("img");
       image.src = getCardImage(card);
@@ -217,9 +223,14 @@ export function createRenderer(elements) {
       subtitle.textContent = card.subtitle;
 
       const message = document.createElement("p");
+      message.className = "spread-message";
       message.textContent = card.message;
 
-      item.append(image, role, title, subtitle, message);
+      const veil = document.createElement("div");
+      veil.className = "spread-veil";
+      veil.textContent = card.spreadLabel || layerLabel(card.layer);
+
+      item.append(image, role, title, subtitle, message, veil);
       elements.spreadGrid.appendChild(item);
     });
   }
@@ -359,6 +370,11 @@ function renderPaywallPreview(offer) {
     const image = document.createElement("div");
     image.className = "paywall-preview-image";
 
+    const veil = document.createElement("span");
+    veil.className = "paywall-preview-veil";
+    veil.textContent = "лес говорит больше";
+    image.appendChild(veil);
+
     const role = document.createElement("p");
     role.className = "paywall-preview-role";
     role.textContent = item.role;
@@ -370,6 +386,28 @@ function renderPaywallPreview(offer) {
     card.append(image, role, line);
     container.appendChild(card);
   });
+}
+
+function getSpreadDelay(card, count) {
+  const revealOrder = Math.max((card.revealOrder || 1) - 1, 0);
+
+  if (count === 5) {
+    return `${revealOrder * 860}ms`;
+  }
+
+  return `${revealOrder * 460}ms`;
+}
+
+function getSpreadStageNote(count) {
+  if (count === 5) {
+    return "Лес открывает каждый знак по очереди: ты, узел, импульс, скрытое, путь.";
+  }
+
+  if (count === 3) {
+    return "Сначала лес показывает настоящее, затем корень и только потом вектор.";
+  }
+
+  return "";
 }
 
 function getPaywallPreviewPreset(offer) {

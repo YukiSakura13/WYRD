@@ -33,6 +33,13 @@ export function createActionHandler(deps) {
       return;
     }
 
+    if (action === "toggle-whisper") {
+      audio.playSelect(store.getState().soundEnabled);
+      store.toggleWhisper();
+      renderApp();
+      return;
+    }
+
     if (action === "select-mode") {
       const mode = trigger.dataset.mode;
       if (!mode) {
@@ -149,6 +156,9 @@ export function resolveRitual(deps, mode) {
     window.setTimeout(function playSingleReveal() {
       audio.playReveal(currentState.soundEnabled);
     }, 380);
+    window.setTimeout(function playSingleWhisper() {
+      audio.playWhisper(currentState.soundEnabled && currentState.whisperEnabled, "ты уже знаешь");
+    }, 1180);
     renderer.scrollTo("result");
     return;
   }
@@ -165,6 +175,9 @@ export function resolveRitual(deps, mode) {
     window.setTimeout(function playSingleReveal() {
       audio.playReveal(currentState.soundEnabled);
     }, 380);
+    window.setTimeout(function playSingleWhisper() {
+      audio.playWhisper(currentState.soundEnabled && currentState.whisperEnabled, "лес уже ответил");
+    }, 1180);
     renderer.scrollTo("result");
     return;
   }
@@ -185,7 +198,7 @@ export function resolveRitual(deps, mode) {
     );
     renderApp();
     audio.sync({ enabled: currentState.soundEnabled, scene: "spread" });
-    playSpreadSequence(audio, currentState.soundEnabled, count);
+    playSpreadSequence(audio, currentState.soundEnabled, currentState.whisperEnabled, count);
     renderer.scrollTo("spread");
     return;
   }
@@ -203,12 +216,23 @@ export function createInitialUIState(state) {
   };
 }
 
-function playSpreadSequence(audio, enabled, count) {
+function playSpreadSequence(audio, enabled, whisperEnabled, count) {
+  const interval = count === 5 ? 860 : 460;
+  const phrases =
+    count === 5
+      ? ["вот ты", "вот узел", "вот импульс", "вот скрытое", "вот путь"]
+      : ["смотри сюда", "смотри в корень", "смотри вперёд"];
+
   for (let index = 0; index < count; index += 1) {
     window.setTimeout(function revealNextCard() {
       audio.playReveal(enabled, {
         bright: index === count - 1,
       });
-    }, 260 + index * 420);
+      if (whisperEnabled) {
+        window.setTimeout(function whisperAfterReveal() {
+          audio.playWhisper(enabled && whisperEnabled, phrases[index] || "лес шепчет");
+        }, count === 5 ? 340 : 220);
+      }
+    }, 260 + index * interval);
   }
 }
