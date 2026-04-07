@@ -168,7 +168,12 @@ body::after {
 @keyframes ritualLineReveal {
   0% {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(18px) scale(0.985);
+    filter: blur(16px);
+  }
+
+  45% {
+    opacity: 0.5;
     filter: blur(8px);
   }
 
@@ -176,6 +181,22 @@ body::after {
     opacity: 1;
     transform: translateY(0);
     filter: blur(0);
+  }
+}
+
+@keyframes moonDustDrift {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+
+  35% {
+    opacity: 0.82;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-24px) scale(1.06);
   }
 }
 
@@ -328,13 +349,33 @@ body[data-scene="onboarding"] .top-actions {
 
 .ritual-line {
   opacity: 0;
-  transform: translateY(12px);
+  position: relative;
+  transform: translateY(18px) scale(0.985);
   color: var(--parchment);
   font-size: 1.16rem;
   line-height: 1.5;
   text-align: center;
-  animation: ritualLineReveal 0.9s ease forwards;
+  text-shadow:
+    0 0 18px rgba(242, 235, 221, 0.06),
+    0 0 34px rgba(201, 161, 74, 0.08);
+  animation: ritualLineReveal 1.8s cubic-bezier(0.2, 0.72, 0.2, 1) forwards;
   animation-delay: var(--ritual-delay, 0ms);
+}
+
+.ritual-line::before {
+  content: "✦ ✦ ✦";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -10%);
+  color: rgba(201, 161, 74, 0.5);
+  letter-spacing: 0.42em;
+  font-size: 0.62rem;
+  opacity: 0;
+  pointer-events: none;
+  filter: blur(0.5px);
+  animation: moonDustDrift 2.2s ease-out forwards;
+  animation-delay: calc(var(--ritual-delay, 0ms) + 120ms);
 }
 
 .ritual-btn {
