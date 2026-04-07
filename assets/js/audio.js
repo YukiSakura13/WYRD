@@ -171,36 +171,10 @@ export function createForestAudioController() {
     });
   }
 
-  function playWhisper(enabled, phrase = "лес шепчет") {
-    if (!enabled || !("speechSynthesis" in window)) {
-      return;
-    }
-
-    try {
-      const utterance = new SpeechSynthesisUtterance(phrase);
-      utterance.lang = "ru-RU";
-      utterance.volume = 0.16;
-      utterance.rate = 0.74;
-      utterance.pitch = 0.62;
-      const voices = window.speechSynthesis.getVoices();
-      const russianVoice = voices.find(function findVoice(voice) {
-        return voice.lang && voice.lang.toLowerCase().startsWith("ru");
-      });
-      if (russianVoice) {
-        utterance.voice = russianVoice;
-      }
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(utterance);
-    } catch (error) {
-      void error;
-    }
-  }
-
   return {
     playReveal,
     playRustle,
     playSelect,
-    playWhisper,
     stop,
     sync,
   };

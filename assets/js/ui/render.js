@@ -31,7 +31,6 @@ export function getElements(doc = document) {
     deepMessage: doc.getElementById("deep-message"),
     deckTop: doc.querySelector(".dc-top"),
     soundButton: doc.querySelector('[data-action="toggle-sound"]'),
-    whisperButton: doc.querySelector('[data-action="toggle-whisper"]'),
     profileName: doc.getElementById("profile-name"),
     profileMeta: doc.getElementById("profile-meta"),
     historyList: doc.getElementById("history-list"),
@@ -142,9 +141,6 @@ export function createRenderer(elements) {
 
   function renderProfile(state) {
     elements.soundButton.textContent = state.soundEnabled ? "Звук леса: вкл" : "Звук леса: выкл";
-    if (elements.whisperButton) {
-      elements.whisperButton.textContent = state.whisperEnabled ? "Шёпот: вкл" : "Шёпот: выкл";
-    }
     elements.profileName.textContent = state.profileName;
     elements.profileMeta.textContent = state.dailyFreeUsedAt
       ? "Сегодняшняя бесплатная карта уже раскрыта."

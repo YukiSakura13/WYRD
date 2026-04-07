@@ -3,7 +3,6 @@ export const STORAGE_KEY = "wyrd-local-state-v2";
 const defaultState = Object.freeze({
   profileName: "Странник",
   soundEnabled: true,
-  whisperEnabled: true,
   ambienceVolume: 0.58,
   selectedMode: "single",
   dailyFreeUsedAt: null,
@@ -51,12 +50,6 @@ export function createStateStore(storage = window.localStorage) {
       return commit({
         ...state,
         soundEnabled: !state.soundEnabled,
-      });
-    },
-    toggleWhisper() {
-      return commit({
-        ...state,
-        whisperEnabled: !state.whisperEnabled,
       });
     },
     setAmbienceVolume(ambienceVolume) {
@@ -148,7 +141,6 @@ function normalizeState(value) {
   next.dailyFreeUsedAt = typeof next.dailyFreeUsedAt === "string" ? next.dailyFreeUsedAt : null;
   next.profileName = typeof next.profileName === "string" ? next.profileName : base.profileName;
   next.soundEnabled = Boolean(next.soundEnabled);
-  next.whisperEnabled = typeof next.whisperEnabled === "boolean" ? next.whisperEnabled : base.whisperEnabled;
   next.ambienceVolume = typeof next.ambienceVolume === "number" ? next.ambienceVolume : base.ambienceVolume;
   next.ambienceVolume = Math.max(0, Math.min(1, next.ambienceVolume));
   next.selectedMode =
