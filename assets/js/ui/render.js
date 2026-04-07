@@ -11,6 +11,7 @@ export function getElements(doc = document) {
     coverArt: doc.getElementById("cover-art"),
     main: doc.getElementById("main"),
     transitionVeil: doc.getElementById("transition-veil"),
+    onboardingSection: doc.getElementById("ritual-onboarding"),
     deckWrap: doc.getElementById("deck-wrap"),
     drawButton: doc.getElementById("draw-button"),
     deckModeCopy: doc.getElementById("deck-mode-copy"),
@@ -77,6 +78,7 @@ export function createRenderer(elements) {
     const targetMap = {
       paywall: elements.paywallSection,
       profile: elements.profileSection,
+      onboarding: elements.onboardingSection,
       result: elements.resultSection,
       spread: elements.spreadResultSection,
     };
@@ -295,6 +297,8 @@ export function createRenderer(elements) {
 
     elements.paywallSection.hidden = overlay !== "paywall";
     elements.profileSection.hidden = overlay !== "profile";
+    elements.onboardingSection.hidden = overlay !== "onboarding";
+    elements.deckWrap.hidden = overlay !== "none" || contentPanel !== "deck";
     elements.resultSection.hidden = overlay !== "none" || contentPanel !== "result";
     elements.spreadResultSection.hidden = overlay !== "none" || contentPanel !== "spread";
   }

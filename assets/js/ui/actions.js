@@ -16,21 +16,38 @@ export function createActionHandler(deps) {
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function enterForest() {
         uiState.entered = true;
+        uiState.overlay = "onboarding";
         renderApp();
         audio.sync({
           allowInit: true,
           enabled: store.getState().soundEnabled,
-          scene: "deck",
+          scene: "onboarding",
         });
-        if (store.hasFreeDraw()) {
-          window.setTimeout(function instantFirstCard() {
-            resolveRitual(deps, "free");
-          }, 140);
-          return;
-        }
+        window.setTimeout(function scrollToOnboarding() {
+          renderer.scrollTo("onboarding");
+        }, 80);
+      });
+      return;
+    }
+
+    if (action === "enter-ritual") {
+      audio.playSelect(store.getState().soundEnabled);
+      runTransition(function continueToDeck() {
+        uiState.overlay = "none";
+        renderApp();
+        audio.sync({
+          enabled: store.getState().soundEnabled,
+          scene: uiState.contentPanel,
+        });
         if (store.getState().currentReading) {
           renderer.scrollTo("result");
+          return;
         }
+        if (store.getState().lastSpread.length) {
+          renderer.scrollTo("spread");
+          return;
+        }
+        renderer.scrollTo("deck");
       });
       return;
     }
