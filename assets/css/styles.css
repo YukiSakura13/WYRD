@@ -6,6 +6,8 @@
   --ash: #8a8070;
   --fog: #161620;
   --bg: #101019;
+  --display-font: "Cormorant Garamond", Georgia, serif;
+  --ui-font: "Inter", system-ui, sans-serif;
 }
 
 * {
@@ -22,7 +24,7 @@ body {
 body {
   background: var(--ink);
   color: var(--parchment);
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ui-font);
   min-height: 100vh;
   overflow-x: hidden;
   background-image:
@@ -201,9 +203,10 @@ body::after {
 }
 
 .cover-title {
-  font-family: "IM Fell English", serif;
+  font-family: var(--display-font);
   font-size: clamp(3rem, 10vw, 5.5rem);
-  letter-spacing: 0.3em;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   color: var(--parchment);
   text-align: center;
 }
@@ -227,14 +230,17 @@ body::after {
 }
 
 .cover-btn {
-  font-family: "Cormorant Garamond", serif;
-  font-size: 0.95rem;
-  letter-spacing: 0.3em;
+  font-family: var(--ui-font);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink);
   background: var(--gold);
   border: none;
-  padding: 0.85rem 2.5rem;
+  min-height: 64px;
+  padding: 1rem 2.4rem;
+  border-radius: 4px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -266,9 +272,10 @@ body::after {
 }
 
 .hdr-title {
-  font-family: "IM Fell English", serif;
+  font-family: var(--display-font);
   font-size: clamp(2rem, 5vw, 3.2rem);
-  letter-spacing: 0.22em;
+  font-weight: 600;
+  letter-spacing: 0.1em;
 }
 
 .hdr-line {
@@ -386,14 +393,15 @@ body[data-scene="onboarding"] .top-actions {
 }
 
 .text-btn {
-  font-family: "Cormorant Garamond", serif;
-  font-size: 0.8rem;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--ash);
+  font-family: var(--ui-font);
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--parchment);
   background: transparent;
-  border: 1px solid rgba(201, 161, 74, 0.18);
-  padding: 0.75rem 1rem;
+  border: 1px solid rgba(201, 161, 74, 0.32);
+  padding: 0.9rem 1.1rem;
+  border-radius: 4px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -564,14 +572,17 @@ body[data-scene="onboarding"] .top-actions {
 }
 
 .draw-btn {
-  font-family: "Cormorant Garamond", serif;
-  font-size: 0.82rem;
-  letter-spacing: 0.32em;
+  font-family: var(--ui-font);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--parchment);
   background: transparent;
   border: 1px solid rgba(201, 161, 74, 0.35);
-  padding: 0.65rem 1.8rem;
+  min-height: 60px;
+  padding: 0.9rem 1.8rem;
+  border-radius: 4px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -683,8 +694,9 @@ body[data-scene="onboarding"] .top-actions {
 }
 
 .card-name {
-  font-family: "IM Fell English", serif;
+  font-family: var(--display-font);
   font-size: clamp(1.3rem, 3vw, 1.9rem);
+  font-weight: 600;
   line-height: 1.1;
   margin-bottom: 0.2rem;
 }
@@ -715,8 +727,7 @@ body[data-scene="onboarding"] .top-actions {
 
 .card-msg {
   font-size: clamp(0.95rem, 2vw, 1.1rem);
-  line-height: 1.75;
-  font-style: italic;
+  line-height: 1.65;
   margin-bottom: 1.6rem;
   opacity: 0;
   transform: translateY(18px);
@@ -759,7 +770,6 @@ body[data-scene="onboarding"] .top-actions {
   font-size: 0.88rem;
   line-height: 1.6;
   color: var(--ash);
-  font-style: italic;
 }
 
 .actions-panel {
@@ -827,14 +837,17 @@ body[data-scene="onboarding"] .top-actions {
 .reset-btn {
   display: block;
   width: 100%;
-  font-family: "Cormorant Garamond", serif;
-  font-size: 0.8rem;
-  letter-spacing: 0.32em;
+  font-family: var(--ui-font);
+  font-size: 0.98rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--ash);
   background: transparent;
   border: 1px solid rgba(138, 128, 112, 0.22);
-  padding: 0.75rem;
+  min-height: 58px;
+  padding: 0.9rem 1rem;
+  border-radius: 4px;
   cursor: pointer;
   text-align: center;
   transition: all 0.3s ease;
@@ -864,8 +877,9 @@ body[data-scene="onboarding"] .top-actions {
 
 .paywall-title,
 .profile-name {
-  font-family: "IM Fell English", serif;
+  font-family: var(--display-font);
   font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-weight: 600;
   margin-bottom: 0.8rem;
 }
 
@@ -1005,9 +1019,10 @@ body[data-scene="onboarding"] .top-actions {
 
 .gal-title {
   text-align: center;
-  font-family: "IM Fell English", serif;
-  font-size: 1rem;
-  letter-spacing: 0.25em;
+  font-family: var(--display-font);
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   color: var(--ash);
   margin: 4rem 0 0.5rem;
 }
@@ -1239,8 +1254,9 @@ body[data-scene="onboarding"] .top-actions {
 }
 
 .spread-card h3 {
-  font-family: "IM Fell English", serif;
-  font-size: 1rem;
+  font-family: var(--display-font);
+  font-size: 1.2rem;
+  font-weight: 600;
   margin-bottom: 0.25rem;
 }
 
@@ -1281,8 +1297,9 @@ body[data-scene="onboarding"] .top-actions {
 }
 
 .history-item h3 {
-  font-family: "IM Fell English", serif;
-  font-size: 1rem;
+  font-family: var(--display-font);
+  font-size: 1.1rem;
+  font-weight: 600;
   margin-bottom: 0.2rem;
 }
 
