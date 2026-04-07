@@ -15,17 +15,18 @@ export function createActionHandler(deps) {
     if (action === "enter") {
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function enterForest() {
+        const currentState = store.getState();
         uiState.entered = true;
         uiState.forceDeck = false;
-        uiState.overlay = "onboarding";
+        uiState.overlay = currentState.onboardingSeen ? "none" : "onboarding";
         renderApp();
         audio.sync({
           allowInit: true,
           enabled: store.getState().soundEnabled,
-          scene: "onboarding",
+          scene: currentState.onboardingSeen ? "deck" : "onboarding",
         });
-        window.setTimeout(function scrollToOnboarding() {
-          renderer.scrollTo("onboarding");
+        window.setTimeout(function scrollAfterEntry() {
+          renderer.scrollTo(currentState.onboardingSeen ? "deck" : "onboarding");
         }, 80);
       });
       return;
@@ -34,13 +35,14 @@ export function createActionHandler(deps) {
     if (action === "enter-ritual") {
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function continueToDeck() {
+        store.markOnboardingSeen();
         uiState.forceDeck = true;
         uiState.overlay = "none";
         renderApp();
         audio.sync({
           enabled: store.getState().soundEnabled,
           scene: "deck",
-        }
+        });
         renderer.scrollTo("deck");
       });
       return;
