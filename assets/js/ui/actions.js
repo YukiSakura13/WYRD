@@ -16,6 +16,7 @@ export function createActionHandler(deps) {
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function enterForest() {
         uiState.entered = true;
+        uiState.forceDeck = false;
         uiState.overlay = "onboarding";
         renderApp();
         audio.sync({
@@ -33,19 +34,12 @@ export function createActionHandler(deps) {
     if (action === "enter-ritual") {
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function continueToDeck() {
+        uiState.forceDeck = true;
         uiState.overlay = "none";
         renderApp();
         audio.sync({
           enabled: store.getState().soundEnabled,
-          scene: uiState.contentPanel,
-        });
-        if (store.getState().currentReading) {
-          renderer.scrollTo("result");
-          return;
-        }
-        if (store.getState().lastSpread.length) {
-          renderer.scrollTo("spread");
-          return;
+          scene: "deck",
         }
         renderer.scrollTo("deck");
       });
@@ -124,6 +118,7 @@ export function createActionHandler(deps) {
   }
 
   function startRitual(mode) {
+    uiState.forceDeck = false;
     uiState.overlay = "none";
     uiState.paywallOffer = null;
     renderApp();
@@ -213,6 +208,7 @@ export function resolveRitual(deps, mode) {
 export function createInitialUIState(state) {
   return {
     entered: false,
+    forceDeck: false,
     overlay: "none",
     paywallOffer: null,
     contentPanel: deriveContentPanel(state),

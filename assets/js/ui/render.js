@@ -76,6 +76,7 @@ export function createRenderer(elements) {
 
   function scrollTo(name) {
     const targetMap = {
+      deck: elements.deckWrap,
       paywall: elements.paywallSection,
       profile: elements.profileSection,
       onboarding: elements.onboardingSection,
@@ -114,7 +115,8 @@ export function createRenderer(elements) {
     elements.cover.classList.toggle("gone", uiState.entered);
     elements.main.classList.toggle("on", uiState.entered);
     elements.transitionVeil.classList.toggle("is-active", Boolean(uiState.transitioning));
-    elements.body.dataset.scene = uiState.overlay !== "none" ? uiState.overlay : uiState.contentPanel;
+    elements.body.dataset.scene =
+      uiState.overlay !== "none" ? uiState.overlay : uiState.forceDeck ? "deck" : uiState.contentPanel;
   }
 
   function renderDeckCopy(state, uiState) {
@@ -294,13 +296,14 @@ export function createRenderer(elements) {
   function renderVisibility(state, uiState) {
     const contentPanel = deriveContentPanel(state);
     const overlay = uiState.overlay;
+    const showingDeck = overlay === "none" && (uiState.forceDeck || contentPanel === "deck");
 
     elements.paywallSection.hidden = overlay !== "paywall";
     elements.profileSection.hidden = overlay !== "profile";
     elements.onboardingSection.hidden = overlay !== "onboarding";
-    elements.deckWrap.hidden = overlay !== "none" || contentPanel !== "deck";
-    elements.resultSection.hidden = overlay !== "none" || contentPanel !== "result";
-    elements.spreadResultSection.hidden = overlay !== "none" || contentPanel !== "spread";
+    elements.deckWrap.hidden = !showingDeck;
+    elements.resultSection.hidden = overlay !== "none" || uiState.forceDeck || contentPanel !== "result";
+    elements.spreadResultSection.hidden = overlay !== "none" || uiState.forceDeck || contentPanel !== "spread";
   }
 
   function resetReadingReveal() {
