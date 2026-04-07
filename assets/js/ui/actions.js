@@ -17,7 +17,7 @@ export function createActionHandler(deps) {
       runTransition(function enterForest() {
         const currentState = store.getState();
         uiState.entered = true;
-        uiState.forceDeck = false;
+        uiState.forceDeck = currentState.onboardingSeen;
         uiState.overlay = currentState.onboardingSeen ? "none" : "onboarding";
         renderApp();
         audio.sync({
