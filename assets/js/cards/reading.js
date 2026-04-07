@@ -22,29 +22,58 @@ export function createReading(cards, isFree, now = new Date(), options = {}) {
 
 export function createSpread(cards, count, options = {}) {
   if (count === 3) {
-    return createThreeCardSpread(cards, options.previousReading || null);
+    return createThreeCardSpread(cards, options);
   }
 
   if (count === 5) {
-    return createFiveCardSpread(cards, options.previousReading || null);
+    return createFiveCardSpread(cards, options);
   }
 
   return pickDistinctCards(cards, count);
 }
 
-function createThreeCardSpread(cards, previousReading) {
-  return buildConfiguredSpread(cards, ORACLE_CONFIG.spreads.three.slots, previousReading);
+function createThreeCardSpread(cards, options = {}) {
+  const pinnedCardsByRole = {};
+
+  if (options.currentReading && options.currentReading.card) {
+    pinnedCardsByRole.present = {
+      ...options.currentReading.card,
+      alreadyKnown: true,
+    };
+  }
+
+  return buildConfiguredSpread(cards, ORACLE_CONFIG.spreads.three.slots, {
+    previousReading: options.previousReading || null,
+    pinnedCardsByRole,
+  });
 }
 
-function createFiveCardSpread(cards, previousReading) {
-  return buildConfiguredSpread(cards, ORACLE_CONFIG.spreads.five.slots, previousReading);
+function createFiveCardSpread(cards, options = {}) {
+  return buildConfiguredSpread(cards, ORACLE_CONFIG.spreads.five.slots, {
+    previousReading: options.previousReading || null,
+  });
 }
 
-function buildConfiguredSpread(cards, slotConfig, previousReading) {
+function buildConfiguredSpread(cards, slotConfig, options = {}) {
   const selected = [];
-  let anchorCard = previousReading ? previousReading.card : null;
+  const pinnedCardsByRole = options.pinnedCardsByRole || {};
+  let anchorCard = options.previousReading ? options.previousReading.card : null;
 
   return slotConfig.map(function pickSlot(configItem) {
+    const pinnedCard = pinnedCardsByRole[configItem.spreadRole];
+    if (pinnedCard) {
+      selected.push(pinnedCard);
+      anchorCard = pinnedCard;
+
+      return {
+        ...pinnedCard,
+        slot: configItem.slot,
+        revealOrder: configItem.revealOrder,
+        spreadRole: configItem.spreadRole,
+        spreadLabel: configItem.spreadLabel,
+      };
+    }
+
     const card = pickWeightedCard({
       cards,
       layer: configItem.layer,

@@ -39,6 +39,7 @@ export function getElements(doc = document) {
     spreadGrid: doc.getElementById("spread-grid"),
     spreadTitle: doc.getElementById("spread-title"),
     spreadStageNote: doc.getElementById("spread-stage-note"),
+    spreadContinuation: doc.getElementById("spread-continuation"),
     paywallTitle: doc.getElementById("paywall-title"),
     paywallCopy: doc.getElementById("paywall-copy"),
     paywallPreview: doc.getElementById("paywall-preview"),
@@ -69,6 +70,7 @@ export function createRenderer(elements) {
     renderCurrentReading(state.currentReading);
     renderHook(state, uiState);
     renderSpread(state.lastSpread);
+    renderSpreadContinuation(state.lastSpread, uiState);
     renderHistory(state.history);
     renderPaywall(uiState.paywallOffer);
     renderVisibility(state, uiState);
@@ -129,12 +131,12 @@ export function createRenderer(elements) {
     const usedFree = Boolean(state.dailyFreeUsedAt);
     if (elements.deckModeCopy) {
       elements.deckModeCopy.textContent = usedFree
-        ? "Сегодня лес уже открыл первый знак. Дальше путь скрыт за вуалью."
+        ? "Первый знак уже открыт. Лес ждёт, решишься ли ты продолжить путь."
         : "Одна карта в день. Лес открывает только первый слой.";
     }
 
     if (elements.drawButton) {
-      elements.drawButton.textContent = usedFree ? "Открыть следующий знак" : "Коснуться колоды";
+      elements.drawButton.textContent = usedFree ? "Открыть путь" : "Коснуться колоды";
     }
   }
 
@@ -244,6 +246,14 @@ export function createRenderer(elements) {
       item.append(image, role, title, subtitle, message, veil);
       elements.spreadGrid.appendChild(item);
     });
+  }
+
+  function renderSpreadContinuation(lastSpread, uiState) {
+    if (!elements.spreadContinuation) {
+      return;
+    }
+
+    elements.spreadContinuation.hidden = uiState.overlay !== "none" || lastSpread.length !== 3;
   }
 
   function renderHistory(history) {
@@ -419,7 +429,7 @@ function getSpreadStageNote(count) {
   }
 
   if (count === 3) {
-    return "Сначала лес показывает настоящее, затем корень и только потом вектор.";
+    return "Центральный знак уже знаком тебе. Теперь лес открывает корень, а затем вектор пути.";
   }
 
   return "";
@@ -435,11 +445,10 @@ function getPaywallPreviewPreset(offer) {
 
   if (offer === "spread-3") {
     return {
-      layout: "triple",
+      layout: "double",
       items: [
         { role: "Прошлое", line: "То, что держало..." },
-        { role: "Настоящее", line: "То, что происходит..." },
-        { role: "Будущее", line: "То, что ведёт..." },
+        { role: "Будущее", line: "То, что уже зовёт..." },
       ],
     };
   }

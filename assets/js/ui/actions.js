@@ -64,7 +64,7 @@ export function createActionHandler(deps) {
       if (store.hasFreeDraw()) {
         startRitual("free");
       } else {
-        openPaywall("extra-draw");
+        openPaywall("spread-3");
       }
       return;
     }
@@ -202,6 +202,8 @@ export function resolveRitual(deps, mode) {
     store.saveSpread(
       createSpread(cards, count, {
         previousReading: currentState.history[0] || null,
+        currentReading: currentState.currentReading,
+        previousSpread: currentState.lastSpread,
       }),
     );
     renderApp();
