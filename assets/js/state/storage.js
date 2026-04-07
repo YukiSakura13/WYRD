@@ -65,6 +65,12 @@ export function createStateStore(storage = window.localStorage) {
         onboardingSeen: true,
       });
     },
+    resetOnboardingSeen() {
+      return commit({
+        ...state,
+        onboardingSeen: false,
+      });
+    },
     setSelectedMode(selectedMode) {
       return commit({
         ...state,

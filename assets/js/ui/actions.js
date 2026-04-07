@@ -98,6 +98,18 @@ export function createActionHandler(deps) {
       return;
     }
 
+    if (action === "replay-onboarding") {
+      audio.playSelect(store.getState().soundEnabled);
+      store.resetOnboardingSeen();
+      uiState.forceDeck = false;
+      uiState.hasDrawnThisSession = false;
+      uiState.overlay = "onboarding";
+      renderApp();
+      audio.sync({ enabled: store.getState().soundEnabled, scene: "onboarding" });
+      renderer.scrollTo("onboarding");
+      return;
+    }
+
     if (action === "close-profile") {
       audio.playSelect(store.getState().soundEnabled);
       uiState.overlay = "none";
