@@ -14,7 +14,6 @@ export function getElements(doc = document) {
     deckWrap: doc.getElementById("deck-wrap"),
     drawButton: doc.getElementById("draw-button"),
     deckModeCopy: doc.getElementById("deck-mode-copy"),
-    modeButtons: Array.from(doc.querySelectorAll('[data-action="select-mode"]')),
     resultSection: doc.getElementById("result"),
     spreadResultSection: doc.getElementById("spread-result"),
     paywallSection: doc.getElementById("paywall"),
@@ -29,6 +28,8 @@ export function getElements(doc = document) {
     cardShadow: doc.getElementById("card-shadow"),
     deepWrap: doc.getElementById("deep-wrap"),
     deepMessage: doc.getElementById("deep-message"),
+    hookBlock: doc.getElementById("hook-block"),
+    actionsPanel: doc.querySelector(".actions-panel"),
     deckTop: doc.querySelector(".dc-top"),
     soundButton: doc.querySelector('[data-action="toggle-sound"]'),
     profileName: doc.getElementById("profile-name"),
@@ -62,9 +63,10 @@ export function createRenderer(elements) {
 
   function render(state, uiState) {
     renderShell(uiState);
-    renderModeSelector(state);
+    renderDeckCopy(state, uiState);
     renderProfile(state);
     renderCurrentReading(state.currentReading);
+    renderHook(state, uiState);
     renderSpread(state.lastSpread);
     renderHistory(state.history);
     renderPaywall(uiState.paywallOffer);
@@ -113,29 +115,16 @@ export function createRenderer(elements) {
     elements.body.dataset.scene = uiState.overlay !== "none" ? uiState.overlay : uiState.contentPanel;
   }
 
-  function renderModeSelector(state) {
-    const selectedMode = state.selectedMode || "single";
-    const labels = {
-      single: "Одна карта из настоящего",
-      "spread-3": "Путь из трёх карт: прошлое, настоящее, будущее",
-      "spread-5": "Пять знаков леса в ритуальной композиции",
-    };
-    const buttonLabels = {
-      single: "Коснуться колоды",
-      "spread-3": "Открыть путь на 3 карты",
-      "spread-5": "Открыть путь на 5 карт",
-    };
-
-    elements.modeButtons.forEach(function updateButton(button) {
-      button.classList.toggle("is-active", button.dataset.mode === selectedMode);
-    });
-
+  function renderDeckCopy(state, uiState) {
+    const usedFree = Boolean(state.dailyFreeUsedAt);
     if (elements.deckModeCopy) {
-      elements.deckModeCopy.textContent = labels[selectedMode] || labels.single;
+      elements.deckModeCopy.textContent = usedFree
+        ? "Сегодня лес уже открыл первый знак. Дальше путь скрыт за вуалью."
+        : "Одна карта в день. Лес открывает только первый слой.";
     }
 
     if (elements.drawButton) {
-      elements.drawButton.textContent = buttonLabels[selectedMode] || buttonLabels.single;
+      elements.drawButton.textContent = usedFree ? "Открыть следующий знак" : "Коснуться колоды";
     }
   }
 
@@ -180,6 +169,22 @@ export function createRenderer(elements) {
     if (reading.id !== lastReadingId) {
       lastReadingId = reading.id;
       startReadingReveal();
+    }
+  }
+
+  function renderHook(state, uiState) {
+    if (!elements.hookBlock) {
+      return;
+    }
+
+    const shouldShowHook =
+      uiState.overlay === "none" &&
+      Boolean(state.currentReading && state.currentReading.free) &&
+      !state.lastSpread.length;
+
+    elements.hookBlock.hidden = !shouldShowHook;
+    if (elements.actionsPanel) {
+      elements.actionsPanel.hidden = shouldShowHook;
     }
   }
 

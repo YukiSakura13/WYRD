@@ -22,6 +22,15 @@ export function createActionHandler(deps) {
           enabled: store.getState().soundEnabled,
           scene: "deck",
         });
+        if (store.hasFreeDraw()) {
+          window.setTimeout(function instantFirstCard() {
+            resolveRitual(deps, "free");
+          }, 140);
+          return;
+        }
+        if (store.getState().currentReading) {
+          renderer.scrollTo("result");
+        }
       });
       return;
     }
@@ -33,27 +42,18 @@ export function createActionHandler(deps) {
       return;
     }
 
-    if (action === "select-mode") {
-      const mode = trigger.dataset.mode;
-      if (!mode) {
-        return;
+    if (action === "draw") {
+      if (store.hasFreeDraw()) {
+        startRitual("free");
+      } else {
+        openPaywall("extra-draw");
       }
-
-      audio.playSelect(store.getState().soundEnabled);
-      store.setSelectedMode(mode);
-      renderApp();
       return;
     }
 
-    if (action === "draw") {
-      const selectedMode = store.getState().selectedMode || "single";
-
-      if (selectedMode === "single" && store.hasFreeDraw()) {
-        startRitual("free");
-      } else {
-        const paywallOffer = selectedMode === "single" ? "extra-draw" : selectedMode;
-        openPaywall(paywallOffer);
-      }
+    if (action === "hook-open-path") {
+      audio.playSelect(store.getState().soundEnabled);
+      openPaywall("spread-3");
       return;
     }
 

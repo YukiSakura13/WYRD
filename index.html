@@ -44,11 +44,6 @@
 
       <section class="deck-wrap" id="deck-wrap">
         <p class="deck-hint">Сосредоточься на своём вопросе</p>
-        <div class="mode-selector" role="group" aria-label="Выбор расклада">
-          <button class="mode-btn is-active" type="button" data-action="select-mode" data-mode="single">1 карта</button>
-          <button class="mode-btn" type="button" data-action="select-mode" data-mode="spread-3">3 карты</button>
-          <button class="mode-btn" type="button" data-action="select-mode" data-mode="spread-5">5 карт</button>
-        </div>
         <div class="deck" data-action="draw">
           <div class="dc"></div>
           <div class="dc"></div>
@@ -58,7 +53,7 @@
           </div>
         </div>
         <button class="draw-btn" id="draw-button" data-action="draw">Коснуться колоды</button>
-        <p class="deck-mode-copy" id="deck-mode-copy">Одна карта из настоящего</p>
+        <p class="deck-mode-copy" id="deck-mode-copy">Одна карта в день. Лес открывает только первый слой.</p>
       </section>
 
       <section id="result" hidden>
@@ -89,6 +84,21 @@
           <button class="reset-btn" data-action="deep-reading">Углубить значение</button>
           <button class="reset-btn" data-action="spread-3">Расклад на 3 карты</button>
           <button class="reset-btn" data-action="spread-5">Расклад на 5 карт</button>
+        </div>
+
+        <div class="hook-block" id="hook-block" hidden>
+          <p class="hook-copy">Это только то, что видно сейчас</p>
+          <div class="hook-preview" aria-hidden="true">
+            <article class="hook-card">
+              <div class="hook-card-image"></div>
+              <p class="hook-card-role">Прошлое</p>
+            </article>
+            <article class="hook-card">
+              <div class="hook-card-image"></div>
+              <p class="hook-card-role">Будущее</p>
+            </article>
+          </div>
+          <button class="cover-btn hook-btn" data-action="hook-open-path">Открыть путь</button>
         </div>
       </section>
 
