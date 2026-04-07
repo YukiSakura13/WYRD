@@ -17,7 +17,8 @@ export function createActionHandler(deps) {
       runTransition(function enterForest() {
         const currentState = store.getState();
         uiState.entered = true;
-        uiState.forceDeck = currentState.onboardingSeen;
+        uiState.forceDeck = true;
+        uiState.hasDrawnThisSession = false;
         uiState.overlay = currentState.onboardingSeen ? "none" : "onboarding";
         renderApp();
         audio.sync({
@@ -37,6 +38,7 @@ export function createActionHandler(deps) {
       runTransition(function continueToDeck() {
         store.markOnboardingSeen();
         uiState.forceDeck = true;
+        uiState.hasDrawnThisSession = false;
         uiState.overlay = "none";
         uiState.contentPanel = "deck";
         renderApp();
@@ -58,6 +60,7 @@ export function createActionHandler(deps) {
 
     if (action === "draw") {
       uiState.forceDeck = false;
+      uiState.hasDrawnThisSession = true;
       if (store.hasFreeDraw()) {
         startRitual("free");
       } else {
@@ -107,6 +110,8 @@ export function createActionHandler(deps) {
       audio.stop();
       store.reset();
       uiState.entered = false;
+      uiState.forceDeck = false;
+      uiState.hasDrawnThisSession = false;
       uiState.overlay = "none";
       uiState.paywallOffer = null;
       renderApp();
@@ -213,6 +218,7 @@ export function createInitialUIState(state) {
   return {
     entered: false,
     forceDeck: false,
+    hasDrawnThisSession: false,
     overlay: "none",
     paywallOffer: null,
     contentPanel: deriveContentPanel(state),

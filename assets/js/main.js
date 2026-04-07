@@ -18,7 +18,7 @@ if (elements.coverArt) {
 function renderApp() {
   const state = store.syncDayBoundary();
   uiState.contentPanel = deriveContentPanel(state);
-  if (uiState.forceDeck && uiState.overlay === "none") {
+  if ((!uiState.hasDrawnThisSession || uiState.forceDeck) && uiState.overlay === "none") {
     uiState.contentPanel = "deck";
   }
   renderer.render(state, uiState);
