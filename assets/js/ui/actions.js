@@ -38,6 +38,7 @@ export function createActionHandler(deps) {
         store.markOnboardingSeen();
         uiState.forceDeck = true;
         uiState.overlay = "none";
+        uiState.contentPanel = "deck";
         renderApp();
         audio.sync({
           enabled: store.getState().soundEnabled,
@@ -56,6 +57,7 @@ export function createActionHandler(deps) {
     }
 
     if (action === "draw") {
+      uiState.forceDeck = false;
       if (store.hasFreeDraw()) {
         startRitual("free");
       } else {
