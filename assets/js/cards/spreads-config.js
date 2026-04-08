@@ -1,0 +1,83 @@
+export const SPREADS_CONFIG = {
+  single_draw: {
+    id: "single_draw",
+    title: "Ответ леса",
+    positions: [{ name: "message", role: "current_message", layer: "present" }],
+  },
+  deepening: {
+    id: "deepening",
+    title: "Глубже в вопрос",
+    slots: [
+      {
+        slot: 2,
+        layer: "present",
+        preset: "present",
+        revealOrder: 1,
+        spreadRole: "what_is_happening",
+        spreadLabel: "Настоящее",
+      },
+      {
+        slot: 1,
+        layer: "past",
+        preset: "past",
+        revealOrder: 2,
+        spreadRole: "root_of_question",
+        spreadLabel: "Прошлое",
+      },
+      {
+        slot: 3,
+        layer: "future",
+        preset: "future",
+        revealOrder: 3,
+        spreadRole: "where_it_leads",
+        spreadLabel: "Будущее",
+      },
+    ],
+  },
+  oracle_reading: {
+    id: "oracle_reading",
+    title: "Голос оракула",
+    slots: [
+      {
+        slot: 1,
+        layer: "present",
+        preset: "present",
+        revealOrder: 1,
+        spreadRole: "current_message",
+        spreadLabel: "Ты",
+      },
+      {
+        slot: 2,
+        layer: "past",
+        preset: "past",
+        revealOrder: 2,
+        spreadRole: "root_of_question",
+        spreadLabel: "Что держит",
+      },
+      {
+        slot: 3,
+        layer: "present",
+        preset: "present",
+        revealOrder: 3,
+        spreadRole: "nearest_shift",
+        spreadLabel: "Что ведёт",
+      },
+      {
+        slot: 4,
+        layer: null,
+        preset: "hidden",
+        revealOrder: 4,
+        spreadRole: "hidden_tension",
+        spreadLabel: "Что скрыто",
+      },
+      {
+        slot: 5,
+        layer: "future",
+        preset: "future",
+        revealOrder: 5,
+        spreadRole: "integrated_message",
+        spreadLabel: "Куда ведёт",
+      },
+    ],
+  },
+};

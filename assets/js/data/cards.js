@@ -488,15 +488,95 @@ const RAW_CARDS = [
 
 export const CARDS = RAW_CARDS.map(function enrichCard(card) {
   const meta = CARD_META[card.name] || {};
+  const tone = meta.tone || "neutral";
 
   return {
     ...card,
+    title_ru: card.name,
+    title_en: card.subtitle,
     layer: CARD_LAYERS[card.name] || "present",
     state: meta.state || slugify(card.keyword),
-    tone: meta.tone || "neutral",
+    tone,
     links: Array.isArray(meta.links) ? meta.links : [],
+    short: meta.short || extractLeadSentence(card.message),
+    depth: meta.depth || card.message,
+    advice: meta.advice || fallbackAdvice(tone),
+    themes: Array.isArray(meta.themes) && meta.themes.length ? meta.themes : [meta.state || slugify(card.keyword)],
+    emotion: meta.emotion || fallbackEmotion(tone),
+    archetype: meta.archetype || fallbackArchetype(tone),
+    intensity: Number.isFinite(meta.intensity) ? meta.intensity : fallbackIntensity(tone),
+    spread_variants: meta.spread_variants || buildDefaultSpreadVariants(card),
   };
 });
+
+function buildDefaultSpreadVariants(card) {
+  const short = extractLeadSentence(card.message);
+
+  return {
+    current_message: short,
+    what_is_happening: card.message,
+    what_is_hidden: card.shadow,
+    where_it_leads: short,
+    root_of_question: card.message,
+    hidden_tension: card.shadow,
+    what_supports_you: fallbackAdvice("neutral"),
+    nearest_shift: short,
+    integrated_message: fallbackAdvice("light"),
+  };
+}
+
+function extractLeadSentence(value) {
+  const match = String(value || "").trim().match(/^(.+?[.!?])(?:\s|$)/);
+  return match ? match[1].trim() : String(value || "").trim();
+}
+
+function fallbackAdvice(tone) {
+  if (tone === "light") {
+    return "Держись того, что даёт ясность и мягкое движение вперёд.";
+  }
+
+  if (tone === "dark") {
+    return "Смотри прямо на главный узел и не отворачивайся от того, что уже назрело.";
+  }
+
+  return "Смотри внимательнее на повторяющийся знак и двигайся без лишней спешки.";
+}
+
+function fallbackEmotion(tone) {
+  if (tone === "light") {
+    return "hope";
+  }
+
+  if (tone === "dark") {
+    return "tension";
+  }
+
+  return "uncertainty";
+}
+
+function fallbackArchetype(tone) {
+  if (tone === "light") {
+    return "guide";
+  }
+
+  if (tone === "dark") {
+    return "witness";
+  }
+
+  return "seer";
+}
+
+function fallbackIntensity(tone) {
+  if (tone === "light") {
+    return 2;
+  }
+
+  if (tone === "dark") {
+    return 4;
+  }
+
+  return 3;
+}
 
 function slugify(value) {
   return String(value || "")

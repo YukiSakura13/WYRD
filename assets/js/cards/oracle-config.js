@@ -1,3 +1,5 @@
+import { SPREADS_CONFIG } from "./spreads-config.js";
+
 export const ORACLE_CONFIG = {
   paywallCopy: {
     "extra-draw": {
@@ -35,21 +37,7 @@ export const ORACLE_CONFIG = {
     linkBonus: 1.35,
   },
   spreads: {
-    three: {
-      slots: [
-        { slot: 2, layer: "present", preset: "present", revealOrder: 1, spreadRole: "present", spreadLabel: "Настоящее" },
-        { slot: 1, layer: "past", preset: "past", revealOrder: 2, spreadRole: "past", spreadLabel: "Прошлое" },
-        { slot: 3, layer: "future", preset: "future", revealOrder: 3, spreadRole: "future", spreadLabel: "Будущее" },
-      ],
-    },
-    five: {
-      slots: [
-        { slot: 1, layer: "present", preset: "present", revealOrder: 1, spreadRole: "present", spreadLabel: "Ты" },
-        { slot: 2, layer: "past", preset: "past", revealOrder: 2, spreadRole: "past", spreadLabel: "Что держит" },
-        { slot: 3, layer: "present", preset: "present", revealOrder: 3, spreadRole: "present", spreadLabel: "Что ведёт" },
-        { slot: 4, layer: null, preset: "hidden", revealOrder: 4, spreadRole: "hidden", spreadLabel: "Что скрыто" },
-        { slot: 5, layer: "future", preset: "future", revealOrder: 5, spreadRole: "future", spreadLabel: "Куда ведёт" },
-      ],
-    },
+    three: SPREADS_CONFIG.deepening,
+    five: SPREADS_CONFIG.oracle_reading,
   },
 };

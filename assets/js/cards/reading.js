@@ -1,4 +1,5 @@
 import { ORACLE_CONFIG } from "./oracle-config.js";
+import { SPREADS_CONFIG } from "./spreads-config.js";
 
 export const PAYWALL_COPY = ORACLE_CONFIG.paywallCopy;
 
@@ -36,20 +37,20 @@ function createThreeCardSpread(cards, options = {}) {
   const pinnedCardsByRole = {};
 
   if (options.currentReading && options.currentReading.card) {
-    pinnedCardsByRole.present = {
+    pinnedCardsByRole.what_is_happening = {
       ...options.currentReading.card,
       alreadyKnown: true,
     };
   }
 
-  return buildConfiguredSpread(cards, ORACLE_CONFIG.spreads.three.slots, {
+  return buildConfiguredSpread(cards, SPREADS_CONFIG.deepening.slots, {
     previousReading: options.previousReading || null,
     pinnedCardsByRole,
   });
 }
 
 function createFiveCardSpread(cards, options = {}) {
-  return buildConfiguredSpread(cards, ORACLE_CONFIG.spreads.five.slots, {
+  return buildConfiguredSpread(cards, SPREADS_CONFIG.oracle_reading.slots, {
     previousReading: options.previousReading || null,
   });
 }
