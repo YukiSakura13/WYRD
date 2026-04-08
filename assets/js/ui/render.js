@@ -40,6 +40,12 @@ export function getElements(doc = document) {
     spreadTitle: doc.getElementById("spread-title"),
     spreadStageNote: doc.getElementById("spread-stage-note"),
     spreadContinuation: doc.getElementById("spread-continuation"),
+    oracleVoice: doc.getElementById("oracle-voice"),
+    oracleVoiceMessage: doc.getElementById("oracle-voice-message"),
+    oracleVoiceSummary: doc.getElementById("oracle-voice-summary"),
+    oracleVoiceTension: doc.getElementById("oracle-voice-tension"),
+    oracleVoicePath: doc.getElementById("oracle-voice-path"),
+    oracleVoiceHint: doc.getElementById("oracle-voice-hint"),
     paywallTitle: doc.getElementById("paywall-title"),
     paywallCopy: doc.getElementById("paywall-copy"),
     paywallPreview: doc.getElementById("paywall-preview"),
@@ -70,6 +76,7 @@ export function createRenderer(elements) {
     renderCurrentReading(state.currentReading);
     renderHook(state, uiState);
     renderSpread(state.lastSpread);
+    renderOracleVoice(state.lastSpread, state.lastOracleReading);
     renderSpreadContinuation(state.lastSpread, uiState);
     renderHistory(state.history);
     renderPaywall(uiState.paywallOffer);
@@ -254,6 +261,40 @@ export function createRenderer(elements) {
     }
 
     elements.spreadContinuation.hidden = uiState.overlay !== "none" || lastSpread.length !== 3;
+  }
+
+  function renderOracleVoice(lastSpread, oracleReading) {
+    if (!elements.oracleVoice) {
+      return;
+    }
+
+    const shouldShow = lastSpread.length === 3 || lastSpread.length === 5;
+    elements.oracleVoice.hidden = !shouldShow || !oracleReading;
+
+    if (!shouldShow || !oracleReading) {
+      if (elements.oracleVoiceMessage) {
+        elements.oracleVoiceMessage.textContent = "";
+      }
+      if (elements.oracleVoiceSummary) {
+        elements.oracleVoiceSummary.textContent = "";
+      }
+      if (elements.oracleVoiceTension) {
+        elements.oracleVoiceTension.textContent = "";
+      }
+      if (elements.oracleVoicePath) {
+        elements.oracleVoicePath.textContent = "";
+      }
+      if (elements.oracleVoiceHint) {
+        elements.oracleVoiceHint.textContent = "";
+      }
+      return;
+    }
+
+    elements.oracleVoiceMessage.textContent = oracleReading.oracle_message || "";
+    elements.oracleVoiceSummary.textContent = oracleReading.summary || "";
+    elements.oracleVoiceTension.textContent = oracleReading.tension || "";
+    elements.oracleVoicePath.textContent = oracleReading.path || "";
+    elements.oracleVoiceHint.textContent = oracleReading.integration_hint || "";
   }
 
   function renderHistory(history) {

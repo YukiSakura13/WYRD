@@ -1021,6 +1021,56 @@ body[data-scene="onboarding"] .top-actions {
   width: 100%;
 }
 
+.oracle-voice {
+  margin-top: 1.45rem;
+  padding: 1.35rem 1.2rem 1.2rem;
+  border: 1px solid rgba(201, 161, 74, 0.18);
+  background:
+    linear-gradient(180deg, rgba(17, 19, 30, 0.92), rgba(10, 11, 18, 0.97)),
+    radial-gradient(circle at top, rgba(201, 161, 74, 0.08), transparent 40%);
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.28),
+    0 0 28px rgba(201, 161, 74, 0.04);
+}
+
+.oracle-voice-kicker {
+  margin-bottom: 0.7rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.82;
+}
+
+.oracle-voice-message {
+  font-family: var(--display-font);
+  font-size: clamp(1.12rem, 2.3vw, 1.36rem);
+  line-height: 1.5;
+  color: var(--parchment);
+  margin-bottom: 0.95rem;
+}
+
+.oracle-voice-summary {
+  color: var(--ash);
+  font-size: 0.98rem;
+  line-height: 1.65;
+  margin-bottom: 1rem;
+}
+
+.oracle-voice-meta {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.oracle-voice-meta-item {
+  margin: 0;
+  padding-left: 0.9rem;
+  border-left: 1px solid rgba(201, 161, 74, 0.18);
+  color: var(--mist);
+  font-size: 0.94rem;
+  line-height: 1.6;
+}
+
 .paywall-btn {
   width: 100%;
 }

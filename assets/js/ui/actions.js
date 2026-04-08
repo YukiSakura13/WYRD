@@ -1,4 +1,5 @@
 import { createReading, createSpread } from "../cards/reading.js";
+import { buildLocalOracleReading } from "../cards/oracle-local.js";
 import { deriveContentPanel } from "./render.js";
 
 export function createActionHandler(deps) {
@@ -211,13 +212,13 @@ export function resolveRitual(deps, mode) {
 
   if (mode === "spread-3" || mode === "spread-5") {
     const count = mode === "spread-3" ? 3 : 5;
-    store.saveSpread(
-      createSpread(cards, count, {
-        previousReading: currentState.history[0] || null,
-        currentReading: currentState.currentReading,
-        previousSpread: currentState.lastSpread,
-      }),
-    );
+    const spreadCards = createSpread(cards, count, {
+      previousReading: currentState.history[0] || null,
+      currentReading: currentState.currentReading,
+      previousSpread: currentState.lastSpread,
+    });
+    const oracleReading = buildLocalOracleReading(count === 3 ? "deepening" : "oracle_reading", spreadCards);
+    store.saveSpread(spreadCards, oracleReading);
     renderApp();
     audio.sync({ enabled: currentState.soundEnabled, scene: "spread" });
     playSpreadSequence(audio, currentState.soundEnabled, count);

@@ -10,6 +10,7 @@ const defaultState = Object.freeze({
   history: [],
   currentReading: null,
   lastSpread: [],
+  lastOracleReading: null,
 });
 
 export function createStateStore(storage = window.localStorage) {
@@ -88,6 +89,7 @@ export function createStateStore(storage = window.localStorage) {
         ...state,
         currentReading: reading,
         lastSpread: [],
+        lastOracleReading: null,
         history: [reading, ...state.history],
       });
     },
@@ -114,11 +116,12 @@ export function createStateStore(storage = window.localStorage) {
         ),
       });
     },
-    saveSpread(lastSpread) {
+    saveSpread(lastSpread, lastOracleReading = null) {
       return commit({
         ...state,
         currentReading: null,
         lastSpread,
+        lastOracleReading,
       });
     },
     reset() {
@@ -150,6 +153,8 @@ function normalizeState(value) {
 
   next.history = Array.isArray(next.history) ? next.history : [];
   next.lastSpread = Array.isArray(next.lastSpread) ? next.lastSpread : [];
+  next.lastOracleReading =
+    next.lastOracleReading && typeof next.lastOracleReading === "object" ? next.lastOracleReading : null;
   next.currentReading = next.currentReading && typeof next.currentReading === "object" ? next.currentReading : null;
   next.dailyFreeUsedAt = typeof next.dailyFreeUsedAt === "string" ? next.dailyFreeUsedAt : null;
   next.profileName = typeof next.profileName === "string" ? next.profileName : base.profileName;
@@ -166,6 +171,7 @@ function normalizeState(value) {
 
   if (next.currentReading) {
     next.lastSpread = [];
+    next.lastOracleReading = null;
   }
 
   return next;
