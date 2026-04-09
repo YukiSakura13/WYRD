@@ -1,181 +1,141 @@
 import { buildMeaningSummary } from "./meaning-engine.js";
 
-const THEME_LABELS = {
-  path: "путь",
-  choice: "выбор",
-  vision: "видение",
-  flow: "течение",
-  ending: "завершение",
-  rebirth: "перерождение",
-  fracture: "разлом",
-  insight: "прозрение",
-  stillness: "тишина",
-  timing: "время",
-  winter_rest: "передышка",
-  dawn: "рассвет",
-  protection: "защита",
-  root: "корень",
-  attraction: "зов",
-  light: "свет",
-  ritual: "ритуал",
-  deception: "обман",
-  sacrifice: "жертва",
-  grief: "память сердца",
-  threshold: "порог",
-  memory: "память",
-  threads: "нити судьбы",
-  cycle: "круг",
-  remedy: "исцеление",
-  prophecy: "знак",
-  awakening: "пробуждение",
-  fate: "судьба",
-  key: "ключ",
-  web: "связь",
-  boundary: "граница",
-  patience: "терпение",
-  depth: "глубина",
-  connection: "связь",
-  blessing: "благословение",
-  growth: "рост",
-  survival: "выживание",
-  water_memory: "зов воды",
-  uncertainty: "неясность",
-  sacred_fire: "огонь перемены",
-  circle: "круг",
-  spark: "искра",
-  joy: "радость",
-  release: "освобождение",
-  voice: "голос",
-  small_steps: "малые шаги",
-  guidance: "путеводный свет",
-  acceptance: "принятие",
-  future_path: "будущий путь",
+const OPENINGS = {
+  hidden_tension: [
+    "Путь уже дрогнул под твоими ногами.",
+    "То, что скрыто, уже меняет рисунок пути.",
+    "В тени уже зреет поворот.",
+  ],
+  contrast: [
+    "Свет и тень уже встретились на одной тропе.",
+    "На этом пути сошлись ясность и тень.",
+    "Сейчас лес открывает поворот, в котором встречаются свет и тень.",
+  ],
+  inner_conflict: [
+    "Выбор стоит ближе, чем кажется.",
+    "Сердце уже знает, где начинается верная тропа.",
+    "Развилка уже рядом, даже если тишина ещё держит ответ.",
+  ],
+  emotional_core: [
+    "Ответ уже движется к тебе.",
+    "Тропа медленно проступает из тишины.",
+    "Сейчас лес открывает не весь путь, а его первый верный знак.",
+  ],
 };
 
-const EMOTION_LABELS = {
-  grief: "памяти сердца",
-  fear: "напряжения",
-  tension: "внутреннего напряжения",
-  stillness: "тихого ожидания",
-  hope: "надежды",
-  clarity: "ясности",
-  longing: "ожидания",
-  trust: "доверия",
-  uncertainty: "неясности",
-  acceptance: "принятия",
-  power: "силы",
-  tenderness: "мягкости",
-  rest: "передышки",
-  desire: "зова",
-  transformation: "перемены",
+const MIDDLES = {
+  uncertainty: [
+    "То, что скрыто, скоро станет яснее.",
+    "Неясность держится недолго, знак уже проступает сквозь вуаль.",
+    "Ответ ещё не назван, но его очертания уже собираются.",
+  ],
+  grief: [
+    "Память сердца больше не держит тебя на месте, она ведёт к новому шагу.",
+    "То, что болело дольше других знаков, начинает отпускать дорогу вперёд.",
+    "Старый узел ослабевает, и путь становится мягче.",
+  ],
+  hope: [
+    "То, что зреет в тишине, скоро станет видимее.",
+    "Рядом уже растёт то, что откроется в своё время.",
+    "Скрытый рост скоро даст о себе знать.",
+  ],
+  tension: [
+    "То, что было натянуто слишком долго, уже просит нового движения.",
+    "Старый способ держаться теряет силу, и путь просит ясности.",
+    "Узел уже назрел, теперь ему нужен верный поворот.",
+  ],
+  clarity: [
+    "Знак уже рядом, теперь важно увидеть его без лишнего шума.",
+    "Ясность приходит ближе, когда сердце перестаёт спорить с собой.",
+    "То, что казалось далёким, уже подходит к самой границе выбора.",
+  ],
+  stillness: [
+    "Тишина сейчас хранит больше, чем любое поспешное слово.",
+    "Пауза не задерживает путь, она собирает его в одно целое.",
+    "Сейчас молчание работает точнее любого ответа.",
+  ],
+  acceptance: [
+    "Путь становится легче там, где исчезает лишняя борьба.",
+    "Что-то важное уже просит не силы, а согласия.",
+    "Следующий шаг открывается там, где ты перестаёшь тянуть старый узел.",
+  ],
+  transformation: [
+    "Перемена уже началась, даже если снаружи всё ещё тихо.",
+    "Старый рисунок пути треснул, и в этой трещине уже виден новый свет.",
+    "То, что уходит, освобождает место для другого хода.",
+  ],
+  default: [
+    "Скрытый смысл уже касается твоего пути.",
+    "Сейчас важен не шум, а самый точный знак.",
+    "Следующее движение уже собирается в тишине.",
+  ],
 };
 
-const PATH_TEMPLATES = [
-  "Путь уже шевельнулся, он ведёт от %FROM% к %TO%.",
-  "Этот знак движется от %FROM% к %TO%, через %THROUGH%.",
-  "Лес ведёт тебя от темы %FROM% к теме %TO%, и поворот уже зреет.",
-];
+const CLOSINGS = {
+  guidance: [
+    "Иди туда, где внутренний свет не гаснет.",
+    "Следуй за знаком, который повторяется тише других.",
+    "Держись той тропы, где становится спокойнее внутри.",
+  ],
+  acceptance: [
+    "Пусть шаг созреет в своём времени.",
+    "Позволь пути открыться без лишней борьбы.",
+    "Дай ответу приблизиться в своём ритме.",
+  ],
+  clarity: [
+    "Смотри туда, где становится яснее.",
+    "Выбирай то, что собирает тебя, а не рассеивает.",
+    "Держись того, что даёт тихую ясность.",
+  ],
+  rest: [
+    "Передышка тоже ведёт вперёд.",
+    "Пауза сейчас работает на твой путь.",
+    "Пусть тишина договорит то, что ещё не названо.",
+  ],
+  flow: [
+    "Доверься движению, которое уже началось.",
+    "Иди туда, где путь течёт свободнее.",
+    "Следуй за тем, что двигается без насилия.",
+  ],
+  softening: [
+    "Мягкость сейчас откроет больше, чем усилие.",
+    "Позволь пути стать мягче, и знак проявится точнее.",
+    "Там, где исчезает лишнее напряжение, становится ближе ответ.",
+  ],
+  default: [
+    "Иди туда, где сердце не спорит с выбором.",
+    "Доверься шагу, который уже назрел.",
+    "Следуй за тем, что отзывается тихой уверенностью.",
+  ],
+};
 
 export function buildLocalOracleReading(spreadId, cards) {
   const meaning = buildMeaningSummary({ spreadId, cards });
-  const oracle_message = buildOracleMessage(meaning);
 
   return {
     spreadId,
     meaning,
-    oracle_message,
-    summary: buildSummary(meaning),
-    tension: buildTension(meaning),
-    path: buildPath(meaning),
-    integration_hint: buildHint(meaning),
+    oracle_message: buildOracleMessage(meaning),
   };
 }
 
 function buildOracleMessage(meaning) {
-  const leadTheme = labelTheme(meaning.dominantThemes[0]);
-  const secondTheme = labelTheme(meaning.directionalVector.to);
-  const support = meaning.supportSignal?.summary || "";
-
-  const opening = `Духи леса говорят: ${buildOpening(meaning, leadTheme)}`;
-  const middle = randomFrom(PATH_TEMPLATES)
-    .replace("%FROM%", labelTheme(meaning.directionalVector.from))
-    .replace("%THROUGH%", labelTheme(meaning.directionalVector.through))
-    .replace("%TO%", secondTheme);
-  const closing = buildClosing(meaning, support, leadTheme, secondTheme);
+  const opening = pickForMeaning(OPENINGS[meaning.centralTension?.type] || OPENINGS.emotional_core, meaning, 0);
+  const middle = pickForMeaning(MIDDLES[meaning.dominantEmotion] || MIDDLES.default, meaning, 1);
+  const closing = pickForMeaning(CLOSINGS[meaning.supportSignal?.theme] || CLOSINGS.default, meaning, 2);
 
   return [opening, middle, closing].filter(Boolean).join(" ");
 }
 
-function buildOpening(meaning, leadTheme) {
-  if (meaning.centralTension?.type === "hidden_tension") {
-    return `в тени уже зреет тема ${leadTheme}, и именно она меняет твой путь.`;
+function pickForMeaning(options, meaning, salt) {
+  const index = hashString(`${meaning.spreadSignature || "wyrd"}:${salt}`) % options.length;
+  return options[index];
+}
+
+function hashString(value) {
+  let hash = 0;
+  for (let index = 0; index < value.length; index += 1) {
+    hash = (hash * 31 + value.charCodeAt(index)) >>> 0;
   }
-
-  if (meaning.centralTension?.type === "contrast") {
-    return `свет и тень уже встретились, из этой встречи рождается новый поворот.`;
-  }
-
-  if (meaning.centralTension?.type === "inner_conflict") {
-    return `сердце уже стоит между двумя тропами, и узел этого чтения просит ясности.`;
-  }
-
-  return `сейчас путь говорит языком ${labelEmotion(meaning.dominantEmotion)}.`;
-}
-
-function buildClosing(meaning, support, leadTheme, secondTheme) {
-  if (support) {
-    return `${support} ${buildAffirmation(meaning, leadTheme, secondTheme)}`;
-  }
-
-  return buildAffirmation(meaning, leadTheme, secondTheme);
-}
-
-function buildAffirmation(meaning, leadTheme, secondTheme) {
-  if (meaning.dominantEmotion === "hope") {
-    return `То, что зреет рядом с темой ${secondTheme}, скоро станет видимее.`;
-  }
-
-  if (meaning.dominantEmotion === "uncertainty") {
-    return `Ясность уже собирается вокруг темы ${leadTheme}, смотри на самый тихий знак.`;
-  }
-
-  if (meaning.dominantEmotion === "grief") {
-    return `Память сердца постепенно открывает дорогу туда, где ${secondTheme} становится опорой.`;
-  }
-
-  return `Следующий шаг уже связан с темой ${secondTheme}, и лес просит увидеть его вовремя.`;
-}
-
-function buildSummary(meaning) {
-  const leadTheme = labelTheme(meaning.dominantThemes[0]);
-  const toTheme = labelTheme(meaning.directionalVector.to);
-  return `Главная нить расклада связана с темой ${leadTheme}, и ведёт к теме ${toTheme}.`;
-}
-
-function buildTension(meaning) {
-  return meaning.centralTension?.summary || `Сейчас узел чтения связан с темой ${labelTheme(meaning.dominantThemes[0])}.`;
-}
-
-function buildPath(meaning) {
-  return `Путь идёт от ${labelTheme(meaning.directionalVector.from)} через ${labelTheme(meaning.directionalVector.through)} к ${labelTheme(meaning.directionalVector.to)}.`;
-}
-
-function buildHint(meaning) {
-  return meaning.supportSignal?.summary || "Смотри внимательнее на знак, который повторяется тише других.";
-}
-
-function labelTheme(value) {
-  if (!value || value === "unknown") {
-    return "скрытому знаку";
-  }
-
-  return THEME_LABELS[value] || value.replace(/_/g, " ");
-}
-
-function labelEmotion(value) {
-  return EMOTION_LABELS[value] || "тихого движения";
-}
-
-function randomFrom(items) {
-  return items[Math.floor(Math.random() * items.length)];
+  return hash;
 }

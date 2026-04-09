@@ -1044,31 +1044,10 @@ body[data-scene="onboarding"] .top-actions {
 
 .oracle-voice-message {
   font-family: var(--display-font);
-  font-size: clamp(1.12rem, 2.3vw, 1.36rem);
-  line-height: 1.5;
+  font-size: clamp(1.08rem, 2.2vw, 1.32rem);
+  line-height: 1.7;
   color: var(--parchment);
-  margin-bottom: 0.95rem;
-}
-
-.oracle-voice-summary {
-  color: var(--ash);
-  font-size: 0.98rem;
-  line-height: 1.65;
-  margin-bottom: 1rem;
-}
-
-.oracle-voice-meta {
-  display: grid;
-  gap: 0.7rem;
-}
-
-.oracle-voice-meta-item {
   margin: 0;
-  padding-left: 0.9rem;
-  border-left: 1px solid rgba(201, 161, 74, 0.18);
-  color: var(--mist);
-  font-size: 0.94rem;
-  line-height: 1.6;
 }
 
 .paywall-btn {
