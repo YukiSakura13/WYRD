@@ -15,6 +15,7 @@ export function getElements(doc = document) {
     deckWrap: doc.getElementById("deck-wrap"),
     drawButton: doc.getElementById("draw-button"),
     deckModeCopy: doc.getElementById("deck-mode-copy"),
+    resultQuestion: doc.getElementById("result-question"),
     resultSection: doc.getElementById("result"),
     spreadResultSection: doc.getElementById("spread-result"),
     paywallSection: doc.getElementById("paywall"),
@@ -69,7 +70,7 @@ export function createRenderer(elements) {
     renderShell(uiState);
     renderDeckCopy(state, uiState);
     renderProfile(state);
-    renderCurrentReading(state.currentReading);
+    renderCurrentReading(state.currentReading, uiState.currentQuestion);
     renderHook(state, uiState);
     renderSpread(state.lastSpread);
     renderOracleVoice(state.lastSpread, state.lastOracleReading);
@@ -151,11 +152,25 @@ export function createRenderer(elements) {
       : "Бесплатная карта ещё не раскрыта.";
   }
 
-  function renderCurrentReading(reading) {
+  function renderCurrentReading(reading, question) {
     if (!reading) {
       lastReadingId = null;
       resetReadingReveal();
+      if (elements.resultQuestion) {
+        elements.resultQuestion.hidden = true;
+        elements.resultQuestion.textContent = "";
+      }
       return;
+    }
+
+    // Show question if provided
+    if (elements.resultQuestion) {
+      if (question) {
+        elements.resultQuestion.textContent = question;
+        elements.resultQuestion.hidden = false;
+      } else {
+        elements.resultQuestion.hidden = true;
+      }
     }
 
     const hasImage = Boolean(reading.card.image);
@@ -314,20 +329,8 @@ export function createRenderer(elements) {
     });
   }
 
-  function renderPaywall(paywallOffer) {
-    if (!paywallOffer) {
-      elements.paywallTitle.textContent = "";
-      elements.paywallCopy.textContent = "";
-      elements.paywallPreview.replaceChildren();
-      elements.paywallCta.textContent = "";
-      return;
-    }
-
-    const offer = PAYWALL_COPY[paywallOffer];
-    elements.paywallTitle.textContent = offer.title;
-    elements.paywallCopy.textContent = offer.text;
-    renderPaywallPreview(paywallOffer);
-    elements.paywallCta.textContent = offer.cta;
+  function renderPaywall(_paywallOffer) {
+    // Paywall removed — no-op
   }
 
   function renderVisibility(state, uiState) {
@@ -335,7 +338,7 @@ export function createRenderer(elements) {
     const overlay = uiState.overlay;
     const showingDeck = overlay === "none" && (!uiState.hasDrawnThisSession || uiState.forceDeck || contentPanel === "deck");
 
-    elements.paywallSection.hidden = overlay !== "paywall";
+    if (elements.paywallSection) elements.paywallSection.hidden = overlay !== "paywall";
     elements.profileSection.hidden = overlay !== "profile";
     elements.onboardingSection.hidden = overlay !== "onboarding";
     elements.deckWrap.hidden = !showingDeck;

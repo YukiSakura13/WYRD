@@ -62,31 +62,22 @@ export function createActionHandler(deps) {
     if (action === "draw") {
       uiState.forceDeck = false;
       uiState.hasDrawnThisSession = true;
-      if (store.hasFreeDraw()) {
-        startRitual("free");
-      } else {
-        openPaywall("spread-3");
-      }
+      // Save question if entered
+      const questionEl = document.getElementById("question-input");
+      uiState.currentQuestion = questionEl ? questionEl.value.trim() : "";
+      startRitual("free");
       return;
     }
 
     if (action === "hook-open-path") {
       audio.playSelect(store.getState().soundEnabled);
-      openPaywall("spread-3");
+      startRitual("spread-3");
       return;
     }
 
     if (action === "extra-draw" || action === "deep-reading" || action === "spread-3" || action === "spread-5") {
       audio.playSelect(store.getState().soundEnabled);
-      openPaywall(action);
-      return;
-    }
-
-    if (action === "confirm-paywall") {
-      if (uiState.paywallOffer) {
-        audio.playSelect(store.getState().soundEnabled);
-        startRitual(uiState.paywallOffer);
-      }
+      startRitual(action);
       return;
     }
 
@@ -130,14 +121,6 @@ export function createActionHandler(deps) {
       renderApp();
     }
   };
-
-  function openPaywall(offer) {
-    uiState.overlay = "paywall";
-    uiState.paywallOffer = offer;
-    audio.sync({ enabled: store.getState().soundEnabled, scene: "paywall" });
-    renderApp();
-    renderer.scrollTo("paywall");
-  }
 
   function startRitual(mode) {
     uiState.forceDeck = false;
@@ -236,6 +219,7 @@ export function createInitialUIState(state) {
     hasDrawnThisSession: false,
     overlay: "none",
     paywallOffer: null,
+    currentQuestion: "",
     contentPanel: deriveContentPanel(state),
     transitioning: false,
   };

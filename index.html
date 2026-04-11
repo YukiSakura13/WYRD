@@ -55,7 +55,16 @@
       </section>
 
       <section class="deck-wrap" id="deck-wrap">
-        <p class="deck-hint">Сосредоточься на своём вопросе</p>
+        <p class="deck-hint">Задумай вопрос перед тем как коснуться колоды</p>
+        <div class="question-field-wrap">
+          <textarea
+            id="question-input"
+            class="question-input"
+            placeholder="Напиши свой вопрос (необязательно)..."
+            maxlength="280"
+            rows="2"
+          ></textarea>
+        </div>
         <div class="deck" data-action="draw">
           <div class="dc"></div>
           <div class="dc"></div>
@@ -65,10 +74,10 @@
           </div>
         </div>
         <button class="draw-btn" id="draw-button" data-action="draw">Коснуться колоды</button>
-        <p class="deck-mode-copy" id="deck-mode-copy">Одна карта в день. Лес открывает только первый слой.</p>
       </section>
 
       <section id="result" hidden>
+        <p class="result-question" id="result-question" hidden></p>
         <div class="card-box" id="card-box">
           <div class="card-img-wrap">
             <img class="card-img" id="card-image" alt="" />
@@ -99,7 +108,7 @@
         </div>
 
         <div class="hook-block" id="hook-block" hidden>
-          <p class="hook-copy">Это только то, что видно сейчас</p>
+          <p class="hook-copy">Хочешь узнать больше?</p>
           <div class="hook-preview" aria-hidden="true">
             <article class="hook-card">
               <div class="hook-card-image"></div>
@@ -110,7 +119,7 @@
               <p class="hook-card-role">Будущее</p>
             </article>
           </div>
-          <button class="cover-btn hook-btn" data-action="hook-open-path">Открыть путь</button>
+          <button class="cover-btn hook-btn" data-action="hook-open-path">Открыть путь — 3 карты</button>
         </div>
       </section>
 
@@ -129,15 +138,7 @@
         </div>
       </section>
 
-      <section id="paywall" hidden>
-        <div class="paywall-box">
-          <p class="deck-hint">Ритуал доступа</p>
-          <h2 class="paywall-title" id="paywall-title"></h2>
-          <p class="paywall-copy" id="paywall-copy"></p>
-          <div class="paywall-preview" id="paywall-preview"></div>
-          <button class="cover-btn paywall-btn" id="paywall-cta" data-action="confirm-paywall"></button>
-        </div>
-      </section>
+      <!-- paywall removed for free launch -->
 
       <section id="profile" hidden>
         <div class="profile-box">
