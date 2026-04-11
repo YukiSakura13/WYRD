@@ -117,7 +117,7 @@ export function createActionHandler(deps) {
       uiState.forceDeck = false;
       uiState.hasDrawnThisSession = false;
       uiState.overlay = "none";
-      uiState.paywallOffer = null;
+      uiState.continuationOffer = null;
       renderApp();
     }
   };
@@ -125,7 +125,7 @@ export function createActionHandler(deps) {
   function startRitual(mode) {
     uiState.forceDeck = false;
     uiState.overlay = "none";
-    uiState.paywallOffer = null;
+    uiState.continuationOffer = null;
     renderApp();
     runTransition(function resolveAfterTransition() {
       resolveRitual(deps, mode);
@@ -150,7 +150,7 @@ export function resolveRitual(deps, mode) {
   const currentState = store.getState();
 
   uiState.overlay = "none";
-  uiState.paywallOffer = null;
+  uiState.continuationOffer = null;
   audio.playRustle(currentState.soundEnabled);
 
   if (mode === "free") {
@@ -218,7 +218,7 @@ export function createInitialUIState(state) {
     forceDeck: false,
     hasDrawnThisSession: false,
     overlay: "none",
-    paywallOffer: null,
+    continuationOffer: null,
     currentQuestion: "",
     contentPanel: deriveContentPanel(state),
     transitioning: false,

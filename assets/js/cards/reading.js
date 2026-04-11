@@ -1,7 +1,7 @@
 import { ORACLE_CONFIG } from "./oracle-config.js";
 import { SPREADS_CONFIG } from "./spreads-config.js";
 
-export const PAYWALL_COPY = ORACLE_CONFIG.paywallCopy;
+export const CONTINUATION_COPY = ORACLE_CONFIG.continuationCopy;
 
 export function createReading(cards, isFree, now = new Date(), options = {}) {
   const previousReading = options.previousReading || null;

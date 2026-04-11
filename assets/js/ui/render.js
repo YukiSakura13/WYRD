@@ -1,5 +1,3 @@
-import { PAYWALL_COPY } from "../cards/reading.js";
-
 const DEEP_READING_TEXT =
   'Этот знак просит не ответа, а внутренней тишины. Вернись к нему вечером и проверь, где в течение дня уже проявился образ "%CARD_NAME%".';
 const EMPTY_CARD_IMAGE = createEmptyCardImage();
@@ -18,7 +16,6 @@ export function getElements(doc = document) {
     resultQuestion: doc.getElementById("result-question"),
     resultSection: doc.getElementById("result"),
     spreadResultSection: doc.getElementById("spread-result"),
-    paywallSection: doc.getElementById("paywall"),
     profileSection: doc.getElementById("profile"),
     cardBox: doc.getElementById("card-box"),
     cardImage: doc.getElementById("card-image"),
@@ -43,10 +40,6 @@ export function getElements(doc = document) {
     spreadContinuation: doc.getElementById("spread-continuation"),
     oracleVoice: doc.getElementById("oracle-voice"),
     oracleVoiceMessage: doc.getElementById("oracle-voice-message"),
-    paywallTitle: doc.getElementById("paywall-title"),
-    paywallCopy: doc.getElementById("paywall-copy"),
-    paywallPreview: doc.getElementById("paywall-preview"),
-    paywallCta: doc.getElementById("paywall-cta"),
   };
 }
 
@@ -76,14 +69,13 @@ export function createRenderer(elements) {
     renderOracleVoice(state.lastSpread, state.lastOracleReading);
     renderSpreadContinuation(state.lastSpread, uiState);
     renderHistory(state.history);
-    renderPaywall(uiState.paywallOffer);
+    renderContinuation(uiState.continuationOffer);
     renderVisibility(state, uiState);
   }
 
   function scrollTo(name) {
     const targetMap = {
       deck: elements.deckWrap,
-      paywall: elements.paywallSection,
       profile: elements.profileSection,
       onboarding: elements.onboardingSection,
       result: elements.resultSection,
@@ -135,12 +127,12 @@ export function createRenderer(elements) {
     const usedFree = Boolean(state.dailyFreeUsedAt);
     if (elements.deckModeCopy) {
       elements.deckModeCopy.textContent = usedFree
-        ? "Первый знак уже открыт. Лес ждёт, решишься ли ты продолжить путь."
+        ? "Первый знак уже открыт. Если захочешь, можно продолжить чтение глубже."
         : "Одна карта в день. Лес открывает только первый слой.";
     }
 
     if (elements.drawButton) {
-      elements.drawButton.textContent = usedFree ? "Открыть путь" : "Коснуться колоды";
+      elements.drawButton.textContent = usedFree ? "Продолжить путь" : "Коснуться колоды";
     }
   }
 
@@ -329,8 +321,8 @@ export function createRenderer(elements) {
     });
   }
 
-  function renderPaywall(_paywallOffer) {
-    // Paywall removed — no-op
+  function renderContinuation(_continuationOffer) {
+    // Free beta launch — no-op
   }
 
   function renderVisibility(state, uiState) {
@@ -338,7 +330,6 @@ export function createRenderer(elements) {
     const overlay = uiState.overlay;
     const showingDeck = overlay === "none" && (!uiState.hasDrawnThisSession || uiState.forceDeck || contentPanel === "deck");
 
-    if (elements.paywallSection) elements.paywallSection.hidden = overlay !== "paywall";
     elements.profileSection.hidden = overlay !== "profile";
     elements.onboardingSection.hidden = overlay !== "onboarding";
     elements.deckWrap.hidden = !showingDeck;
@@ -401,7 +392,7 @@ function layerLabel(layer) {
   return "Настоящее";
 }
 
-function renderPaywallPreview(offer) {
+function renderContinuationPreview(offer) {
   const container = document.getElementById("paywall-preview");
   if (!container) {
     return;
@@ -409,7 +400,7 @@ function renderPaywallPreview(offer) {
 
   container.replaceChildren();
 
-  const preset = getPaywallPreviewPreset(offer);
+  const preset = getContinuationPreviewPreset(offer);
   container.dataset.layout = preset.layout;
 
   preset.items.forEach(function (item) {
@@ -459,7 +450,7 @@ function getSpreadStageNote(count) {
   return "";
 }
 
-function getPaywallPreviewPreset(offer) {
+function getContinuationPreviewPreset(offer) {
   if (offer === "deep-reading") {
     return {
       layout: "single",
