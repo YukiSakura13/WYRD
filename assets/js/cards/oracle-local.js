@@ -109,19 +109,59 @@ const CLOSINGS = {
   ],
 };
 
-export function buildLocalOracleReading(spreadId, cards) {
+const QUESTION_ECHOES = {
+  love: [
+    "То, что касается сердца, уже набирает силу.",
+    "Нить близости уже тянется к тебе, даже если её шаг ещё тих.",
+    "Чувство, о котором ты думаешь, уже ищет свой верный жест.",
+  ],
+  body: [
+    "То, что ты меняешь в себе, любит верный ритм и терпение.",
+    "Перемена в теле приходит туда, где шаг становится ровнее.",
+    "Твой путь к новой форме просит не рывка, а устойчивого движения.",
+  ],
+  money: [
+    "То, о чём ты спрашиваешь, любит внимательность и зрелый шаг.",
+    "Плод, которого ты ждёшь, собирается там, где есть верность делу.",
+    "Материя отвечает тем, кто держит путь ровно и без суеты.",
+  ],
+  study: [
+    "То, чему ты сейчас учишься, скоро покажет свою силу.",
+    "Усилие уже не пропадает в тишине, оно собирает будущий ответ.",
+    "Знание, к которому ты идёшь, уже складывается в верный узор.",
+  ],
+  choice: [
+    "Развилка, о которой ты думаешь, скоро покажет свой настоящий знак.",
+    "Ответ на этот выбор уже зреет, даже если имя ему ещё не найдено.",
+    "Тропа, о которой ты спрашиваешь, скоро станет различимее.",
+  ],
+  waiting: [
+    "То, чего ты ждёшь, уже движется ближе.",
+    "Ожидание не пусто, в нём уже собирается следующий знак.",
+    "То, о чём ты спрашиваешь, любит своё время, но не стоит на месте.",
+  ],
+};
+
+export function buildLocalOracleReading(spreadId, cards, options = {}) {
   const meaning = buildMeaningSummary({ spreadId, cards });
+  const question = normalizeQuestion(options.question);
+  const questionTopic = detectQuestionTopic(question);
+  const questionEcho = questionTopic
+    ? pickForMeaning(QUESTION_ECHOES[questionTopic] || QUESTION_ECHOES.waiting, meaning, `question:${questionTopic}`)
+    : "";
 
   return {
     spreadId,
+    question,
+    questionTopic,
     meaning,
-    oracle_message: buildOracleMessage(meaning),
+    oracle_message: buildOracleMessage(meaning, questionEcho),
   };
 }
 
-function buildOracleMessage(meaning) {
+function buildOracleMessage(meaning, questionEcho = "") {
   const opening = pickForMeaning(OPENINGS[meaning.centralTension?.type] || OPENINGS.emotional_core, meaning, 0);
-  const middle = pickForMeaning(MIDDLES[meaning.dominantEmotion] || MIDDLES.default, meaning, 1);
+  const middle = questionEcho || pickForMeaning(MIDDLES[meaning.dominantEmotion] || MIDDLES.default, meaning, 1);
   const closing = pickForMeaning(CLOSINGS[meaning.supportSignal?.theme] || CLOSINGS.default, meaning, 2);
 
   return [opening, middle, closing].filter(Boolean).join(" ");
@@ -130,6 +170,50 @@ function buildOracleMessage(meaning) {
 function pickForMeaning(options, meaning, salt) {
   const index = hashString(`${meaning.spreadSignature || "wyrd"}:${salt}`) % options.length;
   return options[index];
+}
+
+function detectQuestionTopic(question) {
+  if (!question) {
+    return null;
+  }
+
+  const normalized = question.toLowerCase().replaceAll("ё", "е");
+
+  if (matchesAny(normalized, ["люб", "отнош", "встрет", "нрав", "симпат", "поцел", "замуж", "пар", "сердц"])) {
+    return "love";
+  }
+
+  if (matchesAny(normalized, ["похуд", "вес", "тел", "фигур", "стройн", "внешн", "красив"])) {
+    return "body";
+  }
+
+  if (matchesAny(normalized, ["деньг", "финанс", "доход", "зарплат", "работ", "бизнес", "клиент", "проект"])) {
+    return "money";
+  }
+
+  if (matchesAny(normalized, ["учеб", "экзам", "школ", "универ", "оценк", "урок", "сдам", "поступ"])) {
+    return "study";
+  }
+
+  if (matchesAny(normalized, ["выбор", "решен", "стоит ли", "куда", "какой путь", "переезд"])) {
+    return "choice";
+  }
+
+  if (matchesAny(normalized, ["получ", "получится", "когда", "ждат", "дожд", "скоро", "успе", "вернет", "ответит"])) {
+    return "waiting";
+  }
+
+  return null;
+}
+
+function matchesAny(question, needles) {
+  return needles.some(function matchNeedle(needle) {
+    return question.includes(needle);
+  });
+}
+
+function normalizeQuestion(question) {
+  return typeof question === "string" ? question.trim() : "";
 }
 
 function hashString(value) {

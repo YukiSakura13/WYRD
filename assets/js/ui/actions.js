@@ -200,7 +200,9 @@ export function resolveRitual(deps, mode) {
       currentReading: currentState.currentReading,
       previousSpread: currentState.lastSpread,
     });
-    const oracleReading = buildLocalOracleReading(count === 3 ? "deepening" : "oracle_reading", spreadCards);
+    const oracleReading = buildLocalOracleReading(count === 3 ? "deepening" : "oracle_reading", spreadCards, {
+      question: uiState.currentQuestion,
+    });
     store.saveSpread(spreadCards, oracleReading);
     renderApp();
     audio.sync({ enabled: currentState.soundEnabled, scene: "spread" });
