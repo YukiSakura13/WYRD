@@ -10,6 +10,7 @@
   --night-forest: #161827;
   --deep-mist: #202233;
   --display-font: "Cormorant Garamond", Georgia, serif;
+  --ritual-font: "IM Fell English", Georgia, serif;
   --ui-font: "Inter", system-ui, sans-serif;
 }
 
@@ -211,12 +212,13 @@ body::after {
 }
 
 .cover-title {
-  font-family: var(--display-font);
-  font-size: clamp(3rem, 10vw, 5.5rem);
-  font-weight: 600;
-  letter-spacing: 0.14em;
+  font-family: var(--ritual-font);
+  font-size: clamp(3.5rem, 12vw, 6rem);
+  font-weight: 400;
+  letter-spacing: 0.35em;
   color: var(--parchment);
   text-align: center;
+  line-height: 1;
   text-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
 }
 
@@ -241,17 +243,17 @@ body::after {
 }
 
 .cover-btn {
-  font-family: var(--ui-font);
-  font-size: 1.05rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-family: var(--display-font);
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--ink);
   background: var(--gold);
   border: none;
-  min-height: 64px;
-  padding: 1rem 2.4rem;
-  border-radius: 4px;
+  min-height: 60px;
+  padding: 0.9rem 2.6rem;
+  border-radius: 2px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -283,10 +285,10 @@ body::after {
 }
 
 .hdr-title {
-  font-family: var(--display-font);
-  font-size: clamp(2.1rem, 5vw, 3.35rem);
-  font-weight: 600;
-  letter-spacing: 0.12em;
+  font-family: var(--ritual-font);
+  font-size: clamp(1.9rem, 5vw, 3rem);
+  font-weight: 400;
+  letter-spacing: 0.22em;
   text-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
 }
 
@@ -369,11 +371,14 @@ body[data-scene="onboarding"] .top-actions {
 .ritual-line {
   opacity: 0;
   position: relative;
-  transform: translateY(18px) scale(0.985);
+  transform: translateY(14px);
   color: var(--parchment);
-  font-size: 1.16rem;
-  line-height: 1.5;
+  font-family: var(--display-font);
+  font-size: clamp(1.05rem, 3vw, 1.35rem);
+  font-style: italic;
+  line-height: 1.65;
   text-align: center;
+  padding: 0.38rem 0;
   text-shadow:
     0 0 18px rgba(242, 235, 221, 0.06),
     0 0 34px rgba(201, 161, 74, 0.08);
@@ -382,19 +387,11 @@ body[data-scene="onboarding"] .top-actions {
 }
 
 .ritual-line::before {
-  content: "✦ ✦ ✦";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -10%);
-  color: rgba(201, 161, 74, 0.5);
-  letter-spacing: 0.42em;
-  font-size: 0.62rem;
-  opacity: 0;
-  pointer-events: none;
-  filter: blur(0.5px);
-  animation: moonDustDrift 2.2s ease-out forwards;
-  animation-delay: calc(var(--ritual-delay, 0ms) + 120ms);
+  content: "·";
+  color: var(--gold);
+  margin-right: 0.65rem;
+  opacity: 0.55;
+  font-style: normal;
 }
 
 .ritual-btn {
@@ -405,15 +402,16 @@ body[data-scene="onboarding"] .top-actions {
 }
 
 .text-btn {
-  font-family: var(--ui-font);
-  font-size: 0.95rem;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  color: var(--parchment);
+  font-family: var(--display-font);
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ash);
   background: transparent;
-  border: 1px solid rgba(201, 161, 74, 0.32);
-  padding: 0.9rem 1.1rem;
-  border-radius: 4px;
+  border: 1px solid rgba(201, 161, 74, 0.22);
+  padding: 0.7rem 1.1rem;
+  border-radius: 2px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -421,8 +419,8 @@ body[data-scene="onboarding"] .top-actions {
 .text-btn:hover,
 .draw-btn:hover,
 .reset-btn:hover {
-  color: var(--parchment);
-  border-color: rgba(201, 161, 74, 0.3);
+  color: var(--gold);
+  border-color: var(--gold);
 }
 
 .deck-wrap {
@@ -654,22 +652,22 @@ body[data-scene="onboarding"] .top-actions {
 }
 
 .draw-btn {
-  font-family: var(--ui-font);
+  font-family: var(--display-font);
   position: relative;
   z-index: 1;
-  font-size: 1rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
   color: var(--parchment);
-  background: rgba(15, 16, 24, 0.46);
-  border: 1px solid rgba(201, 161, 74, 0.4);
-  min-height: 60px;
-  padding: 0.95rem 1.9rem;
-  border-radius: 4px;
+  background: transparent;
+  border: 1px solid rgba(201, 161, 74, 0.3);
+  min-height: 52px;
+  padding: 0.7rem 1.6rem;
+  border-radius: 2px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+  box-shadow: none;
 }
 
 .deck-mode-copy {
@@ -785,9 +783,9 @@ body[data-scene="onboarding"] .top-actions {
 }
 
 .card-name {
-  font-family: var(--display-font);
-  font-size: clamp(1.3rem, 3vw, 1.9rem);
-  font-weight: 600;
+  font-family: var(--ritual-font);
+  font-size: clamp(1.3rem, 3.5vw, 1.9rem);
+  font-weight: 400;
   line-height: 1.1;
   margin-bottom: 0.2rem;
 }
@@ -817,8 +815,10 @@ body[data-scene="onboarding"] .top-actions {
 }
 
 .card-msg {
-  font-size: clamp(0.95rem, 2vw, 1.1rem);
-  line-height: 1.65;
+  font-family: var(--display-font);
+  font-style: italic;
+  font-size: clamp(0.98rem, 2.1vw, 1.1rem);
+  line-height: 1.82;
   margin-bottom: 1.6rem;
   opacity: 0;
   transform: translateY(18px);
@@ -928,21 +928,21 @@ body[data-scene="onboarding"] .top-actions {
 .reset-btn {
   display: block;
   width: 100%;
-  font-family: var(--ui-font);
-  font-size: 0.98rem;
-  font-weight: 500;
-  letter-spacing: 0.05em;
+  font-family: var(--display-font);
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--ash);
   background: transparent;
-  border: 1px solid rgba(138, 128, 112, 0.22);
-  min-height: 58px;
-  padding: 0.9rem 1rem;
-  border-radius: 4px;
+  border: 1px solid rgba(154, 143, 122, 0.18);
+  min-height: 52px;
+  padding: 0.7rem 1rem;
+  border-radius: 2px;
   cursor: pointer;
   text-align: center;
   transition: all 0.3s ease;
-  margin-top: 0.6rem;
+  margin-top: 0.5rem;
 }
 
 .paywall-box,
