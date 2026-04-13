@@ -47,6 +47,36 @@ const BASE_CARD_META = {
   "Соловей Рассвета": { state: "voice", tone: "light", links: ["dawn", "light", "choice"] },
   "Бурундук Лесных Троп": { state: "small_steps", tone: "light", links: ["path", "choice", "joy"] },
   Светляк: { state: "guidance", tone: "light", links: ["light", "future_path", "choice"] },
+  "Лунные Влюблённые": { state: "love", tone: "light", links: ["connection", "union", "blessing"] },
+  "Пламя Под Кожей": { state: "passion", tone: "neutral", links: ["attraction", "spark", "choice"] },
+  "Поцелуй Тени": { state: "temptation", tone: "dark", links: ["deception", "attraction", "boundary"] },
+  "Скреплённые Ветви": { state: "union", tone: "light", links: ["connection", "threads", "circle"] },
+  "Зерно Урожая": { state: "harvest", tone: "light", links: ["growth", "root", "blessing"] },
+  "Лесной Резчик": { state: "craft", tone: "neutral", links: ["root", "growth", "voice"] },
+  "Лестница Ветвей": { state: "ascent", tone: "light", links: ["future_path", "vision", "growth"] },
+  "Золотая Мера": { state: "fair_measure", tone: "neutral", links: ["balance", "harvest", "root"] },
+  "Хранитель Прощающего Сердца": {
+    state: "forgiveness",
+    tone: "light",
+    links: ["grief", "love", "release"],
+  },
+  "Ткач Возвращённого Света": {
+    state: "returning_light",
+    tone: "light",
+    links: ["love", "threads", "dawn"],
+  },
+  "Хранительница Тихой Верности": {
+    state: "fidelity",
+    tone: "neutral",
+    links: ["union", "threads", "stillness"],
+  },
+  "Узел Живого Дела": { state: "teamwork", tone: "light", links: ["craft", "root", "growth"] },
+  "Трон Корней": { state: "leadership", tone: "neutral", links: ["root", "ascent", "fair_measure"] },
+  "Знак Главного Пути": {
+    state: "calling",
+    tone: "light",
+    links: ["path", "vision", "craft"],
+  },
 };
 
 const STATE_EMOTIONS = {
@@ -79,6 +109,20 @@ const STATE_EMOTIONS = {
   rebirth: "transformation",
   ending: "transformation",
   awakening: "transformation",
+  love: "tenderness",
+  passion: "power",
+  temptation: "tension",
+  union: "tenderness",
+  harvest: "hope",
+  craft: "clarity",
+  ascent: "power",
+  fair_measure: "clarity",
+  forgiveness: "tenderness",
+  returning_light: "hope",
+  fidelity: "tenderness",
+  teamwork: "power",
+  leadership: "power",
+  calling: "clarity",
 };
 
 const STATE_ARCHETYPES = {
@@ -103,6 +147,20 @@ const STATE_ARCHETYPES = {
   remedy: "healer",
   light: "guide",
   spark: "guide",
+  love: "guide",
+  passion: "transformer",
+  temptation: "trickster",
+  union: "guardian",
+  harvest: "guide",
+  craft: "guide",
+  ascent: "messenger",
+  fair_measure: "witness",
+  forgiveness: "healer",
+  returning_light: "guide",
+  fidelity: "guardian",
+  teamwork: "guardian",
+  leadership: "guardian",
+  calling: "guide",
 };
 
 const STATE_INTENSITY = {
@@ -130,6 +188,20 @@ const STATE_INTENSITY = {
   spark: 2,
   light: 2,
   dawn: 2,
+  love: 3,
+  passion: 4,
+  temptation: 4,
+  union: 3,
+  harvest: 3,
+  craft: 3,
+  ascent: 4,
+  fair_measure: 3,
+  forgiveness: 3,
+  returning_light: 3,
+  fidelity: 3,
+  teamwork: 3,
+  leadership: 4,
+  calling: 4,
 };
 
 const CARD_META_V2_OVERRIDES = {
@@ -164,6 +236,62 @@ const CARD_META_V2_OVERRIDES = {
   "Жертвенный Огонь": {
     short: "Огонь очищает только то, что уже созрело для перемены.",
     advice: "Отдай пламени то, что уже не умеет вести тебя дальше.",
+  },
+  "Лунные Влюблённые": {
+    short: "Тихая взаимность уже ищет форму, в которой сможет стать явной.",
+    advice: "Смотри туда, где чувство не только зовёт, но и откликается.",
+  },
+  "Пламя Под Кожей": {
+    short: "Живой огонь уже проснулся, теперь важно различить его силу и цену.",
+    advice: "Прими влечение, но не позволяй ему заглушить внутреннюю ясность.",
+  },
+  "Поцелуй Тени": {
+    short: "Соблазн приходит красивым, но его правда всегда требует близкого взгляда.",
+    advice: "Не путай жар желания с глубиной настоящего чувства.",
+  },
+  "Скреплённые Ветви": {
+    short: "Союз крепнет там, где доверие растёт медленно, но верно.",
+    advice: "Береги связь, если в ней есть не только чувство, но и живая опора.",
+  },
+  "Зерно Урожая": {
+    short: "Посеянное однажды уже движется к своему видимому плоду.",
+    advice: "Продолжай то, что уже дало корень, и не отворачивайся от медленного роста.",
+  },
+  "Лесной Резчик": {
+    short: "Мастерство начинает говорить за тебя сильнее любых обещаний.",
+    advice: "Укрепляй качество своего дела, и признание соберётся вокруг него естественно.",
+  },
+  "Лестница Ветвей": {
+    short: "Следующая высота уже видна, если не отводить взгляд от собственного роста.",
+    advice: "Поднимайся туда, где усилие становится больше старой привычки оставаться ниже.",
+  },
+  "Золотая Мера": {
+    short: "У этого пути есть своя честная цена, и она уже начинает проявляться.",
+    advice: "Смотри трезво на ценность своего труда и не уменьшай её из страха.",
+  },
+  "Хранитель Прощающего Сердца": {
+    short: "Прощение возвращает тепло туда, где слишком долго жила одна только боль.",
+    advice: "Отпускай обиду там, где сердце уже готово выбрать исцеление вместо повторения раны.",
+  },
+  "Ткач Возвращённого Света": {
+    short: "Живая связь может снова вспыхнуть, если в ней осталось настоящее взаимное движение.",
+    advice: "Смотри не только на память, а на то, есть ли сейчас живой отклик с другой стороны.",
+  },
+  "Хранительница Тихой Верности": {
+    short: "Тихая преданность держится не на клятвах, а на ежедневной честности чувства.",
+    advice: "Береги ту связь, где глубина подтверждается не словами, а устойчивым присутствием.",
+  },
+  "Узел Живого Дела": {
+    short: "Общее дело крепнет там, где усилия не спорят друг с другом, а связываются в один ритм.",
+    advice: "Ищи союзников, с которыми твоя сила не теряется, а становится точнее и полезнее.",
+  },
+  "Трон Корней": {
+    short: "Настоящее лидерство вырастает из устойчивости, а не из одной только высоты.",
+    advice: "Занимай своё место силы там, где готова не только вести, но и держать опору для других.",
+  },
+  "Знак Главного Пути": {
+    short: "Свой путь уже начинает светиться там, где дело совпадает с твоей внутренней правдой.",
+    advice: "Смотри туда, где движение даёт не только рост, но и чувство точного внутреннего совпадения.",
   },
 };
 
