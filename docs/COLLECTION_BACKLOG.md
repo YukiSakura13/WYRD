@@ -116,6 +116,18 @@
 - Трон Корней
   - главный смысл: лидерство
   - визуальный кандидат: `assets/images/cards/tron_korney.webp`
+- Золотой Ручей
+  - главный смысл: денежный поток
+  - визуальный кандидат: `assets/images/cards/zolotoy_ruchey.webp`
+- Венец После Бури
+  - главный смысл: победа после испытания
+  - визуальный кандидат: `assets/images/cards/venets_posle_buri.webp`
+- Прыжок Через Огонь
+  - главный смысл: мужество
+  - визуальный кандидат: `assets/images/cards/pryzhok_cherez_ogon.webp`
+- Эхо Вершин
+  - главный смысл: публичное признание
+  - визуальный кандидат: `assets/images/cards/ekho_vershin.webp`
 - Зерно Урожая
   - визуальный кандидат: `assets/images/cards/zerno_urozhaya.webp`
 - Лесной Резчик

@@ -77,6 +77,18 @@ const BASE_CARD_META = {
     tone: "light",
     links: ["path", "vision", "craft"],
   },
+  "Золотой Ручей": { state: "golden_flow", tone: "light", links: ["harvest", "flow", "blessing"] },
+  "Венец После Бури": { state: "triumph", tone: "light", links: ["fracture", "ascent", "dawn"] },
+  "Прыжок Через Огонь": {
+    state: "courage",
+    tone: "neutral",
+    links: ["sacred_fire", "threshold", "ascent"],
+  },
+  "Эхо Вершин": {
+    state: "recognition",
+    tone: "light",
+    links: ["voice", "vision", "dawn"],
+  },
 };
 
 const STATE_EMOTIONS = {
@@ -123,6 +135,10 @@ const STATE_EMOTIONS = {
   teamwork: "power",
   leadership: "power",
   calling: "clarity",
+  golden_flow: "hope",
+  triumph: "power",
+  courage: "power",
+  recognition: "power",
 };
 
 const STATE_ARCHETYPES = {
@@ -161,6 +177,10 @@ const STATE_ARCHETYPES = {
   teamwork: "guardian",
   leadership: "guardian",
   calling: "guide",
+  golden_flow: "guide",
+  triumph: "messenger",
+  courage: "guardian",
+  recognition: "messenger",
 };
 
 const STATE_INTENSITY = {
@@ -202,6 +222,10 @@ const STATE_INTENSITY = {
   teamwork: 3,
   leadership: 4,
   calling: 4,
+  golden_flow: 3,
+  triumph: 4,
+  courage: 4,
+  recognition: 3,
 };
 
 const CARD_META_V2_OVERRIDES = {
@@ -292,6 +316,22 @@ const CARD_META_V2_OVERRIDES = {
   "Знак Главного Пути": {
     short: "Свой путь уже начинает светиться там, где дело совпадает с твоей внутренней правдой.",
     advice: "Смотри туда, где движение даёт не только рост, но и чувство точного внутреннего совпадения.",
+  },
+  "Золотой Ручей": {
+    short: "Поток ресурса усиливается там, где ценность не застаивается, а начинает двигаться.",
+    advice: "Поддерживай движение денег там, где оно идёт живо, естественно и не требует лишнего насилия.",
+  },
+  "Венец После Бури": {
+    short: "После самой тяжёлой части пути уже начинает проступать заслуженный итог.",
+    advice: "Не обесценивай свою стойкость в момент, когда она уже превращается в результат.",
+  },
+  "Прыжок Через Огонь": {
+    short: "Мужество приходит не после страха, а в тот миг, когда ты идёшь через него.",
+    advice: "Сделай шаг, даже если внутри ещё дрожит, именно так и рождается настоящая сила.",
+  },
+  "Эхо Вершин": {
+    short: "Твоё звучание начинает находить отклик там, где раньше его ещё не слышали.",
+    advice: "Позволь себе быть видимой в тот момент, когда мир уже готов откликнуться на твою ценность.",
   },
 };
 
