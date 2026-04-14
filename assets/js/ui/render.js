@@ -37,6 +37,14 @@ export function getElements(doc = document) {
     spreadGrid: doc.getElementById("spread-grid"),
     spreadTitle: doc.getElementById("spread-title"),
     spreadStageNote: doc.getElementById("spread-stage-note"),
+    spreadDetail: doc.getElementById("spread-detail"),
+    spreadDetailRole: doc.getElementById("spread-detail-role"),
+    spreadDetailImage: doc.getElementById("spread-detail-image"),
+    spreadDetailKeyword: doc.getElementById("spread-detail-keyword"),
+    spreadDetailName: doc.getElementById("spread-detail-name"),
+    spreadDetailSubtitle: doc.getElementById("spread-detail-subtitle"),
+    spreadDetailMessage: doc.getElementById("spread-detail-message"),
+    spreadDetailShadow: doc.getElementById("spread-detail-shadow"),
     spreadContinuation: doc.getElementById("spread-continuation"),
     oracleVoice: doc.getElementById("oracle-voice"),
     oracleVoiceMessage: doc.getElementById("oracle-voice-message"),
@@ -58,6 +66,7 @@ export function deriveContentPanel(state) {
 export function createRenderer(elements) {
   let readingRevealTimers = [];
   let lastReadingId = null;
+  let selectedSpreadCardId = null;
 
   function render(state, uiState) {
     renderShell(uiState);
@@ -216,6 +225,16 @@ export function createRenderer(elements) {
     elements.spreadGrid.replaceChildren();
     elements.spreadGrid.className = "spread-grid";
 
+    if (!lastSpread.length) {
+      selectedSpreadCardId = null;
+      renderSpreadDetail(null);
+      return;
+    }
+
+    if (!lastSpread.some((card) => card.id === selectedSpreadCardId)) {
+      selectedSpreadCardId = lastSpread[0]?.id || null;
+    }
+
     if (lastSpread.length === 3) {
       elements.spreadGrid.classList.add("spread-grid--three");
     } else if (lastSpread.length === 5) {
@@ -223,39 +242,55 @@ export function createRenderer(elements) {
     }
 
     lastSpread.forEach(function (card) {
-      const item = document.createElement("article");
+      const item = document.createElement("button");
+      item.type = "button";
       item.className = "spread-card";
       item.dataset.slot = String(card.slot || "");
       item.dataset.layer = card.layer || "";
+      item.dataset.selected = String(card.id === selectedSpreadCardId);
+      item.setAttribute("aria-pressed", String(card.id === selectedSpreadCardId));
+      item.setAttribute("aria-label", `${card.spreadLabel || layerLabel(card.layer)} — ${card.name}`);
       item.style.setProperty("--spread-delay", getSpreadDelay(card, lastSpread.length));
+      item.addEventListener("click", function handleSelect() {
+        selectedSpreadCardId = card.id;
+        renderSpread(lastSpread);
+      });
 
       const image = document.createElement("img");
       image.src = getCardImage(card);
       image.alt = card.name;
       image.classList.toggle("is-empty", !card.image);
 
-      const title = document.createElement("h3");
-      title.textContent = card.name;
+      const srRole = document.createElement("span");
+      srRole.className = "sr-only";
+      srRole.textContent = card.spreadLabel || layerLabel(card.layer);
 
-      const role = document.createElement("p");
-      role.className = "spread-role";
-      role.textContent = card.spreadLabel || layerLabel(card.layer);
-
-      const subtitle = document.createElement("p");
-      subtitle.className = "card-en";
-      subtitle.textContent = card.subtitle;
-
-      const message = document.createElement("p");
-      message.className = "spread-message";
-      message.textContent = card.message;
-
-      const veil = document.createElement("div");
-      veil.className = "spread-veil";
-      veil.textContent = card.spreadLabel || layerLabel(card.layer);
-
-      item.append(image, role, title, subtitle, message, veil);
+      item.append(image, srRole);
       elements.spreadGrid.appendChild(item);
     });
+
+    renderSpreadDetail(lastSpread.find((card) => card.id === selectedSpreadCardId) || lastSpread[0]);
+  }
+
+  function renderSpreadDetail(card) {
+    if (!elements.spreadDetail) {
+      return;
+    }
+
+    if (!card) {
+      elements.spreadDetail.hidden = true;
+      return;
+    }
+
+    elements.spreadDetail.hidden = false;
+    elements.spreadDetailRole.textContent = card.spreadLabel || layerLabel(card.layer);
+    elements.spreadDetailImage.src = getCardImage(card);
+    elements.spreadDetailImage.alt = card.name;
+    elements.spreadDetailKeyword.textContent = `✦ ${card.keyword} ✦`;
+    elements.spreadDetailName.textContent = card.name;
+    elements.spreadDetailSubtitle.textContent = card.subtitle;
+    elements.spreadDetailMessage.textContent = `« ${card.message} »`;
+    elements.spreadDetailShadow.textContent = card.shadow;
   }
 
   function renderSpreadContinuation(lastSpread, uiState) {
