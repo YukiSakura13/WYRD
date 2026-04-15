@@ -342,7 +342,7 @@ const RAW_CARDS = [
     message:
       "Ты не видишь следующего шага. Это не опасность — это пространство между. Туман не врёт.",
     shadow: "Ты называешь неопределённость провалом.",
-    image: "./assets/images/cards/wyrd_034.webp",
+    image: "./assets/images/cards/wyrd_036.webp",
   },
   {
     id: "wyrd_035",
@@ -352,7 +352,7 @@ const RAW_CARDS = [
     message:
       "Это не смерть и не слабость. Это медведь под снегом — живой, дышащий, копящий силу. Ты имеешь право на паузу.",
     shadow: "Ты путаешь отдых с бегством.",
-    image: "./assets/images/cards/wyrd_035.webp",
+    image: "./assets/images/cards/wyrd_034.webp",
   },
   {
     id: "wyrd_036",
@@ -362,7 +362,7 @@ const RAW_CARDS = [
     message:
       "Оба пути настоящие. Оба ведут куда-то. Стоять здесь вечно — тоже выбор.",
     shadow: "Ты ждёшь знака, которого не будет. Знак — это ты.",
-    image: "./assets/images/cards/wyrd_036.webp",
+    image: "./assets/images/cards/wyrd_035.webp",
   },
   {
     id: "wyrd_037",
