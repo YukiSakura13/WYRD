@@ -147,54 +147,54 @@
 
 | id | name | image | keyword | primary_essence | category | primary_group | layer | tone | status | notes |
 |---|---|---|---|---|---|---|---|---|---|---|
-| wyrd_001 | Хранитель Леса | `wyrd_001.webp` | Путь | путь | вектор | путь-выбор | present | neutral | legacy_mvp | |
-| wyrd_002 | Вестник Чёрных Крыльев | `wyrd_002.webp` | Трансформация | завершение | вектор | обновление-цикл | future | dark | legacy_mvp | конец цикла |
-| wyrd_003 | Всевидящий Плащ | `wyrd_003.webp` | Тайное знание | истина | знание | интуиция-тайна | present | neutral | legacy_mvp | |
-| wyrd_004 | Хранитель Времени | `wyrd_004.webp` | Мудрость | время | знание | интуиция-тайна | future | light | legacy_mvp | зрелость и срок |
-| wyrd_005 | Страж Ночи | `wyrd_005.webp` | Защита | защита | свет | граница-служение | present | neutral | legacy_mvp | |
-| wyrd_006 | Хранитель Фонаря | `wyrd_006.webp` | Притяжение | влечение | связь | любовь-связь | future | neutral | legacy_mvp | опасное притяжение |
-| wyrd_007 | Леший | `wyrd_007.webp` | Ритуал | служение | порядок | граница-служение | past | dark | legacy_mvp | временно оставлен в past, проверить на живых раскладах |
-| wyrd_008 | Лисица Девяти Хвостов | `wyrd_008.webp` | Обман | обман | испытание | любовь-связь | present | dark | legacy_mvp | тень в отношениях |
-| wyrd_009 | Хранитель Лунной Вуали | `wyrd_009.webp` | Тишина | тишина | знание | интуиция-тайна | present | light | legacy_mvp | тихий ответ |
-| wyrd_010 | Алтарь Пустоты | `wyrd_010.webp` | Жертва | жертва | испытание | испытание-сила | past | dark | legacy_mvp | цена выбора |
-| wyrd_011 | Древо Возрождения | `wyrd_011.webp` | Возрождение | возрождение | вектор | обновление-цикл | past | neutral | legacy_mvp | |
-| wyrd_012 | Плакальщица | `wyrd_012.webp` | Горе | привязанность | связь | любовь-связь | past | dark | legacy_mvp | боль и отпускание |
-| wyrd_013 | Страж Порога | `wyrd_013.webp` | Граница | переход | вектор | путь-выбор | future | light | legacy_mvp | порог и шаг |
-| wyrd_014 | Волк с Зеркалом | `wyrd_014.webp` | Память | память | знание | интуиция-тайна | past | dark | legacy_mvp | зеркало прошлого |
-| wyrd_015 | Ткачиха Судьбы | `wyrd_015.webp` | Нити судьбы | судьбоносная связь | связь | любовь-связь | present | neutral | legacy_mvp | связь и судьба |
-| wyrd_016 | Уроборос | `wyrd_016.webp` | Цикл | цикл | порядок | обновление-цикл | past | dark | legacy_mvp | судьба и повтор |
-| wyrd_017 | Лесной Знахарь | `wyrd_017.webp` | Яд / Лекарство | мера | знание | интуиция-тайна | present | neutral | legacy_mvp | знание и исцеление |
-| wyrd_018 | Вещий Ворон | `wyrd_018.webp` | Пророчество | знак | знание | интуиция-тайна | future | light | legacy_mvp | прямой ответ |
-| wyrd_019 | Рой | `wyrd_019.webp` | Пробуждение | пробуждение | испытание | испытание-сила | future | neutral | legacy_mvp | внутренний сдвиг |
-| wyrd_020 | Хранитель Нитей | `wyrd_020.webp` | Судьба | узел судьбы | порядок | граница-служение | past | dark | legacy_mvp | закономерность |
-| wyrd_021 | Страж с Ключом | `wyrd_021.webp` | Тайна | открытие | свет | путь-выбор | future | light | legacy_mvp | вход и доступ |
-| wyrd_022 | Паук Звёздной Сети | `wyrd_022.webp` | Паутина | скрытая связь | порядок | интуиция-тайна | present | neutral | legacy_mvp | знаки и сеть |
-| wyrd_023 | Ёж | `wyrd_023.webp` | Граница | граница | свет | граница-служение | present | neutral | legacy_mvp | защита и близость |
-| wyrd_024 | Жаба | `wyrd_024.webp` | Терпение | терпение | сила | деньги-карьера | present | neutral | legacy_mvp | ждать и не торопиться; временный primary_group до secondary_groups |
-| wyrd_025 | Русалка | `wyrd_025.webp` | Глубина | опасное притяжение | связь | любовь-связь | future | dark | legacy_mvp | опасная любовь |
-| wyrd_026 | Свеча | `wyrd_026.webp` | Свет | свет | свет | интуиция-тайна | present | light | legacy_mvp | малый свет в темноте |
-| wyrd_027 | Грибница | `wyrd_027.webp` | Связь | связь | связь | любовь-связь | present | neutral | legacy_mvp | невидимые нити |
-| wyrd_028 | Золотой Олень | `wyrd_028.webp` | Дар | шанс | вектор | путь-выбор | future | light | legacy_mvp | момент, который нельзя упустить; временный primary_group до secondary_groups |
-| wyrd_029 | Заря | `wyrd_029.webp` | Рассвет | рассвет | свет | обновление-цикл | future | light | legacy_mvp | новое после тьмы |
-| wyrd_030 | Орёл | `wyrd_030.webp` | Видение | видение | знание | интуиция-тайна | future | light | legacy_mvp | широкий взгляд сверху |
-| wyrd_031 | Цветущая Ветвь | `wyrd_031.webp` | Рост | рост | вектор | обновление-цикл | future | light | legacy_mvp | |
-| wyrd_032 | Крыса | `wyrd_032.webp` | Выживание | ресурс | сила | деньги-карьера | past | dark | legacy_mvp | синхронизировать keyword |
-| wyrd_033 | Водяной | `wyrd_033.webp` | Подъём | возвращение скрытого | испытание | испытание-сила | past | dark | legacy_mvp | глубина и всплытие |
-| wyrd_034 | Туман | `wyrd_034.webp` | Неясность | неясность | испытание | испытание-сила | present | neutral | legacy_mvp | пространство между |
-| wyrd_035 | Зимний Сон | `wyrd_035.webp` | Пауза | восстановление | сила | обновление-цикл | present | light | legacy_mvp | цикл отдыха |
-| wyrd_036 | Выбор | `wyrd_036.webp` | Решение | поворот бытия | вектор | путь-выбор | present | neutral | legacy_mvp | развилка |
-| wyrd_037 | Разлом | `wyrd_037.webp` | Трещина | вызов | испытание | испытание-сила | past | dark | legacy_mvp | кризис и прорыв |
-| wyrd_038 | Тишина | `wyrd_038.webp` | Присутствие | внутренний слух | знание | интуиция-тайна | present | neutral | legacy_mvp | слышание без слов |
-| wyrd_039 | Жертвенный Огонь | `wyrd_039.webp` | Отдача | очищение | испытание | граница-служение | past | dark | legacy_mvp | огонь и отпускание |
-| wyrd_040 | Корень | `wyrd_040.webp` | Исток | основа | сила | граница-служение | past | dark | legacy_mvp | база и исток |
-| wyrd_041 | Круг | `wyrd_041.webp` | Целостность | целостность | порядок | обновление-цикл | present | light | legacy_mvp | завершённость |
-| wyrd_042 | Искра Леса | `wyrd_042.webp` | Игра | вдохновение | творчество | свобода-творчество | present | light | legacy_mvp | оживление |
-| wyrd_043 | Собиратель Орехов | `wyrd_043.webp` | Радость | радость | энергия | обновление-цикл | present | light | legacy_mvp | тихое изобилие, сезонный ритм |
-| wyrd_044 | Текущая Река | `wyrd_044.webp` | Поток | поток | вектор | деньги-карьера | present | light | legacy_mvp | денежный поток; временный primary_group до secondary_groups |
-| wyrd_045 | Перо Ветра | `wyrd_045.webp` | Лёгкость | свобода | энергия | свобода-творчество | present | light | legacy_mvp | освобождение |
-| wyrd_046 | Соловей Рассвета | `wyrd_046.webp` | Голос | голос | творчество | свобода-творчество | present | light | legacy_mvp | самовыражение |
-| wyrd_047 | Бурундук Лесных Троп | `wyrd_047.webp` | Шаг | прогресс | сила | деньги-карьера | present | light | legacy_mvp | маленькие шаги к цели; временный primary_group до secondary_groups |
-| wyrd_048 | Светляк | `wyrd_048.webp` | Свет | самосвет | свет | свобода-творчество | present | light | legacy_mvp | собственный свет как самовыражение |
+| wyrd_001 | Хранитель Леса | `khranitel_lesa.webp` | Путь | путь | вектор | путь-выбор | present | neutral | legacy_mvp | |
+| wyrd_002 | Вестник Чёрных Крыльев | `vestnik_chernykh_krylev.webp` | Трансформация | завершение | вектор | обновление-цикл | future | dark | legacy_mvp | конец цикла |
+| wyrd_003 | Всевидящий Плащ | `vsevidyashchiy_plashch.webp` | Тайное знание | истина | знание | интуиция-тайна | present | neutral | legacy_mvp | |
+| wyrd_004 | Хранитель Времени | `khranitel_vremeni.webp` | Мудрость | время | знание | интуиция-тайна | future | light | legacy_mvp | зрелость и срок |
+| wyrd_005 | Страж Ночи | `strazh_nochi.webp` | Защита | защита | свет | граница-служение | present | neutral | legacy_mvp | |
+| wyrd_006 | Хранитель Фонаря | `khranitel_fonarya.webp` | Притяжение | влечение | связь | любовь-связь | future | neutral | legacy_mvp | опасное притяжение |
+| wyrd_007 | Леший | `leshiy.webp` | Ритуал | служение | порядок | граница-служение | past | dark | legacy_mvp | временно оставлен в past, проверить на живых раскладах |
+| wyrd_008 | Лисица Девяти Хвостов | `lisitsa_devyati_khvostov.webp` | Обман | обман | испытание | любовь-связь | present | dark | legacy_mvp | тень в отношениях |
+| wyrd_009 | Хранитель Лунной Вуали | `khranitel_lunnoy_vuali.webp` | Тишина | тишина | знание | интуиция-тайна | present | light | legacy_mvp | тихий ответ |
+| wyrd_010 | Алтарь Пустоты | `altar_pustoty.webp` | Жертва | жертва | испытание | испытание-сила | past | dark | legacy_mvp | цена выбора |
+| wyrd_011 | Древо Возрождения | `drevo_vozrozhdeniya.webp` | Возрождение | возрождение | вектор | обновление-цикл | past | neutral | legacy_mvp | |
+| wyrd_012 | Плакальщица | `plakalshchitsa.webp` | Горе | привязанность | связь | любовь-связь | past | dark | legacy_mvp | боль и отпускание |
+| wyrd_013 | Страж Порога | `strazh_poroga.webp` | Граница | переход | вектор | путь-выбор | future | light | legacy_mvp | порог и шаг |
+| wyrd_014 | Волк с Зеркалом | `volk_s_zerkalom.webp` | Память | память | знание | интуиция-тайна | past | dark | legacy_mvp | зеркало прошлого |
+| wyrd_015 | Ткачиха Судьбы | `tkachikha_sudby.webp` | Нити судьбы | судьбоносная связь | связь | любовь-связь | present | neutral | legacy_mvp | связь и судьба |
+| wyrd_016 | Уроборос | `uroboros.webp` | Цикл | цикл | порядок | обновление-цикл | past | dark | legacy_mvp | судьба и повтор |
+| wyrd_017 | Лесной Знахарь | `lesnoi_znakhar.webp` | Яд / Лекарство | мера | знание | интуиция-тайна | present | neutral | legacy_mvp | знание и исцеление |
+| wyrd_018 | Вещий Ворон | `veshchiy_voron.webp` | Пророчество | знак | знание | интуиция-тайна | future | light | legacy_mvp | прямой ответ |
+| wyrd_019 | Рой | `roy.webp` | Пробуждение | пробуждение | испытание | испытание-сила | future | neutral | legacy_mvp | внутренний сдвиг |
+| wyrd_020 | Хранитель Нитей | `khranitel_nitey.webp` | Судьба | узел судьбы | порядок | граница-служение | past | dark | legacy_mvp | закономерность |
+| wyrd_021 | Страж с Ключом | `strazh_s_klyuchom.webp` | Тайна | открытие | свет | путь-выбор | future | light | legacy_mvp | вход и доступ |
+| wyrd_022 | Паук Звёздной Сети | `pauk_zvezdnoy_seti.webp` | Паутина | скрытая связь | порядок | интуиция-тайна | present | neutral | legacy_mvp | знаки и сеть |
+| wyrd_023 | Ёж | `ezh.webp` | Граница | граница | свет | граница-служение | present | neutral | legacy_mvp | защита и близость |
+| wyrd_024 | Жаба | `zhaba.webp` | Терпение | терпение | сила | деньги-карьера | present | neutral | legacy_mvp | ждать и не торопиться; временный primary_group до secondary_groups |
+| wyrd_025 | Русалка | `rusalka.webp` | Глубина | опасное притяжение | связь | любовь-связь | future | dark | legacy_mvp | опасная любовь |
+| wyrd_026 | Свеча | `svecha.webp` | Свет | свет | свет | интуиция-тайна | present | light | legacy_mvp | малый свет в темноте |
+| wyrd_027 | Грибница | `gribnitsa.webp` | Связь | связь | связь | любовь-связь | present | neutral | legacy_mvp | невидимые нити |
+| wyrd_028 | Золотой Олень | `zolotoy_olen.webp` | Дар | шанс | вектор | путь-выбор | future | light | legacy_mvp | момент, который нельзя упустить; временный primary_group до secondary_groups |
+| wyrd_029 | Заря | `zarya.webp` | Рассвет | рассвет | свет | обновление-цикл | future | light | legacy_mvp | новое после тьмы |
+| wyrd_030 | Орёл | `orel.webp` | Видение | видение | знание | интуиция-тайна | future | light | legacy_mvp | широкий взгляд сверху |
+| wyrd_031 | Цветущая Ветвь | `tsvetushchaya_vetv.webp` | Рост | рост | вектор | обновление-цикл | future | light | legacy_mvp | |
+| wyrd_032 | Крыса | `krysa.webp` | Выживание | ресурс | сила | деньги-карьера | past | dark | legacy_mvp | синхронизировать keyword |
+| wyrd_033 | Водяной | `vodyanoy.webp` | Подъём | возвращение скрытого | испытание | испытание-сила | past | dark | legacy_mvp | глубина и всплытие |
+| wyrd_034 | Туман | `zimniy_son.webp` | Неясность | неясность | испытание | испытание-сила | present | neutral | legacy_mvp | пространство между |
+| wyrd_035 | Зимний Сон | `vybor.webp` | Пауза | восстановление | сила | обновление-цикл | present | light | legacy_mvp | цикл отдыха |
+| wyrd_036 | Выбор | `tuman.webp` | Решение | поворот бытия | вектор | путь-выбор | present | neutral | legacy_mvp | развилка |
+| wyrd_037 | Разлом | `razlom.webp` | Трещина | вызов | испытание | испытание-сила | past | dark | legacy_mvp | кризис и прорыв |
+| wyrd_038 | Тишина | `tishina.webp` | Присутствие | внутренний слух | знание | интуиция-тайна | present | neutral | legacy_mvp | слышание без слов |
+| wyrd_039 | Жертвенный Огонь | `zhertvennyy_ogon.webp` | Отдача | очищение | испытание | граница-служение | past | dark | legacy_mvp | огонь и отпускание |
+| wyrd_040 | Корень | `koren.webp` | Исток | основа | сила | граница-служение | past | dark | legacy_mvp | база и исток |
+| wyrd_041 | Круг | `krug.webp` | Целостность | целостность | порядок | обновление-цикл | present | light | legacy_mvp | завершённость |
+| wyrd_042 | Искра Леса | `iskra_lesa.webp` | Игра | вдохновение | творчество | свобода-творчество | present | light | legacy_mvp | оживление |
+| wyrd_043 | Собиратель Орехов | `sobiratel_orekhov.webp` | Радость | радость | энергия | обновление-цикл | present | light | legacy_mvp | тихое изобилие, сезонный ритм |
+| wyrd_044 | Текущая Река | `tekushchaya_reka.webp` | Поток | поток | вектор | деньги-карьера | present | light | legacy_mvp | денежный поток; временный primary_group до secondary_groups |
+| wyrd_045 | Перо Ветра | `pero_vetra.webp` | Лёгкость | свобода | энергия | свобода-творчество | present | light | legacy_mvp | освобождение |
+| wyrd_046 | Соловей Рассвета | `solovey_rassveta.webp` | Голос | голос | творчество | свобода-творчество | present | light | legacy_mvp | самовыражение |
+| wyrd_047 | Бурундук Лесных Троп | `burunduk_lesnykh_trop.webp` | Шаг | прогресс | сила | деньги-карьера | present | light | legacy_mvp | маленькие шаги к цели; временный primary_group до secondary_groups |
+| wyrd_048 | Светляк | `svetlyak.webp` | Свет | самосвет | свет | свобода-творчество | present | light | legacy_mvp | собственный свет как самовыражение |
 | wyrd_049 | Лунные Влюблённые | `lunnye_vlyublennye.webp` | Любовь | любовь | связь | любовь-связь | present | light | built_in_new | |
 | wyrd_050 | Пламя Под Кожей | `plamya_pod_kozhey.webp` | Страсть | страсть | связь | любовь-связь | present | neutral | built_in_new | |
 | wyrd_051 | Поцелуй Тени | `potseluy_teni.webp` | Соблазн | соблазн | испытание | любовь-связь | present | dark | built_in_new | тень в любви |

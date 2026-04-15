@@ -12,7 +12,7 @@ const RAW_CARDS = [
     message:
       "Ты уже знаешь, куда идти. Компас у тебя в руках — он всегда указывал верно. Ты просто ещё не решилась назвать это вслух, потому что выбор делает путь настоящим.",
     shadow: "Ты ждёшь, пока кто-то другой укажет направление. Но проводник сюда не придёт.",
-    image: "./assets/images/cards/wyrd_001.webp",
+    image: "./assets/images/cards/khranitel_lesa.webp",
   },
   {
     id: "wyrd_002",
@@ -22,7 +22,7 @@ const RAW_CARDS = [
     message:
       "Что-то заканчивается. И это правильно. Не цепляйся за уходящее — в каждом конце спрятано начало чего-то, что ты ещё не умеешь назвать.",
     shadow: "Ты цепляешься за то, что уже ушло. Держишь форму, которая давно пуста.",
-    image: "./assets/images/cards/wyrd_002.webp",
+    image: "./assets/images/cards/vestnik_chernykh_krylev.webp",
   },
   {
     id: "wyrd_003",
@@ -32,7 +32,7 @@ const RAW_CARDS = [
     message:
       "Ты давно знаешь правду. Она живёт в тебе тихо, терпеливо ждёт. Ты просто делаешь вид, что всё ещё ищешь.",
     shadow: "Чужие взгляды не должны определять твой путь. Смотри внутрь, а не вовне.",
-    image: "./assets/images/cards/wyrd_003.webp",
+    image: "./assets/images/cards/vsevidyashchiy_plashch.webp",
   },
   {
     id: "wyrd_004",
@@ -42,7 +42,7 @@ const RAW_CARDS = [
     message:
       "Не всё происходит сразу. И это нормально. Мудрость не терпит спешки — она приходит к тем, кто умеет стоять и слушать тишину.",
     shadow: "Ты откладываешь жизнь, ожидая идеального момента. Он уже здесь.",
-    image: "./assets/images/cards/wyrd_004.webp",
+    image: "./assets/images/cards/khranitel_vremeni.webp",
   },
   {
     id: "wyrd_005",
@@ -52,7 +52,7 @@ const RAW_CARDS = [
     message:
       "Ты защищаешь что-то важное. Но от кого? Граница между мирами тонка — и иногда то, что ты охраняешь снаружи, живёт внутри.",
     shadow: "Ты держишься за страх и называешь это осторожностью.",
-    image: "./assets/images/cards/wyrd_005.webp",
+    image: "./assets/images/cards/strazh_nochi.webp",
   },
   {
     id: "wyrd_006",
@@ -62,7 +62,7 @@ const RAW_CARDS = [
     message:
       "Тебя тянет туда — но это не значит, что тебе туда нужно. Убедись, что летишь к своему свету, а не к чужому огню.",
     shadow: "Ты идёшь за тем, что тебя сожжёт.",
-    image: "./assets/images/cards/wyrd_006.webp",
+    image: "./assets/images/cards/khranitel_fonarya.webp",
   },
   {
     id: "wyrd_007",
@@ -72,7 +72,7 @@ const RAW_CARDS = [
     message:
       "Прежде чем двигаться — пойми, зачем. Каждый шаг в лесу оставляет след. Освяти намерение, прежде чем действовать.",
     shadow: "Ты делаешь шаги, которые никуда не ведут.",
-    image: "./assets/images/cards/wyrd_007.webp",
+    image: "./assets/images/cards/leshiy.webp",
   },
   {
     id: "wyrd_008",
@@ -82,7 +82,7 @@ const RAW_CARDS = [
     message:
       "Ты уже видишь обман. Не всё, что ведёт тебя — ведёт туда, куда ты думаешь. Смотри внимательнее.",
     shadow: "Ты выбираешь верить, потому что так легче.",
-    image: "./assets/images/cards/wyrd_008.webp",
+    image: "./assets/images/cards/lisitsa_devyati_khvostov.webp",
   },
   {
     id: "wyrd_009",
@@ -92,7 +92,7 @@ const RAW_CARDS = [
     message:
       "Сейчас не время отвечать. Просто побудь. Не каждый вопрос требует слов — некоторые растворяются в лунном свете.",
     shadow: "Ты прячешься за тишиной, чтобы ничего не менять.",
-    image: "./assets/images/cards/wyrd_009.webp",
+    image: "./assets/images/cards/khranitel_lunnoy_vuali.webp",
   },
   {
     id: "wyrd_010",
@@ -102,7 +102,7 @@ const RAW_CARDS = [
     message:
       "Ты не можешь сохранить всё. Настоящая сила всегда требует цены — плати осознанно, а не по привычке.",
     shadow: "Ты отдаёшь себя вместо того, что действительно важно.",
-    image: "./assets/images/cards/wyrd_010.webp",
+    image: "./assets/images/cards/altar_pustoty.webp",
   },
   {
     id: "wyrd_011",
@@ -112,7 +112,7 @@ const RAW_CARDS = [
     message:
       "Из этого вырастет что-то новое. Из того, что умерло, прорастает живое. Не бойся стать почвой для чего-то большего.",
     shadow: "Ты держишься за то, что уже умерло.",
-    image: "./assets/images/cards/wyrd_011.webp",
+    image: "./assets/images/cards/drevo_vozrozhdeniya.webp",
   },
   {
     id: "wyrd_012",
@@ -122,7 +122,7 @@ const RAW_CARDS = [
     message:
       "Тебе можно чувствовать это. Позволь себе оплакать. Слёзы — не слабость. Это река, которая несёт тебя дальше.",
     shadow: "Ты застрял в этом и не хочешь выходить. Горе стало домом.",
-    image: "./assets/images/cards/wyrd_012.webp",
+    image: "./assets/images/cards/plakalshchitsa.webp",
   },
   {
     id: "wyrd_013",
@@ -132,7 +132,7 @@ const RAW_CARDS = [
     message:
       "Ты уже на границе. Одна рука в прошлом, другая — в будущем. Стоять между — не выбор. Шагни.",
     shadow: "Ты стоишь между и не выбираешь ни одну сторону.",
-    image: "./assets/images/cards/wyrd_013.webp",
+    image: "./assets/images/cards/strazh_poroga.webp",
   },
   {
     id: "wyrd_014",
@@ -142,7 +142,7 @@ const RAW_CARDS = [
     message:
       "Ты смотришь в прошлое и не замечаешь настоящее. Зеркало показывает не то, что есть — а то, что было. Помни, откуда пришла.",
     shadow: "Ты держишься за версию себя, которой уже нет.",
-    image: "./assets/images/cards/wyrd_014.webp",
+    image: "./assets/images/cards/volk_s_zerkalom.webp",
   },
   {
     id: "wyrd_015",
@@ -152,7 +152,7 @@ const RAW_CARDS = [
     message:
       "Всё связано. Даже то, что ты считаешь случайным — часть большого узора. Ищи связи там, где видишь только хаос.",
     shadow: "Ты живёшь чужими нитями. Найди свою.",
-    image: "./assets/images/cards/wyrd_015.webp",
+    image: "./assets/images/cards/tkachikha_sudby.webp",
   },
   {
     id: "wyrd_016",
@@ -162,7 +162,7 @@ const RAW_CARDS = [
     message:
       "Ты снова здесь. Всё возвращается — конец и есть начало. Свеча горит внутри круга вечности.",
     shadow: "Ты ходишь по кругу и называешь это судьбой.",
-    image: "./assets/images/cards/wyrd_016.webp",
+    image: "./assets/images/cards/uroboros.webp",
   },
   {
     id: "wyrd_017",
@@ -172,7 +172,7 @@ const RAW_CARDS = [
     message:
       "Одно и то же растение лечит и убивает. Всё зависит от дозы и намерения. Что ты несёшь в своей чаше — и кому?",
     shadow: "Ты даёшь другим то, в чём сам нуждаешься.",
-    image: "./assets/images/cards/wyrd_017.webp",
+    image: "./assets/images/cards/lesnoi_znakhar.webp",
   },
   {
     id: "wyrd_018",
@@ -182,7 +182,7 @@ const RAW_CARDS = [
     message:
       "Ты уже получил ответ. Знак был дан — ты его видела, слышала, чувствовала. Поверь теперь.",
     shadow: "Ты игнорируешь то, что тебе не нравится.",
-    image: "./assets/images/cards/wyrd_018.webp",
+    image: "./assets/images/cards/veshchiy_voron.webp",
   },
   {
     id: "wyrd_019",
@@ -192,7 +192,7 @@ const RAW_CARDS = [
     message:
       "Ты увидел. Что-то внутри тебя сдвинулось и уже не вернётся на место. Это не конец — это начало движения.",
     shadow: "Ты сделал вид, что ничего не произошло.",
-    image: "./assets/images/cards/wyrd_019.webp",
+    image: "./assets/images/cards/roy.webp",
   },
   {
     id: "wyrd_020",
@@ -202,7 +202,7 @@ const RAW_CARDS = [
     message:
       "Он знает, где начинается твоя нить и где она узлом сходится с чужой. Распутай то, что сам же завязал.",
     shadow: "Ты называешь это судьбой — но это твои собственные узлы.",
-    image: "./assets/images/cards/wyrd_020.webp",
+    image: "./assets/images/cards/khranitel_nitey.webp",
   },
   {
     id: "wyrd_021",
@@ -212,7 +212,7 @@ const RAW_CARDS = [
     message:
       "Ключ уже у тебя. Дверь давно ждёт. Ты ходишь вокруг и смотришь в замочную скважину, вместо того чтобы войти.",
     shadow: "Ты боишься не того, что за дверью. Ты боишься, что там пусто.",
-    image: "./assets/images/cards/wyrd_021.webp",
+    image: "./assets/images/cards/strazh_s_klyuchom.webp",
   },
   {
     id: "wyrd_022",
@@ -222,7 +222,7 @@ const RAW_CARDS = [
     message:
       "Все нити связаны. То, что кажется случайным — часть космического узора, который ткётся давно. Ищи смысл в совпадениях.",
     shadow: "Ты запуталась в чужих нитях. Найди свою.",
-    image: "./assets/images/cards/wyrd_022.webp",
+    image: "./assets/images/cards/pauk_zvezdnoy_seti.webp",
   },
   {
     id: "wyrd_023",
@@ -232,7 +232,7 @@ const RAW_CARDS = [
     message:
       "Твои иглы — не злоба. Это мудрость тела, которое знает, когда сворачиваться. Граница — это не стена, это забота о себе.",
     shadow: "Ты прячешься под иглами от тех, кто хочет тебя согреть.",
-    image: "./assets/images/cards/wyrd_023.webp",
+    image: "./assets/images/cards/ezh.webp",
   },
   {
     id: "wyrd_024",
@@ -242,7 +242,7 @@ const RAW_CARDS = [
     message:
       "Она сидит и ждёт. Не из слабости — из знания, что момент придёт. Твоё терпение — это не пассивность, это сила.",
     shadow: "Ты ждёшь так долго, что забыла, чего ждёшь.",
-    image: "./assets/images/cards/wyrd_024.webp",
+    image: "./assets/images/cards/zhaba.webp",
   },
   {
     id: "wyrd_025",
@@ -252,7 +252,7 @@ const RAW_CARDS = [
     message:
       "Что-то тянет тебя вниз. Это не обязательно плохо — но знай, куда ныряешь. Глубина требует осознанности.",
     shadow: "Ты идёшь на зов, не спросив, кто зовёт.",
-    image: "./assets/images/cards/wyrd_025.webp",
+    image: "./assets/images/cards/rusalka.webp",
   },
   {
     id: "wyrd_026",
@@ -262,7 +262,7 @@ const RAW_CARDS = [
     message:
       "Не нужен факел. Одна свеча освещает достаточно для следующего шага. Ты уже несёшь достаточно света.",
     shadow: "Ты сжигаешь себя ради тех, кто не замечает твоего огня.",
-    image: "./assets/images/cards/wyrd_026.webp",
+    image: "./assets/images/cards/svecha.webp",
   },
   {
     id: "wyrd_027",
@@ -272,7 +272,7 @@ const RAW_CARDS = [
     message:
       "Под землёй всё связано. То, что кажется отдельным — часть одного живого. Ты не одна — даже когда кажется иначе.",
     shadow: "Ты оборвала нити, которые тебя держали. И называешь это свободой.",
-    image: "./assets/images/cards/wyrd_027.webp",
+    image: "./assets/images/cards/gribnitsa.webp",
   },
   {
     id: "wyrd_028",
@@ -282,7 +282,7 @@ const RAW_CARDS = [
     message:
       "Редкое существо вышло к тебе. Это знак — не спугни его тревогой. Позволь удаче случиться.",
     shadow: "Ты не веришь, что это для тебя. И уходишь раньше, чем дар успевает дойти.",
-    image: "./assets/images/cards/wyrd_028.webp",
+    image: "./assets/images/cards/zolotoy_olen.webp",
   },
   {
     id: "wyrd_029",
@@ -292,7 +292,7 @@ const RAW_CARDS = [
     message:
       "Лес ещё тёмный, но свет уже касается верхушек деревьев. Ночь не длится вечно — даже самая долгая.",
     shadow: "Ты так привыкла к темноте, что не замечаешь, что уже рассветает.",
-    image: "./assets/images/cards/wyrd_029.webp",
+    image: "./assets/images/cards/zarya.webp",
   },
   {
     id: "wyrd_030",
@@ -302,7 +302,7 @@ const RAW_CARDS = [
     message:
       "Скоро ты увидишь картину целиком. Поднимись выше своей боли — оттуда видно то, чего не видно изнутри.",
     shadow: "Ты смотришь так далеко, что не видишь того, что прямо перед тобой.",
-    image: "./assets/images/cards/wyrd_030.webp",
+    image: "./assets/images/cards/orel.webp",
   },
   {
     id: "wyrd_031",
@@ -312,7 +312,7 @@ const RAW_CARDS = [
     message:
       "Из мёртвого дерева вырастает цветок. Это не метафора — это то, что происходит прямо сейчас с тобой.",
     shadow: "Ты держишься за мёртвую форму и не даёшь новому прорасти.",
-    image: "./assets/images/cards/wyrd_031.webp",
+    image: "./assets/images/cards/tsvetushchaya_vetv.webp",
   },
   {
     id: "wyrd_032",
@@ -322,7 +322,7 @@ const RAW_CARDS = [
     message:
       "Ты выжила там, где другие сдались. Этот опыт — не стыд, это сила. Признай его.",
     shadow: "Ты так привыкла выживать, что забыла, как просто жить.",
-    image: "./assets/images/cards/wyrd_032.webp",
+    image: "./assets/images/cards/krysa.webp",
   },
   {
     id: "wyrd_033",
@@ -332,7 +332,7 @@ const RAW_CARDS = [
     message:
       "Что-то было утоплено давно. Оно не исчезло — оно лежит на дне и ждёт, когда ты будешь готова его поднять.",
     shadow: "Ты продолжаешь топить то, что просится на поверхность.",
-    image: "./assets/images/cards/wyrd_033.webp",
+    image: "./assets/images/cards/vodyanoy.webp",
   },
   {
     id: "wyrd_034",
@@ -342,7 +342,7 @@ const RAW_CARDS = [
     message:
       "Ты не видишь следующего шага. Это не опасность — это пространство между. Туман не врёт.",
     shadow: "Ты называешь неопределённость провалом.",
-    image: "./assets/images/cards/wyrd_036.webp",
+    image: "./assets/images/cards/tuman.webp",
   },
   {
     id: "wyrd_035",
@@ -352,7 +352,7 @@ const RAW_CARDS = [
     message:
       "Это не смерть и не слабость. Это медведь под снегом — живой, дышащий, копящий силу. Ты имеешь право на паузу.",
     shadow: "Ты путаешь отдых с бегством.",
-    image: "./assets/images/cards/wyrd_034.webp",
+    image: "./assets/images/cards/zimniy_son.webp",
   },
   {
     id: "wyrd_036",
@@ -362,7 +362,7 @@ const RAW_CARDS = [
     message:
       "Оба пути настоящие. Оба ведут куда-то. Стоять здесь вечно — тоже выбор.",
     shadow: "Ты ждёшь знака, которого не будет. Знак — это ты.",
-    image: "./assets/images/cards/wyrd_035.webp",
+    image: "./assets/images/cards/vybor.webp",
   },
   {
     id: "wyrd_037",
@@ -372,7 +372,7 @@ const RAW_CARDS = [
     message:
       "Это уже сломалось. Не чини. Из трещины растёт то, что было заперто внутри.",
     shadow: "Ты продолжаешь притворяться, что всё в порядке.",
-    image: "./assets/images/cards/wyrd_037.webp",
+    image: "./assets/images/cards/razlom.webp",
   },
   {
     id: "wyrd_038",
@@ -382,7 +382,7 @@ const RAW_CARDS = [
     message:
       "Не молчание как отсутствие — а тишина как присутствие. В ней говорит то, что важно.",
     shadow: "Ты боишься того, что услышишь, если замолчишь.",
-    image: "./assets/images/cards/wyrd_038.webp",
+    image: "./assets/images/cards/tishina.webp",
   },
   {
     id: "wyrd_039",
@@ -392,7 +392,7 @@ const RAW_CARDS = [
     message:
       "Что ты готова отдать огню? Не потерять — именно отдать. Осознанно. Это разные вещи.",
     shadow: "Ты держишь то, что давно просится в огонь.",
-    image: "./assets/images/cards/wyrd_039.webp",
+    image: "./assets/images/cards/zhertvennyy_ogon.webp",
   },
   {
     id: "wyrd_040",
@@ -402,7 +402,7 @@ const RAW_CARDS = [
     message:
       "Ты знаешь, откуда растёшь. Это держит тебя сильнее, чем ты думаешь — и это не всегда плохо.",
     shadow: "Ты сам не хочешь отпускать корень, который тебя душит.",
-    image: "./assets/images/cards/wyrd_040.webp",
+    image: "./assets/images/cards/koren.webp",
   },
   {
     id: "wyrd_041",
@@ -412,7 +412,7 @@ const RAW_CARDS = [
     message:
       "Ты на своём месте. Не где-то потом — прямо сейчас. Это редкое ощущение. Не спугни его анализом.",
     shadow: "Ты боишься выйти за пределы того, что уже понятно.",
-    image: "./assets/images/cards/wyrd_041.webp",
+    image: "./assets/images/cards/krug.webp",
   },
   {
     id: "wyrd_042",
@@ -422,7 +422,7 @@ const RAW_CARDS = [
     message:
       "Ты слишком серьёзна для того, кто всё равно не знает, чем всё закончится. Лес смеётся — не над тобой, а вместе с тобой. Попробуй сделать шаг не ради результата, а ради движения.",
     shadow: "Ты прячешься в лёгкости, чтобы не встречаться с важным. Не вся игра — свобода.",
-    image: "./assets/images/cards/wyrd_042.webp",
+    image: "./assets/images/cards/iskra_lesa.webp",
   },
   {
     id: "wyrd_043",
@@ -432,7 +432,7 @@ const RAW_CARDS = [
     message:
       "Радость — не громкая. Она тихо складывается в ладонях: в тёплом воздухе, в случайной мысли, в чём-то маленьком. Ты уже держишь больше, чем замечаешь.",
     shadow: "Ты ищешь большой свет и не замечаешь маленьких огней. И говоришь, что радости нет.",
-    image: "./assets/images/cards/wyrd_043.webp",
+    image: "./assets/images/cards/sobiratel_orekhov.webp",
   },
   {
     id: "wyrd_044",
@@ -442,7 +442,7 @@ const RAW_CARDS = [
     message:
       "Ты не должна толкать воду, чтобы она текла. Отпусти сопротивление — и почувствуй, как движение уже происходит. Тебя несёт, даже если ты не доверяешь этому.",
     shadow: "Ты плывёшь по течению там, где нужно было выбрать направление.",
-    image: "./assets/images/cards/wyrd_044.webp",
+    image: "./assets/images/cards/tekushchaya_reka.webp",
   },
   {
     id: "wyrd_045",
@@ -452,7 +452,7 @@ const RAW_CARDS = [
     message:
       "Не всё нужно нести. Некоторые вещи можно просто отпустить — и они сами найдут своё место. Лёгкость — это не пустота, это отсутствие лишнего.",
     shadow: "Ты делаешь вид, что тебе легко, чтобы не признавать тяжесть.",
-    image: "./assets/images/cards/wyrd_045.webp",
+    image: "./assets/images/cards/pero_vetra.webp",
   },
   {
     id: "wyrd_046",
@@ -462,7 +462,7 @@ const RAW_CARDS = [
     message:
       "Ты долго молчала. Но внутри тебя уже звучит песня. Не идеальная — живая. Лес не ждёт совершенства. Он слушает, когда ты начинаешь звучать.",
     shadow: "Ты боишься своего голоса и называешь это тишиной.",
-    image: "./assets/images/cards/wyrd_046.webp",
+    image: "./assets/images/cards/solovey_rassveta.webp",
   },
   {
     id: "wyrd_047",
@@ -472,7 +472,7 @@ const RAW_CARDS = [
     message:
       "Не каждый шаг должен быть большим. Маленькие движения тоже ведут вперёд. Ты уже в пути — даже если просто перебегаешь с ветки на ветку.",
     shadow: "Ты распыляешься на мелочи, чтобы не делать главное.",
-    image: "./assets/images/cards/wyrd_047.webp",
+    image: "./assets/images/cards/burunduk_lesnykh_trop.webp",
   },
   {
     id: "wyrd_048",
@@ -482,7 +482,7 @@ const RAW_CARDS = [
     message:
       "Тебе не нужно освещать весь лес. Достаточно увидеть следующий шаг. Твой свет маленький — и этого достаточно.",
     shadow: "Ты ждёшь большого света и не идёшь, пока его нет.",
-    image: "./assets/images/cards/wyrd_048.webp",
+    image: "./assets/images/cards/svetlyak.webp",
   },
   {
     id: "wyrd_049",
