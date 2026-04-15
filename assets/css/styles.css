@@ -534,7 +534,7 @@ body[data-scene="onboarding"] .top-actions {
 }
 
 .text-btn {
-  font-family: var(--ui-font);
+  font-family: var(--display-font);
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: var(--tracking-wide);
@@ -788,7 +788,7 @@ body[data-scene="onboarding"] .top-actions {
 }
 
 .draw-btn {
-  font-family: var(--ui-font);
+  font-family: var(--display-font);
   position: relative;
   z-index: 1;
   font-size: 0.82rem;
@@ -1077,7 +1077,7 @@ body[data-scene="onboarding"] .top-actions {
 .reset-btn {
   display: block;
   width: 100%;
-  font-family: var(--ui-font);
+  font-family: var(--display-font);
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.16em;
