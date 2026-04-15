@@ -4,8 +4,13 @@ export function registerServiceWorker() {
   }
 
   window.addEventListener("load", function () {
-    navigator.serviceWorker.register("./sw.js").catch(function () {
-      return undefined;
-    });
+    const buildId = window.WYRD_BUILD_ID || "dev";
+    navigator.serviceWorker
+      .register(`./sw.js?v=${encodeURIComponent(buildId)}`, {
+        updateViaCache: "none",
+      })
+      .catch(function () {
+        return undefined;
+      });
   });
 }

@@ -1,35 +1,9 @@
-const CACHE_NAME = "wyrd-static-v43";
-const CORE_ASSETS = [
-  "./",
-  "./index.html",
-  "./manifest.webmanifest",
-  "./assets/css/styles.css",
-  "./assets/images/cover.webp",
-  "./assets/js/audio.js",
-  "./assets/js/cards/card-meta.js",
-  "./assets/js/cards/layer-map.js",
-  "./assets/js/cards/meaning-engine.js",
-  "./assets/js/cards/oracle-local.js",
-  "./assets/js/cards/reading.js",
-  "./assets/js/cards/oracle-config.js",
-  "./assets/js/cards/oracle-prompt.js",
-  "./assets/js/cards/spreads-config.js",
-  "./assets/js/data/cards.js",
-  "./assets/js/main.js",
-  "./assets/js/pwa.js",
-  "./assets/js/ritual.js",
-  "./assets/js/state/storage.js",
-  "./assets/js/ui/actions.js",
-  "./assets/js/ui/render.js",
-];
+const BUILD_ID = new URLSearchParams(self.location.search).get("v") || "dev";
+const CACHE_NAME = `wyrd-runtime-${BUILD_ID}`;
+const RUNTIME_CACHEABLE_DESTINATIONS = new Set(["image", "audio", "video", "font"]);
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches
-      .open(CACHE_NAME)
-      .then((cache) => cache.addAll(CORE_ASSETS))
-      .then(() => self.skipWaiting()),
-  );
+  event.waitUntil(self.skipWaiting());
 });
 
 self.addEventListener("activate", (event) => {
@@ -48,50 +22,58 @@ self.addEventListener("fetch", (event) => {
 
   const requestUrl = new URL(event.request.url);
   const isSameOrigin = requestUrl.origin === self.location.origin;
+  const destination = event.request.destination;
   const isCriticalAsset =
     event.request.mode === "navigate" ||
-    ["style", "script", "manifest"].includes(event.request.destination);
+    ["style", "script", "manifest", "document"].includes(destination);
 
   if (isSameOrigin && isCriticalAsset) {
-    event.respondWith(networkFirst(event.request));
+    event.respondWith(fetchFresh(event.request));
     return;
   }
 
-  event.respondWith(cacheFirst(event.request));
+  if (isSameOrigin && RUNTIME_CACHEABLE_DESTINATIONS.has(destination)) {
+    event.respondWith(staleWhileRevalidate(event.request));
+    return;
+  }
+
+  event.respondWith(fetch(event.request));
 });
 
-async function networkFirst(request) {
+async function fetchFresh(request) {
   try {
-    const response = await fetch(request);
-    if (response.ok) {
-      const cache = await caches.open(CACHE_NAME);
-      cache.put(request, response.clone());
-    }
-    return response;
+    return await fetch(request, { cache: "no-store" });
   } catch (error) {
-    const cached = await caches.match(request);
-    if (cached) {
-      return cached;
+    const fallback = await caches.match(request, { ignoreSearch: true });
+    if (fallback) {
+      return fallback;
     }
-
-    if (request.mode === "navigate") {
-      return caches.match("./index.html");
-    }
-
     throw error;
   }
 }
 
-async function cacheFirst(request) {
-  const cached = await caches.match(request);
+async function staleWhileRevalidate(request) {
+  const cache = await caches.open(CACHE_NAME);
+  const cached = await cache.match(request, { ignoreSearch: true });
+
+  const networkPromise = fetch(request)
+    .then((response) => {
+      if (response.ok) {
+        cache.put(request, response.clone());
+      }
+      return response;
+    })
+    .catch(() => undefined);
+
   if (cached) {
+    void networkPromise;
     return cached;
   }
 
-  const response = await fetch(request);
-  if (response.ok) {
-    const cache = await caches.open(CACHE_NAME);
-    cache.put(request, response.clone());
+  const response = await networkPromise;
+  if (response) {
+    return response;
   }
-  return response;
+
+  return fetch(request);
 }
