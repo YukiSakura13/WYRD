@@ -102,7 +102,7 @@ export function createRenderer(elements) {
       return;
     }
 
-    elements.deckTop.style.transition = "all .5s ease";
+    elements.deckTop.style.transition = "transform .5s ease, opacity .5s ease";
     elements.deckTop.style.transform = "translateY(-50px) rotate(12deg)";
     elements.deckTop.style.opacity = "0";
 
