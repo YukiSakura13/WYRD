@@ -370,7 +370,7 @@ body::after {
 }
 
 .cover-btn {
-  font-family: var(--ui-font);
+  font-family: var(--display-font);
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0.18em;
