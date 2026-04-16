@@ -225,7 +225,7 @@
 5. `Страж Ночи / Guardian of the Night`
 6. `Хранитель Фонаря / Lantern Keeper Moth`
 7. `Леший / Spirit of the Forest`
-8. `Лисица Девяти Хвостов / The Fox of Nine Paths`
+8. `Лисий Огонь / Foxfire`
 9. `Хранитель Лунной Вуали / Keeper of the Moon Veil`
 10. `Алтарь Пустоты / The Void Altar`
 11. `Древо Возрождения / The Bone Tree`

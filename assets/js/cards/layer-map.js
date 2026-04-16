@@ -19,7 +19,7 @@ export const CARD_LAYERS = {
   Свеча: "present",
   Туман: "present",
   "Страж Ночи": "present",
-  "Лисица Девяти Хвостов": "present",
+  "Лисий Огонь": "present",
   "Ткачиха Судьбы": "present",
   "Хранитель Леса": "present",
   "Лесной Знахарь": "present",

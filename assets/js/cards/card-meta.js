@@ -6,7 +6,7 @@ const BASE_CARD_META = {
   "Страж Ночи": { state: "protection", tone: "neutral", links: ["boundary", "stillness", "root"] },
   "Хранитель Фонаря": { state: "attraction", tone: "neutral", links: ["vision", "light", "choice"] },
   Леший: { state: "ritual", tone: "dark", links: ["choice", "root", "sacrifice"] },
-  "Лисица Девяти Хвостов": { state: "deception", tone: "dark", links: ["insight", "stillness", "threads"] },
+  "Лисий Огонь": { state: "deception", tone: "dark", links: ["insight", "stillness", "threads"] },
   "Хранитель Лунной Вуали": { state: "stillness", tone: "light", links: ["flow", "choice", "acceptance"] },
   "Алтарь Пустоты": { state: "sacrifice", tone: "dark", links: ["fracture", "rebirth", "sacred_fire"] },
   "Древо Возрождения": { state: "rebirth", tone: "neutral", links: ["dawn", "growth", "circle"] },

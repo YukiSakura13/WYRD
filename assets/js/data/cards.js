@@ -76,13 +76,13 @@ const RAW_CARDS = [
   },
   {
     id: "wyrd_008",
-    name: "Лисица Девяти Хвостов",
-    subtitle: "The Fox of Nine Paths",
+    name: "Лисий Огонь",
+    subtitle: "Foxfire",
     keyword: "Обман",
     message:
       "Ты уже видишь обман. Не всё, что ведёт тебя — ведёт туда, куда ты думаешь. Смотри внимательнее.",
     shadow: "Ты выбираешь верить, потому что так легче.",
-    image: "./assets/images/cards/lisitsa_devyati_khvostov.webp",
+    image: "./assets/images/cards/lisiy_ogon.webp",
   },
   {
     id: "wyrd_009",
