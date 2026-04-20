@@ -31,7 +31,7 @@ export const CARD_LAYERS = {
   "Перо Ветра": "present",
   "Соловей Рассвета": "present",
   "Бурундук Лесных Троп": "present",
-  Светляк: "present",
+  "Светляк в Ночи": "present",
   "Лунные Влюблённые": "present",
   "Пламя Под Кожей": "present",
   "Поцелуй Тени": "present",

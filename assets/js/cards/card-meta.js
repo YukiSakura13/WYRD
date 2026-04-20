@@ -46,7 +46,7 @@ const BASE_CARD_META = {
   "Перо Ветра": { state: "release", tone: "light", links: ["flow", "stillness", "joy"] },
   "Соловей Рассвета": { state: "voice", tone: "light", links: ["dawn", "light", "choice"] },
   "Бурундук Лесных Троп": { state: "small_steps", tone: "light", links: ["path", "choice", "joy"] },
-  Светляк: { state: "guidance", tone: "light", links: ["light", "future_path", "choice"] },
+  "Светляк в Ночи": { state: "guidance", tone: "light", links: ["light", "future_path", "choice"] },
   "Лунные Влюблённые": { state: "love", tone: "light", links: ["connection", "union", "blessing"] },
   "Пламя Под Кожей": { state: "passion", tone: "neutral", links: ["attraction", "spark", "choice"] },
   "Поцелуй Тени": { state: "temptation", tone: "dark", links: ["deception", "attraction", "boundary"] },
