@@ -30,7 +30,7 @@ const BASE_CARD_META = {
   Заря: { state: "dawn", tone: "light", links: ["light", "growth", "future_path"] },
   Орёл: { state: "vision", tone: "light", links: ["prophecy", "choice", "future_path"] },
   "Цветущая Ветвь": { state: "growth", tone: "light", links: ["rebirth", "dawn", "blessing"] },
-  Крыса: { state: "survival", tone: "dark", links: ["root", "fracture", "choice"] },
+  "Крыса Тёмных Троп": { state: "survival", tone: "dark", links: ["root", "fracture", "choice"] },
   Водяной: { state: "water_memory", tone: "dark", links: ["depth", "grief", "flow"] },
   Туман: { state: "uncertainty", tone: "neutral", links: ["choice", "vision", "stillness"] },
   "Зимний Сон": { state: "winter_rest", tone: "light", links: ["timing", "patience", "dawn"] },
