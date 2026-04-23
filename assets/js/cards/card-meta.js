@@ -22,7 +22,7 @@ const BASE_CARD_META = {
   "Страж с Ключом": { state: "key", tone: "light", links: ["threshold", "prophecy", "vision"] },
   "Паук Звёздной Сети": { state: "web", tone: "neutral", links: ["threads", "fate", "insight"] },
   Ёж: { state: "boundary", tone: "neutral", links: ["protection", "stillness", "choice"] },
-  Жаба: { state: "patience", tone: "neutral", links: ["timing", "winter_rest", "dawn"] },
+  "Жаба Верного Часа": { state: "patience", tone: "neutral", links: ["timing", "winter_rest", "dawn"] },
   Русалка: { state: "depth", tone: "dark", links: ["flow", "water_memory", "vision"] },
   Свеча: { state: "light", tone: "light", links: ["dawn", "future_path", "spark"] },
   Грибница: { state: "connection", tone: "neutral", links: ["threads", "fate", "joy"] },
