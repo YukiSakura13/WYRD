@@ -93,6 +93,36 @@ const BASE_CARD_META = {
     tone: "light",
     links: ["voice", "vision", "dawn"],
   },
+  "Свой Костёр": {
+    state: "kinship_fire",
+    tone: "light",
+    links: ["connection", "guidance", "love"],
+  },
+  "Дом Под Корой": {
+    state: "family_home",
+    tone: "light",
+    links: ["root", "connection", "light"],
+  },
+  "Родная Стая": {
+    state: "belonging",
+    tone: "light",
+    links: ["union", "joy", "guidance"],
+  },
+  "Чужая Стая": {
+    state: "alienation",
+    tone: "dark",
+    links: ["boundary", "choice", "deception"],
+  },
+  "Тропа Домой": {
+    state: "homecoming",
+    tone: "light",
+    links: ["path", "connection", "dawn"],
+  },
+  "Дружеский Совет": {
+    state: "counsel",
+    tone: "neutral",
+    links: ["guidance", "voice", "choice"],
+  },
 };
 
 const STATE_EMOTIONS = {
@@ -143,6 +173,12 @@ const STATE_EMOTIONS = {
   triumph: "power",
   courage: "power",
   recognition: "power",
+  kinship_fire: "tenderness",
+  family_home: "tenderness",
+  belonging: "hope",
+  alienation: "tension",
+  homecoming: "longing",
+  counsel: "clarity",
 };
 
 const STATE_ARCHETYPES = {
@@ -185,6 +221,12 @@ const STATE_ARCHETYPES = {
   triumph: "messenger",
   courage: "guardian",
   recognition: "messenger",
+  kinship_fire: "guardian",
+  family_home: "guardian",
+  belonging: "guide",
+  alienation: "witness",
+  homecoming: "guide",
+  counsel: "messenger",
 };
 
 const STATE_INTENSITY = {
@@ -230,6 +272,12 @@ const STATE_INTENSITY = {
   triumph: 4,
   courage: 4,
   recognition: 3,
+  kinship_fire: 2,
+  family_home: 3,
+  belonging: 2,
+  alienation: 4,
+  homecoming: 3,
+  counsel: 3,
 };
 
 const CARD_META_V2_OVERRIDES = {
@@ -336,6 +384,30 @@ const CARD_META_V2_OVERRIDES = {
   "Эхо Вершин": {
     short: "Твоё звучание начинает находить отклик там, где раньше его ещё не слышали.",
     advice: "Позволь себе быть видимой в тот момент, когда мир уже готов откликнуться на твою ценность.",
+  },
+  "Свой Костёр": {
+    short: "Рядом уже есть круг, в котором можно согреться и перестать держать всё в одиночку.",
+    advice: "Подойди ближе к тем, рядом с кем не нужно лишних объяснений, и позволь поддержке стать реальной.",
+  },
+  "Дом Под Корой": {
+    short: "Связь с родными держится глубже, чем может показаться в моменте.",
+    advice: "Верни внимание туда, где живёт твоя семейная опора, и не откладывай этот шаг надолго.",
+  },
+  "Родная Стая": {
+    short: "Свои узнаются по тишине, в которой всё равно остаётся чувство принятия.",
+    advice: "Ищи среду, рядом с которой не нужно сжиматься или объяснять себя слишком долго.",
+  },
+  "Чужая Стая": {
+    short: "Чужая среда умеет становиться привычной раньше, чем ты замечаешь цену этого.",
+    advice: "Проверь, действительно ли это место поддерживает тебя, и не бойся менять круг, если он искажает.",
+  },
+  "Тропа Домой": {
+    short: "Обратная дорога к своим уже существует, даже если между вами накопилось расстояние.",
+    advice: "Сделай шаг к тем, рядом с кем в тебе оживает опора, а не только память о ней.",
+  },
+  "Дружеский Совет": {
+    short: "Нужная ясность может прийти через простой разговор с теми, кому ты доверяешь.",
+    advice: "Не тащи этот узел в одиночку, прислушайся к слову друга и переведи услышанное в шаг.",
   },
 };
 

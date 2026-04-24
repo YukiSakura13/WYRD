@@ -45,6 +45,11 @@ export const CARD_LAYERS = {
   "Хранитель Лунной Вуали": "present",
   "Всевидящий Плащ": "present",
   Грибница: "present",
+  "Свой Костёр": "present",
+  "Дом Под Корой": "present",
+  "Родная Стая": "present",
+  "Чужая Стая": "present",
+  "Дружеский Совет": "present",
   Заря: "future",
   "Золотой Олень": "future",
   Орёл: "future",
@@ -65,4 +70,5 @@ export const CARD_LAYERS = {
   "Знак Главного Пути": "future",
   "Венец После Бури": "future",
   "Эхо Вершин": "future",
+  "Тропа Домой": "future",
 };
