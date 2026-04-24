@@ -226,7 +226,7 @@
 6. `Хранитель Фонаря / Lantern Keeper Moth`
 7. `Леший / Spirit of the Forest`
 8. `Лисий Огонь / Foxfire`
-9. `Хранитель Лунной Вуали / Keeper of the Moon Veil`
+9. `Хранительница Лунной Вуали / Keeper of the Moon Veil`
 10. `Алтарь Пустоты / The Void Altar`
 11. `Древо Возрождения / The Bone Tree`
 12. `Плакальщица / The Mourning One`
