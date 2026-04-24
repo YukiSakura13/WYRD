@@ -16,7 +16,7 @@ const BASE_CARD_META = {
   "Ткачиха Судьбы": { state: "threads", tone: "neutral", links: ["fate", "circle", "key"] },
   Уроборос: { state: "cycle", tone: "dark", links: ["rebirth", "circle", "fracture"] },
   "Лесной Знахарь": { state: "remedy", tone: "neutral", links: ["balance", "flow", "choice"] },
-  "Вещий Ворон": { state: "prophecy", tone: "light", links: ["vision", "key", "future_path"] },
+  "Вещий Ворон": { state: "prophecy", tone: "neutral", links: ["vision", "key", "future_path"] },
   Рой: { state: "awakening", tone: "neutral", links: ["fracture", "flow", "future_path"] },
   "Хранитель Нитей": { state: "fate", tone: "dark", links: ["threads", "choice", "circle"] },
   "Страж с Ключом": { state: "key", tone: "light", links: ["threshold", "prophecy", "vision"] },
