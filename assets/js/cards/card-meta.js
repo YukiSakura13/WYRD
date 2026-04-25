@@ -3,7 +3,7 @@ const BASE_CARD_META = {
   "Вестник Чёрных Крыльев": { state: "ending", tone: "dark", links: ["rebirth", "dawn", "fracture"] },
   "Всевидящий Плащ": { state: "insight", tone: "neutral", links: ["stillness", "choice", "vision"] },
   "Хранитель Времени": { state: "timing", tone: "light", links: ["stillness", "winter_rest", "dawn"] },
-  "Страж Ночи": { state: "protection", tone: "neutral", links: ["boundary", "stillness", "root"] },
+  "Тёмный Гость": { state: "manipulation", tone: "dark", links: ["alienation", "deception", "boundary"] },
   "Хранитель Фонаря": { state: "attraction", tone: "neutral", links: ["vision", "light", "choice"] },
   Леший: { state: "ritual", tone: "dark", links: ["choice", "root", "sacrifice"] },
   "Лисий Огонь": { state: "deception", tone: "dark", links: ["insight", "stillness", "threads"] },

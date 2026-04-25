@@ -222,7 +222,7 @@
 2. `Вестник Чёрных Крыльев / Harbinger of the Black Wings`
 3. `Всевидящий Плащ / All-Seeing Cloak`
 4. `Хранитель Времени / Timekeeper Owl`
-5. `Страж Ночи / Guardian of the Night`
+5. `Тёмный Гость / The Dark Guest`
 6. `Хранитель Фонаря / Lantern Keeper Moth`
 7. `Леший / Spirit of the Forest`
 8. `Лисий Огонь / Foxfire`
