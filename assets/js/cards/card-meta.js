@@ -123,6 +123,11 @@ const BASE_CARD_META = {
     tone: "neutral",
     links: ["guidance", "voice", "choice"],
   },
+  "Скрытый Исток": {
+    state: "creative_source",
+    tone: "light",
+    links: ["spark", "voice", "release"],
+  },
 };
 
 const STATE_EMOTIONS = {
@@ -179,6 +184,7 @@ const STATE_EMOTIONS = {
   alienation: "tension",
   homecoming: "longing",
   counsel: "clarity",
+  creative_source: "power",
 };
 
 const STATE_ARCHETYPES = {
@@ -227,6 +233,7 @@ const STATE_ARCHETYPES = {
   alienation: "witness",
   homecoming: "guide",
   counsel: "messenger",
+  creative_source: "guide",
 };
 
 const STATE_INTENSITY = {
@@ -278,6 +285,7 @@ const STATE_INTENSITY = {
   alienation: 4,
   homecoming: 3,
   counsel: 3,
+  creative_source: 3,
 };
 
 const CARD_META_V2_OVERRIDES = {

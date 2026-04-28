@@ -730,6 +730,16 @@ const RAW_CARDS = [
     shadow: "Нужное слово уже могло быть сказано. Не пора ли что-то делать?",
     image: "./assets/images/cards/druzheskiy_sovet.webp",
   },
+  {
+    id: "wyrd_073",
+    name: "Скрытый Исток",
+    subtitle: "The Hidden Source",
+    keyword: "Творческая сила",
+    message:
+      "В тебе есть сила, которая ещё не вышла наружу. Творчество — её путь. Позволь ей проявиться, и ответ проявится сам.",
+    shadow: "Сила есть. Что мешает ей выйти наружу?",
+    image: "./assets/images/cards/skrytyy_istok.webp",
+  },
 ];
 
 export const CARDS = RAW_CARDS.map(function enrichCard(card) {
