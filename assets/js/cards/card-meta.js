@@ -128,6 +128,11 @@ const BASE_CARD_META = {
     tone: "light",
     links: ["spark", "voice", "release"],
   },
+  "Судьбоносная Встреча": {
+    state: "fated_meeting",
+    tone: "neutral",
+    links: ["love", "threads", "choice"],
+  },
 };
 
 const STATE_EMOTIONS = {
@@ -185,6 +190,7 @@ const STATE_EMOTIONS = {
   homecoming: "longing",
   counsel: "clarity",
   creative_source: "power",
+  fated_meeting: "transformation",
 };
 
 const STATE_ARCHETYPES = {
@@ -234,6 +240,7 @@ const STATE_ARCHETYPES = {
   homecoming: "guide",
   counsel: "messenger",
   creative_source: "guide",
+  fated_meeting: "messenger",
 };
 
 const STATE_INTENSITY = {
@@ -286,6 +293,7 @@ const STATE_INTENSITY = {
   homecoming: 3,
   counsel: 3,
   creative_source: 3,
+  fated_meeting: 4,
 };
 
 const CARD_META_V2_OVERRIDES = {

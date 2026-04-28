@@ -51,6 +51,7 @@ export const CARD_LAYERS = {
   "Чужая Стая": "present",
   "Дружеский Совет": "present",
   "Скрытый Исток": "present",
+  "Судьбоносная Встреча": "future",
   Заря: "future",
   "Золотой Олень": "future",
   Орёл: "future",

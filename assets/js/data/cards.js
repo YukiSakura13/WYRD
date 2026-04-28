@@ -740,6 +740,17 @@ const RAW_CARDS = [
     shadow: "Сила есть. Что мешает ей выйти наружу?",
     image: "./assets/images/cards/skrytyy_istok.webp",
   },
+  {
+    id: "wyrd_074",
+    name: "Судьбоносная Встреча",
+    subtitle: "The Fated Meeting",
+    keyword: "Поворотный момент",
+    message:
+      "Эта встреча не случайна. Человек, который появился или появится, несёт с собой что-то важное — урок, поворот, новую главу. После этой встречи твоя жизнь уже не будет прежней.",
+    shadow:
+      "Не каждая судьбоносная встреча обещает счастливый финал. Сможешь ли ты принять то, что она принесёт, даже если это не оправдает твою надежду?",
+    image: "./assets/images/cards/sudbonosnaya_vstrecha.webp",
+  },
 ];
 
 export const CARDS = RAW_CARDS.map(function enrichCard(card) {
