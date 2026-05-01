@@ -228,7 +228,7 @@
 8. `Лисий Огонь / Foxfire`
 9. `Хранительница Лунной Вуали / Keeper of the Moon Veil`
 10. `Алтарь Пустоты / The Void Altar`
-11. `Древо Возрождения / The Bone Tree`
+11. `Древо Возрождения / The Tree of Renewal`
 12. `Плакальщица / The Mourning One`
 13. `Страж Порога / The Threshold Guardian`
 14. `Волк с Зеркалом / The Mirror Wolf`
