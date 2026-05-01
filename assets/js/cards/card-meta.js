@@ -18,7 +18,7 @@ const BASE_CARD_META = {
   "Лесной Знахарь": { state: "remedy", tone: "neutral", links: ["balance", "flow", "choice"] },
   "Вещий Ворон": { state: "prophecy", tone: "neutral", links: ["vision", "key", "future_path"] },
   Рой: { state: "awakening", tone: "neutral", links: ["fracture", "flow", "future_path"] },
-  "Хранитель Нитей": { state: "fate", tone: "dark", links: ["threads", "choice", "circle"] },
+  "Хранитель Нитей": { state: "fate", tone: "neutral", links: ["threads", "choice", "circle"] },
   "Страж с Ключом": { state: "key", tone: "light", links: ["threshold", "prophecy", "vision"] },
   "Паук Звёздной Сети": { state: "web", tone: "neutral", links: ["threads", "fate", "insight"] },
   "Ёж Тайной Калитки": { state: "boundary", tone: "neutral", links: ["protection", "stillness", "choice"] },
