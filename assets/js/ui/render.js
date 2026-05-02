@@ -181,7 +181,7 @@ export function createRenderer(elements) {
     elements.cardKeyword.textContent = `✦ ${reading.card.keyword} ✦`;
     elements.cardName.textContent = reading.card.name;
     elements.cardSubtitle.textContent = reading.card.subtitle;
-    elements.cardMessage.textContent = `« ${reading.card.message} »`;
+    elements.cardMessage.textContent = reading.card.message;
     elements.cardShadow.textContent = reading.card.shadow;
 
     if (reading.depthUnlocked) {
@@ -289,7 +289,7 @@ export function createRenderer(elements) {
     elements.spreadDetailKeyword.textContent = `✦ ${card.keyword} ✦`;
     elements.spreadDetailName.textContent = card.name;
     elements.spreadDetailSubtitle.textContent = card.subtitle;
-    elements.spreadDetailMessage.textContent = `« ${card.message} »`;
+    elements.spreadDetailMessage.textContent = card.message;
     elements.spreadDetailShadow.textContent = card.shadow;
   }
 

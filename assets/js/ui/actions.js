@@ -77,6 +77,18 @@ export function createActionHandler(deps) {
       return;
     }
 
+    if (action === "back-to-deck") {
+      audio.playSelect(store.getState().soundEnabled);
+      runTransition(function returnToDeck() {
+        uiState.forceDeck = true;
+        uiState.overlay = "none";
+        renderApp();
+        audio.sync({ enabled: store.getState().soundEnabled, scene: "deck" });
+        renderer.scrollTo("deck");
+      });
+      return;
+    }
+
     if (action === "new-question") {
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function backToDeck() {
@@ -97,6 +109,21 @@ export function createActionHandler(deps) {
           }, 400);
         }
       });
+      return;
+    }
+
+    if (action === "share-card") {
+      const reading = store.getState().currentReading;
+      if (!reading) {
+        return;
+      }
+      const text = `${reading.card.name}\n\n${reading.card.message}\n\nWYRD — оракул духов леса`;
+      const url = "https://yukisakura13.github.io/WYRD/";
+      if (navigator.share) {
+        navigator.share({ title: "WYRD", text, url }).catch(function ignoreShareError() {});
+      } else if (navigator.clipboard?.writeText) {
+        navigator.clipboard.writeText(`${text}\n${url}`).catch(function ignoreClipboardError() {});
+      }
       return;
     }
 

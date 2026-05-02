@@ -81,28 +81,47 @@
       </section>
 
       <section id="result" hidden>
+        <div class="screen-nav">
+          <button class="btn-back-circle" data-action="new-question" aria-label="Задать новый вопрос">←</button>
+          <div class="screen-nav-title">WYRD</div>
+          <div class="screen-nav-spacer" aria-hidden="true"></div>
+        </div>
         <p class="result-question" id="result-question" hidden></p>
-        <button class="btn-back" data-action="new-question">← Новый вопрос</button>
-        <div class="card-box" id="card-box">
-          <div class="card-img-wrap">
-            <img class="card-img" id="card-image" alt="" />
-            <div class="card-kw" id="card-keyword"></div>
-          </div>
-          <div class="card-body">
-            <h2 class="card-name" id="card-name"></h2>
-            <p class="card-en" id="card-subtitle"></p>
-            <div class="card-div"></div>
-            <p class="lbl card-copy-label">Послание</p>
-            <p class="card-msg" id="card-message"></p>
-            <div class="card-shd-wrap" id="card-shadow-wrap">
-              <p class="lbl">Тень</p>
-              <p class="card-shd" id="card-shadow"></p>
+        <div class="share-card">
+          <div class="card-box" id="card-box">
+            <div class="card-img-wrap share-card-media">
+              <img class="card-img" id="card-image" alt="" />
+              <div class="card-kw" id="card-keyword"></div>
             </div>
-            <div class="card-shd-wrap deep-wrap" id="deep-wrap" hidden>
-              <p class="lbl">Углубление</p>
-              <p class="card-shd" id="deep-message"></p>
+            <div class="card-body">
+              <h2 class="card-name" id="card-name"></h2>
+              <p class="card-en" id="card-subtitle"></p>
+              <div class="card-div"></div>
+              <p class="lbl card-copy-label">Послание</p>
+              <p class="card-msg" id="card-message"></p>
+              <div class="card-shd-wrap" id="card-shadow-wrap">
+                <p class="lbl">Тень</p>
+                <p class="card-shd" id="card-shadow"></p>
+              </div>
+              <div class="card-shd-wrap deep-wrap" id="deep-wrap" hidden>
+                <p class="lbl">Углубление</p>
+                <p class="card-shd" id="deep-message"></p>
+              </div>
             </div>
           </div>
+          <button class="btn-share" data-action="share-card" type="button" aria-label="Поделиться картой">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path
+                d="M15 8a3 3 0 1 0-2.82-4H12a3 3 0 0 0 .18 1.02L7.91 7.16a3 3 0 0 0-1.91-.68 3 3 0 1 0 1.91 5.32l4.27 2.14A3 3 0 0 0 12 15a3 3 0 1 0 .18 1.02l-4.27 2.14A3 3 0 1 0 6 21.5a3 3 0 0 0 1.91-.68l4.27-2.14A3 3 0 0 0 15 17a3 3 0 0 0 0-6Zm0-6a1 1 0 1 1 0 2 1 1 0 0 1 0-2ZM6 8.5a1 1 0 1 1 0 2 1 1 0 0 1 0-2Zm9 11a1 1 0 1 1 0-2 1 1 0 0 1 0 2ZM6 19.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"
+              />
+            </svg>
+            Поделиться картой
+          </button>
+        </div>
+
+        <div class="hook-block" id="hook-block" hidden>
+          <button class="cover-btn hook-btn" data-action="hook-open-path">Открыть три пути →</button>
+          <button class="btn-ghost-link" data-action="new-question">Задать новый вопрос</button>
         </div>
 
         <div class="actions-panel">
@@ -111,25 +130,14 @@
           <button class="reset-btn" data-action="spread-3">Расклад на 3 карты</button>
           <button class="reset-btn" data-action="spread-5">Расклад на 5 карт</button>
         </div>
-
-        <div class="hook-block" id="hook-block" hidden>
-          <p class="hook-copy">Это только первый знак.</p>
-          <div class="hook-preview" aria-hidden="true">
-            <article class="hook-card">
-              <div class="hook-card-image"></div>
-              <p class="hook-card-role">Прошлое</p>
-            </article>
-            <article class="hook-card">
-              <div class="hook-card-image"></div>
-              <p class="hook-card-role">Будущее</p>
-            </article>
-          </div>
-          <button class="cover-btn hook-btn" data-action="hook-open-path">Увидеть, что скрыто</button>
-          <button class="btn-link" data-action="new-question">Задать новый вопрос</button>
-        </div>
       </section>
 
       <section id="spread-result" hidden>
+        <div class="screen-nav">
+          <button class="btn-back-circle" data-action="back-to-deck" aria-label="Вернуться к колоде">←</button>
+          <div class="screen-nav-title">WYRD</div>
+          <div class="screen-nav-spacer" aria-hidden="true"></div>
+        </div>
         <p class="gal-title" id="spread-title">Расклад</p>
         <div class="gal-line"></div>
         <p class="spread-stage-note" id="spread-stage-note"></p>
