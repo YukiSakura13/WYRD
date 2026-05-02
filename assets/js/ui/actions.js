@@ -113,46 +113,19 @@ export function createActionHandler(deps) {
     }
 
     if (action === "share-card") {
-      const shareCard = document.querySelector(".share-card");
-      if (!shareCard) return;
-
-      if (typeof window.html2canvas !== "function") {
-        if (navigator.share) {
-          navigator.share({
-            title: "WYRD — оракул духов леса",
-            url: "https://yukisakura13.github.io/WYRD/",
-          }).catch(function() {});
-        }
-        return;
+      const reading = store.getState().currentReading;
+      if (!reading) return;
+      const text = reading.card.name
+        + "\n\n" + reading.card.message
+        + "\n\n" + (reading.card.shadow ? "Тень: " + reading.card.shadow + "\n\n" : "")
+        + "WYRD — оракул духов леса\nyukisakura13.github.io/WYRD/";
+      if (navigator.share) {
+        navigator.share({ text: text }).catch(function() {});
+      } else {
+        navigator.clipboard.writeText(text).then(function() {
+          alert("Скопировано — вставь в мессенджер");
+        });
       }
-
-      window.html2canvas(shareCard, {
-        backgroundColor: "#1a1810",
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-      }).then(function(canvas) {
-        canvas.toBlob(function(blob) {
-          if (!blob) return;
-          const file = new File([blob], "wyrd-card.png", { type: "image/png" });
-          if (navigator.share && navigator.canShare({ files: [file] })) {
-            navigator.share({
-              files: [file],
-              title: "WYRD — оракул духов леса",
-              url: "https://yukisakura13.github.io/WYRD/",
-            }).catch(function() {});
-          } else {
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "wyrd-card.png";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-          }
-        }, "image/png");
-      });
       return;
     }
 
