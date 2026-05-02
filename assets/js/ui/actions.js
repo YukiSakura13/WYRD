@@ -159,7 +159,8 @@ export function createActionHandler(deps) {
             URL.revokeObjectURL(url);
           }
         }, "image/png");
-      }).catch(function() {
+      }).catch(function(err) {
+        console.error("html2canvas error:", err);
         if (btn) btn.style.display = "";
         const reading = store.getState().currentReading;
         if (!reading) return;
