@@ -113,17 +113,48 @@ export function createActionHandler(deps) {
     }
 
     if (action === "share-card") {
-      const reading = store.getState().currentReading;
-      if (!reading) {
+      const shareCard = document.querySelector(".share-card");
+      if (!shareCard) {
         return;
       }
-      const text = `${reading.card.name}\n\n${reading.card.message}\n\nWYRD — оракул духов леса`;
-      const url = "https://yukisakura13.github.io/WYRD/";
-      if (navigator.share) {
-        navigator.share({ title: "WYRD", text, url }).catch(function ignoreShareError() {});
-      } else if (navigator.clipboard?.writeText) {
-        navigator.clipboard.writeText(`${text}\n${url}`).catch(function ignoreClipboardError() {});
-      }
+
+      import("https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js")
+        .then(function renderShareCard(module) {
+          const html2canvas = module.default;
+          return html2canvas(shareCard, {
+            backgroundColor: "#1a1810",
+            scale: 2,
+            useCORS: true,
+          });
+        })
+        .then(function shareCanvas(canvas) {
+          return canvas.toBlob(function handleBlob(blob) {
+            if (!blob) {
+              return;
+            }
+
+            const file = new File([blob], "wyrd-card.png", { type: "image/png" });
+            if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+              navigator
+                .share({
+                  files: [file],
+                  title: "WYRD — оракул духов леса",
+                  url: "https://yukisakura13.github.io/WYRD/",
+                })
+                .catch(function ignoreShareError() {});
+            } else {
+              const url = URL.createObjectURL(blob);
+              const link = document.createElement("a");
+              link.href = url;
+              link.download = "wyrd-card.png";
+              link.click();
+              window.setTimeout(function revokeUrl() {
+                URL.revokeObjectURL(url);
+              }, 1000);
+            }
+          });
+        })
+        .catch(function ignoreCanvasError() {});
       return;
     }
 
