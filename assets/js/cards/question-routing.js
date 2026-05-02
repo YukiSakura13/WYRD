@@ -2,6 +2,7 @@ export const EMPTY_FATE_PATH_COPY = "Эта карта пришла как по�
 
 const KEYWORD_WEIGHT = 3;
 const CONTEXT_PAIR_WEIGHT = 4;
+const EXACT_SIGNAL_WEIGHT = 5;
 const SOFT_KEYWORD_WEIGHT = 1;
 const SOFT_CONTEXT_PAIR_WEIGHT = 1;
 const PRIMARY_GROUP_MULTIPLIER = 4;
@@ -12,6 +13,22 @@ export const QUESTION_ROUTE_CONFIG = {
   love_romance: {
     title: "Любовь и романтика",
     defaultWeight: 0,
+    exactSignals: [
+      "не пишет",
+      "любит ли",
+      "любит меня",
+      "что он чувствует",
+      "что она чувствует",
+      "скучает ли",
+      "думает обо мне",
+      "будет ли встреча",
+      "будем вместе",
+      "я ему нравлюсь",
+      "я ей нравлюсь",
+      "есть ли шанс",
+      "новая любовь",
+      "встретить любовь",
+    ],
     keywords: [
       "люб",
       "любов",
@@ -98,6 +115,18 @@ export const QUESTION_ROUTE_CONFIG = {
   family_circle: {
     title: "Семья и окружение",
     defaultWeight: 0,
+    exactSignals: [
+      "мама",
+      "папа",
+      "семья",
+      "близкие",
+      "кому доверять",
+      "можно ли доверять",
+      "кто поддержит",
+      "отношения с близкими",
+      "семейные отношения",
+      "атмосфера дома",
+    ],
     keywords: [
       "семь",
       "семья",
@@ -141,7 +170,6 @@ export const QUESTION_ROUTE_CONFIG = {
       "свой",
       "чуж",
       "токсич",
-      "давление",
       "обид",
       "примир",
       "помир",
@@ -177,6 +205,25 @@ export const QUESTION_ROUTE_CONFIG = {
   career_money: {
     title: "Карьера и деньги",
     defaultWeight: 0,
+    exactSignals: [
+      "зарплата",
+      "прибавка",
+      "премия",
+      "работа",
+      "заказ",
+      "заработок",
+      "возьмут ли на работу",
+      "найду работу",
+      "найду ли работу",
+      "будет ли прибавка",
+      "будет ли премия",
+      "когда деньги",
+      "хватит ли денег",
+      "стоит ли менять работу",
+      "стоит ли уходить с работы",
+      "будет ли заказ",
+      "будет ли клиент",
+    ],
     keywords: [
       "работ",
       "работа",
@@ -260,6 +307,24 @@ export const QUESTION_ROUTE_CONFIG = {
   fate_path: {
     title: "Судьба и путь",
     defaultWeight: 1,
+    exactSignals: [
+      "куда идти",
+      "куда дальше",
+      "зачем",
+      "смысл",
+      "выбор",
+      "путь",
+      "знак",
+      "знаки",
+      "какой путь",
+      "правильный путь",
+      "верный путь",
+      "что делать дальше",
+      "куда двигаться",
+      "как поступить",
+      "что меня ждет",
+      "что меня ждёт",
+    ],
     keywords: [
       "путь",
       "дорога",
@@ -286,9 +351,6 @@ export const QUESTION_ROUTE_CONFIG = {
       "направлен",
       "направление",
       "переезд",
-      "уехать",
-      "ехать",
-      "ехать ли",
       "решен",
       "решить",
       "решение",
@@ -355,6 +417,20 @@ export const QUESTION_ROUTE_CONFIG = {
   trials_growth: {
     title: "Испытания и рост",
     defaultWeight: 0,
+    exactSignals: [
+      "тяжело",
+      "больно",
+      "страшно",
+      "пережить",
+      "справиться",
+      "что делать когда тяжело",
+      "что делать когда больно",
+      "что делать когда страшно",
+      "как пережить",
+      "как справиться",
+      "как не сломаться",
+      "почему так тяжело",
+    ],
     keywords: [
       "криз",
       "кризис",
@@ -384,7 +460,6 @@ export const QUESTION_ROUTE_CONFIG = {
       "сломался",
       "разрыв",
       "больно",
-      "боль",
       "рана",
       "травм",
       "травма",
@@ -393,7 +468,6 @@ export const QUESTION_ROUTE_CONFIG = {
       "напряж",
       "напряжение",
       "давлен",
-      "давление",
       "наруш",
       "неуют",
       "изоляц",
@@ -451,10 +525,25 @@ export const QUESTION_ROUTE_CONFIG = {
   health_recovery: {
     title: "Здоровье и восстановление",
     defaultWeight: 0,
+    exactSignals: [
+      "устала",
+      "нет сил",
+      "сил нет",
+      "выгорела",
+      "выгорел",
+      "восстановиться",
+      "как восстановиться",
+      "как прийти в себя",
+      "как отдохнуть",
+      "где взять силы",
+      "когда станет легче",
+      "болит голова",
+      "болит тело",
+      "режим сна",
+    ],
     keywords: [
       "здоров",
       "здоровье",
-      "боль",
       "сон",
       "спать",
       "бессон",
@@ -487,7 +576,6 @@ export const QUESTION_ROUTE_CONFIG = {
       "истощ",
       "истощение",
       "отпуск",
-      "уехать",
       "поездк",
       "поездка",
       "путешеств",
@@ -556,6 +644,12 @@ export function scoreQuestionGroups(question) {
     let score = config.defaultWeight || 0;
 
     if (normalizedQuestion) {
+      (config.exactSignals || []).forEach(function scoreExactSignal(signal) {
+        if (normalizedQuestion.includes(signal)) {
+          score += EXACT_SIGNAL_WEIGHT;
+        }
+      });
+
       config.keywords.forEach(function scoreKeyword(keyword) {
         if (normalizedQuestion.includes(keyword)) {
           score += KEYWORD_WEIGHT;
