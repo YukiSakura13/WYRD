@@ -142,6 +142,15 @@ const QUESTION_ECHOES = {
   ],
 };
 
+const TONE_BY_GROUP = {
+  health_recovery: "Тело знает раньше, чем разум успевает заметить.",
+  love_romance: "Сердце уже чувствует то, что ум боится признать.",
+  family_circle: "Корни держат крепче, чем кажется снаружи.",
+  career_money: "Лес не торопится — и всё равно успевает.",
+  trials_growth: "Испытание не останавливает путь — оно и есть путь.",
+  fate_path: "Знак уже пришёл. Вопрос только в том, готов ли ты его увидеть.",
+};
+
 const GROUP_OPENINGS = {
   health_recovery: [
     "Тело уже подаёт сигнал тише, чем боль, но настойчивее слов.",
@@ -188,19 +197,21 @@ export function buildLocalOracleReading(spreadId, cards, options = {}) {
 }
 
 function buildOracleMessage(meaning, questionEcho = "", routeGroup = null) {
+  const groupTone = routeGroup && TONE_BY_GROUP[routeGroup] ? TONE_BY_GROUP[routeGroup] : "";
+
   if (routeGroup && GROUP_OPENINGS[routeGroup] && GROUP_MIDDLES[routeGroup] && GROUP_CLOSINGS[routeGroup]) {
     const opening = pickForMeaning(GROUP_OPENINGS[routeGroup], meaning, `group:${routeGroup}:opening`);
     const middle =
       questionEcho || pickForMeaning(GROUP_MIDDLES[routeGroup], meaning, `group:${routeGroup}:middle`);
     const closing = pickForMeaning(GROUP_CLOSINGS[routeGroup], meaning, `group:${routeGroup}:closing`);
-    return [opening, middle, closing].filter(Boolean).join(" ");
+    return [groupTone, opening, middle, closing].filter(Boolean).join(" ");
   }
 
   const opening = pickForMeaning(OPENINGS[meaning.centralTension?.type] || OPENINGS.emotional_core, meaning, 0);
   const middle = questionEcho || pickForMeaning(MIDDLES[meaning.dominantEmotion] || MIDDLES.default, meaning, 1);
   const closing = pickForMeaning(CLOSINGS[meaning.supportSignal?.theme] || CLOSINGS.default, meaning, 2);
 
-  return [opening, middle, closing].filter(Boolean).join(" ");
+  return [groupTone, opening, middle, closing].filter(Boolean).join(" ");
 }
 
 function pickForMeaning(options, meaning, salt) {
