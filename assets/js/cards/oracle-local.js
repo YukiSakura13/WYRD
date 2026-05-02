@@ -142,9 +142,35 @@ const QUESTION_ECHOES = {
   ],
 };
 
+const GROUP_OPENINGS = {
+  health_recovery: [
+    "Тело уже подаёт сигнал тише, чем боль, но настойчивее слов.",
+    "Сейчас лес отвечает не про путь, а про восстановление и бережность к себе.",
+    "То, о чём ты спрашиваешь, касается не рывка, а возвращения сил.",
+  ],
+};
+
+const GROUP_MIDDLES = {
+  health_recovery: [
+    "Сейчас важны пауза, сон, ровный ритм и всё, что снимает перегруз с тела.",
+    "Ответ лежит в восстановлении: меньше давления, больше покоя, воздуха и времени на передышку.",
+    "То, что кажется помехой, может быть просьбой тела замедлиться и перестать тянуть лишнее.",
+  ],
+};
+
+const GROUP_CLOSINGS = {
+  health_recovery: [
+    "Слушай не тревогу, а то, где становится легче дышать и спокойнее внутри тела.",
+    "Выбирай то, что возвращает силы, а не забирает их остаток.",
+    "Пусть восстановление станет ответом раньше, чем следующий рывок.",
+  ],
+};
+
 export function buildLocalOracleReading(spreadId, cards, options = {}) {
   const meaning = buildMeaningSummary({ spreadId, cards });
   const question = normalizeQuestion(options.question);
+  const questionRoute = options.questionRoute || null;
+  const routeGroup = questionRoute?.primaryGroup || questionRoute?.group || null;
   const questionTopic = detectQuestionTopic(question);
   const questionEcho = questionTopic
     ? pickForMeaning(QUESTION_ECHOES[questionTopic] || QUESTION_ECHOES.waiting, meaning, `question:${questionTopic}`)
@@ -153,13 +179,23 @@ export function buildLocalOracleReading(spreadId, cards, options = {}) {
   return {
     spreadId,
     question,
+    questionRoute,
+    routeGroup,
     questionTopic,
     meaning,
-    oracle_message: buildOracleMessage(meaning, questionEcho),
+    oracle_message: buildOracleMessage(meaning, questionEcho, routeGroup),
   };
 }
 
-function buildOracleMessage(meaning, questionEcho = "") {
+function buildOracleMessage(meaning, questionEcho = "", routeGroup = null) {
+  if (routeGroup && GROUP_OPENINGS[routeGroup] && GROUP_MIDDLES[routeGroup] && GROUP_CLOSINGS[routeGroup]) {
+    const opening = pickForMeaning(GROUP_OPENINGS[routeGroup], meaning, `group:${routeGroup}:opening`);
+    const middle =
+      questionEcho || pickForMeaning(GROUP_MIDDLES[routeGroup], meaning, `group:${routeGroup}:middle`);
+    const closing = pickForMeaning(GROUP_CLOSINGS[routeGroup], meaning, `group:${routeGroup}:closing`);
+    return [opening, middle, closing].filter(Boolean).join(" ");
+  }
+
   const opening = pickForMeaning(OPENINGS[meaning.centralTension?.type] || OPENINGS.emotional_core, meaning, 0);
   const middle = questionEcho || pickForMeaning(MIDDLES[meaning.dominantEmotion] || MIDDLES.default, meaning, 1);
   const closing = pickForMeaning(CLOSINGS[meaning.supportSignal?.theme] || CLOSINGS.default, meaning, 2);

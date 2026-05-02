@@ -296,6 +296,7 @@ export function resolveRitual(deps, mode) {
     });
     const oracleReading = buildLocalOracleReading(count === 3 ? "deepening" : "oracle_reading", spreadCards, {
       question: uiState.rawQuestion,
+      questionRoute,
     });
     store.saveSpread(spreadCards, oracleReading);
     renderApp();
