@@ -77,6 +77,29 @@ export function createActionHandler(deps) {
       return;
     }
 
+    if (action === "new-question") {
+      audio.playSelect(store.getState().soundEnabled);
+      runTransition(function backToDeck() {
+        uiState.hasDrawnThisSession = false;
+        uiState.forceDeck = true;
+        uiState.currentQuestion = "";
+        uiState.rawQuestion = "";
+        uiState.overlay = "none";
+        uiState.continuationOffer = null;
+        renderApp();
+        audio.sync({ enabled: store.getState().soundEnabled, scene: "deck" });
+        renderer.scrollTo("deck");
+        const questionEl = document.getElementById("question-input");
+        if (questionEl) {
+          questionEl.value = "";
+          window.setTimeout(function focusQuestion() {
+            questionEl.focus();
+          }, 400);
+        }
+      });
+      return;
+    }
+
     if (action === "extra-draw" || action === "deep-reading" || action === "spread-3" || action === "spread-5") {
       audio.playSelect(store.getState().soundEnabled);
       startRitual(action);
