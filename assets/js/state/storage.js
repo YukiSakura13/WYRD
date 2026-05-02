@@ -1,4 +1,8 @@
+import { CARDS } from "../data/cards.js";
+
 export const STORAGE_KEY = "wyrd-local-state-v2";
+
+const CARD_BY_ID = new Map(CARDS.map((card) => [card.id, card]));
 
 const defaultState = Object.freeze({
   profileName: "Странник",
@@ -151,11 +155,12 @@ function normalizeState(value) {
   const base = clone(defaultState);
   const next = value && typeof value === "object" ? { ...base, ...value } : base;
 
-  next.history = Array.isArray(next.history) ? next.history : [];
-  next.lastSpread = Array.isArray(next.lastSpread) ? next.lastSpread : [];
+  next.history = Array.isArray(next.history) ? next.history.map(normalizeReading).filter(Boolean) : [];
+  next.lastSpread = Array.isArray(next.lastSpread) ? next.lastSpread.map(normalizeSpreadCard).filter(Boolean) : [];
   next.lastOracleReading =
     next.lastOracleReading && typeof next.lastOracleReading === "object" ? next.lastOracleReading : null;
-  next.currentReading = next.currentReading && typeof next.currentReading === "object" ? next.currentReading : null;
+  next.currentReading =
+    next.currentReading && typeof next.currentReading === "object" ? normalizeReading(next.currentReading) : null;
   next.dailyFreeUsedAt = typeof next.dailyFreeUsedAt === "string" ? next.dailyFreeUsedAt : null;
   next.profileName = typeof next.profileName === "string" ? next.profileName : base.profileName;
   next.soundEnabled = Boolean(next.soundEnabled);
@@ -179,4 +184,40 @@ function normalizeState(value) {
 
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
+}
+
+function normalizeReading(reading) {
+  if (!reading || typeof reading !== "object" || !reading.card) {
+    return null;
+  }
+
+  const card = normalizeCard(reading.card);
+  if (!card) {
+    return null;
+  }
+
+  return {
+    ...reading,
+    card,
+  };
+}
+
+function normalizeSpreadCard(card) {
+  return normalizeCard(card);
+}
+
+function normalizeCard(card) {
+  if (!card || typeof card !== "object" || typeof card.id !== "string") {
+    return null;
+  }
+
+  const canonicalCard = CARD_BY_ID.get(card.id);
+  if (!canonicalCard) {
+    return card;
+  }
+
+  return {
+    ...card,
+    ...canonicalCard,
+  };
 }
