@@ -116,28 +116,25 @@ export function createActionHandler(deps) {
       const shareCard = document.querySelector(".share-card");
       if (!shareCard) return;
 
-      const btn = shareCard.querySelector('[data-action="share-card"]');
-      if (btn) btn.style.display = "none";
-
       if (typeof window.html2canvas !== "function") {
-        if (btn) btn.style.display = "";
         const reading = store.getState().currentReading;
         if (!reading) return;
-        const text = reading.card.name
-          + "\n\n" + reading.card.message
-          + "\n\nWYRD — оракул духов леса\nyukisakura13.github.io/WYRD/";
-        if (navigator.share) {
-          navigator.share({ text: text }).catch(function() {});
-        }
+        navigator.share && navigator.share({
+          text: reading.card.name + "\n\n" + reading.card.message + "\n\nWYRD\nyukisakura13.github.io/WYRD/"
+        }).catch(function(){});
         return;
       }
+
+      const btn = shareCard.querySelector('[data-action="share-card"]');
+      if (btn) btn.style.display = "none";
 
       window.html2canvas(shareCard, {
         backgroundColor: "#1a1810",
         scale: 2,
         useCORS: true,
         allowTaint: false,
-        imageTimeout: 0,
+        imageTimeout: 15000,
+        logging: false,
       }).then(function(canvas) {
         if (btn) btn.style.display = "";
         canvas.toBlob(function(blob) {
@@ -164,12 +161,9 @@ export function createActionHandler(deps) {
         if (btn) btn.style.display = "";
         const reading = store.getState().currentReading;
         if (!reading) return;
-        const text = reading.card.name
-          + "\n\n" + reading.card.message
-          + "\n\nWYRD — оракул духов леса\nyukisakura13.github.io/WYRD/";
-        if (navigator.share) {
-          navigator.share({ text: text }).catch(function() {});
-        }
+        navigator.share && navigator.share({
+          text: reading.card.name + "\n\n" + reading.card.message + "\n\nWYRD\nyukisakura13.github.io/WYRD/"
+        }).catch(function(){});
       });
       return;
     }
