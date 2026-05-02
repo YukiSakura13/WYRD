@@ -114,47 +114,45 @@ export function createActionHandler(deps) {
 
     if (action === "share-card") {
       const shareCard = document.querySelector(".share-card");
-      if (!shareCard) {
+      if (!shareCard) return;
+
+      if (typeof window.html2canvas !== "function") {
+        if (navigator.share) {
+          navigator.share({
+            title: "WYRD — оракул духов леса",
+            url: "https://yukisakura13.github.io/WYRD/",
+          }).catch(function() {});
+        }
         return;
       }
 
-      import("https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js")
-        .then(function renderShareCard(module) {
-          const html2canvas = module.default;
-          return html2canvas(shareCard, {
-            backgroundColor: "#1a1810",
-            scale: 2,
-            useCORS: true,
-          });
-        })
-        .then(function shareCanvas(canvas) {
-          return canvas.toBlob(function handleBlob(blob) {
-            if (!blob) {
-              return;
-            }
-
-            const file = new File([blob], "wyrd-card.png", { type: "image/png" });
-            if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-              navigator
-                .share({
-                  files: [file],
-                  title: "WYRD — оракул духов леса",
-                  url: "https://yukisakura13.github.io/WYRD/",
-                })
-                .catch(function ignoreShareError() {});
-            } else {
-              const url = URL.createObjectURL(blob);
-              const link = document.createElement("a");
-              link.href = url;
-              link.download = "wyrd-card.png";
-              link.click();
-              window.setTimeout(function revokeUrl() {
-                URL.revokeObjectURL(url);
-              }, 1000);
-            }
-          });
-        })
-        .catch(function ignoreCanvasError() {});
+      window.html2canvas(shareCard, {
+        backgroundColor: "#1a1810",
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+      }).then(function(canvas) {
+        canvas.toBlob(function(blob) {
+          if (!blob) return;
+          const file = new File([blob], "wyrd-card.png", { type: "image/png" });
+          if (navigator.share && navigator.canShare({ files: [file] })) {
+            navigator.share({
+              files: [file],
+              title: "WYRD — оракул духов леса",
+              url: "https://yukisakura13.github.io/WYRD/",
+            }).catch(function() {});
+          } else {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "wyrd-card.png";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          }
+        }, "image/png");
+      });
       return;
     }
 
