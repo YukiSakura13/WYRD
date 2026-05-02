@@ -1,15 +1,19 @@
 import { ORACLE_CONFIG } from "./oracle-config.js";
+import { detectQuestionRoute, filterCardsByPrimaryGroup, getRouteWeightMultiplier } from "./question-routing.js";
 import { SPREADS_CONFIG } from "./spreads-config.js";
 
 export const CONTINUATION_COPY = ORACLE_CONFIG.continuationCopy;
 
 export function createReading(cards, isFree, now = new Date(), options = {}) {
   const previousReading = options.previousReading || null;
+  const questionRoute = options.questionRoute || detectQuestionRoute(options.question || "");
   const card = pickWeightedCard({
     cards,
     layer: isFree ? "present" : null,
     toneWeights: isFree ? ORACLE_CONFIG.toneWeightPresets.free_present : ORACLE_CONFIG.toneWeightPresets.any,
     previousCard: previousReading ? previousReading.card : null,
+    questionRoute,
+    primaryGroupOnly: true,
   });
 
   return {
@@ -22,12 +26,20 @@ export function createReading(cards, isFree, now = new Date(), options = {}) {
 }
 
 export function createSpread(cards, count, options = {}) {
+  const questionRoute = options.questionRoute || detectQuestionRoute(options.question || "");
+
   if (count === 3) {
-    return createThreeCardSpread(cards, options);
+    return createThreeCardSpread(cards, {
+      ...options,
+      questionRoute,
+    });
   }
 
   if (count === 5) {
-    return createFiveCardSpread(cards, options);
+    return createFiveCardSpread(cards, {
+      ...options,
+      questionRoute,
+    });
   }
 
   return pickDistinctCards(cards, count);
@@ -46,18 +58,21 @@ function createThreeCardSpread(cards, options = {}) {
   return buildConfiguredSpread(cards, SPREADS_CONFIG.deepening.slots, {
     previousReading: options.previousReading || null,
     pinnedCardsByRole,
+    questionRoute: options.questionRoute || null,
   });
 }
 
 function createFiveCardSpread(cards, options = {}) {
   return buildConfiguredSpread(cards, SPREADS_CONFIG.oracle_reading.slots, {
     previousReading: options.previousReading || null,
+    questionRoute: options.questionRoute || null,
   });
 }
 
 function buildConfiguredSpread(cards, slotConfig, options = {}) {
   const selected = [];
   const pinnedCardsByRole = options.pinnedCardsByRole || {};
+  const questionRoute = options.questionRoute || null;
   let anchorCard = options.previousReading ? options.previousReading.card : null;
 
   return slotConfig.map(function pickSlot(configItem) {
@@ -82,6 +97,10 @@ function buildConfiguredSpread(cards, slotConfig, options = {}) {
       previousCard: anchorCard,
       usedStates: collectStates(selected),
       excludeIds: collectIds(selected),
+      questionRoute,
+      primaryGroupOnly:
+        Boolean(questionRoute?.primaryGroup) &&
+        ["current_message", "what_is_happening"].includes(configItem.spreadRole),
     });
 
     selected.push(card);
@@ -97,8 +116,17 @@ function buildConfiguredSpread(cards, slotConfig, options = {}) {
   });
 }
 
-function pickWeightedCard({ cards, layer, toneWeights, previousCard = null, usedStates = [], excludeIds = [] }) {
-  const pool = cards.filter(function filterCard(card) {
+function pickWeightedCard({
+  cards,
+  layer,
+  toneWeights,
+  previousCard = null,
+  usedStates = [],
+  excludeIds = [],
+  questionRoute = null,
+  primaryGroupOnly = false,
+}) {
+  const filteredCards = cards.filter(function filterCard(card) {
     if (excludeIds.includes(card.id)) {
       return false;
     }
@@ -109,6 +137,9 @@ function pickWeightedCard({ cards, layer, toneWeights, previousCard = null, used
 
     return true;
   });
+
+  const pool =
+    primaryGroupOnly && questionRoute ? filterCardsByPrimaryGroup(filteredCards, questionRoute) : filteredCards;
 
   const weightedPool = pool.map(function mapWeight(card) {
     let weight = toneWeights[card.tone] ?? 1;
@@ -124,6 +155,8 @@ function pickWeightedCard({ cards, layer, toneWeights, previousCard = null, used
     if (previousCard && Array.isArray(previousCard.links) && previousCard.links.includes(card.state)) {
       weight *= ORACLE_CONFIG.multipliers.linkBonus;
     }
+
+    weight *= getRouteWeightMultiplier(card.name, questionRoute);
 
     return {
       card,

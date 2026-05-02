@@ -1,5 +1,6 @@
 import { createReading, createSpread } from "../cards/reading.js";
 import { buildLocalOracleReading } from "../cards/oracle-local.js";
+import { detectQuestionRoute } from "../cards/question-routing.js";
 import { deriveContentPanel } from "./render.js";
 
 export function createActionHandler(deps) {
@@ -62,9 +63,10 @@ export function createActionHandler(deps) {
     if (action === "draw") {
       uiState.forceDeck = false;
       uiState.hasDrawnThisSession = true;
-      // Save question if entered
+      // Save raw question for routing and a display question for the result screen.
       const questionEl = document.getElementById("question-input");
-      uiState.currentQuestion = questionEl ? questionEl.value.trim() : "";
+      uiState.rawQuestion = questionEl ? questionEl.value.trim() : "";
+      uiState.currentQuestion = uiState.rawQuestion;
       startRitual("free");
       return;
     }
@@ -154,10 +156,15 @@ export function resolveRitual(deps, mode) {
   audio.playRustle(currentState.soundEnabled);
 
   if (mode === "free") {
+    const questionRoute = detectQuestionRoute(uiState.rawQuestion);
+    uiState.currentQuestion = questionRoute.displayQuestion || "";
+
     store.markDailyFreeUsed(new Date().toISOString());
     store.saveReading(
       createReading(cards, true, new Date(), {
         previousReading: currentState.history[0] || null,
+        question: uiState.rawQuestion,
+        questionRoute,
       }),
     );
     renderApp();
@@ -171,9 +178,14 @@ export function resolveRitual(deps, mode) {
   }
 
   if (mode === "extra-draw") {
+    const questionRoute = detectQuestionRoute(uiState.rawQuestion);
+    uiState.currentQuestion = questionRoute.displayQuestion || "";
+
     store.saveReading(
       createReading(cards, false, new Date(), {
         previousReading: currentState.history[0] || null,
+        question: uiState.rawQuestion,
+        questionRoute,
       }),
     );
     renderApp();
@@ -195,13 +207,16 @@ export function resolveRitual(deps, mode) {
 
   if (mode === "spread-3" || mode === "spread-5") {
     const count = mode === "spread-3" ? 3 : 5;
+    const questionRoute = detectQuestionRoute(uiState.rawQuestion);
     const spreadCards = createSpread(cards, count, {
       previousReading: currentState.history[0] || null,
       currentReading: currentState.currentReading,
       previousSpread: currentState.lastSpread,
+      question: uiState.rawQuestion,
+      questionRoute,
     });
     const oracleReading = buildLocalOracleReading(count === 3 ? "deepening" : "oracle_reading", spreadCards, {
-      question: uiState.currentQuestion,
+      question: uiState.rawQuestion,
     });
     store.saveSpread(spreadCards, oracleReading);
     renderApp();
@@ -222,6 +237,7 @@ export function createInitialUIState(state) {
     overlay: "none",
     continuationOffer: null,
     currentQuestion: "",
+    rawQuestion: "",
     contentPanel: deriveContentPanel(state),
     transitioning: false,
   };
