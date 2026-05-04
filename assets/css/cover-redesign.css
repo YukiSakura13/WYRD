@@ -1,0 +1,143 @@
+#cover {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 10;
+}
+
+#cover .cover-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  z-index: 0;
+  filter: none;
+  border: 0;
+  margin-bottom: 0;
+  border-radius: 0;
+  box-shadow: none;
+  animation: none;
+}
+
+#cover.gone {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(1.04);
+}
+
+.cover-gradient {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70%;
+  background: linear-gradient(
+    to top,
+    #060504 40%,
+    rgba(6, 5, 4, 0.85) 60%,
+    rgba(6, 5, 4, 0.4) 80%,
+    transparent 100%
+  );
+  z-index: 1;
+}
+
+.cover-center {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 1rem;
+}
+
+.cover-deco {
+  font-size: 10px;
+  color: rgba(201, 168, 76, 0.25);
+  letter-spacing: 8px;
+  margin-bottom: 4px;
+}
+
+.cover-title {
+  font-size: clamp(2.4rem, 10vw, 3.2rem);
+  color: #e8d5a3;
+  letter-spacing: 0.35em;
+  padding-left: 0.35em;
+  font-family: "IM Fell English", serif;
+  font-weight: 400;
+  text-align: center;
+  text-shadow: 0 0 40px rgba(201, 168, 76, 0.2);
+  margin: 0;
+}
+
+.cover-sub {
+  font-size: 0.65rem;
+  color: #c9a84c;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-align: center;
+  margin: 0;
+}
+
+.cover-count {
+  display: none !important;
+}
+
+.cover-bottom {
+  position: relative;
+  z-index: 2;
+  padding: 0 1.5rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cover-icons {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+
+.cover-icon-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cover-icon-btn img {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  object-fit: cover;
+  transition: opacity 0.2s;
+}
+
+.cover-icon-btn span {
+  font-size: 0.6rem;
+  color: rgba(201, 168, 76, 0.45);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-family: "Manrope", sans-serif;
+}
+
+.cover-icon-btn.sound-off img {
+  opacity: 0.35;
+}
+
+.cover-icon-btn:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 4px;
+  border-radius: 999px;
+}
