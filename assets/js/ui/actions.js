@@ -57,6 +57,10 @@ export function createActionHandler(deps) {
       const nextState = store.toggleSound();
       audio.sync({ enabled: nextState.soundEnabled, scene: uiState.contentPanel });
       renderApp();
+      const soundBtn = document.getElementById('cover-sound-btn');
+      if (soundBtn) {
+        soundBtn.classList.toggle('sound-off', !nextState.soundEnabled);
+      }
       return;
     }
 
