@@ -20,6 +20,7 @@
     />
     <link rel="manifest" href="./manifest.webmanifest?v=2026-04-16-znak-puti-art-refresh" />
     <link rel="stylesheet" href="./assets/css/styles.css?v=2026-04-16-znak-puti-art-refresh" />
+    <link rel="stylesheet" href="./assets/css/cover-redesign.css?v=2026-05-04-cover-redesign" />
   </head>
   <body>
     <div class="scene-fog scene-fog--back" aria-hidden="true"></div>
@@ -28,10 +29,31 @@
 
     <div id="cover" class="active">
       <img class="cover-art" id="cover-art" src="" alt="WYRD" />
-      <h1 class="cover-title">WYRD</h1>
-      <p class="cover-sub">Оракул духов леса</p>
-      <p class="cover-count">Мистическая и таинственная атмосфера настроит Вас на нужный лад.</p>
-      <button class="cover-btn" data-action="enter">Войти в лес</button>
+      <div class="cover-gradient"></div>
+
+      <div class="cover-center">
+        <p class="cover-deco">✦ ✦ ✦</p>
+        <h1 class="cover-title">WYRD</h1>
+        <p class="cover-sub">Оракул духов леса</p>
+      </div>
+
+      <div class="cover-bottom">
+        <button class="cover-btn" data-action="enter">Войти в лес</button>
+        <div class="cover-icons">
+          <button class="cover-icon-btn" data-action="replay-onboarding">
+            <img src="./assets/images/icons/icon-cards.png" alt="Как гадать" />
+            <span>Как гадать</span>
+          </button>
+          <button class="cover-icon-btn" data-action="open-profile">
+            <img src="./assets/images/icons/icon-book.png" alt="История" />
+            <span>История</span>
+          </button>
+          <button class="cover-icon-btn" data-action="toggle-sound" id="cover-sound-btn">
+            <img src="./assets/images/icons/icon-sound.png" alt="Звук" />
+            <span>Звук</span>
+          </button>
+        </div>
+      </div>
     </div>
 
     <main id="main">
