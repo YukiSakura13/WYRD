@@ -57,9 +57,9 @@ export function createActionHandler(deps) {
       const nextState = store.toggleSound();
       audio.sync({ enabled: nextState.soundEnabled, scene: uiState.contentPanel });
       renderApp();
-      const soundBtn = document.getElementById('cover-sound-btn');
+      const soundBtn = document.getElementById("cover-sound-btn");
       if (soundBtn) {
-        soundBtn.classList.toggle('sound-off', !nextState.soundEnabled);
+        soundBtn.classList.toggle("sound-off", !nextState.soundEnabled);
       }
       return;
     }
@@ -180,6 +180,7 @@ export function createActionHandler(deps) {
 
     if (action === "open-profile") {
       audio.playSelect(store.getState().soundEnabled);
+      uiState.entered = true;
       uiState.overlay = "profile";
       audio.sync({ enabled: store.getState().soundEnabled, scene: "profile" });
       renderApp();
@@ -190,6 +191,7 @@ export function createActionHandler(deps) {
     if (action === "replay-onboarding") {
       audio.playSelect(store.getState().soundEnabled);
       store.resetOnboardingSeen();
+      uiState.entered = true;
       uiState.forceDeck = false;
       uiState.hasDrawnThisSession = false;
       uiState.overlay = "onboarding";

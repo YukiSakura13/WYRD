@@ -10,7 +10,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <meta name="wyrd-build" content="2026-04-16-znak-puti-art-refresh" />
+    <meta name="wyrd-build" content="2026-05-05-cover-moon-forest-prototype-approved" />
     <title>WYRD</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -18,9 +18,8 @@
       href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="manifest" href="./manifest.webmanifest?v=2026-04-16-znak-puti-art-refresh" />
-    <link rel="stylesheet" href="./assets/css/styles.css?v=2026-04-16-znak-puti-art-refresh" />
-    <link rel="stylesheet" href="./assets/css/cover-redesign.css?v=2026-05-04-cover-redesign" />
+    <link rel="manifest" href="./manifest.webmanifest?v=2026-05-05-cover-moon-forest-prototype-approved" />
+    <link rel="stylesheet" href="./assets/css/styles.css?v=2026-05-05-cover-moon-forest-prototype-approved" />
   </head>
   <body>
     <div class="scene-fog scene-fog--back" aria-hidden="true"></div>
@@ -28,32 +27,44 @@
     <div class="transition-veil" id="transition-veil" aria-hidden="true"></div>
 
     <div id="cover" class="active">
-      <img class="cover-art" id="cover-art" src="" alt="WYRD" />
-      <div class="cover-gradient"></div>
+      <div class="cover-bg" aria-hidden="true"></div>
 
-      <div class="cover-center">
-        <p class="cover-deco">✦ ✦ ✦</p>
-        <h1 class="cover-title">WYRD</h1>
-        <p class="cover-sub">Оракул духов леса</p>
-      </div>
+      <section class="cover-scene" aria-label="Вход в WYRD">
+        <img
+          class="cover-art"
+          id="cover-art"
+          src="./assets/images/cover/cover-moon-forest.webp"
+          alt="WYRD"
+        />
+        <div class="cover-overlay" aria-hidden="true"></div>
 
-      <div class="cover-bottom">
-        <button class="cover-btn" data-action="enter">Войти в лес</button>
-        <div class="cover-icons">
-          <button class="cover-icon-btn" data-action="replay-onboarding">
-            <img src="./assets/images/icons/icon-cards.png" alt="Как гадать" />
-            <span>Как гадать</span>
-          </button>
-          <button class="cover-icon-btn" data-action="open-profile">
-            <img src="./assets/images/icons/icon-book.png" alt="История" />
-            <span>История</span>
-          </button>
-          <button class="cover-icon-btn" data-action="toggle-sound" id="cover-sound-btn">
-            <img src="./assets/images/icons/icon-sound.png" alt="Звук" />
-            <span>Звук</span>
-          </button>
+        <div class="cover-copy">
+          <h1 class="cover-title">WYRD</h1>
+          <p class="cover-sub">Оракул духов леса</p>
+          <button class="cover-btn" data-action="enter">Войти в лес</button>
         </div>
-      </div>
+      </section>
+
+      <nav class="cover-nav" aria-label="Дополнительные действия">
+        <button class="cover-icon-btn" data-action="replay-onboarding" type="button">
+          <span class="cover-icon-visual" aria-hidden="true">
+            <img src="./assets/images/icons/icon-cards.png" alt="" />
+          </span>
+          <span>Как гадать</span>
+        </button>
+        <button class="cover-icon-btn" data-action="open-profile" type="button">
+          <span class="cover-icon-visual" aria-hidden="true">
+            <img src="./assets/images/icons/icon-book.png" alt="" />
+          </span>
+          <span>История</span>
+        </button>
+        <button class="cover-icon-btn" data-action="toggle-sound" id="cover-sound-btn" type="button">
+          <span class="cover-icon-visual" aria-hidden="true">
+            <img src="./assets/images/icons/icon-sound.png" alt="" />
+          </span>
+          <span>Звук</span>
+        </button>
+      </nav>
     </div>
 
     <main id="main">
@@ -207,7 +218,7 @@
       window.WYRD_BUILD_ID =
         document.querySelector('meta[name="wyrd-build"]')?.content || "dev";
     </script>
-    <script type="module" src="./assets/js/main.js?v=2026-04-16-znak-puti-art-refresh"></script>
+    <script type="module" src="./assets/js/main.js?v=2026-05-05-cover-moon-forest-prototype-approved"></script>
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   </body>
 </html>

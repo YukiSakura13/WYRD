@@ -1,7 +1,7 @@
 import { CARD_META } from "../cards/card-meta.js";
 import { CARD_LAYERS } from "../cards/layer-map.js";
 
-export const COVER_IMAGE = "./assets/images/cover.webp";
+export const COVER_IMAGE = "./assets/images/cover/cover-moon-forest.webp";
 
 const RAW_CARDS = [
   {

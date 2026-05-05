@@ -7,6 +7,7 @@ export function getElements(doc = document) {
     body: doc.body,
     cover: doc.getElementById("cover"),
     coverArt: doc.getElementById("cover-art"),
+    coverSoundButton: doc.getElementById("cover-sound-btn"),
     main: doc.getElementById("main"),
     transitionVeil: doc.getElementById("transition-veil"),
     onboardingSection: doc.getElementById("ritual-onboarding"),
@@ -30,7 +31,7 @@ export function getElements(doc = document) {
     hookBlock: doc.getElementById("hook-block"),
     actionsPanel: doc.querySelector(".actions-panel"),
     deckTop: doc.querySelector(".dc-top"),
-    soundButton: doc.querySelector('[data-action="toggle-sound"]'),
+    soundButton: doc.querySelector('.top-actions [data-action="toggle-sound"]'),
     profileName: doc.getElementById("profile-name"),
     profileMeta: doc.getElementById("profile-meta"),
     historyList: doc.getElementById("history-list"),
@@ -146,7 +147,12 @@ export function createRenderer(elements) {
   }
 
   function renderProfile(state) {
-    elements.soundButton.textContent = state.soundEnabled ? "Звук леса: вкл" : "Звук леса: выкл";
+    if (elements.soundButton) {
+      elements.soundButton.textContent = state.soundEnabled ? "Звук леса: вкл" : "Звук леса: выкл";
+    }
+    if (elements.coverSoundButton) {
+      elements.coverSoundButton.classList.toggle("sound-off", !state.soundEnabled);
+    }
     elements.profileName.textContent = state.profileName;
     elements.profileMeta.textContent = state.dailyFreeUsedAt
       ? "Сегодняшняя бесплатная карта уже раскрыта."
