@@ -373,6 +373,7 @@ export function createRenderer(elements) {
 
     elements.profileSection.hidden = overlay !== "profile";
     elements.onboardingSection.hidden = overlay !== "onboarding";
+    elements.onboardingSection.classList.toggle("is-visible", overlay === "onboarding");
     elements.deckWrap.hidden = !showingDeck;
     elements.resultSection.hidden = overlay !== "none" || !uiState.hasDrawnThisSession || uiState.forceDeck || contentPanel !== "result";
     elements.spreadResultSection.hidden =

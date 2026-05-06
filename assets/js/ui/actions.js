@@ -17,20 +17,18 @@ export function createActionHandler(deps) {
     if (action === "enter") {
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function enterForest() {
-        const currentState = store.getState();
         uiState.entered = true;
         uiState.forceDeck = true;
         uiState.hasDrawnThisSession = false;
-        uiState.overlay = currentState.onboardingSeen ? "none" : "onboarding";
-        uiState.onboardingReturn = currentState.onboardingSeen ? "deck" : "cover";
+        uiState.overlay = "none";
         renderApp();
         audio.sync({
           allowInit: true,
           enabled: store.getState().soundEnabled,
-          scene: currentState.onboardingSeen ? "deck" : "onboarding",
+          scene: "deck",
         });
         window.setTimeout(function scrollAfterEntry() {
-          renderer.scrollTo(currentState.onboardingSeen ? "deck" : "onboarding");
+          renderer.scrollTo("deck");
         }, 80);
       });
       return;
