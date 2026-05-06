@@ -80,15 +80,27 @@
       </div>
 
       <section class="ritual-onboarding" id="ritual-onboarding" hidden>
-        <p class="ritual-kicker">Как гадать при помощи этой колоды</p>
-        <div class="ritual-lines" aria-label="Шаги ритуала">
-          <p class="ritual-line" style="--ritual-delay: 0ms">Посмотри на колоду и вспомни свой вопрос</p>
-          <p class="ritual-line" style="--ritual-delay: 760ms">Подержи его в мыслях несколько секунд</p>
-          <p class="ritual-line" style="--ritual-delay: 1520ms">Доверься интуиции и коснись колоды</p>
-          <p class="ritual-line" style="--ritual-delay: 2280ms">Прочитай ответ духов леса</p>
-          <p class="ritual-line" style="--ritual-delay: 3040ms">Когда будешь готов, вернись с новым вопросом</p>
+        <img
+          class="ritual-bg"
+          src="./assets/images/onboarding/raven-forest.webp"
+          alt=""
+          aria-hidden="true"
+        />
+        <div class="ritual-bg-overlay" aria-hidden="true"></div>
+        <button class="btn-back-circle ritual-back" data-action="back-from-onboarding" aria-label="Назад">←</button>
+        <div class="ritual-content">
+          <p class="ritual-kicker">Оракул духов леса</p>
+          <h2 class="ritual-title">Как гадать с помощью этой колоды</h2>
+          <div class="ritual-lines" aria-label="Шаги ритуала">
+            <p class="ritual-line" style="--ritual-delay: 0ms">Посмотри на колоду и вспомни свой вопрос</p>
+            <p class="ritual-line" style="--ritual-delay: 760ms">Подержи его в мыслях несколько секунд</p>
+            <p class="ritual-line" style="--ritual-delay: 1520ms">Доверься интуиции и коснись колоды</p>
+            <p class="ritual-line" style="--ritual-delay: 2280ms">Прочитай ответ духов леса</p>
+            <p class="ritual-line" style="--ritual-delay: 3040ms">Захочется спросить снова. Возвращайся</p>
+          </div>
+          <button class="ritual-btn" data-action="enter-ritual">Войти в ритуал</button>
         </div>
-        <button class="cover-btn ritual-btn" data-action="enter-ritual">Войти в ритуал</button>
+        <p class="ritual-whisper">Лес отвечает тем, кто умеет слушать тишину</p>
       </section>
 
       <section class="deck-wrap" id="deck-wrap">

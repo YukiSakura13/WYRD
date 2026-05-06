@@ -22,6 +22,7 @@ export function createActionHandler(deps) {
         uiState.forceDeck = true;
         uiState.hasDrawnThisSession = false;
         uiState.overlay = currentState.onboardingSeen ? "none" : "onboarding";
+        uiState.onboardingReturn = currentState.onboardingSeen ? "deck" : "cover";
         renderApp();
         audio.sync({
           allowInit: true,
@@ -48,6 +49,34 @@ export function createActionHandler(deps) {
           enabled: store.getState().soundEnabled,
           scene: "deck",
         });
+        renderer.scrollTo("deck");
+      });
+      return;
+    }
+
+    if (action === "back-from-onboarding") {
+      audio.playSelect(store.getState().soundEnabled);
+      runTransition(function leaveOnboarding() {
+        const returnTarget = uiState.onboardingReturn || "cover";
+
+        if (returnTarget === "cover") {
+          uiState.entered = false;
+          uiState.forceDeck = false;
+          uiState.hasDrawnThisSession = false;
+          uiState.overlay = "none";
+          renderApp();
+          audio.sync({ enabled: store.getState().soundEnabled, scene: "deck" });
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          return;
+        }
+
+        uiState.entered = true;
+        uiState.forceDeck = true;
+        uiState.hasDrawnThisSession = false;
+        uiState.overlay = "none";
+        uiState.contentPanel = "deck";
+        renderApp();
+        audio.sync({ enabled: store.getState().soundEnabled, scene: "deck" });
         renderer.scrollTo("deck");
       });
       return;
@@ -191,6 +220,7 @@ export function createActionHandler(deps) {
     if (action === "replay-onboarding") {
       audio.playSelect(store.getState().soundEnabled);
       store.resetOnboardingSeen();
+      uiState.onboardingReturn = uiState.entered ? "deck" : "cover";
       uiState.entered = true;
       uiState.forceDeck = false;
       uiState.hasDrawnThisSession = false;
@@ -337,6 +367,7 @@ export function createInitialUIState(state) {
     currentQuestion: "",
     rawQuestion: "",
     contentPanel: deriveContentPanel(state),
+    onboardingReturn: "cover",
     transitioning: false,
   };
 }
