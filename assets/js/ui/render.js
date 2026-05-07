@@ -85,7 +85,7 @@ export function createRenderer(elements) {
 
   function scrollTo(name) {
     const targetMap = {
-      deck: elements.deckWrap,
+      deck: elements.main,
       profile: elements.profileSection,
       onboarding: elements.onboardingSection,
       result: elements.resultSection,

@@ -120,6 +120,21 @@ export function createActionHandler(deps) {
       return;
     }
 
+    if (action === "back-to-cover") {
+      audio.playSelect(store.getState().soundEnabled);
+      runTransition(function returnToCover() {
+        uiState.entered = false;
+        uiState.forceDeck = false;
+        uiState.hasDrawnThisSession = false;
+        uiState.overlay = "none";
+        uiState.contentPanel = "deck";
+        renderApp();
+        audio.sync({ enabled: store.getState().soundEnabled, scene: "deck" });
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+      return;
+    }
+
     if (action === "new-question") {
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function backToDeck() {

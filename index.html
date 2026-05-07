@@ -71,7 +71,7 @@
       <header class="hdr">
         <h1 class="hdr-title">WYRD</h1>
         <div class="hdr-line"></div>
-        <p class="hdr-desc">Тёмный оракул духов леса</p>
+        <p class="hdr-desc">Оракул духов леса</p>
       </header>
 
       <div class="top-actions">
@@ -109,25 +109,27 @@
       </section>
 
       <section class="deck-wrap" id="deck-wrap">
-        <p class="deck-hint">Задумай вопрос перед тем как коснуться колоды</p>
+        <button class="btn-back-circle deck-back" data-action="back-to-cover" aria-label="Назад">←</button>
         <div class="question-field-wrap">
-          <label class="question-label" for="question-input">Твой вопрос</label>
+          <label class="question-label sr-only" for="question-input">Твой вопрос</label>
           <textarea
             id="question-input"
             class="question-input"
-            placeholder="Напиши свой вопрос, если хочешь сделать чтение более личным"
+            placeholder="Держи вопрос в уме или запиши его здесь..."
             aria-label="Твой вопрос"
             maxlength="280"
             rows="2"
           ></textarea>
         </div>
-        <div class="deck" data-action="draw">
-          <div class="dc"></div>
-          <div class="dc"></div>
-          <div class="dc"></div>
-          <div class="dc-top" aria-hidden="true"></div>
+        <div class="deck-center-zone">
+          <button class="deck" data-action="draw" type="button" aria-label="Коснуться колоды">
+            <div class="dc"></div>
+            <div class="dc"></div>
+            <div class="dc"></div>
+            <div class="dc-top" aria-hidden="true"></div>
+          </button>
+          <p class="deck-touch-hint">✦ коснись колоды ✦</p>
         </div>
-        <button class="draw-btn" id="draw-button" data-action="draw">Коснуться колоды</button>
       </section>
 
       <section id="result" hidden>
