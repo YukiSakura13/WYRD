@@ -12,8 +12,6 @@ export function getElements(doc = document) {
     transitionVeil: doc.getElementById("transition-veil"),
     onboardingSection: doc.getElementById("ritual-onboarding"),
     deckWrap: doc.getElementById("deck-wrap"),
-    drawButton: doc.getElementById("draw-button"),
-    deckModeCopy: doc.getElementById("deck-mode-copy"),
     resultQuestion: doc.getElementById("result-question"),
     resultSection: doc.getElementById("result"),
     spreadResultSection: doc.getElementById("spread-result"),
@@ -30,7 +28,7 @@ export function getElements(doc = document) {
     deepMessage: doc.getElementById("deep-message"),
     hookBlock: doc.getElementById("hook-block"),
     actionsPanel: doc.querySelector(".actions-panel"),
-    deckTop: doc.querySelector(".dc-top"),
+    deckTop: doc.querySelector(".deck-card-face"),
     soundButton: doc.querySelector('.top-actions [data-action="toggle-sound"]'),
     profileName: doc.getElementById("profile-name"),
     profileMeta: doc.getElementById("profile-meta"),
@@ -71,7 +69,6 @@ export function createRenderer(elements) {
 
   function render(state, uiState) {
     renderShell(uiState);
-    renderDeckCopy(state, uiState);
     renderProfile(state);
     renderCurrentReading(state.currentReading, uiState.currentQuestion);
     renderHook(state, uiState);
@@ -85,7 +82,7 @@ export function createRenderer(elements) {
 
   function scrollTo(name) {
     const targetMap = {
-      deck: elements.main,
+      deck: elements.deckWrap,
       profile: elements.profileSection,
       onboarding: elements.onboardingSection,
       result: elements.resultSection,
@@ -131,19 +128,6 @@ export function createRenderer(elements) {
         : uiState.forceDeck
           ? "deck"
           : uiState.contentPanel;
-  }
-
-  function renderDeckCopy(state, uiState) {
-    const usedFree = Boolean(state.dailyFreeUsedAt);
-    if (elements.deckModeCopy) {
-      elements.deckModeCopy.textContent = usedFree
-        ? "Первый знак уже открыт. Если захочешь, можно продолжить чтение глубже."
-        : "Одна карта в день. Лес открывает только первый слой.";
-    }
-
-    if (elements.drawButton) {
-      elements.drawButton.textContent = usedFree ? "Продолжить путь" : "Коснуться колоды";
-    }
   }
 
   function renderProfile(state) {

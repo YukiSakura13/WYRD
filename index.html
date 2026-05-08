@@ -108,28 +108,40 @@
         <p class="ritual-whisper">Лес отвечает тем, кто умеет слушать тишину</p>
       </section>
 
-      <section class="deck-wrap" id="deck-wrap">
-        <button class="btn-back-circle deck-back" data-action="back-to-cover" aria-label="Назад">←</button>
-        <div class="question-field-wrap">
-          <label class="question-label sr-only" for="question-input">Твой вопрос</label>
+      <section class="deck-scene" id="deck-wrap" aria-label="Экран колоды WYRD">
+        <button class="deck-back" data-action="back-to-cover" type="button" aria-label="Назад">←</button>
+
+        <header class="deck-header">
+          <h2 class="deck-brand">WYRD</h2>
+          <div class="deck-brand-line" aria-hidden="true"></div>
+          <p class="deck-subtitle">Оракул духов леса</p>
+        </header>
+
+        <section class="deck-question-zone" aria-label="Поле вопроса">
+          <label class="sr-only" for="question-input">Твой вопрос</label>
           <textarea
             id="question-input"
-            class="question-input"
-            placeholder="Держи вопрос в уме или запиши его здесь..."
-            aria-label="Твой вопрос"
-            maxlength="280"
+            class="deck-question-input"
             rows="2"
+            maxlength="280"
+            aria-label="Твой вопрос"
+            placeholder="Держи вопрос в уме или запиши его здесь..."
           ></textarea>
-        </div>
-        <div class="deck-center-zone">
-          <button class="deck" data-action="draw" type="button" aria-label="Коснуться колоды">
-            <div class="dc"></div>
-            <div class="dc"></div>
-            <div class="dc"></div>
-            <div class="dc-top" aria-hidden="true"></div>
+        </section>
+
+        <section class="deck-card-zone" aria-label="Колода">
+          <button class="deck-card" data-action="draw" type="button" aria-label="Коснуться колоды">
+            <span class="deck-card-stack deck-card-stack--left" aria-hidden="true"></span>
+            <span class="deck-card-stack deck-card-stack--mid" aria-hidden="true"></span>
+            <span class="deck-card-face" aria-hidden="true"></span>
           </button>
-          <p class="deck-touch-hint">✦ коснись колоды ✦</p>
-        </div>
+          <p class="deck-touch-copy">✦ коснись колоды ✦</p>
+        </section>
+
+        <section class="deck-whisper-zone" aria-label="Тихая подпись">
+          <p class="deck-stars" aria-hidden="true">✦ ✦ ✦</p>
+          <p class="deck-whisper">Лес отвечает тем, кто умеет слушать тишину.</p>
+        </section>
       </section>
 
       <section id="result" hidden>
