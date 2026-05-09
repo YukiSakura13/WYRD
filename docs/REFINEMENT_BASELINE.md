@@ -55,6 +55,7 @@
 
 ### Публикация
 
+- локальные smoke-checks проходят: `smoke-domain`, `smoke-state`, `prepare_pages`, `validate_pages_artifact`
 - `index.html` публикуется с актуальным `wyrd-build`.
 - `main.js`, `styles.css`, `manifest.webmanifest`, `sw.js` приходят с актуальной versioned query string.
 - После обновления GitHub Pages сайт не застревает на старой версии.
