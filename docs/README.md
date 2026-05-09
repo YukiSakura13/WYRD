@@ -19,10 +19,11 @@
 3. [ROADMAP.md](/Users/marinamart/Desktop/Oracle_dev/docs/ROADMAP.md)
 4. [FEATURES.md](/Users/marinamart/Desktop/Oracle_dev/docs/FEATURES.md)
 5. [REFINEMENT_BASELINE.md](/Users/marinamart/Desktop/Oracle_dev/docs/REFINEMENT_BASELINE.md)
-6. [../ARCHITECTURE.md](/Users/marinamart/Desktop/Oracle_dev/ARCHITECTURE.md)
-7. [CONTENT_MODEL.md](/Users/marinamart/Desktop/Oracle_dev/docs/CONTENT_MODEL.md)
-8. [ADR.md](/Users/marinamart/Desktop/Oracle_dev/docs/ADR.md)
-9. [WORKFLOW_WITH_CODEX.md](/Users/marinamart/Desktop/Oracle_dev/docs/WORKFLOW_WITH_CODEX.md)
+6. [RELEASE_CHECKLIST.md](/Users/marinamart/Desktop/Oracle_dev/docs/RELEASE_CHECKLIST.md)
+7. [../ARCHITECTURE.md](/Users/marinamart/Desktop/Oracle_dev/ARCHITECTURE.md)
+8. [CONTENT_MODEL.md](/Users/marinamart/Desktop/Oracle_dev/docs/CONTENT_MODEL.md)
+9. [ADR.md](/Users/marinamart/Desktop/Oracle_dev/docs/ADR.md)
+10. [WORKFLOW_WITH_CODEX.md](/Users/marinamart/Desktop/Oracle_dev/docs/WORKFLOW_WITH_CODEX.md)
 
 ---
 
@@ -41,6 +42,7 @@
 - [../ARCHITECTURE.md](/Users/marinamart/Desktop/Oracle_dev/ARCHITECTURE.md) — текущая архитектура сайта
 - [ADR.md](/Users/marinamart/Desktop/Oracle_dev/docs/ADR.md) — журнал архитектурных решений
 - [REFINEMENT_BASELINE.md](/Users/marinamart/Desktop/Oracle_dev/docs/REFINEMENT_BASELINE.md) — baseline сценариев и regression checklist для безопасного рефакторинга
+- [RELEASE_CHECKLIST.md](/Users/marinamart/Desktop/Oracle_dev/docs/RELEASE_CHECKLIST.md) — quality gates перед push и контроль публикации на GitHub Pages
 
 ### Совместная работа
 
@@ -55,6 +57,7 @@
 - Если добавляется или меняется сценарий пользователя, обновляем [FEATURES.md](/Users/marinamart/Desktop/Oracle_dev/docs/FEATURES.md).
 - Если меняется контентная сущность, формат карты или расклада, обновляем [CONTENT_MODEL.md](/Users/marinamart/Desktop/Oracle_dev/docs/CONTENT_MODEL.md).
 - Если принимается важное техническое или продуктовое решение, записываем его в [ADR.md](/Users/marinamart/Desktop/Oracle_dev/docs/ADR.md).
+- Если меняется выпускной процесс, smoke-проверки или deploy-поток, обновляем [RELEASE_CHECKLIST.md](/Users/marinamart/Desktop/Oracle_dev/docs/RELEASE_CHECKLIST.md).
 
 ---
 
