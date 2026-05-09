@@ -131,11 +131,15 @@
 
 - `assets/js/cards/reading.js`
 - `assets/js/cards/oracle-config.js`
+- `assets/js/cards/question-routing.js`
+- `assets/js/cards/question-routing/*`
 
 Ответственность:
 
 - создать чтение одной карты
 - создать расклад на несколько карт
+- маршрутизировать вопрос пользователя по доменным группам
+- считать route scores и card-group multipliers
 - хранить настраиваемый probability-profile оракула в отдельном конфиге
 
 ### 4.4. State Layer
@@ -394,6 +398,19 @@
 
 - логика выбора карт сейчас случайная
 - истории раскладов не сохраняются, сохраняется только `lastSpread`
+
+## `assets/js/cards/question-routing.js`
+
+Роль:
+
+- стабильный публичный entrypoint для маршрутизации вопросов
+- реэкспортирует доменные helper-функции из внутренних модулей
+
+Связанные helper-модули:
+
+- `assets/js/cards/question-routing/config.js` — route config, route weights и bridge-card mapping
+- `assets/js/cards/question-routing/scoring.js` — normalizer, scoring и route detection
+- `assets/js/cards/question-routing/card-groups.js` — card-group membership и route-based multipliers
 
 ## `assets/js/ui/actions.js`
 

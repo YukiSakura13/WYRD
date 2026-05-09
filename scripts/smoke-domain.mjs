@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
-import fs from "node:fs/promises";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 
 const rootDir = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
 
@@ -26,8 +26,9 @@ function checkRoute(routing, question, expected) {
 
 async function loadRoutingModule() {
   const modulePath = path.join(rootDir, "assets/js/cards/question-routing.js");
-  const source = await fs.readFile(modulePath, "utf8");
-  return import(`data:text/javascript;charset=utf-8,${encodeURIComponent(source)}`);
+  const moduleUrl = new URL(pathToFileURL(modulePath).href);
+  moduleUrl.searchParams.set("v", String(Date.now()));
+  return import(moduleUrl.href);
 }
 
 async function main() {

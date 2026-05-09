@@ -29,6 +29,8 @@
 - `assets/js/data/cards.js` — канонический источник данных карт
 - `assets/js/state/storage.js` — загрузка, сохранение и нормализация состояния
 - `assets/js/cards/reading.js` — логика выбора карт и раскладов
+- `assets/js/cards/question-routing.js` — публичный entrypoint маршрутизации вопросов
+- `assets/js/cards/question-routing/` — config, scoring и group-weighting для question routing
 - `assets/js/ui/render.js` — единый рендер UI-секций
 - `assets/js/ui/actions.js` — маршрутизация действий пользователя
 - `assets/js/ui/render-spread.js`, `assets/js/ui/render-helpers.js` — вспомогательные UI-модули рендера
@@ -76,3 +78,4 @@
 - добавлен baseline-документ для безопасной полировки и regression-проверки
 - `styles.css` превращён в тонкий entry-файл с `@import` на CSS-модули
 - UI-слой начал дробиться на отдельные helper-модули без изменения продуктового поведения
+- маршрутизация вопросов вынесена из монолита в отдельные domain-модули с сохранением прежнего API
