@@ -3,7 +3,6 @@ const SCENE_LEVELS = {
   deck: 0.028,
   result: 0.034,
   spread: 0.038,
-  paywall: 0.024,
   profile: 0.02,
 };
 

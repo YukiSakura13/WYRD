@@ -52,18 +52,6 @@ export function getElements(doc = document) {
   };
 }
 
-export function deriveContentPanel(state) {
-  if (state.lastSpread.length) {
-    return "spread";
-  }
-
-  if (state.currentReading) {
-    return "result";
-  }
-
-  return "deck";
-}
-
 export function createRenderer(elements) {
   let readingRevealTimers = [];
   let lastReadingId = null;
@@ -413,42 +401,6 @@ function layerLabel(layer) {
   return "Настоящее";
 }
 
-function renderContinuationPreview(offer) {
-  const container = document.getElementById("paywall-preview");
-  if (!container) {
-    return;
-  }
-
-  container.replaceChildren();
-
-  const preset = getContinuationPreviewPreset(offer);
-  container.dataset.layout = preset.layout;
-
-  preset.items.forEach(function (item) {
-    const card = document.createElement("article");
-    card.className = "paywall-preview-card";
-
-    const image = document.createElement("div");
-    image.className = "paywall-preview-image";
-
-    const veil = document.createElement("span");
-    veil.className = "paywall-preview-veil";
-    veil.textContent = "лес говорит больше";
-    image.appendChild(veil);
-
-    const role = document.createElement("p");
-    role.className = "paywall-preview-role";
-    role.textContent = item.role;
-
-    const line = document.createElement("p");
-    line.className = "paywall-preview-text";
-    line.textContent = item.line;
-
-    card.append(image, role, line);
-    container.appendChild(card);
-  });
-}
-
 function getSpreadDelay(card, count) {
   const revealOrder = Math.max((card.revealOrder || 1) - 1, 0);
 
@@ -469,43 +421,6 @@ function getSpreadStageNote(count) {
   }
 
   return "";
-}
-
-function getContinuationPreviewPreset(offer) {
-  if (offer === "deep-reading") {
-    return {
-      layout: "single",
-      items: [{ role: "Второй слой", line: "Лес говорит больше, но..." }],
-    };
-  }
-
-  if (offer === "spread-3") {
-    return {
-      layout: "double",
-      items: [
-        { role: "Прошлое", line: "То, что держало..." },
-        { role: "Будущее", line: "То, что уже зовёт..." },
-      ],
-    };
-  }
-
-  if (offer === "spread-5") {
-    return {
-      layout: "five",
-      items: [
-        { role: "Ты", line: "Точка входа..." },
-        { role: "Что держит", line: "Старый узел..." },
-        { role: "Что ведёт", line: "Текущий импульс..." },
-        { role: "Что скрыто", line: "Лес прячет..." },
-        { role: "Куда ведёт", line: "Дальнейший путь..." },
-      ],
-    };
-  }
-
-  return {
-    layout: "single",
-    items: [{ role: "Следующий знак", line: "Лес говорит больше..." }],
-  };
 }
 
 function createEmptyCardImage() {

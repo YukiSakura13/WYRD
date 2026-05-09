@@ -4,7 +4,6 @@ export const SCENES = Object.freeze({
   DECK: "deck",
   RESULT: "result",
   SPREAD: "spread",
-  PAYWALL: "paywall",
   PROFILE: "profile",
 });
 
