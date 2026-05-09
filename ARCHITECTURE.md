@@ -147,12 +147,12 @@
 Файлы:
 
 - `assets/js/state/storage.js`
+- `assets/js/state/model.js`
 
 Ответственность:
 
-- загрузка состояния из `localStorage`
-- нормализация состояния
-- обновление состояния через методы store
+- `storage.js` — загрузка состояния из `localStorage`, публичный store API и сохранение
+- `model.js` — state contract, нормализация и инварианты persistent state
 - синхронизация дневной бесплатной карты по границе суток
 
 ### 4.5. Infrastructure Layer
@@ -373,6 +373,10 @@
 
 - внутренний state store без внешней библиотеки
 - публичный API для изменения состояния
+
+Связанный helper-модуль:
+
+- `assets/js/state/model.js` — default state, normalization, invariants и state transitions для persistent state
 
 Публичные операции:
 
