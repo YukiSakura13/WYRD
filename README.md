@@ -8,6 +8,7 @@
 
 - `ARCHITECTURE.md` — архитектура сайта
 - `docs/REFINEMENT_BASELINE.md` — baseline поведения и regression checklist для рефакторинга
+- `docs/RELEASE_CHECKLIST.md` — минимальные quality gates перед push и после публикации
 - `docs/README.md` — индекс всей документации
 - `docs/PROJECT_BRIEF.md` — краткое описание продукта
 - `docs/ROADMAP_VISUAL.md` — визуальная карта страниц и сценариев
@@ -40,6 +41,7 @@
 - `assets/images/` — cover и изображения карт
 - `manifest.webmanifest`, `sw.js` — PWA-обвязка
 - `scripts/prepare_pages.py` — подготовка чистого GitHub Pages артефакта
+- `scripts/validate_pages_artifact.py` — проверка versioning и состава `.dist-pages` перед деплоем
 - `scripts/smoke-domain.mjs` — smoke-проверка доменной маршрутизации перед её рефакторингом
 - `scripts/smoke-state.mjs` — smoke-проверка state-инвариантов и persistent store
 
@@ -49,10 +51,21 @@
 
 1. Открой `index.html` в браузере
 
-Если хочешь проверить PWA и service worker:
+Если хочешь проверить PWA, service worker и итоговый UI локально:
 
 1. В терминале из папки проекта запусти `python3 -m http.server 4173`
 2. Открой [http://localhost:4173](http://localhost:4173)
+
+## Quality gates
+
+Перед публикацией в `main` проект теперь проходит минимальный набор проверок:
+
+1. `node scripts/smoke-domain.mjs`
+2. `node scripts/smoke-state.mjs`
+3. `python3 scripts/prepare_pages.py`
+4. `python3 scripts/validate_pages_artifact.py`
+
+Тот же набор артефактных проверок закреплён и в GitHub Actions workflow `Deploy Pages`.
 
 ## Что реализовано
 
@@ -84,3 +97,4 @@
 - state contract и его инварианты вынесены из storage facade в отдельный state model
 - усилены keyboard/focus semantics: явные `type="button"`, `aria-pressed`, `aria-live` и более заметные focus states
 - убраны из production-структуры неиспользуемые тяжёлые медиа, а `html2canvas` переведён на lazy load при шаринге
+- Pages deploy теперь валидирует `.dist-pages`, smoke-tests домена/state и versioned build-артефакт до публикации
