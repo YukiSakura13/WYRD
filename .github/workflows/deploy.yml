@@ -25,8 +25,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Run smoke tests
+        run: |
+          node scripts/smoke-domain.mjs
+          node scripts/smoke-state.mjs
+
       - name: Prepare Pages Artifact
         run: python3 scripts/prepare_pages.py
+
+      - name: Validate Pages Artifact
+        run: python3 scripts/validate_pages_artifact.py
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
