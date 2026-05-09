@@ -4,6 +4,21 @@ export function shareCurrentCard(store) {
     return;
   }
 
+  ensureHtml2Canvas()
+    .then(function shareAfterLoad() {
+      if (typeof window.html2canvas !== "function") {
+        shareReadingText(store.getState().currentReading);
+        return;
+      }
+
+      renderShareCard(shareCard, store);
+    })
+    .catch(function handleLoaderError() {
+      shareReadingText(store.getState().currentReading);
+    });
+}
+
+function renderShareCard(shareCard, store) {
   if (typeof window.html2canvas !== "function") {
     shareReadingText(store.getState().currentReading);
     return;
@@ -14,8 +29,7 @@ export function shareCurrentCard(store) {
     button.style.display = "none";
   }
 
-  window
-    .html2canvas(shareCard, {
+  window.html2canvas(shareCard, {
       backgroundColor: "#1a1810",
       scale: 2,
       useCORS: true,
@@ -60,6 +74,44 @@ export function shareCurrentCard(store) {
       }
       shareReadingText(store.getState().currentReading);
     });
+}
+
+let html2CanvasLoader = null;
+
+function ensureHtml2Canvas() {
+  if (typeof window.html2canvas === "function") {
+    return Promise.resolve(window.html2canvas);
+  }
+
+  if (html2CanvasLoader) {
+    return html2CanvasLoader;
+  }
+
+  html2CanvasLoader = new Promise(function loadHtml2Canvas(resolve, reject) {
+    const existingScript = document.querySelector('script[data-html2canvas-loader="true"]');
+    if (existingScript) {
+      existingScript.addEventListener("load", function handleLoad() {
+        resolve(window.html2canvas);
+      });
+      existingScript.addEventListener("error", reject);
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js";
+    script.async = true;
+    script.dataset.html2canvasLoader = "true";
+    script.onload = function handleLoad() {
+      resolve(window.html2canvas);
+    };
+    script.onerror = reject;
+    document.head.appendChild(script);
+  }).catch(function resetLoader(error) {
+    html2CanvasLoader = null;
+    throw error;
+  });
+
+  return html2CanvasLoader;
 }
 
 function shareReadingText(reading) {

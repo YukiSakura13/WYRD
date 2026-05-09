@@ -35,6 +35,8 @@
           id="cover-art"
           src="./assets/images/cover/cover-moon-forest.webp"
           alt="WYRD"
+          fetchpriority="high"
+          decoding="async"
         />
         <div class="cover-overlay" aria-hidden="true"></div>
 
@@ -48,19 +50,19 @@
       <nav class="cover-nav" aria-label="Дополнительные действия">
         <button class="cover-icon-btn" data-action="replay-onboarding" type="button">
           <span class="cover-icon-visual" aria-hidden="true">
-            <img src="./assets/images/icons/icon-cards.png" alt="" />
+            <img src="./assets/images/icons/icon-cards.png" alt="" loading="lazy" decoding="async" />
           </span>
           <span>Как гадать</span>
         </button>
         <button class="cover-icon-btn" data-action="open-profile" type="button">
           <span class="cover-icon-visual" aria-hidden="true">
-            <img src="./assets/images/icons/icon-book.png" alt="" />
+            <img src="./assets/images/icons/icon-book.png" alt="" loading="lazy" decoding="async" />
           </span>
           <span>История</span>
         </button>
         <button class="cover-icon-btn" data-action="toggle-sound" id="cover-sound-btn" type="button">
           <span class="cover-icon-visual" aria-hidden="true">
-            <img src="./assets/images/icons/icon-sound.png" alt="" />
+            <img src="./assets/images/icons/icon-sound.png" alt="" loading="lazy" decoding="async" />
           </span>
           <span>Звук</span>
         </button>
@@ -85,6 +87,8 @@
           src="./assets/images/onboarding/raven-forest.webp"
           alt=""
           aria-hidden="true"
+          loading="lazy"
+          decoding="async"
         />
         <div class="ritual-bg-overlay" aria-hidden="true"></div>
         <div class="ritual-mist ritual-mist--rear" aria-hidden="true"></div>
@@ -250,6 +254,5 @@
         document.querySelector('meta[name="wyrd-build"]')?.content || "dev";
     </script>
     <script type="module" src="./assets/js/main.js?v=dev"></script>
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   </body>
 </html>
