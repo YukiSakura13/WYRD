@@ -1,10 +1,13 @@
 import { createReading, createSpread } from "../cards/reading.js";
 import { buildLocalOracleReading } from "../cards/oracle-local.js";
 import { detectQuestionRoute } from "../cards/question-routing.js";
+import { createTransitionRunner, getAudioScene, getReturnScene, playSpreadSequence, resetViewport } from "./flow.js";
 import { SCENES } from "./scenes.js";
+import { shareCurrentCard } from "./share.js";
 
 export function createActionHandler(deps) {
   const { audio, cards, renderApp, renderer, setScene, store, uiState } = deps;
+  const runTransition = createTransitionRunner(renderApp, uiState);
 
   return function onClick(event) {
     const trigger = event.target.closest("[data-action]");
@@ -130,58 +133,7 @@ export function createActionHandler(deps) {
     }
 
     if (action === "share-card") {
-      const shareCard = document.querySelector(".share-card");
-      if (!shareCard) return;
-
-      if (typeof window.html2canvas !== "function") {
-        const reading = store.getState().currentReading;
-        if (!reading) return;
-        navigator.share && navigator.share({
-          text: reading.card.name + "\n\n" + reading.card.message + "\n\nWYRD\nyukisakura13.github.io/WYRD/"
-        }).catch(function(){});
-        return;
-      }
-
-      const btn = shareCard.querySelector('[data-action="share-card"]');
-      if (btn) btn.style.display = "none";
-
-      window.html2canvas(shareCard, {
-        backgroundColor: "#1a1810",
-        scale: 2,
-        useCORS: true,
-        allowTaint: false,
-        imageTimeout: 15000,
-        logging: false,
-      }).then(function(canvas) {
-        if (btn) btn.style.display = "";
-        canvas.toBlob(function(blob) {
-          if (!blob) return;
-          const file = new File([blob], "wyrd-card.png", { type: "image/png" });
-          if (navigator.share && navigator.canShare({ files: [file] })) {
-            navigator.share({
-              files: [file],
-              title: "WYRD — оракул духов леса",
-            }).catch(function() {});
-          } else {
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "wyrd-card.png";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-          }
-        }, "image/png");
-      }).catch(function(err) {
-        console.error("html2canvas error:", err);
-        if (btn) btn.style.display = "";
-        const reading = store.getState().currentReading;
-        if (!reading) return;
-        navigator.share && navigator.share({
-          text: reading.card.name + "\n\n" + reading.card.message + "\n\nWYRD\nyukisakura13.github.io/WYRD/"
-        }).catch(function(){});
-      });
+      shareCurrentCard(store);
       return;
     }
 
@@ -233,18 +185,6 @@ export function createActionHandler(deps) {
       resolveRitual(deps, mode);
     });
   }
-
-  function runTransition(callback) {
-    uiState.transitioning = true;
-    renderApp();
-    window.setTimeout(function finishTransition() {
-      callback();
-      window.setTimeout(function clearTransition() {
-        uiState.transitioning = false;
-        renderApp();
-      }, 280);
-    }, 360);
-  }
 }
 
 export function resolveRitual(deps, mode) {
@@ -272,9 +212,7 @@ export function resolveRitual(deps, mode) {
     window.setTimeout(function playSingleReveal() {
       audio.playReveal(currentState.soundEnabled);
     }, 380);
-    window.requestAnimationFrame(function resetViewportForResult() {
-      window.scrollTo({ top: 0, behavior: "auto" });
-    });
+    resetViewport(SCENES.RESULT);
     return;
   }
 
@@ -295,9 +233,7 @@ export function resolveRitual(deps, mode) {
     window.setTimeout(function playSingleReveal() {
       audio.playReveal(currentState.soundEnabled);
     }, 380);
-    window.requestAnimationFrame(function resetViewportForResult() {
-      window.scrollTo({ top: 0, behavior: "auto" });
-    });
+    resetViewport(SCENES.RESULT);
     return;
   }
 
@@ -305,9 +241,7 @@ export function resolveRitual(deps, mode) {
     store.unlockCurrentReadingDepth();
     setScene(SCENES.RESULT);
     renderApp();
-    window.requestAnimationFrame(function resetViewportForResult() {
-      window.scrollTo({ top: 0, behavior: "auto" });
-    });
+    resetViewport(SCENES.RESULT);
     return;
   }
 
@@ -329,9 +263,7 @@ export function resolveRitual(deps, mode) {
     setScene(SCENES.SPREAD);
     audio.sync({ enabled: currentState.soundEnabled, scene: SCENES.SPREAD });
     playSpreadSequence(audio, currentState.soundEnabled, count);
-    window.requestAnimationFrame(function resetViewportForSpread() {
-      window.scrollTo({ top: 0, behavior: "auto" });
-    });
+    resetViewport(SCENES.SPREAD);
     return;
   }
 
@@ -348,40 +280,4 @@ export function createInitialUIState(state) {
     onboardingReturn: SCENES.COVER,
     transitioning: false,
   };
-}
-
-function getAudioScene(scene) {
-  if (scene === SCENES.RESULT || scene === SCENES.SPREAD || scene === SCENES.ONBOARDING || scene === SCENES.PROFILE) {
-    return scene;
-  }
-
-  return SCENES.DECK;
-}
-
-function getReturnScene(scene, state) {
-  if (scene === SCENES.COVER || scene === SCENES.DECK || scene === SCENES.RESULT || scene === SCENES.SPREAD) {
-    return scene;
-  }
-
-  if (state.lastSpread.length) {
-    return SCENES.SPREAD;
-  }
-
-  if (state.currentReading) {
-    return SCENES.RESULT;
-  }
-
-  return SCENES.DECK;
-}
-
-function playSpreadSequence(audio, enabled, count) {
-  const interval = count === 5 ? 860 : 460;
-
-  for (let index = 0; index < count; index += 1) {
-    window.setTimeout(function revealNextCard() {
-      audio.playReveal(enabled, {
-        bright: index === count - 1,
-      });
-    }, 260 + index * interval);
-  }
 }

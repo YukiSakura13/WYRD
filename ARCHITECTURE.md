@@ -99,6 +99,8 @@
 - `assets/css/scenes/*`
 - `assets/css/components/*`
 - `assets/js/ui/render.js`
+- `assets/js/ui/render-spread.js`
+- `assets/js/ui/render-helpers.js`
 
 Ответственность:
 
@@ -112,6 +114,9 @@
 Файлы:
 
 - `assets/js/ui/actions.js`
+- `assets/js/ui/share.js`
+- `assets/js/ui/flow.js`
+- `assets/js/ui/scenes.js`
 
 Ответственность:
 
@@ -397,6 +402,12 @@
 - единая маршрутизация пользовательских кликов
 - оркестрация между store, audio, renderer и domain-логикой
 
+Связанные helper-модули:
+
+- `assets/js/ui/share.js` — share flow и graceful fallback
+- `assets/js/ui/flow.js` — transition runner, audio-scene mapping, viewport reset, return-scene helpers
+- `assets/js/ui/scenes.js` — канонический список UI-сцен
+
 Поддерживаемые действия:
 
 - `enter`
@@ -425,6 +436,11 @@
 - управляет видимостью секций
 - анимирует колоду
 - скроллит к нужной секции
+
+Связанные helper-модули:
+
+- `assets/js/ui/render-spread.js` — рендер раскладов, истории и голоса оракула
+- `assets/js/ui/render-helpers.js` — общие render helpers и fallback-изображение карты
 
 Особенность:
 
