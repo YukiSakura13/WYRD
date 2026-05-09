@@ -371,8 +371,9 @@
 
 .btn-back-circle:focus-visible,
 .btn-share:focus-visible,
-.btn-ghost-link:focus-visible {
-  outline: 2px solid var(--border-focus);
-  outline-offset: 3px;
+.btn-ghost-link:focus-visible,
+.draw-btn:focus-visible,
+.reset-btn:focus-visible {
+  outline: 3px solid rgba(243, 225, 170, 0.88);
+  outline-offset: 4px;
 }
-

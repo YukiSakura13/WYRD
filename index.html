@@ -41,7 +41,7 @@
         <div class="cover-copy">
           <h1 class="cover-title">WYRD</h1>
           <p class="cover-sub">Оракул духов леса</p>
-          <button class="cover-btn" data-action="enter">Войти в лес</button>
+          <button class="cover-btn" data-action="enter" type="button">Войти в лес</button>
         </div>
       </section>
 
@@ -69,14 +69,14 @@
 
     <main id="main">
       <header class="hdr">
-        <h1 class="hdr-title">WYRD</h1>
+        <p class="hdr-title" aria-label="WYRD">WYRD</p>
         <div class="hdr-line"></div>
         <p class="hdr-desc">Оракул духов леса</p>
       </header>
 
       <div class="top-actions">
-        <button class="text-btn" data-action="toggle-sound">Звук леса: вкл</button>
-        <button class="text-btn" data-action="open-profile">Профиль / история</button>
+        <button class="text-btn" data-action="toggle-sound" type="button" aria-pressed="true">Звук леса: вкл</button>
+        <button class="text-btn" data-action="open-profile" type="button">Профиль / история</button>
       </div>
 
       <section class="ritual-onboarding" id="ritual-onboarding" hidden>
@@ -89,7 +89,7 @@
         <div class="ritual-bg-overlay" aria-hidden="true"></div>
         <div class="ritual-mist ritual-mist--rear" aria-hidden="true"></div>
         <div class="ritual-mist ritual-mist--front" aria-hidden="true"></div>
-        <button class="btn-back-circle ritual-back" data-action="back-from-onboarding" aria-label="Назад">←</button>
+        <button class="btn-back-circle ritual-back" data-action="back-from-onboarding" type="button" aria-label="Назад">←</button>
         <div class="ritual-content">
           <p class="ritual-brand">WYRD</p>
           <p class="ritual-kicker">Оракул духов леса</p>
@@ -102,19 +102,19 @@
             <p class="ritual-line" style="--ritual-delay: 2940ms">Прочитай ответ духов леса</p>
             <p class="ritual-line" style="--ritual-delay: 3920ms">Захочется спросить снова. Возвращайся</p>
           </div>
-          <button class="ritual-btn" data-action="enter-ritual">Войти в ритуал</button>
+          <button class="ritual-btn" data-action="enter-ritual" type="button">Войти в ритуал</button>
         </div>
         <div class="ritual-ornament" aria-hidden="true">✦ ✦ ✦</div>
         <p class="ritual-whisper">Лес отвечает тем, кто умеет слушать тишину</p>
       </section>
 
-      <section id="result" hidden>
+      <section id="result" hidden aria-labelledby="card-name">
         <div class="screen-nav">
-          <button class="btn-back-circle" data-action="new-question" aria-label="Задать новый вопрос">←</button>
+          <button class="btn-back-circle" data-action="new-question" type="button" aria-label="Задать новый вопрос">←</button>
           <div class="screen-nav-title">WYRD</div>
           <div class="screen-nav-spacer" aria-hidden="true"></div>
         </div>
-        <p class="result-question" id="result-question" hidden></p>
+        <p class="result-question" id="result-question" hidden aria-live="polite"></p>
         <div class="share-card">
           <div class="card-box" id="card-box">
             <div class="card-img-wrap share-card-media">
@@ -137,7 +137,7 @@
               </div>
             </div>
           </div>
-          <button class="btn-share" data-action="share-card">
+          <button class="btn-share" data-action="share-card" type="button">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                  stroke="currentColor" stroke-width="1.5"
                  stroke-linecap="round" stroke-linejoin="round">
@@ -152,14 +152,14 @@
         </div>
 
         <div class="hook-block" id="hook-block" hidden>
-          <button class="cover-btn hook-btn" data-action="hook-open-path">Открыть три пути →</button>
-          <button class="btn-ghost-link" data-action="new-question">Задать новый вопрос</button>
+          <button class="cover-btn hook-btn" data-action="hook-open-path" type="button">Открыть три пути →</button>
+          <button class="btn-ghost-link" data-action="new-question" type="button">Задать новый вопрос</button>
         </div>
       </section>
 
-      <section id="spread-result" hidden>
+      <section id="spread-result" hidden aria-labelledby="spread-title">
         <div class="screen-nav">
-          <button class="btn-back-circle" data-action="back-to-deck" aria-label="Вернуться к колоде">←</button>
+          <button class="btn-back-circle" data-action="back-to-deck" type="button" aria-label="Вернуться к колоде">←</button>
           <div class="screen-nav-title">WYRD</div>
           <div class="screen-nav-spacer" aria-hidden="true"></div>
         </div>
@@ -186,7 +186,7 @@
         </div>
         <div class="spread-continuation" id="spread-continuation" hidden>
           <p class="spread-continuation-copy">История уже открылась. Следующий слой ждёт твоего шага.</p>
-          <button class="cover-btn spread-continuation-btn" data-action="spread-5">Продолжить путь</button>
+          <button class="cover-btn spread-continuation-btn" data-action="spread-5" type="button">Продолжить путь</button>
         </div>
       </section>
 
@@ -228,17 +228,17 @@
 
       <!-- free beta launch: all reading modes stay open -->
 
-      <section id="profile" hidden>
+      <section id="profile" hidden aria-labelledby="profile-name">
         <div class="profile-box">
           <p class="deck-hint">Профиль / история</p>
           <p class="profile-name" id="profile-name">Странник</p>
           <p class="profile-meta" id="profile-meta"></p>
-          <button class="reset-btn" data-action="replay-onboarding">Показать ритуал снова</button>
-          <button class="reset-btn" data-action="close-profile">Вернуться к колоде</button>
-          <button class="reset-btn" data-action="reset-local">Очистить локальные данные</button>
+          <button class="reset-btn" data-action="replay-onboarding" type="button">Показать ритуал снова</button>
+          <button class="reset-btn" data-action="close-profile" type="button">Вернуться к колоде</button>
+          <button class="reset-btn" data-action="reset-local" type="button">Очистить локальные данные</button>
         </div>
 
-        <div class="history-list" id="history-list"></div>
+        <div class="history-list" id="history-list" aria-live="polite"></div>
       </section>
 
       <div class="ornament">✦ ✦ ✦</div>

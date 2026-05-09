@@ -225,6 +225,11 @@
     0 0 46px rgba(201, 168, 76, 0.14);
 }
 
+#cover .cover-btn:focus-visible {
+  outline: 3px solid rgba(243, 225, 170, 0.88);
+  outline-offset: 4px;
+}
+
 #cover .cover-btn:active {
   transform: scale(0.97);
 }
@@ -637,6 +642,12 @@ body[data-scene="onboarding"] #profile {
     0 0 46px rgba(201, 168, 76, 0.14);
 }
 
+.ritual-btn:focus-visible,
+.text-btn:focus-visible {
+  outline: 2px solid rgba(243, 225, 170, 0.88);
+  outline-offset: 4px;
+}
+
 .ritual-btn:active {
   transform: scale(0.97);
 }
@@ -679,4 +690,3 @@ body[data-scene="onboarding"] #profile {
 .reset-btn:active {
   transform: scale(0.97);
 }
-

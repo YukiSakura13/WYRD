@@ -82,3 +82,4 @@
 - UI-слой начал дробиться на отдельные helper-модули без изменения продуктового поведения
 - маршрутизация вопросов вынесена из монолита в отдельные domain-модули с сохранением прежнего API
 - state contract и его инварианты вынесены из storage facade в отдельный state model
+- усилены keyboard/focus semantics: явные `type="button"`, `aria-pressed`, `aria-live` и более заметные focus states

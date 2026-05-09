@@ -145,6 +145,12 @@
     0 0 0 1px rgba(201, 161, 74, 0.12);
 }
 
+.deck-back:focus-visible,
+.deck-question-input:focus-visible {
+  outline: 2px solid rgba(243, 225, 170, 0.88);
+  outline-offset: 4px;
+}
+
 .deck-card-zone {
   align-self: stretch;
   display: grid;
@@ -170,7 +176,8 @@
 }
 
 .deck-card:focus-visible {
-  outline: none;
+  outline: 3px solid rgba(243, 225, 170, 0.88);
+  outline-offset: 6px;
 }
 
 .deck-card::before {
@@ -316,4 +323,3 @@ body[data-scene="deck"] #main {
     margin: 0 auto;
   }
 }
-

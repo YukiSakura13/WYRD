@@ -116,9 +116,11 @@ export function createRenderer(elements) {
   function renderProfile(state) {
     if (elements.soundButton) {
       elements.soundButton.textContent = state.soundEnabled ? "Звук леса: вкл" : "Звук леса: выкл";
+      elements.soundButton.setAttribute("aria-pressed", String(state.soundEnabled));
     }
     if (elements.coverSoundButton) {
       elements.coverSoundButton.classList.toggle("sound-off", !state.soundEnabled);
+      elements.coverSoundButton.setAttribute("aria-pressed", String(state.soundEnabled));
     }
     elements.profileName.textContent = state.profileName;
     elements.profileMeta.textContent = state.dailyFreeUsedAt
