@@ -28,7 +28,7 @@
 ## 2. Технологический стек
 
 - `index.html` как единая HTML-точка входа
-- `assets/css/styles.css` как единый файл стилей
+- `assets/css/styles.css` как единый CSS-entrypoint
 - `ES Modules` в браузере
 - `localStorage` для клиентского состояния
 - `Web Audio API` для фонового лесного звука и шуршания карт
@@ -53,7 +53,11 @@
 ├── sw.js                         # service worker
 └── assets/
     ├── css/
-    │   └── styles.css            # глобальные стили
+    │   ├── styles.css            # CSS entrypoint
+    │   ├── tokens.css            # design tokens
+    │   ├── base.css              # reset и базовый слой
+    │   ├── scenes/               # стили по сценам
+    │   └── components/           # стили компонентных блоков
     ├── images/
     │   ├── cover.webp            # cover-изображение
     │   └── cards/                # изображения карт
@@ -92,6 +96,8 @@
 
 - `index.html`
 - `assets/css/styles.css`
+- `assets/css/scenes/*`
+- `assets/css/components/*`
 - `assets/js/ui/render.js`
 
 Ответственность:

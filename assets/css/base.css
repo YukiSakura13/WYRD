@@ -1,0 +1,190 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  background: var(--ink);
+  color: var(--text-default);
+  font-family: var(--ui-font);
+  font-size: var(--text-md);
+  line-height: var(--leading-relaxed);
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-image:
+    radial-gradient(circle at top, var(--accent-10), transparent 30%),
+    radial-gradient(circle at 18% 18%, var(--parchment-03), transparent 24%),
+    var(--surface-shell);
+}
+
+body[data-scene="result"] {
+  background-image:
+    radial-gradient(circle at top, var(--accent-12), transparent 34%),
+    var(--surface-shell-result);
+}
+
+body[data-scene="spread"] {
+  background-image:
+    radial-gradient(circle at top, var(--accent-10), transparent 32%),
+    var(--surface-shell-spread);
+}
+
+body[data-scene="result"] .hdr,
+body[data-scene="result"] .top-actions,
+body[data-scene="result"] .ornament,
+body[data-scene="result"] .footer,
+body[data-scene="spread"] .ornament,
+body[data-scene="spread"] .footer,
+body[data-scene="spread"] .hdr,
+body[data-scene="spread"] .top-actions {
+  display: none;
+}
+
+body:not([data-scene="deck"]) #deck-wrap {
+  display: none !important;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.scene-fog,
+.transition-veil {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.scene-fog {
+  z-index: 1;
+  opacity: 0.45;
+  mix-blend-mode: screen;
+}
+
+.scene-fog::before {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  background:
+    radial-gradient(circle at 18% 52%, var(--parchment-08), transparent 28%),
+    radial-gradient(circle at 76% 26%, var(--accent-09), transparent 24%),
+    radial-gradient(circle at 58% 82%, var(--white-05), transparent 22%);
+  filter: blur(44px);
+  animation: fogDrift 18s ease-in-out infinite alternate;
+}
+
+.scene-fog--front {
+  z-index: 12;
+  opacity: 0.24;
+}
+
+.scene-fog--front::before {
+  inset: -18%;
+  animation-duration: 24s;
+  animation-direction: alternate-reverse;
+  filter: blur(62px);
+}
+
+.transition-veil {
+  z-index: 110;
+  opacity: 0;
+  background:
+    radial-gradient(circle at center, var(--veil-mist), var(--veil-shadow)),
+    linear-gradient(180deg, rgba(16, 16, 25, 0.88), rgba(6, 6, 10, 0.96));
+  transition: opacity var(--dur-medium) var(--ease-out-strong);
+}
+
+.transition-veil.is-active {
+  opacity: 1;
+}
+
+@keyframes fogDrift {
+  0% {
+    transform: translate3d(-2%, 0, 0) scale(1);
+  }
+
+  100% {
+    transform: translate3d(3%, -3%, 0) scale(1.06);
+  }
+}
+
+@keyframes forestBreath {
+  0% {
+    transform: scale(1.01) translate3d(0, 0, 0);
+    filter: brightness(0.98) saturate(0.96);
+  }
+
+  50% {
+    transform: scale(1.022) translate3d(0, -0.4%, 0);
+    filter: brightness(1.03) saturate(1);
+  }
+
+  100% {
+    transform: scale(1.03) translate3d(0, -0.8%, 0);
+    filter: brightness(1.06) saturate(1.02);
+  }
+}
+
+@keyframes ritualGlowPulse {
+  0% {
+    opacity: 0.82;
+    filter: blur(32px);
+  }
+
+  50% {
+    opacity: 1;
+    filter: blur(38px);
+  }
+
+  100% {
+    opacity: 0.88;
+    filter: blur(34px);
+  }
+}
+
+@keyframes mistBreath {
+  0% {
+    opacity: 0.22;
+  }
+
+  50% {
+    opacity: 0.34;
+  }
+
+  100% {
+    opacity: 0.26;
+  }
+}
+
+#cover {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  z-index: 100;
+  background:
+    radial-gradient(circle at top, rgba(210, 176, 90, 0.12), transparent 28%),
+    linear-gradient(180deg, #0b0a10 0%, var(--bg) 100%);
+  transition:
+    opacity calc(var(--dur-ritual) * 1.5) var(--ease-standard),
+    transform calc(var(--dur-ritual) * 1.5) var(--ease-standard);
+  overflow: hidden;
+}
+
+#cover.gone {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(1.04);
+}

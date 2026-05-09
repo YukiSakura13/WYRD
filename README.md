@@ -20,7 +20,10 @@
 ## Структура
 
 - `index.html` — главный вход
-- `assets/css/styles.css` — стили
+- `assets/css/styles.css` — entry-файл стилей
+- `assets/css/tokens.css`, `assets/css/base.css` — токены и базовый слой
+- `assets/css/scenes/` — стили по сценам
+- `assets/css/components/` — компонентные стили
 - `archive/` — архивные прототипы и старые reference-артефакты, не участвующие в production
 - `assets/js/main.js` — тонкий entrypoint приложения
 - `assets/js/data/cards.js` — канонический источник данных карт
@@ -69,3 +72,4 @@
 - состояние и UI-переходы централизованы, чтобы проще добавлять новые сценарии
 - `sw.js` обновлён под новую модульную структуру
 - добавлен baseline-документ для безопасной полировки и regression-проверки
+- `styles.css` превращён в тонкий entry-файл с `@import` на CSS-модули

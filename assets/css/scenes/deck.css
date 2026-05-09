@@ -1,0 +1,319 @@
+.deck-scene {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  justify-items: center;
+  padding:
+    max(1.05rem, calc(env(safe-area-inset-top) + 0.4rem))
+    1.5rem
+    max(0.95rem, calc(env(safe-area-inset-bottom) + 0.35rem));
+  overflow: hidden;
+}
+
+.deck-scene[hidden],
+#result[hidden],
+#spread-result[hidden],
+#profile[hidden] {
+  display: none !important;
+}
+
+#deck-wrap[hidden] {
+  display: none !important;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.deck-scene::before,
+.deck-scene::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.deck-scene::before {
+  background:
+    radial-gradient(circle at 50% 46%, rgba(201, 161, 74, 0.08), transparent 28%),
+    linear-gradient(180deg, rgba(9, 10, 17, 0.18) 0%, rgba(9, 10, 17, 0.06) 100%);
+  animation: forestBreath 8.4s ease-in-out infinite;
+}
+
+.deck-scene::after {
+  background:
+    radial-gradient(circle at 20% 78%, rgba(255, 255, 255, 0.05), transparent 16%),
+    radial-gradient(circle at 80% 75%, rgba(255, 255, 255, 0.04), transparent 16%);
+  filter: blur(14px);
+  opacity: 0.75;
+  animation: fogDrift 9.6s ease-in-out infinite alternate;
+}
+
+.deck-back,
+.deck-question-zone,
+.deck-header,
+.deck-card-zone,
+.deck-whisper-zone {
+  position: relative;
+  z-index: 1;
+}
+
+.deck-back {
+  position: absolute;
+  top: max(0.95rem, calc(env(safe-area-inset-top) + 0.18rem));
+  left: max(0.9rem, calc(env(safe-area-inset-left) + 0.08rem));
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid rgba(201, 161, 74, 0.28);
+  background: linear-gradient(180deg, rgba(30, 28, 23, 0.94), rgba(18, 17, 14, 0.98));
+  color: var(--gold);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--ui-font);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.deck-header {
+  width: min(100%, 22rem);
+  text-align: center;
+  margin-top: 0.35rem;
+}
+
+.deck-brand {
+  margin: 0;
+  color: rgba(240, 232, 216, 0.72);
+  font-family: var(--display-font);
+  font-size: clamp(2rem, 7vw, 2.8rem);
+  font-weight: 400;
+  letter-spacing: 0.24em;
+  padding-left: 0.24em;
+  line-height: 1;
+  text-shadow: 0 0 18px rgba(242, 235, 221, 0.06);
+}
+
+.deck-brand-line {
+  width: min(10rem, 42vw);
+  height: 1px;
+  margin: 0.95rem auto 0.85rem;
+  background: linear-gradient(90deg, transparent, rgba(201, 161, 74, 0.68), transparent);
+}
+
+.deck-subtitle {
+  margin: 0;
+  color: var(--gold);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.deck-question-zone {
+  width: min(100%, 21rem);
+  margin-top: 1.8rem;
+}
+
+.deck-question-input {
+  width: 100%;
+  min-height: 5rem;
+  resize: none;
+  border: 1px solid rgba(201, 161, 74, 0.28);
+  background: rgba(10, 11, 18, 0.26);
+  color: var(--text-default);
+  font-family: var(--ui-font);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  padding: 1.05rem 1rem;
+  outline: none;
+  box-shadow: inset 0 0 0 1px rgba(255, 248, 230, 0.02);
+}
+
+.deck-question-input::placeholder {
+  color: rgba(176, 150, 105, 0.62);
+  font-style: italic;
+  opacity: 1;
+}
+
+.deck-question-input:focus {
+  border-color: rgba(201, 161, 74, 0.44);
+  background: rgba(10, 11, 18, 0.34);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 248, 230, 0.02),
+    0 0 0 1px rgba(201, 161, 74, 0.12);
+}
+
+.deck-card-zone {
+  align-self: stretch;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 0.9rem;
+  margin-top: 0.85rem;
+  min-height: 0;
+}
+
+.deck-card {
+  position: relative;
+  width: min(62vw, 16.5rem);
+  aspect-ratio: 182 / 286;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  transform: translateY(-0.55rem);
+  appearance: none;
+  -webkit-appearance: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.deck-card:focus-visible {
+  outline: none;
+}
+
+.deck-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  box-shadow:
+    0 0 0 1px rgba(201, 161, 74, 0.16) inset,
+    0 0 18px rgba(201, 161, 74, 0.08),
+    0 0 34px rgba(201, 161, 74, 0.06);
+  animation: deckGlow 7.6s ease-in-out infinite;
+}
+
+.deck-card-stack,
+.deck-card-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 3px;
+  background:
+    linear-gradient(180deg, rgba(10, 10, 16, 0.34), rgba(10, 10, 16, 0.56)),
+    url("../images/rubashka.webp") center / cover no-repeat;
+  border: 1px solid rgba(201, 161, 74, 0.28);
+}
+
+.deck-card-stack--left {
+  transform: translate(-0.7rem, 0.48rem) rotate(-8deg);
+  opacity: 0.7;
+}
+
+.deck-card-stack--mid {
+  transform: translate(0.55rem, 0.2rem) rotate(4deg);
+  opacity: 0.84;
+}
+
+.deck-card-face {
+  box-shadow:
+    0 18px 30px rgba(0, 0, 0, 0.44),
+    0 0 18px rgba(201, 161, 74, 0.06);
+  animation: deckBreath 4.8s ease-in-out infinite;
+}
+
+.deck-card:active .deck-card-face {
+  transform: translateY(-2px) scale(1.02);
+}
+
+.deck-touch-copy {
+  margin: 0;
+  color: rgba(201, 161, 74, 0.42);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  text-align: center;
+  transform: translateY(1.25rem);
+}
+
+.deck-whisper-zone {
+  width: min(100%, 23rem);
+  text-align: center;
+  margin-top: auto;
+}
+
+.deck-stars {
+  display: none;
+}
+
+.deck-whisper {
+  margin: 0;
+  color: rgba(124, 115, 101, 0.58);
+  font-size: 0.56rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  line-height: 1.55;
+  text-transform: uppercase;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
+}
+
+body[data-scene="deck"] .top-actions,
+body[data-scene="deck"] .hdr,
+body[data-scene="deck"] .ornament,
+body[data-scene="deck"] .footer {
+  display: none;
+}
+
+body[data-scene="deck"] #main {
+  position: relative;
+  max-width: none;
+  min-height: 100svh;
+  padding: 0;
+  display: block;
+}
+
+@keyframes deckBreath {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-4px) scale(1.014);
+  }
+}
+
+@keyframes deckGlow {
+  0%,
+  100% {
+    opacity: 0.72;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes forestBreath {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.015);
+  }
+}
+
+@keyframes fogDrift {
+  0% {
+    transform: translateY(0) translateX(-1.2%);
+  }
+
+  100% {
+    transform: translateY(-1.8%) translateX(1.2%);
+  }
+}
+
+@media (min-width: 700px) {
+  .deck-scene {
+    width: min(100%, 30rem);
+    min-height: 100svh;
+    margin: 0 auto;
+  }
+}
+
