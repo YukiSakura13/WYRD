@@ -7,6 +7,7 @@
 Для работы по проекту теперь есть единая база документов:
 
 - `ARCHITECTURE.md` — архитектура сайта
+- `docs/REFINEMENT_BASELINE.md` — baseline поведения и regression checklist для рефакторинга
 - `docs/README.md` — индекс всей документации
 - `docs/PROJECT_BRIEF.md` — краткое описание продукта
 - `docs/ROADMAP_VISUAL.md` — визуальная карта страниц и сценариев
@@ -20,6 +21,7 @@
 
 - `index.html` — главный вход
 - `assets/css/styles.css` — стили
+- `archive/` — архивные прототипы и старые reference-артефакты, не участвующие в production
 - `assets/js/main.js` — тонкий entrypoint приложения
 - `assets/js/data/cards.js` — канонический источник данных карт
 - `assets/js/state/storage.js` — загрузка, сохранение и нормализация состояния
@@ -29,6 +31,8 @@
 - `assets/js/audio.js`, `assets/js/ritual.js`, `assets/js/pwa.js` — побочные эффекты и инфраструктура
 - `assets/images/` — cover и изображения карт
 - `manifest.webmanifest`, `sw.js` — PWA-обвязка
+- `scripts/prepare_pages.py` — подготовка чистого GitHub Pages артефакта
+- `scripts/smoke-domain.mjs` — smoke-проверка доменной маршрутизации перед её рефакторингом
 
 ## Как смотреть локально
 
@@ -64,3 +68,4 @@
 - убрано дублирование данных карт: источник истины теперь один
 - состояние и UI-переходы централизованы, чтобы проще добавлять новые сценарии
 - `sw.js` обновлён под новую модульную структуру
+- добавлен baseline-документ для безопасной полировки и regression-проверки

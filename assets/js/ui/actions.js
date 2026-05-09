@@ -1,7 +1,7 @@
 import { createReading, createSpread } from "../cards/reading.js";
 import { buildLocalOracleReading } from "../cards/oracle-local.js";
 import { detectQuestionRoute } from "../cards/question-routing.js";
-import { SCENES } from "./scenes.js?v=2026-05-09-scene-fix-hotfix-2";
+import { SCENES } from "./scenes.js";
 
 export function createActionHandler(deps) {
   const { audio, cards, renderApp, renderer, setScene, store, uiState } = deps;

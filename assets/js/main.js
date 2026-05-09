@@ -1,10 +1,10 @@
-import { createForestAudioController } from "./audio.js?v=2026-05-09-scene-fix-hotfix-2";
-import { CARDS, COVER_IMAGE } from "./data/cards.js?v=2026-05-09-scene-fix-hotfix-2";
-import { registerServiceWorker } from "./pwa.js?v=2026-05-09-scene-fix-hotfix-2";
-import { createStateStore } from "./state/storage.js?v=2026-05-09-scene-fix-hotfix-2";
-import { createActionHandler, createInitialUIState } from "./ui/actions.js?v=2026-05-09-scene-fix-hotfix-2";
-import { createRenderer, getElements } from "./ui/render.js?v=2026-05-09-scene-fix-hotfix-2";
-import { SCENES, isKnownScene } from "./ui/scenes.js?v=2026-05-09-scene-fix-hotfix-2";
+import { createForestAudioController } from "./audio.js";
+import { CARDS, COVER_IMAGE } from "./data/cards.js";
+import { registerServiceWorker } from "./pwa.js";
+import { createStateStore } from "./state/storage.js";
+import { createActionHandler, createInitialUIState } from "./ui/actions.js";
+import { createRenderer, getElements } from "./ui/render.js";
+import { SCENES, isKnownScene } from "./ui/scenes.js";
 
 const store = createStateStore();
 const uiState = createInitialUIState(store.getState());

@@ -49,6 +49,16 @@ def version_relative_js_imports(path: Path) -> None:
     path.write_text(text, encoding="utf-8")
 
 
+def version_relative_css_imports(path: Path) -> None:
+    text = path.read_text(encoding="utf-8")
+    text = re.sub(
+        r'(@import\s+(?:url\()?["\'])([^"\']+?\.css)(["\'])',
+        lambda match: f"{match.group(1)}{match.group(2)}?v={BUILD_ID}{match.group(3)}",
+        text,
+    )
+    path.write_text(text, encoding="utf-8")
+
+
 def main() -> None:
     if DIST.exists():
         shutil.rmtree(DIST)
@@ -65,6 +75,9 @@ def main() -> None:
 
     for js_file in (DIST / "assets/js").rglob("*.js"):
         version_relative_js_imports(js_file)
+
+    for css_file in (DIST / "assets/css").rglob("*.css"):
+        version_relative_css_imports(css_file)
 
     (DIST / ".nojekyll").write_text("", encoding="utf-8")
 

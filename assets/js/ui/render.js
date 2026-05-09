@@ -1,4 +1,4 @@
-import { SCENES } from "./scenes.js?v=2026-05-09-scene-fix-hotfix-2";
+import { SCENES } from "./scenes.js";
 
 const DEEP_READING_TEXT =
   'Этот знак просит не ответа, а внутренней тишины. Вернись к нему вечером и проверь, где в течение дня уже проявился образ "%CARD_NAME%".';
