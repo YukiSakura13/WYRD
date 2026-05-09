@@ -176,9 +176,17 @@ body[data-scene="spread"] {
 
 body[data-scene="result"] .hdr,
 body[data-scene="result"] .top-actions,
+body[data-scene="result"] .ornament,
+body[data-scene="result"] .footer,
+body[data-scene="spread"] .ornament,
+body[data-scene="spread"] .footer,
 body[data-scene="spread"] .hdr,
 body[data-scene="spread"] .top-actions {
   display: none;
+}
+
+body:not([data-scene="deck"]) #deck-wrap {
+  display: none !important;
 }
 
 body::after {
@@ -703,6 +711,13 @@ body[data-scene="onboarding"] .ornament {
   pointer-events: none;
 }
 
+body[data-scene="onboarding"] #deck-wrap,
+body[data-scene="onboarding"] #result,
+body[data-scene="onboarding"] #spread-result,
+body[data-scene="onboarding"] #profile {
+  display: none !important;
+}
+
 .ritual-onboarding {
   position: fixed;
   inset: 0;
@@ -1006,6 +1021,19 @@ body[data-scene="onboarding"] .ornament {
     1.5rem
     max(0.95rem, calc(env(safe-area-inset-bottom) + 0.35rem));
   overflow: hidden;
+}
+
+.deck-scene[hidden],
+#result[hidden],
+#spread-result[hidden],
+#profile[hidden] {
+  display: none !important;
+}
+
+#deck-wrap[hidden] {
+  display: none !important;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .deck-scene::before,

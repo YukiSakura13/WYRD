@@ -1,10 +1,10 @@
 import { createReading, createSpread } from "../cards/reading.js";
 import { buildLocalOracleReading } from "../cards/oracle-local.js";
 import { detectQuestionRoute } from "../cards/question-routing.js";
-import { deriveContentPanel } from "./render.js";
+import { SCENES } from "./scenes.js?v=2026-05-09-scene-fix-hotfix-2";
 
 export function createActionHandler(deps) {
-  const { audio, cards, renderApp, renderer, store, uiState } = deps;
+  const { audio, cards, renderApp, renderer, setScene, store, uiState } = deps;
 
   return function onClick(event) {
     const trigger = event.target.closest("[data-action]");
@@ -17,18 +17,14 @@ export function createActionHandler(deps) {
     if (action === "enter") {
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function enterForest() {
-        uiState.entered = true;
-        uiState.forceDeck = true;
-        uiState.hasDrawnThisSession = false;
-        uiState.overlay = "none";
-        renderApp();
+        setScene(SCENES.DECK);
         audio.sync({
           allowInit: true,
           enabled: store.getState().soundEnabled,
-          scene: "deck",
+          scene: SCENES.DECK,
         });
         window.setTimeout(function scrollAfterEntry() {
-          renderer.scrollTo("deck");
+          renderer.scrollTo(SCENES.DECK);
         }, 80);
       });
       return;
@@ -38,16 +34,12 @@ export function createActionHandler(deps) {
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function continueToDeck() {
         store.markOnboardingSeen();
-        uiState.forceDeck = true;
-        uiState.hasDrawnThisSession = false;
-        uiState.overlay = "none";
-        uiState.contentPanel = "deck";
-        renderApp();
+        setScene(SCENES.DECK);
         audio.sync({
           enabled: store.getState().soundEnabled,
-          scene: "deck",
+          scene: SCENES.DECK,
         });
-        renderer.scrollTo("deck");
+        renderer.scrollTo(SCENES.DECK);
       });
       return;
     }
@@ -55,34 +47,25 @@ export function createActionHandler(deps) {
     if (action === "back-from-onboarding") {
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function leaveOnboarding() {
-        const returnTarget = uiState.onboardingReturn || "cover";
+        const returnTarget = uiState.onboardingReturn || SCENES.COVER;
 
-        if (returnTarget === "cover") {
-          uiState.entered = false;
-          uiState.forceDeck = false;
-          uiState.hasDrawnThisSession = false;
-          uiState.overlay = "none";
-          renderApp();
-          audio.sync({ enabled: store.getState().soundEnabled, scene: "deck" });
+        if (returnTarget === SCENES.COVER) {
+          setScene(SCENES.COVER);
+          audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.DECK });
           window.scrollTo({ top: 0, behavior: "smooth" });
           return;
         }
 
-        uiState.entered = true;
-        uiState.forceDeck = true;
-        uiState.hasDrawnThisSession = false;
-        uiState.overlay = "none";
-        uiState.contentPanel = "deck";
-        renderApp();
-        audio.sync({ enabled: store.getState().soundEnabled, scene: "deck" });
-        renderer.scrollTo("deck");
+        setScene(SCENES.DECK);
+        audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.DECK });
+        renderer.scrollTo(SCENES.DECK);
       });
       return;
     }
 
     if (action === "toggle-sound") {
       const nextState = store.toggleSound();
-      audio.sync({ enabled: nextState.soundEnabled, scene: uiState.contentPanel });
+      audio.sync({ enabled: nextState.soundEnabled, scene: getAudioScene(uiState.activeScene) });
       renderApp();
       const soundBtn = document.getElementById("cover-sound-btn");
       if (soundBtn) {
@@ -92,8 +75,6 @@ export function createActionHandler(deps) {
     }
 
     if (action === "draw") {
-      uiState.forceDeck = false;
-      uiState.hasDrawnThisSession = true;
       // Save raw question for routing and a display question for the result screen.
       const questionEl = document.getElementById("question-input");
       uiState.rawQuestion = questionEl ? questionEl.value.trim() : "";
@@ -111,11 +92,9 @@ export function createActionHandler(deps) {
     if (action === "back-to-deck") {
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function returnToDeck() {
-        uiState.forceDeck = true;
-        uiState.overlay = "none";
-        renderApp();
-        audio.sync({ enabled: store.getState().soundEnabled, scene: "deck" });
-        renderer.scrollTo("deck");
+        setScene(SCENES.DECK);
+        audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.DECK });
+        renderer.scrollTo(SCENES.DECK);
       });
       return;
     }
@@ -123,13 +102,8 @@ export function createActionHandler(deps) {
     if (action === "back-to-cover") {
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function returnToCover() {
-        uiState.entered = false;
-        uiState.forceDeck = false;
-        uiState.hasDrawnThisSession = false;
-        uiState.overlay = "none";
-        uiState.contentPanel = "deck";
-        renderApp();
-        audio.sync({ enabled: store.getState().soundEnabled, scene: "deck" });
+        setScene(SCENES.COVER);
+        audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.DECK });
         window.scrollTo({ top: 0, behavior: "smooth" });
       });
       return;
@@ -138,15 +112,12 @@ export function createActionHandler(deps) {
     if (action === "new-question") {
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function backToDeck() {
-        uiState.hasDrawnThisSession = false;
-        uiState.forceDeck = true;
         uiState.currentQuestion = "";
         uiState.rawQuestion = "";
-        uiState.overlay = "none";
         uiState.continuationOffer = null;
-        renderApp();
-        audio.sync({ enabled: store.getState().soundEnabled, scene: "deck" });
-        renderer.scrollTo("deck");
+        setScene(SCENES.DECK);
+        audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.DECK });
+        renderer.scrollTo(SCENES.DECK);
         const questionEl = document.getElementById("question-input");
         if (questionEl) {
           questionEl.value = "";
@@ -222,51 +193,40 @@ export function createActionHandler(deps) {
 
     if (action === "open-profile") {
       audio.playSelect(store.getState().soundEnabled);
-      uiState.entered = true;
-      uiState.overlay = "profile";
-      audio.sync({ enabled: store.getState().soundEnabled, scene: "profile" });
-      renderApp();
-      renderer.scrollTo("profile");
+      uiState.profileReturnScene = getReturnScene(uiState.activeScene, store.getState());
+      setScene(SCENES.PROFILE);
+      audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.PROFILE });
+      renderer.scrollTo(SCENES.PROFILE);
       return;
     }
 
     if (action === "replay-onboarding") {
       audio.playSelect(store.getState().soundEnabled);
       store.resetOnboardingSeen();
-      uiState.onboardingReturn = uiState.entered ? "deck" : "cover";
-      uiState.entered = true;
-      uiState.forceDeck = false;
-      uiState.hasDrawnThisSession = false;
-      uiState.overlay = "onboarding";
-      renderApp();
-      audio.sync({ enabled: store.getState().soundEnabled, scene: "onboarding" });
-      renderer.scrollTo("onboarding");
+      uiState.onboardingReturn = uiState.activeScene === SCENES.COVER ? SCENES.COVER : SCENES.DECK;
+      setScene(SCENES.ONBOARDING);
+      audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.ONBOARDING });
+      renderer.scrollTo(SCENES.ONBOARDING);
       return;
     }
 
     if (action === "close-profile") {
       audio.playSelect(store.getState().soundEnabled);
-      uiState.overlay = "none";
-      audio.sync({ enabled: store.getState().soundEnabled, scene: uiState.contentPanel });
-      renderApp();
+      const returnScene = getReturnScene(uiState.profileReturnScene, store.getState());
+      setScene(returnScene);
+      audio.sync({ enabled: store.getState().soundEnabled, scene: getAudioScene(returnScene) });
       return;
     }
 
     if (action === "reset-local") {
       audio.stop();
       store.reset();
-      uiState.entered = false;
-      uiState.forceDeck = false;
-      uiState.hasDrawnThisSession = false;
-      uiState.overlay = "none";
       uiState.continuationOffer = null;
-      renderApp();
+      setScene(SCENES.COVER);
     }
   };
 
   function startRitual(mode) {
-    uiState.forceDeck = false;
-    uiState.overlay = "none";
     uiState.continuationOffer = null;
     renderApp();
     runTransition(function resolveAfterTransition() {
@@ -288,10 +248,9 @@ export function createActionHandler(deps) {
 }
 
 export function resolveRitual(deps, mode) {
-  const { audio, cards, renderApp, renderer, store, uiState } = deps;
+  const { audio, cards, renderApp, renderer, setScene, store, uiState } = deps;
   const currentState = store.getState();
 
-  uiState.overlay = "none";
   uiState.continuationOffer = null;
   audio.playRustle(currentState.soundEnabled);
 
@@ -307,13 +266,15 @@ export function resolveRitual(deps, mode) {
         questionRoute,
       }),
     );
-    renderApp();
+    setScene(SCENES.RESULT);
     renderer.animateDeck();
-    audio.sync({ enabled: currentState.soundEnabled, scene: "result" });
+    audio.sync({ enabled: currentState.soundEnabled, scene: SCENES.RESULT });
     window.setTimeout(function playSingleReveal() {
       audio.playReveal(currentState.soundEnabled);
     }, 380);
-    renderer.scrollTo("result");
+    window.requestAnimationFrame(function resetViewportForResult() {
+      window.scrollTo({ top: 0, behavior: "auto" });
+    });
     return;
   }
 
@@ -328,20 +289,25 @@ export function resolveRitual(deps, mode) {
         questionRoute,
       }),
     );
-    renderApp();
+    setScene(SCENES.RESULT);
     renderer.animateDeck();
-    audio.sync({ enabled: currentState.soundEnabled, scene: "result" });
+    audio.sync({ enabled: currentState.soundEnabled, scene: SCENES.RESULT });
     window.setTimeout(function playSingleReveal() {
       audio.playReveal(currentState.soundEnabled);
     }, 380);
-    renderer.scrollTo("result");
+    window.requestAnimationFrame(function resetViewportForResult() {
+      window.scrollTo({ top: 0, behavior: "auto" });
+    });
     return;
   }
 
   if (mode === "deep-reading") {
     store.unlockCurrentReadingDepth();
+    setScene(SCENES.RESULT);
     renderApp();
-    renderer.scrollTo("result");
+    window.requestAnimationFrame(function resetViewportForResult() {
+      window.scrollTo({ top: 0, behavior: "auto" });
+    });
     return;
   }
 
@@ -360,10 +326,12 @@ export function resolveRitual(deps, mode) {
       questionRoute,
     });
     store.saveSpread(spreadCards, oracleReading);
-    renderApp();
-    audio.sync({ enabled: currentState.soundEnabled, scene: "spread" });
+    setScene(SCENES.SPREAD);
+    audio.sync({ enabled: currentState.soundEnabled, scene: SCENES.SPREAD });
     playSpreadSequence(audio, currentState.soundEnabled, count);
-    renderer.scrollTo("spread");
+    window.requestAnimationFrame(function resetViewportForSpread() {
+      window.scrollTo({ top: 0, behavior: "auto" });
+    });
     return;
   }
 
@@ -372,17 +340,38 @@ export function resolveRitual(deps, mode) {
 
 export function createInitialUIState(state) {
   return {
-    entered: false,
-    forceDeck: false,
-    hasDrawnThisSession: false,
-    overlay: "none",
+    activeScene: SCENES.COVER,
     continuationOffer: null,
     currentQuestion: "",
+    profileReturnScene: getReturnScene(null, state),
     rawQuestion: "",
-    contentPanel: deriveContentPanel(state),
-    onboardingReturn: "cover",
+    onboardingReturn: SCENES.COVER,
     transitioning: false,
   };
+}
+
+function getAudioScene(scene) {
+  if (scene === SCENES.RESULT || scene === SCENES.SPREAD || scene === SCENES.ONBOARDING || scene === SCENES.PROFILE) {
+    return scene;
+  }
+
+  return SCENES.DECK;
+}
+
+function getReturnScene(scene, state) {
+  if (scene === SCENES.COVER || scene === SCENES.DECK || scene === SCENES.RESULT || scene === SCENES.SPREAD) {
+    return scene;
+  }
+
+  if (state.lastSpread.length) {
+    return SCENES.SPREAD;
+  }
+
+  if (state.currentReading) {
+    return SCENES.RESULT;
+  }
+
+  return SCENES.DECK;
 }
 
 function playSpreadSequence(audio, enabled, count) {

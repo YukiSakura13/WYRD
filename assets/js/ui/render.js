@@ -1,3 +1,5 @@
+import { SCENES } from "./scenes.js?v=2026-05-09-scene-fix-hotfix-2";
+
 const DEEP_READING_TEXT =
   'Этот знак просит не ответа, а внутренней тишины. Вернись к нему вечером и проверь, где в течение дня уже проявился образ "%CARD_NAME%".';
 const EMPTY_CARD_IMAGE = createEmptyCardImage();
@@ -117,17 +119,12 @@ export function createRenderer(elements) {
   };
 
   function renderShell(uiState) {
-    elements.cover.classList.toggle("gone", uiState.entered);
-    elements.main.classList.toggle("on", uiState.entered);
+    const isCoverScene = uiState.activeScene === SCENES.COVER;
+
+    elements.cover.classList.toggle("gone", !isCoverScene);
     elements.transitionVeil.classList.toggle("is-active", Boolean(uiState.transitioning));
-    elements.body.dataset.scene =
-      uiState.overlay !== "none" || !uiState.hasDrawnThisSession
-        ? uiState.overlay !== "none"
-          ? uiState.overlay
-          : "deck"
-        : uiState.forceDeck
-          ? "deck"
-          : uiState.contentPanel;
+    elements.main.classList.toggle("on", !isCoverScene);
+    elements.body.dataset.scene = uiState.activeScene;
   }
 
   function renderProfile(state) {
@@ -199,7 +196,7 @@ export function createRenderer(elements) {
     }
 
     const shouldShowHook =
-      uiState.overlay === "none" &&
+      uiState.activeScene === SCENES.RESULT &&
       Boolean(state.currentReading && state.currentReading.free) &&
       !state.lastSpread.length;
 
@@ -288,7 +285,7 @@ export function createRenderer(elements) {
       return;
     }
 
-    elements.spreadContinuation.hidden = uiState.overlay !== "none" || lastSpread.length !== 3;
+    elements.spreadContinuation.hidden = uiState.activeScene !== SCENES.SPREAD || lastSpread.length !== 3;
   }
 
   function renderOracleVoice(lastSpread, oracleReading) {
@@ -351,17 +348,15 @@ export function createRenderer(elements) {
   }
 
   function renderVisibility(state, uiState) {
-    const contentPanel = deriveContentPanel(state);
-    const overlay = uiState.overlay;
-    const showingDeck = overlay === "none" && (!uiState.hasDrawnThisSession || uiState.forceDeck || contentPanel === "deck");
+    const scene = uiState.activeScene;
+    const isOnboarding = scene === SCENES.ONBOARDING;
 
-    elements.profileSection.hidden = overlay !== "profile";
-    elements.onboardingSection.hidden = overlay !== "onboarding";
-    elements.onboardingSection.classList.toggle("is-visible", overlay === "onboarding");
-    elements.deckWrap.hidden = !showingDeck;
-    elements.resultSection.hidden = overlay !== "none" || !uiState.hasDrawnThisSession || uiState.forceDeck || contentPanel !== "result";
-    elements.spreadResultSection.hidden =
-      overlay !== "none" || !uiState.hasDrawnThisSession || uiState.forceDeck || contentPanel !== "spread";
+    elements.profileSection.hidden = scene !== SCENES.PROFILE;
+    elements.onboardingSection.hidden = !isOnboarding;
+    elements.onboardingSection.classList.toggle("is-visible", isOnboarding);
+    elements.deckWrap.hidden = scene !== SCENES.DECK;
+    elements.resultSection.hidden = scene !== SCENES.RESULT;
+    elements.spreadResultSection.hidden = scene !== SCENES.SPREAD;
   }
 
   function resetReadingReveal() {

@@ -10,7 +10,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <meta name="wyrd-build" content="2026-05-05-cover-moon-forest-prototype-approved" />
+    <meta name="wyrd-build" content="2026-05-09-scene-fix-hotfix-2" />
     <title>WYRD</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -18,8 +18,8 @@
       href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="manifest" href="./manifest.webmanifest?v=2026-05-05-cover-moon-forest-prototype-approved" />
-    <link rel="stylesheet" href="./assets/css/styles.css?v=2026-05-05-cover-moon-forest-prototype-approved" />
+    <link rel="manifest" href="./manifest.webmanifest?v=2026-05-09-scene-fix-hotfix-2" />
+    <link rel="stylesheet" href="./assets/css/styles.css?v=2026-05-09-scene-fix-hotfix-2" />
   </head>
   <body>
     <div class="scene-fog scene-fog--back" aria-hidden="true"></div>
@@ -108,42 +108,6 @@
         <p class="ritual-whisper">Лес отвечает тем, кто умеет слушать тишину</p>
       </section>
 
-      <section class="deck-scene" id="deck-wrap" aria-label="Экран колоды WYRD">
-        <button class="deck-back" data-action="back-to-cover" type="button" aria-label="Назад">←</button>
-
-        <header class="deck-header">
-          <h2 class="deck-brand">WYRD</h2>
-          <div class="deck-brand-line" aria-hidden="true"></div>
-          <p class="deck-subtitle">Оракул духов леса</p>
-        </header>
-
-        <section class="deck-question-zone" aria-label="Поле вопроса">
-          <label class="sr-only" for="question-input">Твой вопрос</label>
-          <textarea
-            id="question-input"
-            class="deck-question-input"
-            rows="2"
-            maxlength="280"
-            aria-label="Твой вопрос"
-            placeholder="Держи вопрос в уме или запиши его здесь..."
-          ></textarea>
-        </section>
-
-        <section class="deck-card-zone" aria-label="Колода">
-          <button class="deck-card" data-action="draw" type="button" aria-label="Коснуться колоды">
-            <span class="deck-card-stack deck-card-stack--left" aria-hidden="true"></span>
-            <span class="deck-card-stack deck-card-stack--mid" aria-hidden="true"></span>
-            <span class="deck-card-face" aria-hidden="true"></span>
-          </button>
-          <p class="deck-touch-copy">✦ коснись колоды ✦</p>
-        </section>
-
-        <section class="deck-whisper-zone" aria-label="Тихая подпись">
-          <p class="deck-stars" aria-hidden="true">✦ ✦ ✦</p>
-          <p class="deck-whisper">Лес отвечает тем, кто умеет слушать тишину.</p>
-        </section>
-      </section>
-
       <section id="result" hidden>
         <div class="screen-nav">
           <button class="btn-back-circle" data-action="new-question" aria-label="Задать новый вопрос">←</button>
@@ -226,6 +190,42 @@
         </div>
       </section>
 
+      <section class="deck-scene" id="deck-wrap" aria-label="Экран колоды WYRD">
+        <button class="deck-back" data-action="back-to-cover" type="button" aria-label="Назад">←</button>
+
+        <header class="deck-header">
+          <h2 class="deck-brand">WYRD</h2>
+          <div class="deck-brand-line" aria-hidden="true"></div>
+          <p class="deck-subtitle">Оракул духов леса</p>
+        </header>
+
+        <section class="deck-question-zone" aria-label="Поле вопроса">
+          <label class="sr-only" for="question-input">Твой вопрос</label>
+          <textarea
+            id="question-input"
+            class="deck-question-input"
+            rows="2"
+            maxlength="280"
+            aria-label="Твой вопрос"
+            placeholder="Держи вопрос в уме или запиши его здесь..."
+          ></textarea>
+        </section>
+
+        <section class="deck-card-zone" aria-label="Колода">
+          <button class="deck-card" data-action="draw" type="button" aria-label="Коснуться колоды">
+            <span class="deck-card-stack deck-card-stack--left" aria-hidden="true"></span>
+            <span class="deck-card-stack deck-card-stack--mid" aria-hidden="true"></span>
+            <span class="deck-card-face" aria-hidden="true"></span>
+          </button>
+          <p class="deck-touch-copy">✦ коснись колоды ✦</p>
+        </section>
+
+        <section class="deck-whisper-zone" aria-label="Тихая подпись">
+          <p class="deck-stars" aria-hidden="true">✦ ✦ ✦</p>
+          <p class="deck-whisper">Лес отвечает тем, кто умеет слушать тишину.</p>
+        </section>
+      </section>
+
       <!-- free beta launch: all reading modes stay open -->
 
       <section id="profile" hidden>
@@ -249,7 +249,7 @@
       window.WYRD_BUILD_ID =
         document.querySelector('meta[name="wyrd-build"]')?.content || "dev";
     </script>
-    <script type="module" src="./assets/js/main.js?v=2026-05-05-cover-moon-forest-prototype-approved"></script>
+    <script type="module" src="./assets/js/main.js?v=2026-05-09-scene-fix-hotfix-2"></script>
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   </body>
 </html>
