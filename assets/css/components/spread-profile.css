@@ -861,7 +861,7 @@ body[data-scene="deck"] .footer {
     background:
       radial-gradient(circle at center, rgba(255, 220, 132, 0.08), transparent 26%),
       linear-gradient(180deg, rgba(8, 7, 10, 0.86), rgba(8, 7, 10, 0.96)),
-      url("../images/cover/cover-moon-forest.webp") center center / cover no-repeat;
+      url("../../images/cover/cover-moon-forest.webp") center center / cover no-repeat;
     filter: blur(28px) brightness(0.38);
     transform: scale(1.08);
   }
