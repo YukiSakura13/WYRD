@@ -1,9 +1,47 @@
 let html2CanvasLoader = null;
 let isSharing = false;
+let cachedShareKey = null;
+let cachedShareBlobPromise = null;
 const HTML2CANVAS_SRC = "./assets/vendor/html2canvas.min.js";
 const HTML2CANVAS_TIMEOUT_MS = 12000;
 const SHARE_RENDER_TIMEOUT_MS = 8000;
 const SHARE_ASSET_TIMEOUT_MS = 4000;
+
+export function primeShareCard(cardKey = "default") {
+  const shareCard = document.getElementById("share-card");
+  if (!shareCard) {
+    return Promise.resolve(null);
+  }
+
+  if (cachedShareKey === cardKey && cachedShareBlobPromise) {
+    return cachedShareBlobPromise;
+  }
+
+  cachedShareKey = cardKey;
+  cachedShareBlobPromise = ensureHtml2Canvas()
+    .then(function ensureRenderer() {
+      if (typeof window.html2canvas !== "function") {
+        throw new Error("html2canvas unavailable");
+      }
+
+      return withTimeout(
+        prepareShareAssets(shareCard).then(function afterPrepare() {
+          return renderShareBlob(shareCard);
+        }),
+        SHARE_RENDER_TIMEOUT_MS,
+        "share render timeout",
+      );
+    })
+    .catch(function handlePrimeError(error) {
+      console.error("share prime error:", error);
+      if (cachedShareKey === cardKey) {
+        cachedShareBlobPromise = null;
+      }
+      return null;
+    });
+
+  return cachedShareBlobPromise;
+}
 
 export function shareCurrentCard(store) {
   const shareCard = document.getElementById("share-card");
@@ -29,13 +67,22 @@ export function shareCurrentCard(store) {
         throw new Error("html2canvas unavailable");
       }
 
-      return withTimeout(
-        prepareShareAssets(shareCard).then(function afterPrepare() {
-          return renderShareCard(shareCard, store);
-        }),
-        SHARE_RENDER_TIMEOUT_MS,
-        "share render timeout",
-      );
+      const reading = store.getState().currentReading;
+      const cardKey = reading?.id || reading?.card?.id || "default";
+
+      return primeShareCard(cardKey).then(function usePrimedBlob(blob) {
+        if (blob) {
+          return shareBlob(blob);
+        }
+
+        return withTimeout(
+          prepareShareAssets(shareCard).then(function afterPrepare() {
+            return renderShareBlob(shareCard).then(shareBlob);
+          }),
+          SHARE_RENDER_TIMEOUT_MS,
+          "share render timeout",
+        );
+      });
     })
     .then(function handleShareSuccess(result) {
       setShareState({
@@ -75,7 +122,7 @@ export function shareCurrentCard(store) {
     });
 }
 
-function renderShareCard(shareCard, store) {
+function renderShareBlob(shareCard) {
   return window.html2canvas(shareCard, {
     backgroundColor: null,
     scale: 2,
@@ -84,28 +131,30 @@ function renderShareCard(shareCard, store) {
     imageTimeout: 15000,
     logging: false,
   }).then(function handleCanvas(canvas) {
-    return canvasToBlob(canvas).then(function handleBlob(blob) {
-      const file = new File([blob], "wyrd-card.png", { type: "image/png" });
-
-      if (canNativeShareFile(file)) {
-        setShareState({
-          button: document.querySelector('#result [data-action="share-card"]'),
-          buttonLabel: document.getElementById("share-button-label"),
-          feedback: document.getElementById("share-feedback"),
-          isLoading: false,
-          message: "",
-        });
-        return navigator.share({
-          files: [file],
-        }).then(function finishNativeShare() {
-          return "native";
-        });
-      }
-
-      downloadBlob(blob, "wyrd-card.png");
-      return "download";
-    });
+    return canvasToBlob(canvas);
   });
+}
+
+function shareBlob(blob) {
+  const file = new File([blob], "wyrd-card.png", { type: "image/png" });
+
+  if (canNativeShareFile(file)) {
+    setShareState({
+      button: document.querySelector('#result [data-action="share-card"]'),
+      buttonLabel: document.getElementById("share-button-label"),
+      feedback: document.getElementById("share-feedback"),
+      isLoading: false,
+      message: "",
+    });
+    return navigator.share({
+      files: [file],
+    }).then(function finishNativeShare() {
+      return "native";
+    });
+  }
+
+  downloadBlob(blob, "wyrd-card.png");
+  return Promise.resolve("download");
 }
 
 function prepareShareAssets(shareCard) {

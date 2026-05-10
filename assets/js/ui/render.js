@@ -1,6 +1,7 @@
 import { SCENES } from "./scenes.js";
 import { createSpreadRenderer } from "./render-spread.js";
 import { getCardImage } from "./render-helpers.js";
+import { primeShareCard } from "./share.js";
 
 export function getElements(doc = document) {
   return {
@@ -160,6 +161,10 @@ export function createRenderer(elements) {
       lastReadingId = reading.id;
       startReadingReveal();
     }
+
+    window.setTimeout(function warmShareCard() {
+      primeShareCard(reading.id || reading.card?.id || "default");
+    }, 120);
   }
 
   function renderHook(state, uiState) {
