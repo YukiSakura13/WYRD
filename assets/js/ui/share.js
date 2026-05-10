@@ -84,7 +84,6 @@ function renderShareCard(shareCard, store) {
       if (canNativeShareFile(file)) {
         return navigator.share({
           files: [file],
-          title: reading?.card?.name || "WYRD",
         }).then(function finishNativeShare() {
           return "native";
         });
