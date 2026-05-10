@@ -2,6 +2,8 @@ let html2CanvasLoader = null;
 let isSharing = false;
 const HTML2CANVAS_SRC = "./assets/vendor/html2canvas.min.js";
 const HTML2CANVAS_TIMEOUT_MS = 12000;
+const SHARE_RENDER_TIMEOUT_MS = 8000;
+const SHARE_ASSET_TIMEOUT_MS = 4000;
 
 export function shareCurrentCard(store) {
   const shareCard = document.getElementById("share-card");
@@ -27,7 +29,13 @@ export function shareCurrentCard(store) {
         throw new Error("html2canvas unavailable");
       }
 
-      return renderShareCard(shareCard, store);
+      return withTimeout(
+        prepareShareAssets(shareCard).then(function afterPrepare() {
+          return renderShareCard(shareCard, store);
+        }),
+        SHARE_RENDER_TIMEOUT_MS,
+        "share render timeout",
+      );
     })
     .then(function handleShareSuccess(result) {
       setShareState({
@@ -77,11 +85,16 @@ function renderShareCard(shareCard, store) {
     logging: false,
   }).then(function handleCanvas(canvas) {
     return canvasToBlob(canvas).then(function handleBlob(blob) {
-      const reading = store.getState().currentReading;
-      const fileName = buildShareFileName(reading?.card?.name);
-      const file = new File([blob], fileName, { type: "image/png" });
+      const file = new File([blob], "wyrd-card.png", { type: "image/png" });
 
       if (canNativeShareFile(file)) {
+        setShareState({
+          button: document.querySelector('#result [data-action="share-card"]'),
+          buttonLabel: document.getElementById("share-button-label"),
+          feedback: document.getElementById("share-feedback"),
+          isLoading: false,
+          message: "",
+        });
         return navigator.share({
           files: [file],
         }).then(function finishNativeShare() {
@@ -89,10 +102,23 @@ function renderShareCard(shareCard, store) {
         });
       }
 
-      downloadBlob(blob, fileName);
+      downloadBlob(blob, "wyrd-card.png");
       return "download";
     });
   });
+}
+
+function prepareShareAssets(shareCard) {
+  const imageNodes = Array.from(shareCard.querySelectorAll("img"));
+  const imagePromises = imageNodes.map(waitForImageReady);
+  const fontReady =
+    document.fonts && document.fonts.ready
+      ? withTimeout(document.fonts.ready, SHARE_ASSET_TIMEOUT_MS, "fonts timeout").catch(function ignoreFontTimeout() {
+          return undefined;
+        })
+      : Promise.resolve();
+
+  return Promise.all([fontReady, ...imagePromises]);
 }
 
 function ensureHtml2Canvas() {
@@ -184,6 +210,35 @@ function canvasToBlob(canvas) {
   });
 }
 
+function waitForImageReady(img) {
+  if (img.complete && img.naturalWidth > 0) {
+    if (typeof img.decode === "function") {
+      return withTimeout(img.decode().catch(function ignoreDecodeError() {}), SHARE_ASSET_TIMEOUT_MS, "image decode timeout").catch(
+        function ignoreTimeout() {
+          return undefined;
+        },
+      );
+    }
+
+    return Promise.resolve();
+  }
+
+  return withTimeout(
+    new Promise(function resolveOnLoad(resolve, reject) {
+      img.addEventListener("load", resolve, { once: true });
+      img.addEventListener(
+        "error",
+        function handleError() {
+          reject(new Error("image failed to load"));
+        },
+        { once: true },
+      );
+    }),
+    SHARE_ASSET_TIMEOUT_MS,
+    "image load timeout",
+  );
+}
+
 function canNativeShareFile(file) {
   if (!navigator.share) {
     return false;
@@ -211,14 +266,22 @@ function downloadBlob(blob, fileName) {
   URL.revokeObjectURL(url);
 }
 
-function buildShareFileName(cardName = "") {
-  const normalized = cardName
-    .toLowerCase()
-    .replaceAll("ё", "е")
-    .replace(/[^a-zа-я0-9]+/gi, "-")
-    .replace(/^-+|-+$/g, "");
+function withTimeout(promise, timeoutMs, message) {
+  return new Promise(function resolveWithTimeout(resolve, reject) {
+    const timeoutId = window.setTimeout(function handleTimeout() {
+      reject(new Error(message));
+    }, timeoutMs);
 
-  return normalized ? `wyrd-${normalized}.png` : "wyrd-card.png";
+    promise
+      .then(function handleResolve(value) {
+        window.clearTimeout(timeoutId);
+        resolve(value);
+      })
+      .catch(function handleReject(error) {
+        window.clearTimeout(timeoutId);
+        reject(error);
+      });
+  });
 }
 
 function isAbortError(error) {

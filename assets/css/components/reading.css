@@ -158,7 +158,7 @@
   margin: 0 auto;
   overflow: hidden;
   border-radius: 12px;
-  background: linear-gradient(180deg, rgb(242, 235, 221) 0%, rgb(242, 235, 221) 48%, var(--color-bg-base) 49%, var(--color-bg-elevated) 100%);
+  background: linear-gradient(180deg, var(--color-bg-base) 0%, var(--color-bg-elevated) 100%);
   box-shadow:
     0 0 0 1px rgba(139, 105, 20, 0.15),
     0 0 24px 4px rgba(139, 105, 20, 0.12),
@@ -171,6 +171,18 @@
     transform var(--dur-ritual) var(--ease-out-strong),
     filter var(--dur-ritual) var(--ease-out-strong),
     box-shadow var(--dur-slow) var(--ease-out-strong);
+}
+
+#result .card-box::before {
+  content: "";
+  position: absolute;
+  inset: 42% 0 0;
+  background:
+    linear-gradient(180deg, rgba(16, 16, 25, 0) 0%, rgba(16, 16, 25, 0.7) 10%, rgba(16, 16, 25, 0.95) 24%, rgba(19, 19, 32, 0.985) 100%),
+    radial-gradient(circle at 50% 8%, rgba(201, 161, 74, 0.08), transparent 28%),
+    linear-gradient(180deg, var(--color-bg-base) 0%, var(--color-bg-elevated) 100%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 #result .card-box.is-visible {
@@ -198,6 +210,16 @@
   background: rgb(242, 235, 221);
 }
 
+#result .share-card-media::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 84px;
+  background: linear-gradient(180deg, rgba(16, 16, 25, 0) 0%, rgba(16, 16, 25, 0.45) 36%, rgba(16, 16, 25, 0.82) 72%, rgba(16, 16, 25, 0.96) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
 #result .card-img {
   display: block;
   width: 100%;
@@ -218,13 +240,10 @@
 }
 
 #result .card-title-block {
-  padding: 14px 20px 8px;
+  margin-top: -48px;
+  padding: 62px 20px 12px;
   position: relative;
   z-index: 1;
-  text-align: center;
-  background:
-    linear-gradient(180deg, rgba(19, 19, 32, 0) 0%, rgba(19, 19, 32, 0.82) 18%, rgba(19, 19, 32, 0.98) 100%),
-    linear-gradient(180deg, var(--color-bg-base) 0%, var(--color-bg-elevated) 100%);
   text-align: center;
 }
 
@@ -264,7 +283,6 @@
   padding: 12px 32px 8px;
   position: relative;
   z-index: 1;
-  background: linear-gradient(180deg, var(--color-bg-elevated) 0%, var(--color-bg-base) 100%);
   text-align: center;
 }
 
@@ -316,7 +334,6 @@
   position: relative;
   z-index: 1;
   border-top: 1px solid var(--accent-20);
-  background: linear-gradient(180deg, rgba(16, 16, 25, 0.98) 0%, rgba(19, 19, 32, 0.98) 100%);
   text-align: center;
   opacity: 0;
   transform: translateY(16px);
