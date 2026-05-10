@@ -146,13 +146,23 @@ function drawShareCard(context, assets, reading, palette, typography) {
     background: palette.parchmentBg,
   });
 
-  const fade = context.createLinearGradient(0, imageAreaHeight - 128, 0, imageAreaHeight + 72);
+  const fade = context.createLinearGradient(0, imageAreaHeight - 176, 0, imageAreaHeight + 160);
   fade.addColorStop(0, "rgba(16, 16, 25, 0)");
-  fade.addColorStop(0.34, "rgba(16, 16, 25, 0.42)");
-  fade.addColorStop(0.7, "rgba(16, 16, 25, 0.9)");
+  fade.addColorStop(0.16, "rgba(242, 235, 221, 0.04)");
+  fade.addColorStop(0.34, "rgba(16, 16, 25, 0.16)");
+  fade.addColorStop(0.54, "rgba(16, 16, 25, 0.42)");
+  fade.addColorStop(0.76, "rgba(16, 16, 25, 0.78)");
   fade.addColorStop(1, palette.darkBase);
   context.fillStyle = fade;
-  context.fillRect(0, imageAreaHeight - 128, width, 220);
+  context.fillRect(0, imageAreaHeight - 176, width, 340);
+
+  const veil = context.createLinearGradient(0, imageAreaHeight - 132, 0, imageAreaHeight + 120);
+  veil.addColorStop(0, "rgba(242, 235, 221, 0)");
+  veil.addColorStop(0.28, "rgba(242, 235, 221, 0.025)");
+  veil.addColorStop(0.55, "rgba(201, 161, 74, 0.03)");
+  veil.addColorStop(1, "rgba(16, 16, 25, 0)");
+  context.fillStyle = veil;
+  context.fillRect(0, imageAreaHeight - 132, width, 252);
 
   const glow = context.createRadialGradient(width / 2, imageAreaHeight + 140, 40, width / 2, imageAreaHeight + 140, 520);
   glow.addColorStop(0, "rgba(201, 161, 74, 0.07)");
@@ -160,15 +170,20 @@ function drawShareCard(context, assets, reading, palette, typography) {
   context.fillStyle = glow;
   context.fillRect(0, imageAreaHeight - 60, width, height - (imageAreaHeight - 60));
 
-  context.fillStyle = palette.darkElevated;
-  context.fillRect(0, imageAreaHeight - 20, width, height - (imageAreaHeight - 20));
+  const lowerSurface = context.createLinearGradient(0, imageAreaHeight - 24, 0, height);
+  lowerSurface.addColorStop(0, palette.darkBase);
+  lowerSurface.addColorStop(0.22, palette.darkElevated);
+  lowerSurface.addColorStop(1, palette.darkBase);
+  context.fillStyle = lowerSurface;
+  context.fillRect(0, imageAreaHeight - 24, width, height - (imageAreaHeight - 24));
 
-  const mist = context.createLinearGradient(0, imageAreaHeight - 90, 0, height);
+  const mist = context.createLinearGradient(0, imageAreaHeight - 120, 0, height);
   mist.addColorStop(0, "rgba(20, 20, 34, 0)");
-  mist.addColorStop(0.38, "rgba(20, 20, 34, 0.35)");
-  mist.addColorStop(1, "rgba(20, 20, 34, 0.04)");
+  mist.addColorStop(0.25, "rgba(20, 20, 34, 0.12)");
+  mist.addColorStop(0.5, "rgba(20, 20, 34, 0.28)");
+  mist.addColorStop(1, "rgba(20, 20, 34, 0.05)");
   context.fillStyle = mist;
-  context.fillRect(0, imageAreaHeight - 90, width, height - (imageAreaHeight - 90));
+  context.fillRect(0, imageAreaHeight - 120, width, height - (imageAreaHeight - 120));
 
   drawCenteredText(context, reading.name, {
     x: width / 2,
