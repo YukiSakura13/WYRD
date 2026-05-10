@@ -1,5 +1,7 @@
 let html2CanvasLoader = null;
 let isSharing = false;
+const HTML2CANVAS_SRC = "./assets/vendor/html2canvas.min.js";
+const HTML2CANVAS_TIMEOUT_MS = 12000;
 
 export function shareCurrentCard(store) {
   const shareCard = document.getElementById("share-card");
@@ -104,23 +106,42 @@ function ensureHtml2Canvas() {
   }
 
   html2CanvasLoader = new Promise(function loadHtml2Canvas(resolve, reject) {
+    const timeoutId = window.setTimeout(function handleTimeout() {
+      html2CanvasLoader = null;
+      reject(new Error("html2canvas load timeout"));
+    }, HTML2CANVAS_TIMEOUT_MS);
+
     const existingScript = document.querySelector('script[data-html2canvas-loader="true"]');
     if (existingScript) {
+      if (typeof window.html2canvas === "function") {
+        window.clearTimeout(timeoutId);
+        resolve(window.html2canvas);
+        return;
+      }
+
       existingScript.addEventListener("load", function handleLoad() {
+        window.clearTimeout(timeoutId);
         resolve(window.html2canvas);
       });
-      existingScript.addEventListener("error", reject);
+      existingScript.addEventListener("error", function handleError(event) {
+        window.clearTimeout(timeoutId);
+        reject(event);
+      });
       return;
     }
 
     const script = document.createElement("script");
-    script.src = "https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js";
+    script.src = HTML2CANVAS_SRC;
     script.async = true;
     script.dataset.html2canvasLoader = "true";
     script.onload = function handleLoad() {
+      window.clearTimeout(timeoutId);
       resolve(window.html2canvas);
     };
-    script.onerror = reject;
+    script.onerror = function handleError(event) {
+      window.clearTimeout(timeoutId);
+      reject(event);
+    };
     document.head.appendChild(script);
   }).catch(function resetLoader(error) {
     html2CanvasLoader = null;
