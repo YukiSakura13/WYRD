@@ -1,55 +1,49 @@
-let html2CanvasLoader = null;
+import { getCardImage } from "./render-helpers.js";
+
 let isSharing = false;
 let cachedShareKey = null;
 let cachedShareBlobPromise = null;
-const HTML2CANVAS_SRC = "./assets/vendor/html2canvas.min.js";
-const HTML2CANVAS_TIMEOUT_MS = 12000;
-const SHARE_RENDER_TIMEOUT_MS = 8000;
-const SHARE_ASSET_TIMEOUT_MS = 4000;
+let frameImagePromise = null;
 
-export function primeShareCard(cardKey = "default") {
-  const shareCard = document.getElementById("share-card");
-  if (!shareCard) {
+const SHARE_WIDTH = 1024;
+const SHARE_HEIGHT = 1536;
+const CANVAS_TIMEOUT_MS = 8000;
+const ASSET_TIMEOUT_MS = 3500;
+const FRAME_SRC = new URL("../../images/card-frame.png", import.meta.url).href;
+
+export function primeShareCard(reading) {
+  const normalizedReading = normalizeReading(reading);
+  if (!normalizedReading) {
+    cachedShareKey = null;
+    cachedShareBlobPromise = null;
     return Promise.resolve(null);
   }
 
-  if (cachedShareKey === cardKey && cachedShareBlobPromise) {
+  if (cachedShareKey === normalizedReading.key && cachedShareBlobPromise) {
     return cachedShareBlobPromise;
   }
 
-  cachedShareKey = cardKey;
-  cachedShareBlobPromise = ensureHtml2Canvas()
-    .then(function ensureRenderer() {
-      if (typeof window.html2canvas !== "function") {
-        throw new Error("html2canvas unavailable");
-      }
-
-      return withTimeout(
-        prepareShareAssets(shareCard).then(function afterPrepare() {
-          return renderShareBlob(shareCard);
-        }),
-        SHARE_RENDER_TIMEOUT_MS,
-        "share render timeout",
-      );
-    })
-    .catch(function handlePrimeError(error) {
+  cachedShareKey = normalizedReading.key;
+  cachedShareBlobPromise = withTimeout(renderShareBlob(normalizedReading), CANVAS_TIMEOUT_MS, "share render timeout").catch(
+    function handlePrimeError(error) {
       console.error("share prime error:", error);
-      if (cachedShareKey === cardKey) {
+      if (cachedShareKey === normalizedReading.key) {
         cachedShareBlobPromise = null;
       }
       return null;
-    });
+    },
+  );
 
   return cachedShareBlobPromise;
 }
 
 export function shareCurrentCard(store) {
-  const shareCard = document.getElementById("share-card");
   const button = document.querySelector('#result [data-action="share-card"]');
   const buttonLabel = document.getElementById("share-button-label");
   const feedback = document.getElementById("share-feedback");
+  const reading = store?.getState?.().currentReading || null;
 
-  if (!shareCard || !button || isSharing) {
+  if (!button || isSharing) {
     return;
   }
 
@@ -61,28 +55,13 @@ export function shareCurrentCard(store) {
     message: "",
   });
 
-  ensureHtml2Canvas()
-    .then(function shareAfterLoad() {
-      if (typeof window.html2canvas !== "function") {
-        throw new Error("html2canvas unavailable");
+  primeShareCard(reading)
+    .then(function handlePrimedBlob(blob) {
+      if (!blob) {
+        throw new Error("share blob unavailable");
       }
 
-      const reading = store.getState().currentReading;
-      const cardKey = reading?.id || reading?.card?.id || "default";
-
-      return primeShareCard(cardKey).then(function usePrimedBlob(blob) {
-        if (blob) {
-          return shareBlob(blob);
-        }
-
-        return withTimeout(
-          prepareShareAssets(shareCard).then(function afterPrepare() {
-            return renderShareBlob(shareCard).then(shareBlob);
-          }),
-          SHARE_RENDER_TIMEOUT_MS,
-          "share render timeout",
-        );
-      });
+      return shareBlob(blob);
     })
     .then(function handleShareSuccess(result) {
       setShareState({
@@ -122,16 +101,468 @@ export function shareCurrentCard(store) {
     });
 }
 
-function renderShareBlob(shareCard) {
-  return window.html2canvas(shareCard, {
-    backgroundColor: null,
-    scale: 2,
-    useCORS: true,
-    allowTaint: false,
-    imageTimeout: 15000,
-    logging: false,
-  }).then(function handleCanvas(canvas) {
+function renderShareBlob(reading) {
+  return prepareShareAssets(reading).then(function renderFromAssets(assets) {
+    const palette = readPalette();
+    const typography = readTypography();
+    const canvas = document.createElement("canvas");
+    canvas.width = SHARE_WIDTH;
+    canvas.height = SHARE_HEIGHT;
+    const context = canvas.getContext("2d");
+
+    if (!context) {
+      throw new Error("canvas context unavailable");
+    }
+
+    drawShareCard(context, assets, reading, palette, typography);
     return canvasToBlob(canvas);
+  });
+}
+
+function drawShareCard(context, assets, reading, palette, typography) {
+  const width = SHARE_WIDTH;
+  const height = SHARE_HEIGHT;
+  const radius = 38;
+  const imageAreaHeight = 760;
+  const titleY = 868;
+  const dividerY = 937;
+  const messageLabelY = 1008;
+  const shadowLabelY = 1268;
+
+  context.clearRect(0, 0, width, height);
+  context.save();
+  clipRoundedRect(context, 0, 0, width, height, radius);
+
+  context.fillStyle = palette.darkBase;
+  context.fillRect(0, 0, width, height);
+
+  context.fillStyle = palette.parchmentBg;
+  context.fillRect(0, 0, width, imageAreaHeight);
+  drawContainedImage(context, assets.cardImage, {
+    x: 48,
+    y: 54,
+    width: width - 96,
+    height: 700,
+    background: palette.parchmentBg,
+  });
+
+  const fade = context.createLinearGradient(0, imageAreaHeight - 128, 0, imageAreaHeight + 72);
+  fade.addColorStop(0, "rgba(16, 16, 25, 0)");
+  fade.addColorStop(0.34, "rgba(16, 16, 25, 0.42)");
+  fade.addColorStop(0.7, "rgba(16, 16, 25, 0.9)");
+  fade.addColorStop(1, palette.darkBase);
+  context.fillStyle = fade;
+  context.fillRect(0, imageAreaHeight - 128, width, 220);
+
+  const glow = context.createRadialGradient(width / 2, imageAreaHeight + 140, 40, width / 2, imageAreaHeight + 140, 520);
+  glow.addColorStop(0, "rgba(201, 161, 74, 0.07)");
+  glow.addColorStop(1, "rgba(201, 161, 74, 0)");
+  context.fillStyle = glow;
+  context.fillRect(0, imageAreaHeight - 60, width, height - (imageAreaHeight - 60));
+
+  context.fillStyle = palette.darkElevated;
+  context.fillRect(0, imageAreaHeight - 20, width, height - (imageAreaHeight - 20));
+
+  const mist = context.createLinearGradient(0, imageAreaHeight - 90, 0, height);
+  mist.addColorStop(0, "rgba(20, 20, 34, 0)");
+  mist.addColorStop(0.38, "rgba(20, 20, 34, 0.35)");
+  mist.addColorStop(1, "rgba(20, 20, 34, 0.04)");
+  context.fillStyle = mist;
+  context.fillRect(0, imageAreaHeight - 90, width, height - (imageAreaHeight - 90));
+
+  drawCenteredText(context, reading.name, {
+    x: width / 2,
+    y: titleY,
+    font: `400 54px ${typography.display}`,
+    color: palette.parchmentText,
+    maxWidth: width - 180,
+    lineHeight: 62,
+    textAlign: "center",
+  });
+
+  drawDivider(context, {
+    centerX: width / 2,
+    y: dividerY,
+    color: palette.gold,
+    width: 324,
+  });
+
+  drawLabel(context, "ПОСЛАНИЕ", {
+    x: width / 2,
+    y: messageLabelY,
+    font: `600 28px ${typography.ui}`,
+    color: palette.gold,
+    tracking: 10,
+  });
+
+  const messageMetrics = fitParagraph(reading.message, {
+    maxWidth: width - 220,
+    maxHeight: 190,
+    initialFontSize: 46,
+    minFontSize: 32,
+    lineHeightRatio: 1.45,
+    fontFamily: typography.display,
+  });
+  drawParagraph(context, reading.message, {
+    x: width / 2,
+    y: 1072,
+    maxWidth: width - 220,
+    fontSize: messageMetrics.fontSize,
+    lineHeight: messageMetrics.lineHeight,
+    fontFamily: typography.display,
+    color: palette.parchmentText,
+    textAlign: "center",
+    baseline: "top",
+  });
+
+  const shadowDividerY = 1228;
+  drawDivider(context, {
+    centerX: width / 2,
+    y: shadowDividerY,
+    color: palette.goldSoft,
+    width: 170,
+  });
+
+  drawLabel(context, "ТЕНЬ", {
+    x: width / 2,
+    y: shadowLabelY,
+    font: `600 24px ${typography.ui}`,
+    color: palette.gold,
+    tracking: 8,
+    alpha: 0.72,
+  });
+
+  const shadowMetrics = fitParagraph(reading.shadow, {
+    maxWidth: width - 240,
+    maxHeight: 150,
+    initialFontSize: 36,
+    minFontSize: 26,
+    lineHeightRatio: 1.48,
+    fontFamily: typography.display,
+    italic: true,
+  });
+  drawParagraph(context, reading.shadow, {
+    x: width / 2,
+    y: 1318,
+    maxWidth: width - 240,
+    fontSize: shadowMetrics.fontSize,
+    lineHeight: shadowMetrics.lineHeight,
+    fontFamily: typography.display,
+    color: palette.parchmentMuted,
+    italic: true,
+    textAlign: "center",
+    baseline: "top",
+  });
+
+  if (assets.frameImage) {
+    context.drawImage(assets.frameImage, 0, 0, width, height);
+  }
+
+  context.restore();
+}
+
+function prepareShareAssets(reading) {
+  const fontsReady =
+    document.fonts && document.fonts.ready
+      ? withTimeout(document.fonts.ready, ASSET_TIMEOUT_MS, "fonts timeout").catch(function ignoreFontTimeout() {
+          return undefined;
+        })
+      : Promise.resolve();
+
+  return Promise.all([fontsReady, loadImage(getCardImage(reading.card)), loadFrameImage()]).then(function handleAssets(result) {
+    return {
+      cardImage: result[1],
+      frameImage: result[2],
+    };
+  });
+}
+
+function loadFrameImage() {
+  if (!frameImagePromise) {
+    frameImagePromise = loadImage(FRAME_SRC).catch(function handleFrameError(error) {
+      frameImagePromise = null;
+      throw error;
+    });
+  }
+
+  return frameImagePromise;
+}
+
+function loadImage(src) {
+  return withTimeout(
+    new Promise(function resolveImage(resolve, reject) {
+      const image = new Image();
+      image.decoding = "async";
+      image.onload = function handleLoad() {
+        if (typeof image.decode === "function") {
+          image
+            .decode()
+            .catch(function ignoreDecodeError() {})
+            .finally(function finishDecode() {
+              resolve(image);
+            });
+          return;
+        }
+
+        resolve(image);
+      };
+      image.onerror = function handleError() {
+        reject(new Error(`image failed to load: ${src}`));
+      };
+      image.src = src;
+    }),
+    ASSET_TIMEOUT_MS,
+    "image load timeout",
+  );
+}
+
+function normalizeReading(reading) {
+  if (!reading || !reading.card) {
+    return null;
+  }
+
+  return {
+    key: reading.id || reading.card.id || "default",
+    name: String(reading.card.name || "").trim(),
+    message: String(reading.card.message || "").trim(),
+    shadow: String(reading.card.shadow || "").trim(),
+    card: reading.card,
+  };
+}
+
+function readPalette() {
+  const rootStyle = getComputedStyle(document.documentElement);
+  return {
+    darkBase: readCssValue(rootStyle, "--color-bg-base", "#101019"),
+    darkElevated: readCssValue(rootStyle, "--color-bg-elevated", "#131320"),
+    parchmentBg: "rgb(242, 235, 221)",
+    parchmentText: readCssValue(rootStyle, "--parchment", "#f0e8d8"),
+    parchmentMuted: "rgba(240, 232, 216, 0.74)",
+    gold: readCssValue(rootStyle, "--gold", "#c9a14a"),
+    goldSoft: "rgba(201, 161, 74, 0.42)",
+  };
+}
+
+function readTypography() {
+  const rootStyle = getComputedStyle(document.documentElement);
+  return {
+    display: readCssValue(rootStyle, "--display-font", 'Georgia, "Times New Roman", serif'),
+    ui: readCssValue(rootStyle, "--ui-font", 'Georgia, "Times New Roman", serif'),
+  };
+}
+
+function readCssValue(style, propertyName, fallback) {
+  const value = style.getPropertyValue(propertyName).trim();
+  return value || fallback;
+}
+
+function drawContainedImage(context, image, rect) {
+  context.fillStyle = rect.background;
+  context.fillRect(rect.x, rect.y, rect.width, rect.height);
+
+  const scale = Math.min(rect.width / image.width, rect.height / image.height);
+  const drawWidth = image.width * scale;
+  const drawHeight = image.height * scale;
+  const drawX = rect.x + (rect.width - drawWidth) / 2;
+  const drawY = rect.y + (rect.height - drawHeight) / 2;
+
+  context.drawImage(image, drawX, drawY, drawWidth, drawHeight);
+}
+
+function drawDivider(context, options) {
+  const { centerX, y, color, width } = options;
+  const gap = 36;
+  const halfLine = (width - gap) / 2;
+
+  context.save();
+  context.strokeStyle = color;
+  context.globalAlpha = 0.45;
+  context.lineWidth = 2;
+  context.beginPath();
+  context.moveTo(centerX - gap / 2 - halfLine, y);
+  context.lineTo(centerX - gap / 2, y);
+  context.moveTo(centerX + gap / 2, y);
+  context.lineTo(centerX + gap / 2 + halfLine, y);
+  context.stroke();
+  context.restore();
+
+  drawCenteredText(context, "✦", {
+    x: centerX,
+    y: y - 2,
+    font: `400 26px ${readTypography().ui}`,
+    color,
+    textAlign: "center",
+  });
+}
+
+function drawLabel(context, text, options) {
+  const { x, y, font, color, tracking = 0, alpha = 0.82 } = options;
+  context.save();
+  context.font = font;
+  context.fillStyle = color;
+  context.globalAlpha = alpha;
+  context.textAlign = "center";
+  context.textBaseline = "middle";
+  drawTrackedText(context, text, x, y, tracking);
+  context.restore();
+}
+
+function fitParagraph(text, options) {
+  const { maxWidth, maxHeight, initialFontSize, minFontSize, lineHeightRatio, fontFamily, italic = false } = options;
+  const measureCanvas = document.createElement("canvas");
+  const measureContext = measureCanvas.getContext("2d");
+
+  if (!measureContext) {
+    return {
+      fontSize: minFontSize,
+      lineHeight: Math.round(minFontSize * lineHeightRatio),
+    };
+  }
+
+  for (let fontSize = initialFontSize; fontSize >= minFontSize; fontSize -= 2) {
+    const font = `${italic ? "italic " : ""}400 ${fontSize}px ${fontFamily}`;
+    measureContext.font = font;
+    const lines = wrapText(measureContext, text, maxWidth);
+    const lineHeight = Math.round(fontSize * lineHeightRatio);
+    const totalHeight = lines.length * lineHeight;
+    if (totalHeight <= maxHeight) {
+      return {
+        fontSize,
+        lineHeight,
+      };
+    }
+  }
+
+  return {
+    fontSize: minFontSize,
+    lineHeight: Math.round(minFontSize * lineHeightRatio),
+  };
+}
+
+function drawParagraph(context, text, options) {
+  const {
+    x,
+    y,
+    maxWidth,
+    fontSize,
+    lineHeight,
+    fontFamily,
+    color,
+    italic = false,
+    textAlign = "left",
+    baseline = "alphabetic",
+  } = options;
+
+  context.save();
+  context.font = `${italic ? "italic " : ""}400 ${fontSize}px ${fontFamily}`;
+  context.fillStyle = color;
+  context.textAlign = textAlign;
+  context.textBaseline = baseline;
+
+  const lines = wrapText(context, text, maxWidth);
+  lines.forEach(function drawLine(line, index) {
+    context.fillText(line, x, y + index * lineHeight);
+  });
+  context.restore();
+}
+
+function drawCenteredText(context, text, options) {
+  const { x, y, font, color, maxWidth, lineHeight = 1, textAlign = "center" } = options;
+  context.save();
+  context.font = font;
+  context.fillStyle = color;
+  context.textAlign = textAlign;
+  context.textBaseline = "middle";
+
+  if (maxWidth) {
+    const lines = wrapText(context, text, maxWidth);
+    const startY = y - ((lines.length - 1) * lineHeight) / 2;
+    lines.forEach(function drawLine(line, index) {
+      context.fillText(line, x, startY + index * lineHeight);
+    });
+  } else {
+    context.fillText(text, x, y);
+  }
+
+  context.restore();
+}
+
+function drawTrackedText(context, text, x, y, tracking) {
+  if (!tracking) {
+    context.fillText(text, x, y);
+    return;
+  }
+
+  const glyphs = Array.from(text);
+  const totalWidth =
+    glyphs.reduce(function sumWidth(total, glyph) {
+      return total + context.measureText(glyph).width;
+    }, 0) +
+    tracking * Math.max(glyphs.length - 1, 0);
+  let cursorX = x - totalWidth / 2;
+
+  glyphs.forEach(function drawGlyph(glyph) {
+    context.fillText(glyph, cursorX, y);
+    cursorX += context.measureText(glyph).width + tracking;
+  });
+}
+
+function wrapText(context, text, maxWidth) {
+  const lines = [];
+  const paragraphs = String(text || "").split(/\n+/).filter(Boolean);
+
+  paragraphs.forEach(function wrapParagraph(paragraph, paragraphIndex) {
+    const words = paragraph.split(/\s+/).filter(Boolean);
+    let line = "";
+
+    words.forEach(function appendWord(word) {
+      const candidate = line ? `${line} ${word}` : word;
+      if (context.measureText(candidate).width <= maxWidth || !line) {
+        line = candidate;
+        return;
+      }
+
+      lines.push(line);
+      line = word;
+    });
+
+    if (line) {
+      lines.push(line);
+    }
+
+    if (paragraphIndex < paragraphs.length - 1) {
+      lines.push("");
+    }
+  });
+
+  return lines.length ? lines : [""];
+}
+
+function clipRoundedRect(context, x, y, width, height, radius) {
+  context.beginPath();
+  context.moveTo(x + radius, y);
+  context.lineTo(x + width - radius, y);
+  context.quadraticCurveTo(x + width, y, x + width, y + radius);
+  context.lineTo(x + width, y + height - radius);
+  context.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  context.lineTo(x + radius, y + height);
+  context.quadraticCurveTo(x, y + height, x, y + height - radius);
+  context.lineTo(x, y + radius);
+  context.quadraticCurveTo(x, y, x + radius, y);
+  context.closePath();
+  context.clip();
+}
+
+function canvasToBlob(canvas) {
+  return new Promise(function resolveBlob(resolve, reject) {
+    canvas.toBlob(function handleBlob(blob) {
+      if (!blob) {
+        reject(new Error("canvas.toBlob returned null"));
+        return;
+      }
+
+      resolve(blob);
+    }, "image/png");
   });
 }
 
@@ -146,83 +577,54 @@ function shareBlob(blob) {
       isLoading: false,
       message: "",
     });
-    return navigator.share({
-      files: [file],
-    }).then(function finishNativeShare() {
+
+    return navigator.share({ files: [file] }).then(function finishNativeShare() {
       return "native";
     });
+  }
+
+  if (navigator.share) {
+    setShareState({
+      button: document.querySelector('#result [data-action="share-card"]'),
+      buttonLabel: document.getElementById("share-button-label"),
+      feedback: document.getElementById("share-feedback"),
+      isLoading: false,
+      message: "",
+    });
+
+    return navigator
+      .share({ files: [file] })
+      .then(function finishNativeShareWithoutCanShare() {
+        return "native";
+      })
+      .catch(function fallbackAfterShareError(error) {
+        if (isAbortError(error)) {
+          throw error;
+        }
+
+        downloadBlob(blob, "wyrd-card.png");
+        return "download";
+      });
   }
 
   downloadBlob(blob, "wyrd-card.png");
   return Promise.resolve("download");
 }
 
-function prepareShareAssets(shareCard) {
-  const imageNodes = Array.from(shareCard.querySelectorAll("img"));
-  const imagePromises = imageNodes.map(waitForImageReady);
-  const fontReady =
-    document.fonts && document.fonts.ready
-      ? withTimeout(document.fonts.ready, SHARE_ASSET_TIMEOUT_MS, "fonts timeout").catch(function ignoreFontTimeout() {
-          return undefined;
-        })
-      : Promise.resolve();
-
-  return Promise.all([fontReady, ...imagePromises]);
-}
-
-function ensureHtml2Canvas() {
-  if (typeof window.html2canvas === "function") {
-    return Promise.resolve(window.html2canvas);
+function canNativeShareFile(file) {
+  if (!navigator.share) {
+    return false;
   }
 
-  if (html2CanvasLoader) {
-    return html2CanvasLoader;
+  if (typeof navigator.canShare !== "function") {
+    return false;
   }
 
-  html2CanvasLoader = new Promise(function loadHtml2Canvas(resolve, reject) {
-    const timeoutId = window.setTimeout(function handleTimeout() {
-      html2CanvasLoader = null;
-      reject(new Error("html2canvas load timeout"));
-    }, HTML2CANVAS_TIMEOUT_MS);
-
-    const existingScript = document.querySelector('script[data-html2canvas-loader="true"]');
-    if (existingScript) {
-      if (typeof window.html2canvas === "function") {
-        window.clearTimeout(timeoutId);
-        resolve(window.html2canvas);
-        return;
-      }
-
-      existingScript.addEventListener("load", function handleLoad() {
-        window.clearTimeout(timeoutId);
-        resolve(window.html2canvas);
-      });
-      existingScript.addEventListener("error", function handleError(event) {
-        window.clearTimeout(timeoutId);
-        reject(event);
-      });
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.src = HTML2CANVAS_SRC;
-    script.async = true;
-    script.dataset.html2canvasLoader = "true";
-    script.onload = function handleLoad() {
-      window.clearTimeout(timeoutId);
-      resolve(window.html2canvas);
-    };
-    script.onerror = function handleError(event) {
-      window.clearTimeout(timeoutId);
-      reject(event);
-    };
-    document.head.appendChild(script);
-  }).catch(function resetLoader(error) {
-    html2CanvasLoader = null;
-    throw error;
-  });
-
-  return html2CanvasLoader;
+  try {
+    return navigator.canShare({ files: [file] });
+  } catch (_error) {
+    return false;
+  }
 }
 
 function setShareState({ button, buttonLabel, feedback, isLoading, message }) {
@@ -243,64 +645,6 @@ function setShareState({ button, buttonLabel, feedback, isLoading, message }) {
   if (feedback) {
     feedback.hidden = !message;
     feedback.textContent = message;
-  }
-}
-
-function canvasToBlob(canvas) {
-  return new Promise(function resolveBlob(resolve, reject) {
-    canvas.toBlob(function handleBlob(blob) {
-      if (!blob) {
-        reject(new Error("canvas.toBlob returned null"));
-        return;
-      }
-
-      resolve(blob);
-    }, "image/png");
-  });
-}
-
-function waitForImageReady(img) {
-  if (img.complete && img.naturalWidth > 0) {
-    if (typeof img.decode === "function") {
-      return withTimeout(img.decode().catch(function ignoreDecodeError() {}), SHARE_ASSET_TIMEOUT_MS, "image decode timeout").catch(
-        function ignoreTimeout() {
-          return undefined;
-        },
-      );
-    }
-
-    return Promise.resolve();
-  }
-
-  return withTimeout(
-    new Promise(function resolveOnLoad(resolve, reject) {
-      img.addEventListener("load", resolve, { once: true });
-      img.addEventListener(
-        "error",
-        function handleError() {
-          reject(new Error("image failed to load"));
-        },
-        { once: true },
-      );
-    }),
-    SHARE_ASSET_TIMEOUT_MS,
-    "image load timeout",
-  );
-}
-
-function canNativeShareFile(file) {
-  if (!navigator.share) {
-    return false;
-  }
-
-  if (typeof navigator.canShare !== "function") {
-    return false;
-  }
-
-  try {
-    return navigator.canShare({ files: [file] });
-  } catch (_error) {
-    return false;
   }
 }
 

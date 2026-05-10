@@ -163,7 +163,7 @@ export function createRenderer(elements) {
     }
 
     window.setTimeout(function warmShareCard() {
-      primeShareCard(reading.id || reading.card?.id || "default");
+      primeShareCard(reading);
     }, 120);
   }
 
