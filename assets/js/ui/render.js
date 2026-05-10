@@ -1,6 +1,6 @@
 import { SCENES } from "./scenes.js";
 import { createSpreadRenderer } from "./render-spread.js";
-import { DEEP_READING_TEXT, getCardImage } from "./render-helpers.js";
+import { getCardImage } from "./render-helpers.js";
 
 export function getElements(doc = document) {
   return {
@@ -13,20 +13,21 @@ export function getElements(doc = document) {
     onboardingSection: doc.getElementById("ritual-onboarding"),
     deckWrap: doc.getElementById("deck-wrap"),
     resultQuestion: doc.getElementById("result-question"),
+    resultQuestionLabel: doc.getElementById("result-question-label"),
+    resultQuestionText: doc.getElementById("result-question-text"),
     resultSection: doc.getElementById("result"),
     spreadResultSection: doc.getElementById("spread-result"),
     profileSection: doc.getElementById("profile"),
-    cardBox: doc.getElementById("card-box"),
+    cardBox: doc.getElementById("share-card"),
     cardImage: doc.getElementById("card-image"),
-    cardKeyword: doc.getElementById("card-keyword"),
     cardName: doc.getElementById("card-name"),
-    cardSubtitle: doc.getElementById("card-subtitle"),
     cardMessage: doc.getElementById("card-message"),
     cardShadowWrap: doc.getElementById("card-shadow-wrap"),
     cardShadow: doc.getElementById("card-shadow"),
-    deepWrap: doc.getElementById("deep-wrap"),
-    deepMessage: doc.getElementById("deep-message"),
     hookBlock: doc.getElementById("hook-block"),
+    shareButton: doc.querySelector('#result [data-action="share-card"]'),
+    shareButtonLabel: doc.getElementById("share-button-label"),
+    shareFeedback: doc.getElementById("share-feedback"),
     actionsPanel: doc.querySelector(".actions-panel"),
     deckTop: doc.querySelector(".deck-card-face"),
     soundButton: doc.querySelector('.top-actions [data-action="toggle-sound"]'),
@@ -132,45 +133,28 @@ export function createRenderer(elements) {
     if (!reading) {
       lastReadingId = null;
       resetReadingReveal();
-      if (elements.resultQuestion) {
-        elements.resultQuestion.hidden = true;
-        elements.resultQuestion.textContent = "";
-      }
+      renderQuestionText("");
+      resetShareFeedback();
       return;
     }
 
-    // Show question if provided
-    if (elements.resultQuestion) {
-      if (question) {
-        elements.resultQuestion.textContent = question;
-        elements.resultQuestion.hidden = false;
-      } else {
-        elements.resultQuestion.hidden = true;
-      }
-    }
+    renderQuestionText(question);
+    resetShareFeedback();
 
     const hasImage = Boolean(reading.card.image);
     elements.cardImage.src = getCardImage(reading.card);
     elements.cardImage.alt = reading.card.name;
     elements.cardImage.classList.toggle("is-empty", !hasImage);
-    elements.cardKeyword.textContent = `✦ ${reading.card.keyword} ✦`;
     elements.cardName.textContent = reading.card.name;
-    elements.cardSubtitle.textContent = reading.card.subtitle;
     elements.cardMessage.textContent = reading.card.message;
     elements.cardShadow.textContent = reading.card.shadow;
-
-    if (reading.depthUnlocked) {
-      elements.deepWrap.hidden = false;
-      elements.deepMessage.textContent = DEEP_READING_TEXT.replace("%CARD_NAME%", reading.card.name);
-      if (reading.id === lastReadingId) {
-        window.setTimeout(function revealDeepImmediately() {
-          elements.deepWrap?.classList.add("is-visible");
-        }, 120);
-      }
-    } else {
-      elements.deepWrap.hidden = true;
-      elements.deepMessage.textContent = "";
-    }
+    updateCopyDensity(elements.cardMessage, {
+      compactClass: "is-compact",
+      condensedClass: "is-condensed",
+    });
+    updateCopyDensity(elements.cardShadow, {
+      condensedClass: "is-condensed-shadow",
+    });
 
     if (reading.id !== lastReadingId) {
       lastReadingId = reading.id;
@@ -218,7 +202,6 @@ export function createRenderer(elements) {
     elements.cardBox?.classList.remove("is-visible");
     elements.cardMessage?.classList.remove("is-visible");
     elements.cardShadowWrap?.classList.remove("is-visible");
-    elements.deepWrap?.classList.remove("is-visible");
   }
 
   function startReadingReveal() {
@@ -238,12 +221,68 @@ export function createRenderer(elements) {
         elements.cardShadowWrap?.classList.add("is-visible");
       }, 980),
     );
-    if (!elements.deepWrap?.hidden) {
-      readingRevealTimers.push(
-        window.setTimeout(function revealDeep() {
-          elements.deepWrap?.classList.add("is-visible");
-        }, 1320),
-      );
+  }
+
+  function renderQuestionText(question) {
+    if (!elements.resultQuestionText || !elements.resultQuestionLabel) {
+      return;
+    }
+
+    if (question) {
+      elements.resultQuestionLabel.hidden = false;
+      elements.resultQuestionText.textContent = question;
+      elements.resultQuestion.classList.remove("is-muted");
+      return;
+    }
+
+    elements.resultQuestionLabel.hidden = true;
+    elements.resultQuestionText.textContent = "Держи свой вопрос в уме — карта его уже слышит.";
+    elements.resultQuestion.classList.add("is-muted");
+  }
+
+  function updateCopyDensity(element, classNames) {
+    if (!element) {
+      return;
+    }
+
+    const { compactClass = "", condensedClass = "" } = classNames;
+
+    if (compactClass) {
+      element.classList.remove(compactClass);
+    }
+    if (condensedClass) {
+      element.classList.remove(condensedClass);
+    }
+
+    const lineHeight = Number.parseFloat(window.getComputedStyle(element).lineHeight);
+    if (!lineHeight) {
+      return;
+    }
+
+    const lineCount = Math.round(element.scrollHeight / lineHeight);
+    if (condensedClass && lineCount > 5) {
+      element.classList.add(condensedClass);
+      return;
+    }
+
+    if (compactClass && lineCount > 3) {
+      element.classList.add(compactClass);
+    }
+  }
+
+  function resetShareFeedback() {
+    if (elements.shareFeedback) {
+      elements.shareFeedback.hidden = true;
+      elements.shareFeedback.textContent = "";
+    }
+
+    if (elements.shareButton) {
+      elements.shareButton.disabled = false;
+      elements.shareButton.classList.remove("is-loading");
+    }
+
+    if (elements.shareButtonLabel) {
+      elements.shareButtonLabel.textContent = "ПОДЕЛИТЬСЯ КАРТОЙ";
     }
   }
 }

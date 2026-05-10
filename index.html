@@ -114,33 +114,48 @@
 
       <section id="result" hidden aria-labelledby="card-name">
         <div class="screen-nav">
-          <button class="btn-back-circle" data-action="new-question" type="button" aria-label="Задать новый вопрос">←</button>
-          <div class="screen-nav-title">WYRD</div>
+          <button class="btn-back-circle" data-action="new-question" type="button" aria-label="Вернуться к колоде">←</button>
+          <div class="screen-nav-title" aria-label="WYRD">
+            <span class="screen-nav-mark" aria-hidden="true">✦</span>
+            <span class="screen-nav-word">WYRD</span>
+            <span class="screen-nav-mark" aria-hidden="true">✦</span>
+          </div>
           <div class="screen-nav-spacer" aria-hidden="true"></div>
         </div>
-        <p class="result-question" id="result-question" hidden aria-live="polite"></p>
-        <div class="share-card">
-          <div class="card-box" id="card-box">
-            <div class="card-img-wrap share-card-media">
+        <div class="result-question" id="result-question" aria-live="polite">
+          <p class="result-question-label" id="result-question-label">ТВОЙ ВОПРОС</p>
+          <p class="result-question-text" id="result-question-text"></p>
+        </div>
+        <div class="result-card-wrap">
+          <article class="share-card card-box" id="share-card" aria-labelledby="card-name">
+            <img
+              class="card-frame"
+              src="./assets/images/card-frame.png"
+              alt=""
+              aria-hidden="true"
+              decoding="async"
+            />
+            <div class="share-card-media">
               <img class="card-img" id="card-image" alt="" />
-              <div class="card-kw" id="card-keyword"></div>
             </div>
-            <div class="card-body">
+            <div class="card-title-block">
               <h2 class="card-name" id="card-name"></h2>
-              <p class="card-en" id="card-subtitle"></p>
-              <div class="card-div"></div>
-              <p class="lbl card-copy-label">Послание</p>
-              <p class="card-msg" id="card-message"></p>
-              <div class="card-shd-wrap" id="card-shadow-wrap">
-                <p class="lbl">Тень</p>
-                <p class="card-shd" id="card-shadow"></p>
-              </div>
-              <div class="card-shd-wrap deep-wrap" id="deep-wrap" hidden>
-                <p class="lbl">Углубление</p>
-                <p class="card-shd" id="deep-message"></p>
+              <div class="card-divider" aria-hidden="true">
+                <span class="card-divider-line"></span>
+                <span class="card-divider-star">✦</span>
+                <span class="card-divider-line"></span>
               </div>
             </div>
-          </div>
+            <div class="card-message-block">
+              <p class="lbl">ПОСЛАНИЕ</p>
+              <p class="card-msg" id="card-message"></p>
+            </div>
+            <div class="card-shadow-block card-shd-wrap" id="card-shadow-wrap">
+              <p class="lbl">ТЕНЬ</p>
+              <p class="card-shd" id="card-shadow"></p>
+              <p class="card-closing-star" aria-hidden="true">✦</p>
+            </div>
+          </article>
           <button class="btn-share" data-action="share-card" type="button">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                  stroke="currentColor" stroke-width="1.5"
@@ -151,13 +166,26 @@
               <line x1="5.5" y1="7" x2="10.5" y2="4"/>
               <line x1="5.5" y1="9" x2="10.5" y2="12"/>
             </svg>
-            Поделиться картой
+            <span id="share-button-label">ПОДЕЛИТЬСЯ КАРТОЙ</span>
           </button>
+          <p class="share-feedback" id="share-feedback" hidden aria-live="polite"></p>
         </div>
 
         <div class="hook-block" id="hook-block" hidden>
-          <button class="cover-btn hook-btn" data-action="hook-open-path" type="button">Открыть три пути →</button>
-          <button class="btn-ghost-link" data-action="new-question" type="button">Задать новый вопрос</button>
+          <div class="hook-divider" aria-hidden="true">
+            <span class="hook-divider-line"></span>
+            <span class="hook-divider-star">✦</span>
+            <span class="hook-divider-line"></span>
+          </div>
+          <p class="hook-copy">
+            Духи леса уже открыли тебе свою первую подсказку. Три карты откроют тебе истоки и то,
+            что придёт после.
+          </p>
+          <div class="hook-cta-wrap">
+            <button class="cover-btn hook-btn" data-action="hook-open-path" type="button">
+              ОТКРЫТЬ ТРИ ПУТИ
+            </button>
+          </div>
         </div>
       </section>
 
