@@ -162,6 +162,9 @@
 - `assets/js/pwa.js`
 - `sw.js`
 - `manifest.webmanifest`
+- `scripts/prepare_pages.py`
+- `scripts/validate_pages_artifact.py`
+- `.github/workflows/deploy.yml`
 
 Ответственность:
 
@@ -169,6 +172,9 @@
 - офлайн-кэширование
 - регистрация service worker
 - PWA-обвязка
+- подготовка чистого Pages-артефакта
+- build-versioning для publish-ресурсов
+- автоматические smoke-gates и валидация deploy-артефакта перед публикацией
 
 ### 4.6. Content/Data Layer
 
