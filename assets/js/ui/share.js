@@ -9,7 +9,7 @@ const SHARE_WIDTH = 1024;
 const SHARE_HEIGHT = 1536;
 const CANVAS_TIMEOUT_MS = 8000;
 const ASSET_TIMEOUT_MS = 3500;
-const RESULT_ILLUSTRATION_FADE_HEIGHT = 0.42;
+const DEFAULT_RESULT_ILLUSTRATION_FADE_HEIGHT = 0.42;
 const FRAME_SRC = new URL("../../images/card-frame.png", import.meta.url).href;
 
 export function primeShareCard(reading) {
@@ -106,6 +106,7 @@ function renderShareBlob(reading) {
   return prepareShareAssets(reading).then(function renderFromAssets(assets) {
     const palette = readPalette();
     const typography = readTypography();
+    const fadeRatio = readIllustrationFadeRatio();
     const canvas = document.createElement("canvas");
     canvas.width = SHARE_WIDTH;
     canvas.height = SHARE_HEIGHT;
@@ -115,17 +116,17 @@ function renderShareBlob(reading) {
       throw new Error("canvas context unavailable");
     }
 
-    drawShareCard(context, assets, reading, palette, typography);
+    drawShareCard(context, assets, reading, palette, typography, fadeRatio);
     return canvasToBlob(canvas);
   });
 }
 
-function drawShareCard(context, assets, reading, palette, typography) {
+function drawShareCard(context, assets, reading, palette, typography, fadeRatio) {
   const width = SHARE_WIDTH;
   const height = SHARE_HEIGHT;
   const radius = 38;
   const imageAreaHeight = 760;
-  const fadeHeight = Math.round(imageAreaHeight * RESULT_ILLUSTRATION_FADE_HEIGHT);
+  const fadeHeight = Math.round(imageAreaHeight * fadeRatio);
   const fadeStartY = imageAreaHeight - fadeHeight;
   const fadeEndY = imageAreaHeight + 156;
   const titleY = 868;
@@ -295,6 +296,33 @@ function prepareShareAssets(reading) {
       frameImage: result[2],
     };
   });
+}
+
+function readIllustrationFadeRatio() {
+  const shareCard = document.getElementById("share-card");
+  if (!shareCard) {
+    return DEFAULT_RESULT_ILLUSTRATION_FADE_HEIGHT;
+  }
+
+  const style = getComputedStyle(shareCard);
+  const rawValue = style.getPropertyValue("--result-illustration-fade-height").trim();
+  if (!rawValue) {
+    return DEFAULT_RESULT_ILLUSTRATION_FADE_HEIGHT;
+  }
+
+  if (rawValue.endsWith("%")) {
+    const numericValue = Number.parseFloat(rawValue.slice(0, -1));
+    if (Number.isFinite(numericValue) && numericValue > 0) {
+      return Math.max(0.1, Math.min(0.9, numericValue / 100));
+    }
+  }
+
+  const ratio = Number.parseFloat(rawValue);
+  if (Number.isFinite(ratio) && ratio > 0) {
+    return Math.max(0.1, Math.min(0.9, ratio));
+  }
+
+  return DEFAULT_RESULT_ILLUSTRATION_FADE_HEIGHT;
 }
 
 function loadFrameImage() {
