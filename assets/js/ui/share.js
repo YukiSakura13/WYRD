@@ -9,6 +9,7 @@ const SHARE_WIDTH = 1024;
 const SHARE_HEIGHT = 1536;
 const CANVAS_TIMEOUT_MS = 8000;
 const ASSET_TIMEOUT_MS = 3500;
+const RESULT_ILLUSTRATION_FADE_HEIGHT = 0.42;
 const FRAME_SRC = new URL("../../images/card-frame.png", import.meta.url).href;
 
 export function primeShareCard(reading) {
@@ -124,6 +125,9 @@ function drawShareCard(context, assets, reading, palette, typography) {
   const height = SHARE_HEIGHT;
   const radius = 38;
   const imageAreaHeight = 760;
+  const fadeHeight = Math.round(imageAreaHeight * RESULT_ILLUSTRATION_FADE_HEIGHT);
+  const fadeStartY = imageAreaHeight - fadeHeight;
+  const fadeEndY = imageAreaHeight + 156;
   const titleY = 868;
   const dividerY = 937;
   const messageLabelY = 1008;
@@ -146,23 +150,24 @@ function drawShareCard(context, assets, reading, palette, typography) {
     background: palette.parchmentBg,
   });
 
-  const fade = context.createLinearGradient(0, imageAreaHeight - 176, 0, imageAreaHeight + 160);
+  const fade = context.createLinearGradient(0, fadeStartY, 0, fadeEndY);
   fade.addColorStop(0, "rgba(16, 16, 25, 0)");
-  fade.addColorStop(0.16, "rgba(242, 235, 221, 0.04)");
-  fade.addColorStop(0.34, "rgba(16, 16, 25, 0.16)");
-  fade.addColorStop(0.54, "rgba(16, 16, 25, 0.42)");
-  fade.addColorStop(0.76, "rgba(16, 16, 25, 0.78)");
+  fade.addColorStop(0.1, "rgba(242, 235, 221, 0.03)");
+  fade.addColorStop(0.24, "rgba(16, 16, 25, 0.08)");
+  fade.addColorStop(0.42, "rgba(16, 16, 25, 0.22)");
+  fade.addColorStop(0.62, "rgba(16, 16, 25, 0.5)");
+  fade.addColorStop(0.82, "rgba(16, 16, 25, 0.82)");
   fade.addColorStop(1, palette.darkBase);
   context.fillStyle = fade;
-  context.fillRect(0, imageAreaHeight - 176, width, 340);
+  context.fillRect(0, fadeStartY, width, fadeEndY - fadeStartY);
 
-  const veil = context.createLinearGradient(0, imageAreaHeight - 132, 0, imageAreaHeight + 120);
+  const veil = context.createLinearGradient(0, fadeStartY + 18, 0, imageAreaHeight + 112);
   veil.addColorStop(0, "rgba(242, 235, 221, 0)");
-  veil.addColorStop(0.28, "rgba(242, 235, 221, 0.025)");
-  veil.addColorStop(0.55, "rgba(201, 161, 74, 0.03)");
+  veil.addColorStop(0.32, "rgba(242, 235, 221, 0.02)");
+  veil.addColorStop(0.58, "rgba(201, 161, 74, 0.028)");
   veil.addColorStop(1, "rgba(16, 16, 25, 0)");
   context.fillStyle = veil;
-  context.fillRect(0, imageAreaHeight - 132, width, 252);
+  context.fillRect(0, fadeStartY + 18, width, imageAreaHeight + 112 - (fadeStartY + 18));
 
   const glow = context.createRadialGradient(width / 2, imageAreaHeight + 140, 40, width / 2, imageAreaHeight + 140, 520);
   glow.addColorStop(0, "rgba(201, 161, 74, 0.07)");
@@ -177,13 +182,13 @@ function drawShareCard(context, assets, reading, palette, typography) {
   context.fillStyle = lowerSurface;
   context.fillRect(0, imageAreaHeight - 24, width, height - (imageAreaHeight - 24));
 
-  const mist = context.createLinearGradient(0, imageAreaHeight - 120, 0, height);
+  const mist = context.createLinearGradient(0, fadeStartY + 40, 0, height);
   mist.addColorStop(0, "rgba(20, 20, 34, 0)");
-  mist.addColorStop(0.25, "rgba(20, 20, 34, 0.12)");
-  mist.addColorStop(0.5, "rgba(20, 20, 34, 0.28)");
+  mist.addColorStop(0.24, "rgba(20, 20, 34, 0.1)");
+  mist.addColorStop(0.52, "rgba(20, 20, 34, 0.24)");
   mist.addColorStop(1, "rgba(20, 20, 34, 0.05)");
   context.fillStyle = mist;
-  context.fillRect(0, imageAreaHeight - 120, width, height - (imageAreaHeight - 120));
+  context.fillRect(0, fadeStartY + 40, width, height - (fadeStartY + 40));
 
   drawCenteredText(context, reading.name, {
     x: width / 2,
