@@ -152,6 +152,9 @@
 
 #result .card-box {
   --result-illustration-fade-height: 42%;
+  --result-background-art-scale: 1.18;
+  --result-background-art-opacity: 0.22;
+  --result-background-art-blur: 10px;
   position: relative;
   width: 100%;
   max-width: 372px;
@@ -221,6 +224,21 @@
   background: rgb(242, 235, 221);
 }
 
+#result .share-card-media::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--result-card-image-url);
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover;
+  transform: scale(var(--result-background-art-scale));
+  transform-origin: center 18%;
+  filter: blur(var(--result-background-art-blur)) saturate(0.86) brightness(0.98);
+  opacity: var(--result-background-art-opacity);
+  z-index: 0;
+}
+
 #result .share-card-media::after {
   content: "";
   position: absolute;
@@ -244,6 +262,8 @@
 }
 
 #result .card-img {
+  position: relative;
+  z-index: 1;
   display: block;
   width: 100%;
   min-height: 200px;

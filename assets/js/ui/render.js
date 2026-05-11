@@ -20,6 +20,7 @@ export function getElements(doc = document) {
     spreadResultSection: doc.getElementById("spread-result"),
     profileSection: doc.getElementById("profile"),
     cardBox: doc.getElementById("share-card"),
+    cardMedia: doc.querySelector("#share-card .share-card-media"),
     cardImage: doc.getElementById("card-image"),
     cardName: doc.getElementById("card-name"),
     cardMessage: doc.getElementById("card-message"),
@@ -136,6 +137,7 @@ export function createRenderer(elements) {
       resetReadingReveal();
       renderQuestionText("");
       resetShareFeedback();
+      elements.cardMedia?.style.removeProperty("--result-card-image-url");
       return;
     }
 
@@ -143,9 +145,11 @@ export function createRenderer(elements) {
     resetShareFeedback();
 
     const hasImage = Boolean(reading.card.image);
-    elements.cardImage.src = getCardImage(reading.card);
+    const cardImageSrc = getCardImage(reading.card);
+    elements.cardImage.src = cardImageSrc;
     elements.cardImage.alt = reading.card.name;
     elements.cardImage.classList.toggle("is-empty", !hasImage);
+    elements.cardMedia?.style.setProperty("--result-card-image-url", `url("${cardImageSrc.replace(/"/g, '\\"')}")`);
     elements.cardName.textContent = reading.card.name;
     elements.cardMessage.textContent = reading.card.message;
     elements.cardShadow.textContent = reading.card.shadow;

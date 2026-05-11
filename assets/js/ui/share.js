@@ -10,6 +10,9 @@ const SHARE_HEIGHT = 1536;
 const CANVAS_TIMEOUT_MS = 8000;
 const ASSET_TIMEOUT_MS = 3500;
 const DEFAULT_RESULT_ILLUSTRATION_FADE_HEIGHT = 0.42;
+const DEFAULT_BACKGROUND_ART_SCALE = 1.18;
+const DEFAULT_BACKGROUND_ART_OPACITY = 0.22;
+const DEFAULT_BACKGROUND_ART_BLUR = 10;
 const FRAME_SRC = new URL("../../images/card-frame.png", import.meta.url).href;
 
 export function primeShareCard(reading) {
@@ -107,6 +110,7 @@ function renderShareBlob(reading) {
     const palette = readPalette();
     const typography = readTypography();
     const fadeRatio = readIllustrationFadeRatio();
+    const backgroundArtSettings = readBackgroundArtSettings();
     const canvas = document.createElement("canvas");
     canvas.width = SHARE_WIDTH;
     canvas.height = SHARE_HEIGHT;
@@ -116,12 +120,12 @@ function renderShareBlob(reading) {
       throw new Error("canvas context unavailable");
     }
 
-    drawShareCard(context, assets, reading, palette, typography, fadeRatio);
+    drawShareCard(context, assets, reading, palette, typography, fadeRatio, backgroundArtSettings);
     return canvasToBlob(canvas);
   });
 }
 
-function drawShareCard(context, assets, reading, palette, typography, fadeRatio) {
+function drawShareCard(context, assets, reading, palette, typography, fadeRatio, backgroundArtSettings) {
   const width = SHARE_WIDTH;
   const height = SHARE_HEIGHT;
   const radius = 38;
@@ -143,6 +147,13 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio)
 
   context.fillStyle = palette.parchmentBg;
   context.fillRect(0, 0, width, imageAreaHeight);
+  drawBackgroundArtLayer(context, assets.cardImage, {
+    width,
+    height: imageAreaHeight,
+    scale: backgroundArtSettings.scale,
+    opacity: backgroundArtSettings.opacity,
+    blur: backgroundArtSettings.blur,
+  });
   drawContainedImage(context, assets.cardImage, {
     x: 48,
     y: 54,
@@ -325,6 +336,25 @@ function readIllustrationFadeRatio() {
   return DEFAULT_RESULT_ILLUSTRATION_FADE_HEIGHT;
 }
 
+function readBackgroundArtSettings() {
+  const shareCard = document.getElementById("share-card");
+  if (!shareCard) {
+    return {
+      scale: DEFAULT_BACKGROUND_ART_SCALE,
+      opacity: DEFAULT_BACKGROUND_ART_OPACITY,
+      blur: DEFAULT_BACKGROUND_ART_BLUR,
+    };
+  }
+
+  const style = getComputedStyle(shareCard);
+
+  return {
+    scale: readNumericCssValue(style, "--result-background-art-scale", DEFAULT_BACKGROUND_ART_SCALE, 1, 2),
+    opacity: readNumericCssValue(style, "--result-background-art-opacity", DEFAULT_BACKGROUND_ART_OPACITY, 0.05, 0.8),
+    blur: readPixelCssValue(style, "--result-background-art-blur", DEFAULT_BACKGROUND_ART_BLUR, 0, 40),
+  };
+}
+
 function loadFrameImage() {
   if (!frameImagePromise) {
     frameImagePromise = loadImage(FRAME_SRC).catch(function handleFrameError(error) {
@@ -404,6 +434,26 @@ function readCssValue(style, propertyName, fallback) {
   return value || fallback;
 }
 
+function readNumericCssValue(style, propertyName, fallback, min, max) {
+  const rawValue = style.getPropertyValue(propertyName).trim();
+  const parsedValue = Number.parseFloat(rawValue);
+  if (Number.isFinite(parsedValue)) {
+    return Math.max(min, Math.min(max, parsedValue));
+  }
+
+  return fallback;
+}
+
+function readPixelCssValue(style, propertyName, fallback, min, max) {
+  const rawValue = style.getPropertyValue(propertyName).trim();
+  const parsedValue = Number.parseFloat(rawValue);
+  if (Number.isFinite(parsedValue)) {
+    return Math.max(min, Math.min(max, parsedValue));
+  }
+
+  return fallback;
+}
+
 function drawContainedImage(context, image, rect) {
   context.fillStyle = rect.background;
   context.fillRect(rect.x, rect.y, rect.width, rect.height);
@@ -415,6 +465,20 @@ function drawContainedImage(context, image, rect) {
   const drawY = rect.y + (rect.height - drawHeight) / 2;
 
   context.drawImage(image, drawX, drawY, drawWidth, drawHeight);
+}
+
+function drawBackgroundArtLayer(context, image, options) {
+  const { width, height, scale, opacity, blur } = options;
+  const drawWidth = width * scale;
+  const drawHeight = (image.height / image.width) * drawWidth;
+  const drawX = (width - drawWidth) / 2;
+  const drawY = Math.min(22, (height - drawHeight) / 2 - 18);
+
+  context.save();
+  context.globalAlpha = opacity;
+  context.filter = `blur(${blur}px) saturate(0.86) brightness(0.98)`;
+  context.drawImage(image, drawX, drawY, drawWidth, drawHeight);
+  context.restore();
 }
 
 function drawDivider(context, options) {
