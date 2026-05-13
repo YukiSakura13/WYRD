@@ -10,7 +10,7 @@ const SHARE_HEIGHT = 1536;
 const CANVAS_TIMEOUT_MS = 8000;
 const ASSET_TIMEOUT_MS = 3500;
 const DEFAULT_RESULT_ILLUSTRATION_FADE_HEIGHT = 0.42;
-const FRAME_SRC = new URL("../../images/card-frame.png", import.meta.url).href;
+const FRAME_SRC = new URL("../../images/card-frame-dark-hero.png", import.meta.url).href;
 
 export function primeShareCard(reading) {
   const normalizedReading = normalizeReading(reading);
