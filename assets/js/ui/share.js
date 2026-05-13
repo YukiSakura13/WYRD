@@ -125,14 +125,14 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio)
   const width = SHARE_WIDTH;
   const height = SHARE_HEIGHT;
   const radius = 38;
-  const imageAreaHeight = Math.round(height * 0.56);
+  const imageAreaHeight = Math.round(height * 0.53);
   const logoZoneHeight = 88;
   const fadeHeight = Math.round(imageAreaHeight * fadeRatio);
   const fadeStartY = imageAreaHeight - fadeHeight;
-  const titleY = 884;
-  const dividerY = 950;
-  const messageLabelY = 1020;
-  const shadowLabelY = 1278;
+  const titleY = 838;
+  const dividerY = 902;
+  const messageLabelY = 966;
+  const shadowLabelY = 1218;
 
   context.clearRect(0, 0, width, height);
   context.save();
@@ -184,7 +184,7 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio)
   drawCenteredText(context, reading.name, {
     x: width / 2,
     y: titleY,
-    font: `400 54px ${typography.display}`,
+    font: `400 52px ${typography.display}`,
     color: palette.parchmentText,
     maxWidth: width - 180,
     lineHeight: 62,
@@ -195,7 +195,7 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio)
     centerX: width / 2,
     y: dividerY,
     color: palette.gold,
-    width: 324,
+    width: 300,
   });
 
   drawLabel(context, "ПОСЛАНИЕ", {
@@ -208,15 +208,15 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio)
 
   const messageMetrics = fitParagraph(reading.message, {
     maxWidth: width - 220,
-    maxHeight: 190,
-    initialFontSize: 46,
-    minFontSize: 32,
+    maxHeight: 178,
+    initialFontSize: 42,
+    minFontSize: 31,
     lineHeightRatio: 1.45,
     fontFamily: typography.display,
   });
   drawParagraph(context, reading.message, {
     x: width / 2,
-    y: 1084,
+    y: 1024,
     maxWidth: width - 220,
     fontSize: messageMetrics.fontSize,
     lineHeight: messageMetrics.lineHeight,
@@ -237,16 +237,16 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio)
 
   const shadowMetrics = fitParagraph(reading.shadow, {
     maxWidth: width - 240,
-    maxHeight: 150,
-    initialFontSize: 36,
-    minFontSize: 26,
+    maxHeight: 128,
+    initialFontSize: 32,
+    minFontSize: 24,
     lineHeightRatio: 1.48,
     fontFamily: typography.display,
     italic: true,
   });
   drawParagraph(context, reading.shadow, {
     x: width / 2,
-    y: 1326,
+    y: 1262,
     maxWidth: width - 240,
     fontSize: shadowMetrics.fontSize,
     lineHeight: shadowMetrics.lineHeight,
