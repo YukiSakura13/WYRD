@@ -68,12 +68,9 @@ export function createActionHandler(deps) {
 
     if (action === "toggle-sound") {
       const nextState = store.toggleSound();
+      updatePressedSoundControl(trigger, nextState.soundEnabled);
       audio.sync({ enabled: nextState.soundEnabled, scene: getAudioScene(uiState.activeScene) });
       renderApp();
-      const soundBtn = document.getElementById("cover-sound-btn");
-      if (soundBtn) {
-        soundBtn.classList.toggle("sound-off", !nextState.soundEnabled);
-      }
       return;
     }
 
@@ -184,6 +181,19 @@ export function createActionHandler(deps) {
     runTransition(function resolveAfterTransition() {
       resolveRitual(deps, mode);
     });
+  }
+}
+
+function updatePressedSoundControl(trigger, soundEnabled) {
+  const isMuted = !soundEnabled;
+  trigger.classList.toggle("sound-off", isMuted);
+  trigger.setAttribute("aria-pressed", isMuted ? "true" : "false");
+  trigger.setAttribute("aria-label", isMuted ? "Звук выключен" : "Звук включён");
+  trigger.dataset.soundState = isMuted ? "off" : "on";
+
+  const label = trigger.querySelector("#cover-sound-label");
+  if (label) {
+    label.textContent = isMuted ? "Без звука" : "Звук";
   }
 }
 

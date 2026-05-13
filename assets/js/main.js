@@ -31,6 +31,42 @@ function renderApp() {
   renderer.render(state, uiState);
 }
 
+function renderCoverSoundState(soundEnabled) {
+  if (!elements.coverSoundButton) {
+    return;
+  }
+
+  const isMuted = !soundEnabled;
+  elements.coverSoundButton.classList.toggle("sound-off", isMuted);
+  elements.coverSoundButton.setAttribute("aria-pressed", isMuted ? "true" : "false");
+  elements.coverSoundButton.setAttribute("aria-label", isMuted ? "Звук выключен" : "Звук включён");
+  elements.coverSoundButton.dataset.soundState = isMuted ? "off" : "on";
+
+  if (elements.coverSoundLabel) {
+    elements.coverSoundLabel.textContent = isMuted ? "Без звука" : "Звук";
+  }
+}
+
+document.addEventListener(
+  "click",
+  function handleCoverSoundClick(event) {
+    const trigger = event.target.closest("#cover-sound-btn");
+
+    if (!trigger) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const nextState = store.toggleSound();
+    renderCoverSoundState(nextState.soundEnabled);
+    audio.sync({ enabled: nextState.soundEnabled, scene: SCENES.DECK });
+    renderApp();
+  },
+  { capture: true },
+);
+
 document.addEventListener(
   "click",
   createActionHandler({
