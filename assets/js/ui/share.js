@@ -143,10 +143,10 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio)
   context.fillStyle = palette.darkBase;
   context.fillRect(0, 0, width, imageAreaHeight);
   drawHeroImage(context, assets.cardImage, {
-    x: 48,
-    y: 54,
-    width: width - 96,
-    height: imageAreaHeight - 54,
+    x: 24,
+    y: 42,
+    width: width - 48,
+    height: imageAreaHeight - 42,
     background: palette.darkBase,
     positionY: 0,
   });
