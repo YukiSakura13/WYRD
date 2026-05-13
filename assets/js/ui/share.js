@@ -154,13 +154,12 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio)
 
   const fadeStartRatio = Math.max(0, Math.min(0.8, fadeStartY / imageAreaHeight));
   const verticalFade = context.createLinearGradient(0, 0, 0, imageAreaHeight);
-  verticalFade.addColorStop(0, "rgba(16,16,25,0.04)");
-  verticalFade.addColorStop(0.18, "rgba(16,16,25,0.02)");
-  verticalFade.addColorStop(0.34, "rgba(16,16,25,0)");
+  verticalFade.addColorStop(0, "rgba(16,16,25,0)");
+  verticalFade.addColorStop(0.42, "rgba(16,16,25,0)");
   verticalFade.addColorStop(fadeStartRatio, "rgba(16,16,25,0)");
-  verticalFade.addColorStop(Math.min(0.96, fadeStartRatio + 0.2), "rgba(16,16,25,0.14)");
-  verticalFade.addColorStop(Math.min(0.98, fadeStartRatio + 0.38), "rgba(16,16,25,0.45)");
-  verticalFade.addColorStop(Math.min(0.995, fadeStartRatio + 0.55), "rgba(16,16,25,0.88)");
+  verticalFade.addColorStop(Math.min(0.96, fadeStartRatio + 0.2), "rgba(16,16,25,0.08)");
+  verticalFade.addColorStop(Math.min(0.98, fadeStartRatio + 0.38), "rgba(16,16,25,0.34)");
+  verticalFade.addColorStop(Math.min(0.995, fadeStartRatio + 0.55), "rgba(16,16,25,0.82)");
   verticalFade.addColorStop(1, "rgba(16,16,25,1)");
   context.fillStyle = verticalFade;
   context.fillRect(0, 0, width, imageAreaHeight);
@@ -175,10 +174,10 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio)
   drawPerimeterVignette(context, {
     width,
     height,
-    topStrength: 0.2,
-    sideStrength: 0.22,
-    bottomStrength: 0.34,
-    cornerStrength: 0.3,
+    topStrength: 0.12,
+    sideStrength: 0.14,
+    bottomStrength: 0.3,
+    cornerStrength: 0.22,
     imageAreaHeight,
   });
 
@@ -225,14 +224,6 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio)
     color: palette.parchmentText,
     textAlign: "center",
     baseline: "top",
-  });
-
-  const shadowDividerY = 1228;
-  drawDivider(context, {
-    centerX: width / 2,
-    y: shadowDividerY,
-    color: palette.goldSoft,
-    width: 170,
   });
 
   drawLabel(context, "ТЕНЬ", {
