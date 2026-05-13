@@ -125,13 +125,13 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio)
   const width = SHARE_WIDTH;
   const height = SHARE_HEIGHT;
   const radius = 38;
-  const imageAreaHeight = 760;
+  const imageAreaHeight = Math.round(height * 0.56);
   const fadeHeight = Math.round(imageAreaHeight * fadeRatio);
   const fadeStartY = imageAreaHeight - fadeHeight;
-  const titleY = 868;
-  const dividerY = 937;
-  const messageLabelY = 1008;
-  const shadowLabelY = 1268;
+  const titleY = 884;
+  const dividerY = 950;
+  const messageLabelY = 1020;
+  const shadowLabelY = 1278;
 
   context.clearRect(0, 0, width, height);
   context.save();
@@ -142,17 +142,20 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio)
 
   context.fillStyle = palette.darkBase;
   context.fillRect(0, 0, width, imageAreaHeight);
-  drawContainedImage(context, assets.cardImage, {
+  drawHeroImage(context, assets.cardImage, {
     x: 48,
     y: 54,
     width: width - 96,
-    height: 700,
+    height: imageAreaHeight - 54,
     background: palette.darkBase,
+    positionY: 0,
   });
 
   const fadeStartRatio = Math.max(0, Math.min(0.8, fadeStartY / imageAreaHeight));
   const verticalFade = context.createLinearGradient(0, 0, 0, imageAreaHeight);
-  verticalFade.addColorStop(0, "rgba(16,16,25,0)");
+  verticalFade.addColorStop(0, "rgba(16,16,25,0.54)");
+  verticalFade.addColorStop(0.1, "rgba(16,16,25,0.28)");
+  verticalFade.addColorStop(0.18, "rgba(16,16,25,0)");
   verticalFade.addColorStop(fadeStartRatio, "rgba(16,16,25,0)");
   verticalFade.addColorStop(Math.min(0.96, fadeStartRatio + 0.2), "rgba(16,16,25,0.25)");
   verticalFade.addColorStop(Math.min(0.98, fadeStartRatio + 0.38), "rgba(16,16,25,0.6)");
@@ -213,7 +216,7 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio)
   });
   drawParagraph(context, reading.message, {
     x: width / 2,
-    y: 1072,
+    y: 1084,
     maxWidth: width - 220,
     fontSize: messageMetrics.fontSize,
     lineHeight: messageMetrics.lineHeight,
@@ -251,7 +254,7 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio)
   });
   drawParagraph(context, reading.shadow, {
     x: width / 2,
-    y: 1318,
+    y: 1326,
     maxWidth: width - 240,
     fontSize: shadowMetrics.fontSize,
     lineHeight: shadowMetrics.lineHeight,
@@ -400,6 +403,19 @@ function drawContainedImage(context, image, rect) {
   const drawHeight = image.height * scale;
   const drawX = rect.x + (rect.width - drawWidth) / 2;
   const drawY = rect.y + (rect.height - drawHeight) / 2;
+
+  context.drawImage(image, drawX, drawY, drawWidth, drawHeight);
+}
+
+function drawHeroImage(context, image, rect) {
+  context.fillStyle = rect.background;
+  context.fillRect(rect.x, rect.y, rect.width, rect.height);
+
+  const scale = Math.max(rect.width / image.width, rect.height / image.height);
+  const drawWidth = image.width * scale;
+  const drawHeight = image.height * scale;
+  const drawX = rect.x + (rect.width - drawWidth) / 2;
+  const drawY = rect.y + (rect.height - drawHeight) * rect.positionY;
 
   context.drawImage(image, drawX, drawY, drawWidth, drawHeight);
 }

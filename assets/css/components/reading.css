@@ -152,6 +152,7 @@
 
 #result .card-box {
   --result-illustration-fade-height: 42%;
+  --result-hero-height: 56%;
   position: relative;
   width: 100%;
   max-width: 372px;
@@ -206,8 +207,9 @@
 
 #result .share-card-media {
   position: relative;
-  min-height: 200px;
-  max-height: 320px;
+  min-height: 360px;
+  height: var(--result-hero-height);
+  max-height: none;
   overflow: hidden;
   background: #101019;
 }
@@ -219,7 +221,9 @@
   background:
     linear-gradient(
       180deg,
-      rgba(16, 16, 25, 0) 0%,
+      rgba(16, 16, 25, 0.54) 0%,
+      rgba(16, 16, 25, 0.28) 10%,
+      rgba(16, 16, 25, 0) 18%,
       rgba(16, 16, 25, 0) 20%,
       rgba(16, 16, 25, 0.25) 40%,
       rgba(16, 16, 25, 0.6) 58%,
@@ -236,9 +240,10 @@
   z-index: 0;
   display: block;
   width: 100%;
-  min-height: 200px;
-  max-height: 320px;
-  object-fit: contain;
+  height: 100%;
+  min-height: 360px;
+  max-height: none;
+  object-fit: cover;
   object-position: center top;
   background: transparent;
 }
@@ -253,8 +258,8 @@
 }
 
 #result .card-title-block {
-  margin-top: -36px;
-  padding: 50px 20px 12px;
+  margin-top: -108px;
+  padding: 120px 20px 12px;
   position: relative;
   z-index: 1;
   text-align: center;
