@@ -9,6 +9,8 @@ export function getElements(doc = document) {
     cover: doc.getElementById("cover"),
     coverArt: doc.getElementById("cover-art"),
     coverSoundButton: doc.getElementById("cover-sound-btn"),
+    coverSoundLabel: doc.getElementById("cover-sound-label"),
+    coverBreathNodes: Array.from(doc.querySelectorAll(".cover-cta-button")),
     main: doc.getElementById("main"),
     transitionVeil: doc.getElementById("transition-veil"),
     onboardingSection: doc.getElementById("ritual-onboarding"),
@@ -56,6 +58,7 @@ export function getElements(doc = document) {
 export function createRenderer(elements) {
   let readingRevealTimers = [];
   let lastReadingId = null;
+  let previousScene = null;
   const spreadRenderer = createSpreadRenderer(elements);
 
   function render(state, uiState) {
@@ -114,6 +117,10 @@ export function createRenderer(elements) {
     elements.transitionVeil.classList.toggle("is-active", Boolean(uiState.transitioning));
     elements.main.classList.toggle("on", !isCoverScene);
     elements.body.dataset.scene = uiState.activeScene;
+    if (isCoverScene && previousScene !== SCENES.COVER) {
+      resetCoverBreathAnimations();
+    }
+    previousScene = uiState.activeScene;
   }
 
   function renderProfile(state) {
@@ -122,8 +129,7 @@ export function createRenderer(elements) {
       elements.soundButton.setAttribute("aria-pressed", String(state.soundEnabled));
     }
     if (elements.coverSoundButton) {
-      elements.coverSoundButton.classList.toggle("sound-off", !state.soundEnabled);
-      elements.coverSoundButton.setAttribute("aria-pressed", String(state.soundEnabled));
+      updateCoverSoundButton(!state.soundEnabled);
     }
     elements.profileName.textContent = state.profileName;
     elements.profileMeta.textContent = state.dailyFreeUsedAt
@@ -137,7 +143,6 @@ export function createRenderer(elements) {
       resetReadingReveal();
       renderQuestionText("");
       resetShareFeedback();
-      elements.cardMedia?.style.removeProperty("--result-card-image-url");
       return;
     }
 
@@ -145,11 +150,9 @@ export function createRenderer(elements) {
     resetShareFeedback();
 
     const hasImage = Boolean(reading.card.image);
-    const cardImageSrc = getCardImage(reading.card);
-    elements.cardImage.src = cardImageSrc;
+    elements.cardImage.src = getCardImage(reading.card);
     elements.cardImage.alt = reading.card.name;
     elements.cardImage.classList.toggle("is-empty", !hasImage);
-    elements.cardMedia?.style.setProperty("--result-card-image-url", `url("${cardImageSrc.replace(/"/g, '\\"')}")`);
     elements.cardName.textContent = reading.card.name;
     elements.cardMessage.textContent = reading.card.message;
     elements.cardShadow.textContent = reading.card.shadow;
@@ -293,5 +296,26 @@ export function createRenderer(elements) {
     if (elements.shareButtonLabel) {
       elements.shareButtonLabel.textContent = "ПОДЕЛИТЬСЯ КАРТОЙ";
     }
+  }
+
+  function updateCoverSoundButton(isMuted) {
+    elements.coverSoundButton.classList.toggle("sound-off", isMuted);
+    elements.coverSoundButton.setAttribute("aria-pressed", isMuted ? "true" : "false");
+    elements.coverSoundButton.setAttribute("aria-label", isMuted ? "Звук выключен" : "Звук включён");
+    elements.coverSoundButton.dataset.soundState = isMuted ? "off" : "on";
+    if (elements.coverSoundLabel) {
+      elements.coverSoundLabel.textContent = isMuted ? "Без звука" : "Звук";
+    }
+  }
+
+  function resetCoverBreathAnimations() {
+    elements.coverBreathNodes.forEach(function resetAnimation(node) {
+      if (!node) {
+        return;
+      }
+      node.style.animation = "none";
+      node.offsetHeight;
+      node.style.animation = "";
+    });
   }
 }

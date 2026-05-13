@@ -152,9 +152,6 @@
 
 #result .card-box {
   --result-illustration-fade-height: 42%;
-  --result-background-art-scale: 1.18;
-  --result-background-art-opacity: 0.22;
-  --result-background-art-blur: 10px;
   position: relative;
   width: 100%;
   max-width: 372px;
@@ -180,21 +177,12 @@
 #result .card-box::before {
   content: "";
   position: absolute;
-  inset: calc(var(--result-illustration-fade-height) - 6%) 0 0;
+  inset: 0;
   background:
-    linear-gradient(
-      180deg,
-      rgba(16, 16, 25, 0) 0%,
-      rgba(242, 235, 221, 0.03) 8%,
-      rgba(16, 16, 25, 0.12) 18%,
-      rgba(16, 16, 25, 0.34) 30%,
-      rgba(16, 16, 25, 0.62) 44%,
-      rgba(17, 17, 28, 0.9) 60%,
-      rgba(19, 19, 32, 0.985) 100%
-    ),
-    radial-gradient(circle at 50% 12%, rgba(201, 161, 74, 0.06), transparent 32%),
-    linear-gradient(180deg, rgba(242, 235, 221, 0.08) 0%, rgba(242, 235, 221, 0) 18%),
-    linear-gradient(180deg, var(--color-bg-base) 0%, var(--color-bg-elevated) 100%);
+    radial-gradient(circle at 50% 34%, rgba(16, 16, 25, 0) 38%, rgba(16, 16, 25, 0.16) 64%, rgba(16, 16, 25, 0.42) 86%, rgba(16, 16, 25, 0.64) 100%),
+    linear-gradient(180deg, rgba(16, 16, 25, 0.34) 0%, rgba(16, 16, 25, 0.06) 12%, rgba(16, 16, 25, 0) 28%),
+    linear-gradient(90deg, rgba(16, 16, 25, 0.34) 0%, rgba(16, 16, 25, 0) 12%, rgba(16, 16, 25, 0) 88%, rgba(16, 16, 25, 0.34) 100%),
+    linear-gradient(180deg, rgba(16, 16, 25, 0) 58%, rgba(16, 16, 25, 0.1) 70%, rgba(16, 16, 25, 0.3) 82%, rgba(16, 16, 25, 0.5) 100%);
   pointer-events: none;
   z-index: 0;
 }
@@ -221,56 +209,38 @@
   min-height: 200px;
   max-height: 320px;
   overflow: hidden;
-  background: rgb(242, 235, 221);
-}
-
-#result .share-card-media::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: var(--result-card-image-url);
-  background-repeat: no-repeat;
-  background-position: center top;
-  background-size: cover;
-  transform: scale(var(--result-background-art-scale));
-  transform-origin: center 18%;
-  filter: blur(var(--result-background-art-blur)) saturate(0.86) brightness(0.98);
-  opacity: var(--result-background-art-opacity);
-  z-index: 0;
+  background: #101019;
 }
 
 #result .share-card-media::after {
   content: "";
   position: absolute;
-  inset: auto 0 0;
-  height: var(--result-illustration-fade-height);
+  inset: 0;
   background:
     linear-gradient(
       180deg,
-      rgba(242, 235, 221, 0) 0%,
-      rgba(242, 235, 221, 0.03) 10%,
-      rgba(16, 16, 25, 0.06) 24%,
-      rgba(16, 16, 25, 0.18) 40%,
-      rgba(16, 16, 25, 0.4) 58%,
-      rgba(16, 16, 25, 0.72) 78%,
-      rgba(16, 16, 25, 0.9) 92%,
+      rgba(16, 16, 25, 0) 0%,
+      rgba(16, 16, 25, 0) 20%,
+      rgba(16, 16, 25, 0.25) 40%,
+      rgba(16, 16, 25, 0.6) 58%,
+      rgba(16, 16, 25, 0.92) 75%,
       rgba(16, 16, 25, 0.96) 100%
     ),
-    radial-gradient(circle at 50% 18%, rgba(201, 161, 74, 0.035), transparent 44%);
+    radial-gradient(circle at 50% 34%, rgba(16, 16, 25, 0) 34%, rgba(16, 16, 25, 0.1) 62%, rgba(16, 16, 25, 0.28) 82%, rgba(16, 16, 25, 0.38) 100%);
   pointer-events: none;
   z-index: 1;
 }
 
 #result .card-img {
   position: relative;
-  z-index: 1;
+  z-index: 0;
   display: block;
   width: 100%;
   min-height: 200px;
   max-height: 320px;
   object-fit: contain;
   object-position: center top;
-  background: rgb(242, 235, 221);
+  background: transparent;
 }
 
 #result .card-img.is-empty,

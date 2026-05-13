@@ -10,9 +10,6 @@ const SHARE_HEIGHT = 1536;
 const CANVAS_TIMEOUT_MS = 8000;
 const ASSET_TIMEOUT_MS = 3500;
 const DEFAULT_RESULT_ILLUSTRATION_FADE_HEIGHT = 0.42;
-const DEFAULT_BACKGROUND_ART_SCALE = 1.18;
-const DEFAULT_BACKGROUND_ART_OPACITY = 0.22;
-const DEFAULT_BACKGROUND_ART_BLUR = 10;
 const FRAME_SRC = new URL("../../images/card-frame.png", import.meta.url).href;
 
 export function primeShareCard(reading) {
@@ -110,7 +107,6 @@ function renderShareBlob(reading) {
     const palette = readPalette();
     const typography = readTypography();
     const fadeRatio = readIllustrationFadeRatio();
-    const backgroundArtSettings = readBackgroundArtSettings();
     const canvas = document.createElement("canvas");
     canvas.width = SHARE_WIDTH;
     canvas.height = SHARE_HEIGHT;
@@ -120,19 +116,18 @@ function renderShareBlob(reading) {
       throw new Error("canvas context unavailable");
     }
 
-    drawShareCard(context, assets, reading, palette, typography, fadeRatio, backgroundArtSettings);
+    drawShareCard(context, assets, reading, palette, typography, fadeRatio);
     return canvasToBlob(canvas);
   });
 }
 
-function drawShareCard(context, assets, reading, palette, typography, fadeRatio, backgroundArtSettings) {
+function drawShareCard(context, assets, reading, palette, typography, fadeRatio) {
   const width = SHARE_WIDTH;
   const height = SHARE_HEIGHT;
   const radius = 38;
   const imageAreaHeight = 760;
   const fadeHeight = Math.round(imageAreaHeight * fadeRatio);
   const fadeStartY = imageAreaHeight - fadeHeight;
-  const fadeEndY = imageAreaHeight + 156;
   const titleY = 868;
   const dividerY = 937;
   const messageLabelY = 1008;
@@ -145,47 +140,26 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio,
   context.fillStyle = palette.darkBase;
   context.fillRect(0, 0, width, height);
 
-  context.fillStyle = palette.parchmentBg;
+  context.fillStyle = palette.darkBase;
   context.fillRect(0, 0, width, imageAreaHeight);
-  drawBackgroundArtLayer(context, assets.cardImage, {
-    width,
-    height: imageAreaHeight,
-    scale: backgroundArtSettings.scale,
-    opacity: backgroundArtSettings.opacity,
-    blur: backgroundArtSettings.blur,
-  });
   drawContainedImage(context, assets.cardImage, {
     x: 48,
     y: 54,
     width: width - 96,
     height: 700,
-    background: palette.parchmentBg,
+    background: palette.darkBase,
   });
 
-  const fade = context.createLinearGradient(0, fadeStartY, 0, fadeEndY);
-  fade.addColorStop(0, "rgba(16, 16, 25, 0)");
-  fade.addColorStop(0.1, "rgba(242, 235, 221, 0.03)");
-  fade.addColorStop(0.24, "rgba(16, 16, 25, 0.08)");
-  fade.addColorStop(0.42, "rgba(16, 16, 25, 0.22)");
-  fade.addColorStop(0.62, "rgba(16, 16, 25, 0.5)");
-  fade.addColorStop(0.82, "rgba(16, 16, 25, 0.82)");
-  fade.addColorStop(1, palette.darkBase);
-  context.fillStyle = fade;
-  context.fillRect(0, fadeStartY, width, fadeEndY - fadeStartY);
-
-  const veil = context.createLinearGradient(0, fadeStartY + 18, 0, imageAreaHeight + 112);
-  veil.addColorStop(0, "rgba(242, 235, 221, 0)");
-  veil.addColorStop(0.32, "rgba(242, 235, 221, 0.02)");
-  veil.addColorStop(0.58, "rgba(201, 161, 74, 0.028)");
-  veil.addColorStop(1, "rgba(16, 16, 25, 0)");
-  context.fillStyle = veil;
-  context.fillRect(0, fadeStartY + 18, width, imageAreaHeight + 112 - (fadeStartY + 18));
-
-  const glow = context.createRadialGradient(width / 2, imageAreaHeight + 140, 40, width / 2, imageAreaHeight + 140, 520);
-  glow.addColorStop(0, "rgba(201, 161, 74, 0.07)");
-  glow.addColorStop(1, "rgba(201, 161, 74, 0)");
-  context.fillStyle = glow;
-  context.fillRect(0, imageAreaHeight - 60, width, height - (imageAreaHeight - 60));
+  const fadeStartRatio = Math.max(0, Math.min(0.8, fadeStartY / imageAreaHeight));
+  const verticalFade = context.createLinearGradient(0, 0, 0, imageAreaHeight);
+  verticalFade.addColorStop(0, "rgba(16,16,25,0)");
+  verticalFade.addColorStop(fadeStartRatio, "rgba(16,16,25,0)");
+  verticalFade.addColorStop(Math.min(0.96, fadeStartRatio + 0.2), "rgba(16,16,25,0.25)");
+  verticalFade.addColorStop(Math.min(0.98, fadeStartRatio + 0.38), "rgba(16,16,25,0.6)");
+  verticalFade.addColorStop(Math.min(0.995, fadeStartRatio + 0.55), "rgba(16,16,25,0.92)");
+  verticalFade.addColorStop(1, "rgba(16,16,25,1)");
+  context.fillStyle = verticalFade;
+  context.fillRect(0, 0, width, imageAreaHeight);
 
   const lowerSurface = context.createLinearGradient(0, imageAreaHeight - 24, 0, height);
   lowerSurface.addColorStop(0, palette.darkBase);
@@ -194,13 +168,15 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio,
   context.fillStyle = lowerSurface;
   context.fillRect(0, imageAreaHeight - 24, width, height - (imageAreaHeight - 24));
 
-  const mist = context.createLinearGradient(0, fadeStartY + 40, 0, height);
-  mist.addColorStop(0, "rgba(20, 20, 34, 0)");
-  mist.addColorStop(0.24, "rgba(20, 20, 34, 0.1)");
-  mist.addColorStop(0.52, "rgba(20, 20, 34, 0.24)");
-  mist.addColorStop(1, "rgba(20, 20, 34, 0.05)");
-  context.fillStyle = mist;
-  context.fillRect(0, fadeStartY + 40, width, height - (fadeStartY + 40));
+  drawPerimeterVignette(context, {
+    width,
+    height,
+    topStrength: 0.34,
+    sideStrength: 0.34,
+    bottomStrength: 0.42,
+    cornerStrength: 0.44,
+    imageAreaHeight,
+  });
 
   drawCenteredText(context, reading.name, {
     x: width / 2,
@@ -336,25 +312,6 @@ function readIllustrationFadeRatio() {
   return DEFAULT_RESULT_ILLUSTRATION_FADE_HEIGHT;
 }
 
-function readBackgroundArtSettings() {
-  const shareCard = document.getElementById("share-card");
-  if (!shareCard) {
-    return {
-      scale: DEFAULT_BACKGROUND_ART_SCALE,
-      opacity: DEFAULT_BACKGROUND_ART_OPACITY,
-      blur: DEFAULT_BACKGROUND_ART_BLUR,
-    };
-  }
-
-  const style = getComputedStyle(shareCard);
-
-  return {
-    scale: readNumericCssValue(style, "--result-background-art-scale", DEFAULT_BACKGROUND_ART_SCALE, 1, 2),
-    opacity: readNumericCssValue(style, "--result-background-art-opacity", DEFAULT_BACKGROUND_ART_OPACITY, 0.05, 0.8),
-    blur: readPixelCssValue(style, "--result-background-art-blur", DEFAULT_BACKGROUND_ART_BLUR, 0, 40),
-  };
-}
-
 function loadFrameImage() {
   if (!frameImagePromise) {
     frameImagePromise = loadImage(FRAME_SRC).catch(function handleFrameError(error) {
@@ -434,26 +391,6 @@ function readCssValue(style, propertyName, fallback) {
   return value || fallback;
 }
 
-function readNumericCssValue(style, propertyName, fallback, min, max) {
-  const rawValue = style.getPropertyValue(propertyName).trim();
-  const parsedValue = Number.parseFloat(rawValue);
-  if (Number.isFinite(parsedValue)) {
-    return Math.max(min, Math.min(max, parsedValue));
-  }
-
-  return fallback;
-}
-
-function readPixelCssValue(style, propertyName, fallback, min, max) {
-  const rawValue = style.getPropertyValue(propertyName).trim();
-  const parsedValue = Number.parseFloat(rawValue);
-  if (Number.isFinite(parsedValue)) {
-    return Math.max(min, Math.min(max, parsedValue));
-  }
-
-  return fallback;
-}
-
 function drawContainedImage(context, image, rect) {
   context.fillStyle = rect.background;
   context.fillRect(rect.x, rect.y, rect.width, rect.height);
@@ -467,18 +404,53 @@ function drawContainedImage(context, image, rect) {
   context.drawImage(image, drawX, drawY, drawWidth, drawHeight);
 }
 
-function drawBackgroundArtLayer(context, image, options) {
-  const { width, height, scale, opacity, blur } = options;
-  const drawWidth = width * scale;
-  const drawHeight = (image.height / image.width) * drawWidth;
-  const drawX = (width - drawWidth) / 2;
-  const drawY = Math.min(22, (height - drawHeight) / 2 - 18);
+function drawPerimeterVignette(context, options) {
+  const { width, height, topStrength, sideStrength, bottomStrength, cornerStrength, imageAreaHeight } = options;
 
-  context.save();
-  context.globalAlpha = opacity;
-  context.filter = `blur(${blur}px) saturate(0.86) brightness(0.98)`;
-  context.drawImage(image, drawX, drawY, drawWidth, drawHeight);
-  context.restore();
+  const topGradient = context.createLinearGradient(0, 0, 0, imageAreaHeight * 0.34);
+  topGradient.addColorStop(0, `rgba(16,16,25,${topStrength})`);
+  topGradient.addColorStop(1, "rgba(16,16,25,0)");
+  context.fillStyle = topGradient;
+  context.fillRect(0, 0, width, imageAreaHeight * 0.34);
+
+  const sideWidth = width * 0.18;
+  const leftGradient = context.createLinearGradient(0, 0, sideWidth, 0);
+  leftGradient.addColorStop(0, `rgba(16,16,25,${sideStrength})`);
+  leftGradient.addColorStop(1, "rgba(16,16,25,0)");
+  context.fillStyle = leftGradient;
+  context.fillRect(0, 0, sideWidth, height);
+
+  const rightGradient = context.createLinearGradient(width - sideWidth, 0, width, 0);
+  rightGradient.addColorStop(0, "rgba(16,16,25,0)");
+  rightGradient.addColorStop(1, `rgba(16,16,25,${sideStrength})`);
+  context.fillStyle = rightGradient;
+  context.fillRect(width - sideWidth, 0, sideWidth, height);
+
+  const bottomGradient = context.createLinearGradient(0, height * 0.72, 0, height);
+  bottomGradient.addColorStop(0, "rgba(16,16,25,0)");
+  bottomGradient.addColorStop(1, `rgba(16,16,25,${bottomStrength})`);
+  context.fillStyle = bottomGradient;
+  context.fillRect(0, height * 0.72, width, height * 0.28);
+
+  const cornerRadius = Math.max(width, height) * 0.28;
+  [
+    [0, 0],
+    [width, 0],
+    [0, height],
+    [width, height],
+  ].forEach(function drawCorner(entry) {
+    const [x, y] = entry;
+    const corner = context.createRadialGradient(x, y, 0, x, y, cornerRadius);
+    corner.addColorStop(0, `rgba(16,16,25,${cornerStrength})`);
+    corner.addColorStop(1, "rgba(16,16,25,0)");
+    context.fillStyle = corner;
+    context.fillRect(
+      x === 0 ? 0 : width - cornerRadius,
+      y === 0 ? 0 : height - cornerRadius,
+      cornerRadius,
+      cornerRadius,
+    );
+  });
 }
 
 function drawDivider(context, options) {
