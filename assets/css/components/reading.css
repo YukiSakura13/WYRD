@@ -153,6 +153,7 @@
 #result .card-box {
   --result-illustration-fade-height: 42%;
   --result-hero-height: 56%;
+  --result-logo-zone-height: 58px;
   position: relative;
   width: 100%;
   max-width: 372px;
@@ -212,7 +213,7 @@
   max-height: none;
   overflow: hidden;
   background: #101019;
-  padding: 28px 18px 0;
+  padding: var(--result-logo-zone-height) 18px 0;
 }
 
 #result .share-card-media::after {
@@ -222,9 +223,8 @@
   background:
     linear-gradient(
       180deg,
-      rgba(16, 16, 25, 0.56) 0%,
-      rgba(16, 16, 25, 0.3) 8%,
-      rgba(16, 16, 25, 0.08) 16%,
+      rgba(16, 16, 25, 0.08) 0%,
+      rgba(16, 16, 25, 0.04) 16%,
       rgba(16, 16, 25, 0) 24%,
       rgba(16, 16, 25, 0.25) 40%,
       rgba(16, 16, 25, 0.6) 58%,
@@ -241,7 +241,7 @@
   z-index: 0;
   display: block;
   width: 100%;
-  height: calc(100% + 10px);
+  height: calc(100% + var(--result-logo-zone-height));
   min-height: 360px;
   max-height: none;
   object-fit: cover;
