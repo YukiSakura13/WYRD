@@ -12,7 +12,7 @@ import {
 
 export const STORAGE_KEY = "wyrd-local-state-v2";
 
-export function createStateStore(storage = window.localStorage) {
+export function createStateStore(storage = getSafeStorage()) {
   let state = loadState(storage);
 
   function commit(nextState) {
@@ -104,5 +104,37 @@ function loadState(storage) {
 }
 
 function persistState(storage, state) {
-  storage.setItem(STORAGE_KEY, JSON.stringify(state));
+  try {
+    storage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (error) {
+    // Some file:// and private browsing contexts block persistent storage.
+  }
+}
+
+function getSafeStorage() {
+  try {
+    const storage = window.localStorage;
+    const testKey = `${STORAGE_KEY}:test`;
+    storage.setItem(testKey, "1");
+    storage.removeItem(testKey);
+    return storage;
+  } catch (error) {
+    return createMemoryStorage();
+  }
+}
+
+function createMemoryStorage() {
+  const data = new Map();
+
+  return {
+    getItem(key) {
+      return data.has(key) ? data.get(key) : null;
+    },
+    setItem(key, value) {
+      data.set(key, String(value));
+    },
+    removeItem(key) {
+      data.delete(key);
+    },
+  };
 }
