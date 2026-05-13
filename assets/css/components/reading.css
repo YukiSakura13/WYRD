@@ -41,6 +41,36 @@
   }
 }
 
+@keyframes resultCardBreath {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 1px rgba(139, 105, 20, 0.15),
+      0 0 20px 3px rgba(139, 105, 20, 0.1),
+      0 8px 30px rgba(0, 0, 0, 0.48);
+  }
+
+  50% {
+    box-shadow:
+      0 0 0 1px rgba(201, 161, 74, 0.24),
+      0 0 28px 5px rgba(201, 161, 74, 0.15),
+      0 10px 34px rgba(0, 0, 0, 0.52);
+  }
+}
+
+@keyframes resultFrameBreath {
+  0%,
+  100% {
+    opacity: 0.8;
+    filter: drop-shadow(0 0 1px rgba(201, 161, 74, 0.1));
+  }
+
+  50% {
+    opacity: 0.9;
+    filter: drop-shadow(0 0 5px rgba(201, 161, 74, 0.18));
+  }
+}
+
 #result {
   width: 100%;
   max-width: 400px;
@@ -156,7 +186,7 @@
   --result-logo-zone-height: 58px;
   position: relative;
   width: 100%;
-  max-width: 372px;
+  max-width: 344px;
   min-width: 0;
   margin: 0 auto;
   overflow: hidden;
@@ -193,6 +223,7 @@
   opacity: 1;
   transform: translateY(0) scale(1);
   filter: blur(0);
+  animation: resultCardBreath 7s ease-in-out 1.4s infinite;
 }
 
 #result .card-frame {
@@ -202,14 +233,15 @@
   height: 100%;
   object-fit: fill;
   mix-blend-mode: normal;
-  opacity: 0.82;
+  opacity: 0.8;
   pointer-events: none;
   z-index: 2;
+  animation: resultFrameBreath 8s ease-in-out 1.8s infinite;
 }
 
 #result .share-card-media {
   position: relative;
-  min-height: 360px;
+  min-height: clamp(292px, 74vw, 336px);
   height: var(--result-hero-height);
   max-height: none;
   overflow: hidden;
@@ -242,7 +274,7 @@
   display: block;
   width: 100%;
   height: calc(100% + var(--result-logo-zone-height));
-  min-height: 360px;
+  min-height: clamp(292px, 74vw, 336px);
   max-height: none;
   object-fit: cover;
   object-position: center top;
@@ -401,15 +433,16 @@
   gap: 7px;
   width: 100%;
   margin: 0;
-  padding: 12px 0;
+  padding: 13px 0;
   background: transparent;
   border: 0;
-  color: #6e6040;
+  color: rgba(201, 161, 74, 0.88);
   font-family: var(--ui-font);
   font-size: 9px;
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
+  text-shadow: 0 0 14px rgba(201, 161, 74, 0.16);
   cursor: pointer;
   transition:
     color var(--dur-medium) var(--ease-out-strong),
@@ -421,6 +454,7 @@
   width: 11px;
   height: 11px;
   flex-shrink: 0;
+  filter: drop-shadow(0 0 5px rgba(201, 161, 74, 0.18));
 }
 
 #result .btn-share.is-loading {
@@ -577,8 +611,13 @@
   #result .card-box,
   #result .card-msg,
   #result .card-shd-wrap {
+    animation: none;
     transition-duration: 140ms;
     transform: none;
     filter: none;
+  }
+
+  #result .card-frame {
+    animation: none;
   }
 }
