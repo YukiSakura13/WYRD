@@ -153,9 +153,10 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio)
 
   const fadeStartRatio = Math.max(0, Math.min(0.8, fadeStartY / imageAreaHeight));
   const verticalFade = context.createLinearGradient(0, 0, 0, imageAreaHeight);
-  verticalFade.addColorStop(0, "rgba(16,16,25,0.54)");
-  verticalFade.addColorStop(0.1, "rgba(16,16,25,0.28)");
-  verticalFade.addColorStop(0.18, "rgba(16,16,25,0)");
+  verticalFade.addColorStop(0, "rgba(16,16,25,0.82)");
+  verticalFade.addColorStop(0.07, "rgba(16,16,25,0.64)");
+  verticalFade.addColorStop(0.16, "rgba(16,16,25,0.22)");
+  verticalFade.addColorStop(0.24, "rgba(16,16,25,0)");
   verticalFade.addColorStop(fadeStartRatio, "rgba(16,16,25,0)");
   verticalFade.addColorStop(Math.min(0.96, fadeStartRatio + 0.2), "rgba(16,16,25,0.25)");
   verticalFade.addColorStop(Math.min(0.98, fadeStartRatio + 0.38), "rgba(16,16,25,0.6)");
