@@ -144,18 +144,18 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio)
   context.fillRect(0, 0, width, imageAreaHeight);
   drawHeroImage(context, assets.cardImage, {
     x: 24,
-    y: 42,
+    y: 58,
     width: width - 48,
-    height: imageAreaHeight - 42,
+    height: imageAreaHeight - 58,
     background: palette.darkBase,
     positionY: 0,
   });
 
   const fadeStartRatio = Math.max(0, Math.min(0.8, fadeStartY / imageAreaHeight));
   const verticalFade = context.createLinearGradient(0, 0, 0, imageAreaHeight);
-  verticalFade.addColorStop(0, "rgba(16,16,25,0.82)");
-  verticalFade.addColorStop(0.07, "rgba(16,16,25,0.64)");
-  verticalFade.addColorStop(0.16, "rgba(16,16,25,0.22)");
+  verticalFade.addColorStop(0, "rgba(16,16,25,0.56)");
+  verticalFade.addColorStop(0.08, "rgba(16,16,25,0.3)");
+  verticalFade.addColorStop(0.16, "rgba(16,16,25,0.08)");
   verticalFade.addColorStop(0.24, "rgba(16,16,25,0)");
   verticalFade.addColorStop(fadeStartRatio, "rgba(16,16,25,0)");
   verticalFade.addColorStop(Math.min(0.96, fadeStartRatio + 0.2), "rgba(16,16,25,0.25)");
