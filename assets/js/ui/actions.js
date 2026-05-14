@@ -115,6 +115,7 @@ export function createActionHandler(deps) {
         uiState.currentQuestion = "";
         uiState.rawQuestion = "";
         uiState.continuationOffer = null;
+        uiState.recentCardNames = [];
         setScene(SCENES.DECK);
         audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.DECK });
         renderer.scrollTo(SCENES.DECK);
@@ -207,15 +208,16 @@ export function resolveRitual(deps, mode) {
   if (mode === "free") {
     const questionRoute = detectQuestionRoute(uiState.rawQuestion);
     uiState.currentQuestion = questionRoute.displayQuestion || "";
+    const reading = createReading(cards, true, new Date(), {
+      previousReading: currentState.history[0] || null,
+      question: uiState.rawQuestion,
+      questionRoute,
+      recentCardNames: uiState.recentCardNames,
+    });
+    rememberRecentCards(uiState, [reading.card]);
 
     store.markDailyFreeUsed(new Date().toISOString());
-    store.saveReading(
-      createReading(cards, true, new Date(), {
-        previousReading: currentState.history[0] || null,
-        question: uiState.rawQuestion,
-        questionRoute,
-      }),
-    );
+    store.saveReading(reading);
     setScene(SCENES.RESULT);
     renderer.animateDeck();
     audio.sync({ enabled: currentState.soundEnabled, scene: SCENES.RESULT });
@@ -229,14 +231,15 @@ export function resolveRitual(deps, mode) {
   if (mode === "extra-draw") {
     const questionRoute = detectQuestionRoute(uiState.rawQuestion);
     uiState.currentQuestion = questionRoute.displayQuestion || "";
+    const reading = createReading(cards, false, new Date(), {
+      previousReading: currentState.history[0] || null,
+      question: uiState.rawQuestion,
+      questionRoute,
+      recentCardNames: uiState.recentCardNames,
+    });
+    rememberRecentCards(uiState, [reading.card]);
 
-    store.saveReading(
-      createReading(cards, false, new Date(), {
-        previousReading: currentState.history[0] || null,
-        question: uiState.rawQuestion,
-        questionRoute,
-      }),
-    );
+    store.saveReading(reading);
     setScene(SCENES.RESULT);
     renderer.animateDeck();
     audio.sync({ enabled: currentState.soundEnabled, scene: SCENES.RESULT });
@@ -264,7 +267,9 @@ export function resolveRitual(deps, mode) {
       previousSpread: currentState.lastSpread,
       question: uiState.rawQuestion,
       questionRoute,
+      recentCardNames: uiState.recentCardNames,
     });
+    rememberRecentCards(uiState, spreadCards);
     const oracleReading = buildLocalOracleReading(count === 3 ? "deepening" : "oracle_reading", spreadCards, {
       question: uiState.rawQuestion,
       questionRoute,
@@ -288,6 +293,17 @@ export function createInitialUIState(state) {
     profileReturnScene: getReturnScene(null, state),
     rawQuestion: "",
     onboardingReturn: SCENES.COVER,
+    recentCardNames: [],
     transitioning: false,
   };
+}
+
+function rememberRecentCards(uiState, cards) {
+  const cardNames = (Array.isArray(cards) ? cards : [])
+    .map(function mapCardName(card) {
+      return card?.name;
+    })
+    .filter(Boolean);
+
+  uiState.recentCardNames = [...cardNames, ...(uiState.recentCardNames || [])].slice(0, 7);
 }

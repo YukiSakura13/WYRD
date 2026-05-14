@@ -7,6 +7,7 @@ export const CONTINUATION_COPY = ORACLE_CONFIG.continuationCopy;
 export function createReading(cards, isFree, now = new Date(), options = {}) {
   const previousReading = options.previousReading || null;
   const questionRoute = options.questionRoute || detectQuestionRoute(options.question || "");
+  const recentCardNames = normalizeRecentCardNames(options.recentCardNames);
   const card = pickWeightedCard({
     cards,
     layer: isFree ? "present" : null,
@@ -14,6 +15,7 @@ export function createReading(cards, isFree, now = new Date(), options = {}) {
     previousCard: previousReading ? previousReading.card : null,
     questionRoute,
     primaryGroupOnly: true,
+    recentCardNames,
   });
 
   return {
@@ -59,6 +61,7 @@ function createThreeCardSpread(cards, options = {}) {
     previousReading: options.previousReading || null,
     pinnedCardsByRole,
     questionRoute: options.questionRoute || null,
+    recentCardNames: options.recentCardNames,
   });
 }
 
@@ -66,6 +69,7 @@ function createFiveCardSpread(cards, options = {}) {
   return buildConfiguredSpread(cards, SPREADS_CONFIG.oracle_reading.slots, {
     previousReading: options.previousReading || null,
     questionRoute: options.questionRoute || null,
+    recentCardNames: options.recentCardNames,
   });
 }
 
@@ -74,12 +78,14 @@ function buildConfiguredSpread(cards, slotConfig, options = {}) {
   const pinnedCardsByRole = options.pinnedCardsByRole || {};
   const questionRoute = options.questionRoute || null;
   let anchorCard = options.previousReading ? options.previousReading.card : null;
+  let recentCardNames = normalizeRecentCardNames(options.recentCardNames);
 
   return slotConfig.map(function pickSlot(configItem) {
     const pinnedCard = pinnedCardsByRole[configItem.spreadRole];
     if (pinnedCard) {
       selected.push(pinnedCard);
       anchorCard = pinnedCard;
+      recentCardNames = rememberRecentCardName(pinnedCard.name, recentCardNames);
 
       return {
         ...pinnedCard,
@@ -101,10 +107,12 @@ function buildConfiguredSpread(cards, slotConfig, options = {}) {
       primaryGroupOnly:
         Boolean(questionRoute?.primaryGroup) &&
         ["current_message", "what_is_happening"].includes(configItem.spreadRole),
+      recentCardNames,
     });
 
     selected.push(card);
     anchorCard = card;
+    recentCardNames = rememberRecentCardName(card.name, recentCardNames);
 
     return {
       ...card,
@@ -125,6 +133,7 @@ function pickWeightedCard({
   excludeIds = [],
   questionRoute = null,
   primaryGroupOnly = false,
+  recentCardNames = [],
 }) {
   const filteredCards = cards.filter(function filterCard(card) {
     if (excludeIds.includes(card.id)) {
@@ -140,8 +149,9 @@ function pickWeightedCard({
 
   const pool =
     primaryGroupOnly && questionRoute ? filterCardsByPrimaryGroup(filteredCards, questionRoute) : filteredCards;
+  const antiRepeatPool = applyRecentCardFilter(pool, recentCardNames);
 
-  const weightedPool = pool.map(function mapWeight(card) {
+  const weightedPool = antiRepeatPool.map(function mapWeight(card) {
     let weight = toneWeights[card.tone] ?? 1;
 
     if (usedStates.includes(card.state)) {
@@ -186,6 +196,29 @@ function weightedRandom(weightedPool) {
 
 function pickDistinctCards(cards, count) {
   return shuffle(cards.slice()).slice(0, count);
+}
+
+function applyRecentCardFilter(cards, recentCardNames = []) {
+  if (!recentCardNames.length) {
+    return cards;
+  }
+
+  const availableCards = cards.filter(function filterRecent(card) {
+    return !recentCardNames.includes(card.name);
+  });
+  const uniqueAvailableNames = new Set(availableCards.map(function mapName(card) {
+    return card.name;
+  }));
+
+  return uniqueAvailableNames.size >= 3 ? availableCards : cards;
+}
+
+function normalizeRecentCardNames(recentCardNames) {
+  return Array.isArray(recentCardNames) ? recentCardNames.filter(Boolean) : [];
+}
+
+function rememberRecentCardName(cardName, recentCardNames) {
+  return cardName ? [cardName, ...recentCardNames].slice(0, 7) : recentCardNames;
 }
 
 function collectStates(cards) {
