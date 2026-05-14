@@ -21,33 +21,33 @@ export function scoreQuestionGroups(question) {
 
     if (normalizedQuestion) {
       (config.exactSignals || []).forEach(function scoreExactSignal(signal) {
-        if (normalizedQuestion.includes(signal)) {
+        if (normalizedQuestion.includes(normalizeQuestion(signal))) {
           score += EXACT_SIGNAL_WEIGHT;
         }
       });
 
       config.keywords.forEach(function scoreKeyword(keyword) {
-        if (normalizedQuestion.includes(keyword)) {
+        if (normalizedQuestion.includes(normalizeQuestion(keyword))) {
           score += KEYWORD_WEIGHT;
         }
       });
 
       (config.softKeywords || []).forEach(function scoreSoftKeyword(keyword) {
-        if (normalizedQuestion.includes(keyword)) {
+        if (normalizedQuestion.includes(normalizeQuestion(keyword))) {
           score += SOFT_KEYWORD_WEIGHT;
         }
       });
 
       config.contextPairs.forEach(function scoreContextPair(pair) {
         const [first, second] = pair;
-        if (normalizedQuestion.includes(first) && normalizedQuestion.includes(second)) {
+        if (normalizedQuestion.includes(normalizeQuestion(first)) && normalizedQuestion.includes(normalizeQuestion(second))) {
           score += CONTEXT_PAIR_WEIGHT;
         }
       });
 
       (config.softContextPairs || []).forEach(function scoreSoftContextPair(pair) {
         const [first, second] = pair;
-        if (normalizedQuestion.includes(first) && normalizedQuestion.includes(second)) {
+        if (normalizedQuestion.includes(normalizeQuestion(first)) && normalizedQuestion.includes(normalizeQuestion(second))) {
           score += SOFT_CONTEXT_PAIR_WEIGHT;
         }
       });
