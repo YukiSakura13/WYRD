@@ -1,6 +1,6 @@
 import { createReading, createSpread } from "../cards/reading.js";
 import { buildLocalOracleReading } from "../cards/oracle-local.js";
-import { detectQuestionRoute } from "../cards/question-routing.js";
+import { ARCHETYPE_POSITIONS, detectArchetype, detectQuestionRoute } from "../cards/question-routing.js";
 import { createTransitionRunner, getAudioScene, getReturnScene, playSpreadSequence, resetViewport } from "./flow.js";
 import { SCENES } from "./scenes.js";
 import { shareCurrentCard } from "./share.js";
@@ -261,6 +261,7 @@ export function resolveRitual(deps, mode) {
   if (mode === "spread-3" || mode === "spread-5") {
     const count = mode === "spread-3" ? 3 : 5;
     const questionRoute = detectQuestionRoute(uiState.rawQuestion);
+    const archetype = detectArchetype(uiState.rawQuestion);
     const spreadCards = createSpread(cards, count, {
       previousReading: currentState.history[0] || null,
       currentReading: currentState.currentReading,
@@ -271,6 +272,8 @@ export function resolveRitual(deps, mode) {
     });
     rememberRecentCards(uiState, spreadCards);
     const oracleReading = buildLocalOracleReading(count === 3 ? "deepening" : "oracle_reading", spreadCards, {
+      archetype,
+      positions: getArchetypePositions(archetype, count),
       question: uiState.rawQuestion,
       questionRoute,
     });
@@ -296,6 +299,12 @@ export function createInitialUIState(state) {
     recentCardNames: [],
     transitioning: false,
   };
+}
+
+function getArchetypePositions(archetype, cardCount) {
+  const spreadSize = cardCount === 3 ? "spread3" : cardCount === 5 ? "spread5" : null;
+
+  return spreadSize ? ARCHETYPE_POSITIONS[archetype]?.[spreadSize] || ARCHETYPE_POSITIONS.A[spreadSize] : null;
 }
 
 function rememberRecentCards(uiState, cards) {

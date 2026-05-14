@@ -66,6 +66,11 @@ async function main() {
     matched: true,
   });
 
+  checkRoute(routing, "Почему всё так плохо?", {
+    primaryGroup: "trials_growth",
+    matched: true,
+  });
+
   checkRoute(routing, "Что происходит в отношениях с мамой и семьёй?", {
     primaryGroup: "love_romance",
     secondaryGroup: "family_circle",
@@ -80,6 +85,9 @@ async function main() {
     scoredLove.scores.love_romance > scoredLove.scores.career_money,
     "love question should outscore career_money",
   );
+
+  assert.equal(routing.detectArchetype("вернётся ли он"), "B", "return question should use archetype B");
+  assert.equal(routing.detectArchetype("почему он молчит"), "A", "why question should use archetype A");
 
   const bridgeMultiplier = routing.getRouteWeightMultiplier("Хранитель Нитей", {
     primaryGroup: "love_romance",

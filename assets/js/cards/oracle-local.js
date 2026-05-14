@@ -175,11 +175,38 @@ const GROUP_CLOSINGS = {
   ],
 };
 
+const POSITION_VOICE = {
+  surface: { lead: "Снаружи это выглядит так:", side: "message" },
+  hidden: { lead: "Под этим лежит:", side: "shadow" },
+  shift: { lead: "Если посмотреть глубже, становится видно:", side: "message" },
+  now: { lead: "Сейчас главное не событие, а состояние:", side: "message" },
+  root: { lead: "Это тянется из старого слоя:", side: "shadow" },
+  lock: { lead: "Держит не сама ситуация, а старый узел:", side: "shadow" },
+  movement: { lead: "Незаметно уже меняется то, как", side: "message" },
+  vector: { lead: "Эта линия ведёт туда, где", side: "message" },
+  start: { lead: "Путь начинается из того, что", side: "message" },
+  force: { lead: "Ситуацию двигает сила, в которой", side: "message" },
+  outcome: { lead: "Если течение сохранится, впереди", side: "message" },
+  other: { lead: "В другой стороне сейчас звучит:", side: "shadow" },
+  between: { lead: "Между вами стоит:", side: "shadow" },
+  factor: { lead: "Ускоряет или задерживает это:", side: "shadow" },
+  block: { lead: "Шаг не даётся, потому что внутри звучит:", side: "shadow" },
+  resource: { lead: "Опора уже есть там, где", side: "message" },
+  release: { lead: "Отпустить нужно не всё, а этот узел:", side: "shadow" },
+  step: { lead: "Первое движение начинается там, где", side: "message" },
+  sign: { lead: "После шага станет видно:", side: "message" },
+  face: { lead: "Снаружи этот человек показывает", side: "message" },
+  core: { lead: "Внутри этого человека скрыто:", side: "shadow" },
+  motive: { lead: "Им движет:", side: "shadow" },
+};
+
 export function buildLocalOracleReading(spreadId, cards, options = {}) {
   const meaning = buildMeaningSummary({ spreadId, cards });
   const question = normalizeQuestion(options.question);
   const questionRoute = options.questionRoute || null;
   const routeGroup = questionRoute?.primaryGroup || questionRoute?.group || null;
+  const archetype = options.archetype || null;
+  const positions = Array.isArray(options.positions) ? options.positions : null;
   const questionTopic = detectQuestionTopic(question);
   const questionEcho = questionTopic
     ? pickForMeaning(QUESTION_ECHOES[questionTopic] || QUESTION_ECHOES.waiting, meaning, `question:${questionTopic}`)
@@ -190,14 +217,31 @@ export function buildLocalOracleReading(spreadId, cards, options = {}) {
     question,
     questionRoute,
     routeGroup,
+    archetype,
+    positions,
     questionTopic,
     meaning,
-    oracle_message: buildOracleMessage(meaning, questionEcho, routeGroup),
+    oracle_message: buildOracleMessage(meaning, questionEcho, routeGroup, {
+      archetype,
+      cards,
+      positions,
+    }),
   };
 }
 
-function buildOracleMessage(meaning, questionEcho = "", routeGroup = null) {
+function buildOracleMessage(meaning, questionEcho = "", routeGroup = null, options = {}) {
   const groupTone = routeGroup && TONE_BY_GROUP[routeGroup] ? TONE_BY_GROUP[routeGroup] : "";
+
+  if (options.positions) {
+    return buildPositionAwareOracleMessage({
+      cards: options.cards,
+      groupTone,
+      meaning,
+      positions: options.positions,
+      questionEcho,
+      routeGroup,
+    });
+  }
 
   if (routeGroup && GROUP_OPENINGS[routeGroup] && GROUP_MIDDLES[routeGroup] && GROUP_CLOSINGS[routeGroup]) {
     const opening = pickForMeaning(GROUP_OPENINGS[routeGroup], meaning, `group:${routeGroup}:opening`);
@@ -212,6 +256,72 @@ function buildOracleMessage(meaning, questionEcho = "", routeGroup = null) {
   const closing = pickForMeaning(CLOSINGS[meaning.supportSignal?.theme] || CLOSINGS.default, meaning, 2);
 
   return [groupTone, opening, middle, closing].filter(Boolean).join(" ");
+}
+
+function buildPositionAwareOracleMessage({ cards, groupTone, meaning, positions, questionEcho, routeGroup }) {
+  const opening = getPositionAwareOpening({ meaning, questionEcho, routeGroup });
+  const positionLines = positions
+    .map(function buildPositionLine(position, index) {
+      return buildPositionLineForCard(position, cards[index]);
+    })
+    .filter(Boolean);
+  const closing =
+    pickForMeaning(CLOSINGS[meaning.supportSignal?.theme] || CLOSINGS.default, meaning, "position-aware:closing");
+
+  return [groupTone, opening, ...positionLines, closing].filter(Boolean).join(" ");
+}
+
+function getPositionAwareOpening({ meaning, questionEcho, routeGroup }) {
+  if (questionEcho) {
+    return questionEcho;
+  }
+
+  if (routeGroup && GROUP_OPENINGS[routeGroup]) {
+    return pickForMeaning(GROUP_OPENINGS[routeGroup], meaning, `position-aware:${routeGroup}:opening`);
+  }
+
+  return pickForMeaning(OPENINGS[meaning.centralTension?.type] || OPENINGS.emotional_core, meaning, "position-aware:opening");
+}
+
+function buildPositionLineForCard(position, card) {
+  if (!position || !card) {
+    return "";
+  }
+
+  const voice = POSITION_VOICE[position.id] || { lead: position.label || "Здесь проявляется", side: "message" };
+  const sourceText = voice.side === "shadow" ? card.shadow || card.message : card.message || card.shadow;
+  const cardPhrase = makeCardPhrase(sourceText);
+
+  return `${voice.lead} ${cardPhrase}`;
+}
+
+function makeCardPhrase(text) {
+  const sentence = getFirstSentence(text);
+
+  if (!sentence) {
+    return "ответ становится ближе.";
+  }
+
+  return lowercaseFirstLetter(ensurePeriod(sentence));
+}
+
+function getFirstSentence(text) {
+  const value = typeof text === "string" ? text.trim() : "";
+
+  if (!value) {
+    return "";
+  }
+
+  const match = value.match(/^[^.!?]+[.!?]?/u);
+  return match ? match[0].trim() : value;
+}
+
+function lowercaseFirstLetter(text) {
+  return text ? text.charAt(0).toLowerCase() + text.slice(1) : text;
+}
+
+function ensurePeriod(text) {
+  return /[.!?]$/u.test(text) ? text : `${text}.`;
 }
 
 function pickForMeaning(options, meaning, salt) {

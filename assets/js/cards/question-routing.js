@@ -4,10 +4,14 @@ export {
   QUESTION_ROUTE_CONFIG,
 } from "./question-routing/config.js";
 export {
+  detectArchetype,
   detectQuestionRoute,
   normalizeQuestion,
   scoreQuestionGroups,
 } from "./question-routing/scoring.js";
+export {
+  ARCHETYPE_POSITIONS,
+} from "./question-routing/archetype-config.js";
 export {
   cardBelongsToGroup,
   filterCardsByPrimaryGroup,

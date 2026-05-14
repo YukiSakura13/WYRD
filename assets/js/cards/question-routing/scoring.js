@@ -1,4 +1,11 @@
 import {
+  ARCHETYPE_CONFIG,
+  ARCHETYPE_EXACT_WEIGHT,
+  ARCHETYPE_KEYWORD_WEIGHT,
+  ARCHETYPE_PAIR_WEIGHT,
+  DEFAULT_ARCHETYPE,
+} from "./archetype-config.js";
+import {
   CONTEXT_PAIR_WEIGHT,
   EMPTY_FATE_PATH_COPY,
   EXACT_SIGNAL_WEIGHT,
@@ -112,4 +119,46 @@ export function detectQuestionRoute(question) {
     matched: true,
     displayQuestion: question,
   };
+}
+
+export function detectArchetype(question) {
+  const normalizedQuestion = normalizeQuestion(question);
+
+  if (!normalizedQuestion) {
+    return DEFAULT_ARCHETYPE;
+  }
+
+  const scores = {};
+
+  Object.entries(ARCHETYPE_CONFIG).forEach(function scoreArchetype([archetypeId, config]) {
+    let score = config.defaultWeight || 0;
+
+    (config.exactSignals || []).forEach(function scoreExactSignal(signal) {
+      if (normalizedQuestion.includes(normalizeQuestion(signal))) {
+        score += ARCHETYPE_EXACT_WEIGHT;
+      }
+    });
+
+    (config.keywords || []).forEach(function scoreKeyword(keyword) {
+      if (normalizedQuestion.includes(normalizeQuestion(keyword))) {
+        score += ARCHETYPE_KEYWORD_WEIGHT;
+      }
+    });
+
+    (config.contextPairs || []).forEach(function scoreContextPair(pair) {
+      const [first, second] = pair;
+
+      if (normalizedQuestion.includes(normalizeQuestion(first)) && normalizedQuestion.includes(normalizeQuestion(second))) {
+        score += ARCHETYPE_PAIR_WEIGHT;
+      }
+    });
+
+    scores[archetypeId] = score;
+  });
+
+  const rankedArchetypes = Object.entries(scores).sort(function sortByScore(left, right) {
+    return right[1] - left[1];
+  });
+
+  return rankedArchetypes[0]?.[0] || DEFAULT_ARCHETYPE;
 }
