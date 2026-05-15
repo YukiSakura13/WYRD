@@ -66,8 +66,18 @@ function createThreeCardSpread(cards, options = {}) {
 }
 
 function createFiveCardSpread(cards, options = {}) {
+  const pinnedCardsByRole = {};
+
+  if (options.previousReading && options.previousReading.card) {
+    pinnedCardsByRole.current_message = {
+      ...options.previousReading.card,
+      alreadyKnown: true,
+    };
+  }
+
   return buildConfiguredSpread(cards, SPREADS_CONFIG.oracle_reading.slots, {
     previousReading: options.previousReading || null,
+    pinnedCardsByRole,
     questionRoute: options.questionRoute || null,
     recentCardNames: options.recentCardNames,
   });

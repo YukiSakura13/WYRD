@@ -1,6 +1,8 @@
 import { SCENES } from "./scenes.js";
+import { CARDS } from "../data/cards.js";
 import { createSpreadRenderer } from "./render-spread.js";
 import { getCardImage } from "./render-helpers.js";
+import { createMoonIcon, formatTraceDate, getMoonPhase } from "./moon.js";
 import { primeShareCard } from "./share.js";
 
 export function getElements(doc = document) {
@@ -37,7 +39,27 @@ export function getElements(doc = document) {
     soundButton: doc.querySelector('.top-actions [data-action="toggle-sound"]'),
     profileName: doc.getElementById("profile-name"),
     profileMeta: doc.getElementById("profile-meta"),
+    profileTodaySection: doc.getElementById("profile-today-section"),
+    historyEmptyState: doc.getElementById("history-empty-state"),
+    historyPreviousHeading: doc.getElementById("history-previous-heading"),
+    profileTodayCard: doc.getElementById("profile-today-card"),
+    profileDeckAction: doc.getElementById("profile-deck-action"),
+    profileTodayImage: doc.getElementById("profile-today-image"),
+    profileTodayKicker: doc.getElementById("profile-today-kicker"),
+    profileTodayTitle: doc.getElementById("profile-today-title"),
+    profileTodayMessage: doc.getElementById("profile-today-message"),
     historyList: doc.getElementById("history-list"),
+    historySheetBackdrop: doc.getElementById("history-sheet-backdrop"),
+    historySheet: doc.getElementById("history-sheet"),
+    historySheetClose: doc.querySelector("#history-sheet [data-action='close-history-entry']"),
+    historySheetQuestion: doc.getElementById("history-sheet-question"),
+    historySheetQuestionText: doc.getElementById("history-sheet-question-text"),
+    historySheetImage: doc.getElementById("history-sheet-image"),
+    historySheetTitle: doc.getElementById("history-sheet-title"),
+    historySheetMessage: doc.getElementById("history-sheet-message"),
+    historySheetShadow: doc.getElementById("history-sheet-shadow"),
+    historySheetShadowText: doc.getElementById("history-sheet-shadow-text"),
+    historySheetFooter: doc.getElementById("history-sheet-footer"),
     spreadGrid: doc.getElementById("spread-grid"),
     spreadTitle: doc.getElementById("spread-title"),
     spreadStageNote: doc.getElementById("spread-stage-note"),
@@ -49,6 +71,17 @@ export function getElements(doc = document) {
     spreadDetailSubtitle: doc.getElementById("spread-detail-subtitle"),
     spreadDetailMessage: doc.getElementById("spread-detail-message"),
     spreadDetailShadow: doc.getElementById("spread-detail-shadow"),
+    spreadModal: doc.getElementById("spread-card-modal"),
+    spreadModalBackdrop: doc.getElementById("spread-card-modal-backdrop"),
+    spreadModalPanel: doc.getElementById("spread-card-modal-panel"),
+    spreadModalClose: doc.getElementById("spread-card-modal-close"),
+    spreadModalImage: doc.getElementById("spread-modal-image"),
+    spreadModalRole: doc.getElementById("spread-modal-role"),
+    spreadModalKeyword: doc.getElementById("spread-modal-keyword"),
+    spreadModalName: doc.getElementById("spread-modal-name"),
+    spreadModalSubtitle: doc.getElementById("spread-modal-subtitle"),
+    spreadModalMessage: doc.getElementById("spread-modal-message"),
+    spreadModalShadow: doc.getElementById("spread-modal-shadow"),
     spreadContinuation: doc.getElementById("spread-continuation"),
     oracleVoice: doc.getElementById("oracle-voice"),
     oracleVoiceMessage: doc.getElementById("oracle-voice-message"),
@@ -60,16 +93,19 @@ export function createRenderer(elements) {
   let lastReadingId = null;
   let previousScene = null;
   const spreadRenderer = createSpreadRenderer(elements);
+  const cardsById = new Map(CARDS.map((card) => [card.id, card]));
 
   function render(state, uiState) {
     renderShell(uiState);
     renderProfile(state);
     renderCurrentReading(state.currentReading, uiState.currentQuestion);
     renderHook(state, uiState);
-    spreadRenderer.renderSpread(state.lastSpread);
+    spreadRenderer.renderSpread(state.lastSpread, state.lastOracleReading);
     spreadRenderer.renderOracleVoice(state.lastSpread, state.lastOracleReading);
     spreadRenderer.renderSpreadContinuation(state.lastSpread, uiState);
-    spreadRenderer.renderHistory(state.history);
+    const historyView = getHistoryView(state);
+    spreadRenderer.renderHistory(historyView.previous);
+    renderHistorySheet(state, uiState);
     renderContinuation(uiState.continuationOffer);
     renderVisibility(state, uiState);
   }
@@ -113,6 +149,8 @@ export function createRenderer(elements) {
   function renderShell(uiState) {
     const isCoverScene = uiState.activeScene === SCENES.COVER;
 
+    elements.cover.hidden = !isCoverScene;
+    elements.cover.setAttribute("aria-hidden", String(!isCoverScene));
     elements.cover.classList.toggle("gone", !isCoverScene);
     elements.transitionVeil.classList.toggle("is-active", Boolean(uiState.transitioning));
     elements.main.classList.toggle("on", !isCoverScene);
@@ -131,10 +169,104 @@ export function createRenderer(elements) {
     if (elements.coverSoundButton) {
       updateCoverSoundButton(!state.soundEnabled);
     }
-    elements.profileName.textContent = state.profileName;
-    elements.profileMeta.textContent = state.dailyFreeUsedAt
-      ? "Сегодняшняя бесплатная карта уже раскрыта."
-      : "Бесплатная карта ещё не раскрыта.";
+    const historyView = getHistoryView(state);
+    const todayReading = historyView.today;
+    const hasAnyTrace = state.history.length > 0;
+
+    elements.historyEmptyState.hidden = hasAnyTrace;
+    elements.profileTodaySection.hidden = !hasAnyTrace;
+    elements.historyPreviousHeading.hidden = historyView.previous.length === 0;
+    elements.profileMeta.textContent = "Первый след сегодня ещё не оставлен.";
+    elements.profileMeta.hidden = Boolean(todayReading);
+    elements.profileDeckAction.hidden = Boolean(todayReading);
+
+    if (!elements.profileTodayCard) {
+      return;
+    }
+
+    elements.profileTodayCard.dataset.traceId = todayReading ? todayReading.id : "";
+    elements.profileTodayCard.hidden = !todayReading;
+
+    if (!todayReading) {
+      return;
+    }
+
+    renderTraceCard(elements, todayReading);
+  }
+
+  function getHistoryView(state) {
+    const todayKey = getLocalDayKey(new Date());
+    const traces = state.history.map(hydrateTrace).filter(Boolean);
+    const today = traces.find((entry) => entry.dayKey === todayKey) || null;
+
+    return {
+      today,
+      previous: traces.filter((entry) => entry.dayKey !== todayKey),
+    };
+  }
+
+  function hydrateTrace(trace) {
+    const card = cardsById.get(trace.cardId);
+    if (!card) {
+      return null;
+    }
+
+    return {
+      ...trace,
+      card,
+    };
+  }
+
+  function getLocalDayKey(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  }
+
+  function renderTraceCard(targets, trace) {
+    const card = trace.card;
+    const hasImage = Boolean(card.image);
+    targets.profileTodayImage.src = getCardImage(card);
+    targets.profileTodayImage.alt = card.name;
+    targets.profileTodayImage.classList.toggle("is-empty", !hasImage);
+    targets.profileTodayKicker.textContent = card.keyword;
+    targets.profileTodayTitle.textContent = card.name;
+    targets.profileTodayMessage.textContent = trace.question || card.message;
+  }
+
+  function renderHistorySheet(state, uiState) {
+    const trace = state.history.map(hydrateTrace).find((entry) => entry.id === uiState.activeHistoryTraceId) || null;
+    const isOpen = Boolean(trace);
+
+    elements.historySheet.hidden = !isOpen;
+    elements.historySheetBackdrop.hidden = !isOpen;
+    elements.historySheet.classList.toggle("is-open", isOpen);
+    elements.historySheetBackdrop.classList.toggle("is-open", isOpen);
+
+    if (!isOpen) {
+      return;
+    }
+
+    const card = trace.card;
+    const date = new Date(trace.date);
+    const moon = getMoonPhase(date);
+    elements.historySheetQuestion.hidden = !trace.question;
+    elements.historySheetQuestionText.textContent = trace.question;
+    elements.historySheetImage.src = getCardImage(card);
+    elements.historySheetImage.alt = card.name;
+    elements.historySheetImage.classList.toggle("is-empty", !card.image);
+    elements.historySheetTitle.textContent = card.name;
+    elements.historySheetMessage.textContent = trace.message || card.message;
+    elements.historySheetShadow.hidden = !card.shadow;
+    elements.historySheetShadowText.textContent = card.shadow || "";
+    elements.historySheetFooter.replaceChildren();
+    elements.historySheetFooter.append(createMoonIcon(moon.type), document.createTextNode(`${formatTraceDate(date)} · ${moon.name}`));
+
+    window.requestAnimationFrame(function focusSheetClose() {
+      elements.historySheetClose?.focus();
+    });
   }
 
   function renderCurrentReading(reading, question) {

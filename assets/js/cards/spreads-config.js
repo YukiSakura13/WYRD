@@ -9,20 +9,20 @@ export const SPREADS_CONFIG = {
     title: "Глубже в вопрос",
     slots: [
       {
-        slot: 2,
+        slot: 1,
         layer: "present",
         preset: "present",
         revealOrder: 1,
         spreadRole: "what_is_happening",
-        spreadLabel: "Настоящее",
+        spreadLabel: "Якорь",
       },
       {
-        slot: 1,
+        slot: 2,
         layer: "past",
         preset: "past",
         revealOrder: 2,
         spreadRole: "root_of_question",
-        spreadLabel: "Прошлое",
+        spreadLabel: "Корень",
       },
       {
         slot: 3,
@@ -30,7 +30,7 @@ export const SPREADS_CONFIG = {
         preset: "future",
         revealOrder: 3,
         spreadRole: "where_it_leads",
-        spreadLabel: "Будущее",
+        spreadLabel: "Вектор",
       },
     ],
   },

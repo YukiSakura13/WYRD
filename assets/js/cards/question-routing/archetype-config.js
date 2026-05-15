@@ -272,61 +272,61 @@ export const ARCHETYPE_POSITIONS = {
 
   A: {
     spread3: [
-      { id: "surface",  label: "Что видно снаружи" },
-      { id: "hidden",   label: "Что скрыто под этим" },
-      { id: "shift",    label: "Что это открывает" },
+      { id: "surface", label: "Поверхность ситуации" },
+      { id: "hidden", label: "Скрытое" },
+      { id: "shift", label: "Сдвиг" },
     ],
     spread5: [
-      { id: "now",      label: "Что происходит сейчас" },
-      { id: "root",     label: "Откуда это идёт" },
-      { id: "lock",     label: "Что держит в этом состоянии" },
-      { id: "movement", label: "Что уже меняется незаметно" },
-      { id: "vector",   label: "К чему это ведёт" },
+      { id: "node", label: "Узел всей ситуации" },
+      { id: "surface", label: "Поверхность" },
+      { id: "hidden", label: "Скрытое" },
+      { id: "movement", label: "Движение" },
+      { id: "vector", label: "Вектор" },
     ],
   },
 
   B: {
     spread3: [
-      { id: "start",   label: "Где ты сейчас" },
-      { id: "force",   label: "Что движет ситуацией" },
-      { id: "outcome", label: "Куда это приведёт" },
+      { id: "now", label: "Сейчас" },
+      { id: "past", label: "Было" },
+      { id: "outcome", label: "Исход" },
     ],
     spread5: [
-      { id: "start",   label: "Где ты сейчас" },
-      { id: "other",   label: "Что в другом человеке или ситуации" },
-      { id: "between", label: "Что между вами или на пути" },
-      { id: "factor",  label: "Что мешает или ускоряет" },
-      { id: "outcome", label: "Что придёт" },
+      { id: "now", label: "Сейчас" },
+      { id: "past", label: "Было" },
+      { id: "between", label: "Между" },
+      { id: "factor", label: "Фактор" },
+      { id: "outcome", label: "Исход" },
     ],
   },
 
   C: {
     spread3: [
-      { id: "block",    label: "Что держит" },
-      { id: "resource", label: "Что уже готово внутри" },
-      { id: "step",     label: "Какой шаг первый" },
+      { id: "step", label: "Шаг" },
+      { id: "support", label: "Что держит" },
+      { id: "resource", label: "Ресурс" },
     ],
     spread5: [
-      { id: "block",   label: "Что держит" },
-      { id: "root",    label: "Откуда это держание идёт" },
-      { id: "release", label: "Что нужно отпустить или принять" },
-      { id: "step",    label: "Какой первый шаг" },
-      { id: "sign",    label: "Что откроется после него" },
+      { id: "support", label: "Что держит" },
+      { id: "root", label: "Корень" },
+      { id: "resource", label: "Ресурс" },
+      { id: "step", label: "Шаг" },
+      { id: "sign", label: "Знак" },
     ],
   },
 
   D: {
     spread3: [
-      { id: "face",    label: "Кто он — суть и видимая природа" },
-      { id: "motive",  label: "Что им движет" },
-      { id: "outcome", label: "Чем это обернётся для тебя" },
+      { id: "core", label: "Сущность / ядро" },
+      { id: "motive", label: "Что движет" },
+      { id: "hidden", label: "Скрытое" },
     ],
     spread5: [
-      { id: "face",    label: "Кто он снаружи" },
-      { id: "core",    label: "Кто он внутри" },
-      { id: "motive",  label: "Что им движет" },
-      { id: "hidden",  label: "Что скрыто" },
-      { id: "outcome", label: "Чем обернётся — стоит ли" },
+      { id: "person", label: "Человек" },
+      { id: "face", label: "Лицо" },
+      { id: "nature", label: "Природа" },
+      { id: "motive", label: "Мотив" },
+      { id: "outcome", label: "Исход" },
     ],
   },
 };

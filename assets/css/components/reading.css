@@ -97,6 +97,15 @@
     max(1.2rem, calc(env(safe-area-inset-bottom) + 0.55rem));
 }
 
+#profile {
+  position: relative;
+  width: 100%;
+  padding:
+    max(1.05rem, calc(env(safe-area-inset-top) + 0.4rem))
+    0
+    max(1.2rem, calc(env(safe-area-inset-bottom) + 0.55rem));
+}
+
 /* Shared deck-style header for every screen after the deck. */
 .screen-nav {
   position: relative;
@@ -171,6 +180,15 @@
   position: absolute;
   top: 0;
   left: max(0.9rem, calc(env(safe-area-inset-left) + 0.08rem));
+}
+
+#profile .screen-nav {
+  min-height: 132px;
+  padding-top: 1.25rem;
+}
+
+#profile .screen-nav .btn-back-circle {
+  top: 1.25rem;
 }
 
 #result .result-question {

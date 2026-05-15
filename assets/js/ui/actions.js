@@ -74,17 +74,33 @@ export function createActionHandler(deps) {
       return;
     }
 
+    if (action === "open-history-entry") {
+      const traceId = trigger.dataset.traceId;
+      if (!traceId) {
+        return;
+      }
+      audio.playSelect(store.getState().soundEnabled);
+      uiState.activeHistoryTraceId = traceId;
+      uiState.historyReturnTraceId = traceId;
+      renderApp();
+      return;
+    }
+
+    if (action === "close-history-entry") {
+      closeHistoryEntry(uiState, renderApp);
+      return;
+    }
+
     if (action === "draw") {
       // Save raw question for routing and a display question for the result screen.
-      const questionEl = document.getElementById("question-input");
-      uiState.rawQuestion = questionEl ? questionEl.value.trim() : "";
-      uiState.currentQuestion = uiState.rawQuestion;
+      syncQuestionFromInput(uiState);
       startRitual("free");
       return;
     }
 
     if (action === "hook-open-path") {
       audio.playSelect(store.getState().soundEnabled);
+      uiState.pinCurrentReadingForSpread = true;
       startRitual("spread-3");
       return;
     }
@@ -137,6 +153,9 @@ export function createActionHandler(deps) {
 
     if (action === "extra-draw" || action === "deep-reading" || action === "spread-3" || action === "spread-5") {
       audio.playSelect(store.getState().soundEnabled);
+      if (action === "extra-draw" || action === "spread-3" || action === "spread-5") {
+        syncQuestionFromInput(uiState);
+      }
       startRitual(action);
       return;
     }
@@ -209,7 +228,7 @@ export function resolveRitual(deps, mode) {
     const questionRoute = detectQuestionRoute(uiState.rawQuestion);
     uiState.currentQuestion = questionRoute.displayQuestion || "";
     const reading = createReading(cards, true, new Date(), {
-      previousReading: currentState.history[0] || null,
+      previousReading: getPreviousTraceReading(currentState, cards),
       question: uiState.rawQuestion,
       questionRoute,
       recentCardNames: uiState.recentCardNames,
@@ -217,7 +236,11 @@ export function resolveRitual(deps, mode) {
     rememberRecentCards(uiState, [reading.card]);
 
     store.markDailyFreeUsed(new Date().toISOString());
-    store.saveReading(reading);
+    store.saveReading(reading, {
+      date: reading.createdAt,
+      message: reading.card.message,
+      question: uiState.currentQuestion,
+    });
     setScene(SCENES.RESULT);
     renderer.animateDeck();
     audio.sync({ enabled: currentState.soundEnabled, scene: SCENES.RESULT });
@@ -232,14 +255,16 @@ export function resolveRitual(deps, mode) {
     const questionRoute = detectQuestionRoute(uiState.rawQuestion);
     uiState.currentQuestion = questionRoute.displayQuestion || "";
     const reading = createReading(cards, false, new Date(), {
-      previousReading: currentState.history[0] || null,
+      previousReading: getPreviousTraceReading(currentState, cards),
       question: uiState.rawQuestion,
       questionRoute,
       recentCardNames: uiState.recentCardNames,
     });
     rememberRecentCards(uiState, [reading.card]);
 
-    store.saveReading(reading);
+    store.saveReading(reading, {
+      saveDailyTrace: false,
+    });
     setScene(SCENES.RESULT);
     renderer.animateDeck();
     audio.sync({ enabled: currentState.soundEnabled, scene: SCENES.RESULT });
@@ -260,20 +285,26 @@ export function resolveRitual(deps, mode) {
 
   if (mode === "spread-3" || mode === "spread-5") {
     const count = mode === "spread-3" ? 3 : 5;
+    const shouldPinCurrentReading = uiState.pinCurrentReadingForSpread === true;
+    uiState.pinCurrentReadingForSpread = false;
     const questionRoute = detectQuestionRoute(uiState.rawQuestion);
     const archetype = detectArchetype(uiState.rawQuestion);
-    const spreadCards = createSpread(cards, count, {
-      previousReading: currentState.history[0] || null,
-      currentReading: currentState.currentReading,
-      previousSpread: currentState.lastSpread,
-      question: uiState.rawQuestion,
-      questionRoute,
-      recentCardNames: uiState.recentCardNames,
-    });
+    const positions = getArchetypePositions(archetype, count);
+    const spreadCards = applyArchetypePositionLabels(
+      createSpread(cards, count, {
+        previousReading: shouldPinCurrentReading ? getPreviousTraceReading(currentState, cards) : null,
+        currentReading: shouldPinCurrentReading ? currentState.currentReading : null,
+        previousSpread: currentState.lastSpread,
+        question: uiState.rawQuestion,
+        questionRoute,
+        recentCardNames: uiState.recentCardNames,
+      }),
+      positions,
+    );
     rememberRecentCards(uiState, spreadCards);
     const oracleReading = buildLocalOracleReading(count === 3 ? "deepening" : "oracle_reading", spreadCards, {
       archetype,
-      positions: getArchetypePositions(archetype, count),
+      positions,
       question: uiState.rawQuestion,
       questionRoute,
     });
@@ -296,8 +327,40 @@ export function createInitialUIState(state) {
     profileReturnScene: getReturnScene(null, state),
     rawQuestion: "",
     onboardingReturn: SCENES.COVER,
+    activeHistoryTraceId: null,
+    historyReturnTraceId: null,
+    pinCurrentReadingForSpread: false,
     recentCardNames: [],
     transitioning: false,
+  };
+}
+
+function syncQuestionFromInput(uiState) {
+  const questionEl = document.getElementById("question-input");
+
+  if (!questionEl) {
+    return;
+  }
+
+  uiState.rawQuestion = questionEl.value.trim();
+  uiState.currentQuestion = uiState.rawQuestion;
+}
+
+export function createKeyboardHandler(deps) {
+  const { renderApp, uiState } = deps;
+
+  return function onKeyDown(event) {
+    const trigger = event.target.closest?.("[data-action='open-history-entry']");
+    if (trigger && (event.key === "Enter" || event.key === " ")) {
+      event.preventDefault();
+      trigger.click();
+      return;
+    }
+
+    if (event.key === "Escape" && uiState.activeHistoryTraceId) {
+      event.preventDefault();
+      closeHistoryEntry(uiState, renderApp);
+    }
   };
 }
 
@@ -305,6 +368,26 @@ function getArchetypePositions(archetype, cardCount) {
   const spreadSize = cardCount === 3 ? "spread3" : cardCount === 5 ? "spread5" : null;
 
   return spreadSize ? ARCHETYPE_POSITIONS[archetype]?.[spreadSize] || ARCHETYPE_POSITIONS.A[spreadSize] : null;
+}
+
+function applyArchetypePositionLabels(spreadCards, positions) {
+  if (!Array.isArray(spreadCards) || !Array.isArray(positions)) {
+    return spreadCards;
+  }
+
+  return spreadCards.map(function mapSpreadPosition(card) {
+    const position = positions[Math.max(Number(card.slot || 1) - 1, 0)];
+
+    if (!position) {
+      return card;
+    }
+
+    return {
+      ...card,
+      spreadPositionId: position.id,
+      spreadLabel: position.label,
+    };
+  });
 }
 
 function rememberRecentCards(uiState, cards) {
@@ -315,4 +398,25 @@ function rememberRecentCards(uiState, cards) {
     .filter(Boolean);
 
   uiState.recentCardNames = [...cardNames, ...(uiState.recentCardNames || [])].slice(0, 7);
+}
+
+function getPreviousTraceReading(state, cards) {
+  const trace = Array.isArray(state.history) ? state.history[0] : null;
+  const card = trace ? cards.find((candidate) => candidate.id === trace.cardId) : null;
+
+  return card ? { card } : state.currentReading || null;
+}
+
+function closeHistoryEntry(uiState, renderApp) {
+  const returnTraceId = uiState.historyReturnTraceId;
+  uiState.activeHistoryTraceId = null;
+  renderApp();
+
+  if (!returnTraceId) {
+    return;
+  }
+
+  window.requestAnimationFrame(function restoreHistoryFocus() {
+    document.querySelector(`[data-trace-id="${returnTraceId}"]`)?.focus();
+  });
 }

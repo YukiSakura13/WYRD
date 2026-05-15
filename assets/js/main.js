@@ -2,7 +2,7 @@ import { createForestAudioController } from "./audio.js";
 import { CARDS, COVER_IMAGE } from "./data/cards.js";
 import { registerServiceWorker } from "./pwa.js";
 import { createStateStore } from "./state/storage.js";
-import { createActionHandler, createInitialUIState } from "./ui/actions.js";
+import { createActionHandler, createInitialUIState, createKeyboardHandler } from "./ui/actions.js";
 import { createRenderer, getElements } from "./ui/render.js";
 import { SCENES, isKnownScene } from "./ui/scenes.js";
 
@@ -76,6 +76,14 @@ document.addEventListener(
     renderer,
     setScene,
     store,
+    uiState,
+  }),
+);
+
+document.addEventListener(
+  "keydown",
+  createKeyboardHandler({
+    renderApp,
     uiState,
   }),
 );

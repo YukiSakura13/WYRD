@@ -332,6 +332,27 @@
           <p class="spread-continuation-copy">История уже открылась. Следующий слой ждёт твоего шага.</p>
           <button class="cover-btn spread-continuation-btn" data-action="spread-5" type="button">Продолжить путь</button>
         </div>
+        <div class="spread-card-modal" id="spread-card-modal" hidden>
+          <div class="spread-card-modal-backdrop" id="spread-card-modal-backdrop" aria-hidden="true"></div>
+          <article
+            class="spread-card-modal-panel"
+            id="spread-card-modal-panel"
+            aria-labelledby="spread-modal-name"
+            aria-modal="true"
+            role="dialog"
+          >
+            <button class="spread-card-modal-close" id="spread-card-modal-close" type="button" aria-label="Закрыть карту">×</button>
+            <img class="spread-card-modal-image" id="spread-modal-image" alt="" />
+            <div class="spread-card-modal-copy">
+              <p class="spread-card-modal-role" id="spread-modal-role"></p>
+              <p class="spread-card-modal-keyword" id="spread-modal-keyword"></p>
+              <h3 class="spread-card-modal-name" id="spread-modal-name"></h3>
+              <p class="spread-card-modal-subtitle card-en" id="spread-modal-subtitle"></p>
+              <p class="spread-card-modal-message" id="spread-modal-message"></p>
+              <p class="spread-card-modal-shadow" id="spread-modal-shadow"></p>
+            </div>
+          </article>
+        </div>
       </section>
 
       <section class="deck-scene" id="deck-wrap" aria-label="Экран колоды WYRD">
@@ -373,16 +394,86 @@
       <!-- free beta launch: all reading modes stay open -->
 
       <section id="profile" hidden aria-labelledby="profile-name">
-        <div class="profile-box">
-          <p class="deck-hint">Профиль / история</p>
-          <p class="profile-name" id="profile-name">Странник</p>
-          <p class="profile-meta" id="profile-meta"></p>
-          <button class="reset-btn" data-action="replay-onboarding" type="button">Показать ритуал снова</button>
-          <button class="reset-btn" data-action="close-profile" type="button">Вернуться к колоде</button>
-          <button class="reset-btn" data-action="reset-local" type="button">Очистить локальные данные</button>
+        <div class="screen-nav">
+          <button class="btn-back-circle" data-action="back-to-cover" type="button" aria-label="Вернуться на главный экран">←</button>
+          <div class="screen-nav-title" aria-label="WYRD">
+            <p class="screen-brand-word">WYRD</p>
+            <div class="screen-brand-line" aria-hidden="true"></div>
+            <p class="screen-brand-subtitle">Оракул духов леса</p>
+          </div>
+          <div class="screen-nav-spacer" aria-hidden="true"></div>
         </div>
 
+        <div class="history-intro">
+          <h1 id="profile-name">Следы в лесу</h1>
+          <p>Один день — один след.</p>
+          <p>Здесь остаётся первое послание дня.</p>
+        </div>
+
+        <div class="history-empty-state" id="history-empty-state" hidden>
+          <p>Ты только вступаешь в лес.</p>
+          <p>Первый след появится здесь после первого послания.</p>
+          <button class="reset-btn profile-primary-action" data-action="back-to-deck" type="button">
+            Перейти к колоде
+          </button>
+        </div>
+
+        <div class="profile-box" id="profile-today-section">
+          <h2 class="history-section-title">Сегодня</h2>
+          <p class="profile-meta" id="profile-meta">Первый след сегодня ещё не оставлен.</p>
+          <div class="profile-today-card" id="profile-today-card" data-action="open-history-entry" role="button" tabindex="0" hidden>
+            <img class="profile-today-image" id="profile-today-image" src="" alt="" loading="lazy" decoding="async" />
+            <div class="profile-today-copy">
+              <p class="profile-today-kicker" id="profile-today-kicker"></p>
+              <h2 class="profile-today-title" id="profile-today-title"></h2>
+              <p class="profile-today-message" id="profile-today-message"></p>
+            </div>
+          </div>
+          <button class="reset-btn profile-primary-action" id="profile-deck-action" data-action="back-to-deck" type="button">
+            Перейти к колоде
+          </button>
+        </div>
+
+        <div class="history-heading" id="history-previous-heading" hidden>
+          <h2>Раньше</h2>
+        </div>
         <div class="history-list" id="history-list" aria-live="polite"></div>
+
+        <div class="history-sheet-backdrop" id="history-sheet-backdrop" data-action="close-history-entry" hidden></div>
+        <aside
+          class="history-sheet"
+          id="history-sheet"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="history-sheet-title"
+          hidden
+        >
+          <div class="history-sheet-inner">
+            <div class="history-sheet-handle" aria-hidden="true"></div>
+            <div class="history-sheet-close-row">
+              <button class="btn-back-circle history-sheet-close" data-action="close-history-entry" type="button" aria-label="Закрыть">×</button>
+            </div>
+            <div class="history-sheet-question" id="history-sheet-question">
+              <p>ТВОЙ ВОПРОС</p>
+              <blockquote id="history-sheet-question-text"></blockquote>
+            </div>
+            <div class="history-sheet-card">
+              <img id="history-sheet-image" src="" alt="" loading="lazy" decoding="async" />
+            </div>
+            <h2 id="history-sheet-title"></h2>
+            <div class="history-sheet-divider" aria-hidden="true">
+              <span></span>
+              <p>ПОСЛАНИЕ</p>
+              <span></span>
+            </div>
+            <p class="history-sheet-message" id="history-sheet-message"></p>
+            <div class="history-sheet-shadow" id="history-sheet-shadow">
+              <p>ТЕНЬ</p>
+              <blockquote id="history-sheet-shadow-text"></blockquote>
+            </div>
+            <div class="history-sheet-footer" id="history-sheet-footer"></div>
+          </div>
+        </aside>
       </section>
 
       <div class="ornament">✦ ✦ ✦</div>

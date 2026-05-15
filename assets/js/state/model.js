@@ -15,6 +15,8 @@ export const DEFAULT_STATE = Object.freeze({
   lastOracleReading: null,
 });
 
+const HISTORY_RETENTION_MONTHS = 3;
+
 export function cloneState(value) {
   return JSON.parse(JSON.stringify(value));
 }
@@ -23,7 +25,7 @@ export function normalizeState(value) {
   const base = cloneState(DEFAULT_STATE);
   const next = value && typeof value === "object" ? { ...base, ...value } : base;
 
-  next.history = Array.isArray(next.history) ? next.history.map(normalizeReading).filter(Boolean) : [];
+  next.history = Array.isArray(next.history) ? pruneExpiredHistory(next.history.map(normalizeHistoryEntry).filter(Boolean)) : [];
   next.lastSpread = Array.isArray(next.lastSpread) ? next.lastSpread.map(normalizeSpreadCard).filter(Boolean) : [];
   next.lastOracleReading =
     next.lastOracleReading && typeof next.lastOracleReading === "object" ? next.lastOracleReading : null;
@@ -59,13 +61,22 @@ export function hasFreeDrawAvailable(state, now = new Date()) {
   return !clearExpiredDailyFreeUsedAt(state, now).dailyFreeUsedAt;
 }
 
-export function createReadingState(state, reading) {
+export function createReadingState(state, reading, options = {}) {
+  const nextHistory =
+    options.saveDailyTrace === false
+      ? state.history
+      : saveDailyTrace(state.history, reading, {
+          date: options.date || reading.createdAt || new Date().toISOString(),
+          message: options.message,
+          question: options.question,
+        });
+
   return normalizeState({
     ...state,
     currentReading: reading,
     lastSpread: [],
     lastOracleReading: null,
-    history: [reading, ...state.history],
+    history: nextHistory,
   });
 }
 
@@ -82,14 +93,6 @@ export function unlockReadingDepth(state) {
   return normalizeState({
     ...state,
     currentReading,
-    history: state.history.map((reading) =>
-      reading.id === currentReading.id
-        ? {
-            ...reading,
-            depthUnlocked: true,
-          }
-        : reading,
-    ),
   });
 }
 
@@ -144,6 +147,119 @@ function normalizeReading(reading) {
     ...reading,
     card,
   };
+}
+
+function normalizeHistoryEntry(entry) {
+  if (!entry || typeof entry !== "object") {
+    return null;
+  }
+
+  if (typeof entry.cardId === "string") {
+    const date = normalizeDateString(entry.date || entry.createdAt);
+    if (!date) {
+      return null;
+    }
+
+    const dayKey = normalizeDayKey(entry.dayKey) || getLocalDayKey(new Date(date));
+    const id = typeof entry.id === "string" && entry.id ? entry.id : `daily-trace-${dayKey}`;
+
+    return {
+      id,
+      dayKey,
+      date,
+      cardId: entry.cardId,
+      question: typeof entry.question === "string" ? entry.question : "",
+      message: typeof entry.message === "string" ? entry.message : "",
+    };
+  }
+
+  // Migrate legacy reading history entries from the pre-trace model.
+  if (entry.card && typeof entry.card.id === "string") {
+    const date = normalizeDateString(entry.createdAt);
+    if (!date) {
+      return null;
+    }
+    const card = normalizeCard(entry.card);
+    const dayKey = getLocalDayKey(new Date(date));
+
+    return {
+      id: `daily-trace-${dayKey}`,
+      dayKey,
+      date,
+      cardId: card.id,
+      question: typeof entry.question === "string" ? entry.question : "",
+      message: typeof entry.message === "string" ? entry.message : card.message || "",
+    };
+  }
+
+  return null;
+}
+
+function saveDailyTrace(history, reading, options) {
+  if (!reading || !reading.card || typeof reading.card.id !== "string") {
+    return history;
+  }
+
+  const date = normalizeDateString(options.date) || new Date().toISOString();
+  const dayKey = getLocalDayKey(new Date(date));
+
+  if (history.some((entry) => entry.dayKey === dayKey)) {
+    return pruneExpiredHistory(history);
+  }
+
+  return pruneExpiredHistory([
+    {
+      id: `daily-trace-${dayKey}`,
+      dayKey,
+      date,
+      cardId: reading.card.id,
+      question: typeof options.question === "string" ? options.question : "",
+      message: typeof options.message === "string" && options.message ? options.message : reading.card.message || "",
+    },
+    ...history,
+  ]);
+}
+
+function pruneExpiredHistory(history, now = new Date()) {
+  const cutoff = new Date(now);
+  cutoff.setMonth(cutoff.getMonth() - HISTORY_RETENTION_MONTHS);
+  const seenDayKeys = new Set();
+
+  return history
+    .filter((entry) => new Date(entry.date) >= cutoff)
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .filter((entry) => {
+      if (seenDayKeys.has(entry.dayKey)) {
+        return false;
+      }
+      seenDayKeys.add(entry.dayKey);
+      return true;
+    });
+}
+
+function normalizeDateString(value) {
+  if (typeof value !== "string") {
+    return null;
+  }
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return null;
+  }
+
+  return date.toISOString();
+}
+
+function normalizeDayKey(value) {
+  return typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : null;
+}
+
+export function getLocalDayKey(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
 }
 
 function normalizeSpreadCard(card) {

@@ -75,8 +75,8 @@ export function createStateStore(storage = getSafeStorage()) {
         dailyFreeUsedAt: usedAt,
       });
     },
-    saveReading(reading) {
-      return commit(createReadingState(state, reading));
+    saveReading(reading, options = {}) {
+      return commit(createReadingState(state, reading, options));
     },
     unlockCurrentReadingDepth() {
       return commit(unlockReadingDepth(state));

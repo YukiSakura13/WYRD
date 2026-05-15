@@ -176,28 +176,33 @@ const GROUP_CLOSINGS = {
 };
 
 const POSITION_VOICE = {
-  surface: { lead: "Снаружи это выглядит так:", side: "message" },
-  hidden: { lead: "Под этим лежит:", side: "shadow" },
-  shift: { lead: "Если посмотреть глубже, становится видно:", side: "message" },
-  now: { lead: "Сейчас главное не событие, а состояние:", side: "message" },
-  root: { lead: "Это тянется из старого слоя:", side: "shadow" },
-  lock: { lead: "Держит не сама ситуация, а старый узел:", side: "shadow" },
-  movement: { lead: "Незаметно уже меняется то, как", side: "message" },
-  vector: { lead: "Эта линия ведёт туда, где", side: "message" },
-  start: { lead: "Путь начинается из того, что", side: "message" },
-  force: { lead: "Ситуацию двигает сила, в которой", side: "message" },
-  outcome: { lead: "Если течение сохранится, впереди", side: "message" },
-  other: { lead: "В другой стороне сейчас звучит:", side: "shadow" },
-  between: { lead: "Между вами стоит:", side: "shadow" },
-  factor: { lead: "Ускоряет или задерживает это:", side: "shadow" },
-  block: { lead: "Шаг не даётся, потому что внутри звучит:", side: "shadow" },
-  resource: { lead: "Опора уже есть там, где", side: "message" },
-  release: { lead: "Отпустить нужно не всё, а этот узел:", side: "shadow" },
-  step: { lead: "Первое движение начинается там, где", side: "message" },
-  sign: { lead: "После шага станет видно:", side: "message" },
-  face: { lead: "Снаружи этот человек показывает", side: "message" },
-  core: { lead: "Внутри этого человека скрыто:", side: "shadow" },
-  motive: { lead: "Им движет:", side: "shadow" },
+  surface: { lead: "Снаружи:", side: "message" },
+  hidden: { lead: "Скрыто:", side: "shadow" },
+  shift: { lead: "Ответ:", side: "message" },
+  now: { lead: "Сейчас:", side: "message" },
+  node: { lead: "Узел:", side: "shadow" },
+  past: { lead: "Было:", side: "shadow" },
+  root: { lead: "Корень:", side: "shadow" },
+  lock: { lead: "Держит:", side: "shadow" },
+  movement: { lead: "Уже меняется:", side: "message" },
+  vector: { lead: "Ведёт к:", side: "message" },
+  start: { lead: "Старт:", side: "message" },
+  force: { lead: "Движет:", side: "message" },
+  outcome: { lead: "Итог:", side: "message" },
+  other: { lead: "В другой стороне:", side: "shadow" },
+  between: { lead: "Между вами:", side: "shadow" },
+  factor: { lead: "Фактор:", side: "shadow" },
+  block: { lead: "Мешает:", side: "shadow" },
+  support: { lead: "Держит:", side: "shadow" },
+  resource: { lead: "Опора:", side: "message" },
+  release: { lead: "Отпустить:", side: "shadow" },
+  step: { lead: "Шаг:", side: "message" },
+  sign: { lead: "После шага:", side: "message" },
+  face: { lead: "Снаружи:", side: "message" },
+  person: { lead: "Человек:", side: "message" },
+  core: { lead: "Внутри:", side: "shadow" },
+  nature: { lead: "Природа:", side: "shadow" },
+  motive: { lead: "Мотив:", side: "shadow" },
 };
 
 export function buildLocalOracleReading(spreadId, cards, options = {}) {
@@ -258,29 +263,14 @@ function buildOracleMessage(meaning, questionEcho = "", routeGroup = null, optio
   return [groupTone, opening, middle, closing].filter(Boolean).join(" ");
 }
 
-function buildPositionAwareOracleMessage({ cards, groupTone, meaning, positions, questionEcho, routeGroup }) {
-  const opening = getPositionAwareOpening({ meaning, questionEcho, routeGroup });
+function buildPositionAwareOracleMessage({ cards, positions }) {
   const positionLines = positions
     .map(function buildPositionLine(position, index) {
       return buildPositionLineForCard(position, cards[index]);
     })
     .filter(Boolean);
-  const closing =
-    pickForMeaning(CLOSINGS[meaning.supportSignal?.theme] || CLOSINGS.default, meaning, "position-aware:closing");
 
-  return [groupTone, opening, ...positionLines, closing].filter(Boolean).join(" ");
-}
-
-function getPositionAwareOpening({ meaning, questionEcho, routeGroup }) {
-  if (questionEcho) {
-    return questionEcho;
-  }
-
-  if (routeGroup && GROUP_OPENINGS[routeGroup]) {
-    return pickForMeaning(GROUP_OPENINGS[routeGroup], meaning, `position-aware:${routeGroup}:opening`);
-  }
-
-  return pickForMeaning(OPENINGS[meaning.centralTension?.type] || OPENINGS.emotional_core, meaning, "position-aware:opening");
+  return positionLines.join(" ");
 }
 
 function buildPositionLineForCard(position, card) {
@@ -290,19 +280,19 @@ function buildPositionLineForCard(position, card) {
 
   const voice = POSITION_VOICE[position.id] || { lead: position.label || "Здесь проявляется", side: "message" };
   const sourceText = voice.side === "shadow" ? card.shadow || card.message : card.message || card.shadow;
-  const cardPhrase = makeCardPhrase(sourceText);
+  const cardPhrase = makeCardPhrase(sourceText, position.id);
 
   return `${voice.lead} ${cardPhrase}`;
 }
 
-function makeCardPhrase(text) {
+function makeCardPhrase(text, positionId = "") {
   const sentence = getFirstSentence(text);
 
   if (!sentence) {
     return "ответ становится ближе.";
   }
 
-  return lowercaseFirstLetter(ensurePeriod(sentence));
+  return lowercaseFirstLetter(shortenSentence(ensurePeriod(sentence), getPositionPhraseLimit(positionId)));
 }
 
 function getFirstSentence(text) {
@@ -322,6 +312,32 @@ function lowercaseFirstLetter(text) {
 
 function ensurePeriod(text) {
   return /[.!?]$/u.test(text) ? text : `${text}.`;
+}
+
+function shortenSentence(sentence, maxLength) {
+  const clause = getFirstClause(sentence);
+
+  if (clause.length <= maxLength) {
+    return clause;
+  }
+
+  const trimmed = clause.slice(0, maxLength).replace(/\s+\S*$/u, "").trim();
+  return ensurePeriod(trimmed);
+}
+
+function getFirstClause(sentence) {
+  const [clause] = sentence.split(/\s+[—–-]\s+|,\s+|;\s+|:\s+/u);
+  const trimmedClause = (clause || "").trim();
+
+  if (!trimmedClause || ["то", "того", "там"].includes(trimmedClause.split(/\s+/u).pop()?.toLowerCase())) {
+    return sentence;
+  }
+
+  return ensurePeriod(trimmedClause);
+}
+
+function getPositionPhraseLimit(positionId) {
+  return positionId === "outcome" || positionId === "vector" || positionId === "step" ? 96 : 82;
 }
 
 function pickForMeaning(options, meaning, salt) {
