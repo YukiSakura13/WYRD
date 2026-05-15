@@ -218,6 +218,7 @@ export function createSpreadRenderer(elements) {
       image.classList.toggle("is-empty", !trace.card.image);
 
       const content = document.createElement("div");
+      content.className = "history-item-copy";
       const title = document.createElement("h3");
       title.textContent = trace.card.name;
 
@@ -228,9 +229,10 @@ export function createSpreadRenderer(elements) {
       meta.className = "history-item-meta";
       const date = new Date(trace.date);
       const moon = getMoonPhase(date);
-      const dateText = document.createElement("span");
-      dateText.textContent = formatTraceDate(date);
-      meta.append(dateText, createMoonIcon(moon.type));
+      const moonText = document.createElement("span");
+      moonText.className = "history-item-moon-label";
+      moonText.textContent = `${formatTraceDate(date)} · ${moon.name}`;
+      meta.append(createMoonIcon(moon.type), moonText);
 
       content.append(title, message);
       item.append(image, content, meta);

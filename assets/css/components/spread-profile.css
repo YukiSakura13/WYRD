@@ -963,13 +963,19 @@ body.spread-modal-open {
 }
 
 .history-item-meta {
-  display: grid;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
   justify-items: end;
-  gap: 0.3rem;
+  gap: 0.45rem;
   color: rgba(154, 143, 122, 0.62);
   font-family: var(--ui-font);
   font-size: 0.72rem;
   line-height: var(--leading-normal);
+}
+
+.history-item-moon-label {
+  white-space: nowrap;
 }
 
 .history-empty {
@@ -1252,7 +1258,6 @@ body.spread-modal-open {
   .history-item-meta {
     grid-column: 2;
     grid-row: 2;
-    grid-auto-flow: column;
     justify-content: start;
     justify-items: start;
   }
