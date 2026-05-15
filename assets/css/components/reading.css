@@ -100,10 +100,21 @@
 #profile {
   position: relative;
   width: 100%;
+  animation-name: profileReveal;
   padding:
     max(1.05rem, calc(env(safe-area-inset-top) + 0.4rem))
     0
     max(1.2rem, calc(env(safe-area-inset-bottom) + 0.55rem));
+}
+
+@keyframes profileReveal {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 /* Shared deck-style header for every screen after the deck. */
