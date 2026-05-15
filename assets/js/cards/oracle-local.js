@@ -318,10 +318,10 @@ function shortenSentence(sentence, maxLength) {
   const clause = getFirstClause(sentence);
 
   if (clause.length <= maxLength) {
-    return clause;
+    return cleanDanglingEnding(clause);
   }
 
-  const trimmed = clause.slice(0, maxLength).replace(/\s+\S*$/u, "").trim();
+  const trimmed = cleanDanglingEnding(clause.slice(0, maxLength).replace(/\s+\S*$/u, "").trim());
   return ensurePeriod(trimmed);
 }
 
@@ -329,11 +329,36 @@ function getFirstClause(sentence) {
   const [clause] = sentence.split(/\s+[—–-]\s+|,\s+|;\s+|:\s+/u);
   const trimmedClause = (clause || "").trim();
 
-  if (!trimmedClause || ["то", "того", "там"].includes(trimmedClause.split(/\s+/u).pop()?.toLowerCase())) {
+  if (!isUsableClause(trimmedClause)) {
     return sentence;
   }
 
   return ensurePeriod(trimmedClause);
+}
+
+function isUsableClause(clause) {
+  if (!clause || clause.length < 18) {
+    return false;
+  }
+
+  const lastWord = clause.split(/\s+/u).pop()?.toLowerCase().replace(/[.!?]$/u, "");
+  return !["в", "во", "на", "с", "со", "к", "ко", "о", "об", "от", "до", "для", "то", "того", "там"].includes(
+    lastWord,
+  );
+}
+
+function cleanDanglingEnding(text) {
+  const words = text.replace(/[.,;:!?]$/u, "").trim().split(/\s+/u);
+
+  while (words.length > 1) {
+    const lastWord = words[words.length - 1].toLowerCase();
+    if (!["в", "во", "на", "с", "со", "к", "ко", "о", "об", "от", "до", "для", "и", "а", "но"].includes(lastWord)) {
+      break;
+    }
+    words.pop();
+  }
+
+  return ensurePeriod(words.join(" "));
 }
 
 function getPositionPhraseLimit(positionId) {

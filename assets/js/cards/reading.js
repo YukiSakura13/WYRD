@@ -114,9 +114,7 @@ function buildConfiguredSpread(cards, slotConfig, options = {}) {
       usedStates: collectStates(selected),
       excludeIds: collectIds(selected),
       questionRoute,
-      primaryGroupOnly:
-        Boolean(questionRoute?.primaryGroup) &&
-        ["current_message", "what_is_happening"].includes(configItem.spreadRole),
+      primaryGroupOnly: Boolean(questionRoute?.primaryGroup && questionRoute?.matched),
       recentCardNames,
     });
 

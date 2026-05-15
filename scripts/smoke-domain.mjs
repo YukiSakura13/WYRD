@@ -71,6 +71,21 @@ async function main() {
     matched: true,
   });
 
+  checkRoute(routing, "Он ко мне тянется или мне просто кажется?", {
+    primaryGroup: "love_romance",
+    matched: true,
+  });
+
+  checkRoute(routing, "Ко мне вернётся проблемный заказчик?", {
+    primaryGroup: "career_money",
+    matched: true,
+  });
+
+  checkRoute(routing, "Я когда-нибудь избавлюсь от этой головной боли?", {
+    primaryGroup: "health_recovery",
+    matched: true,
+  });
+
   checkRoute(routing, "Что происходит в отношениях с мамой и семьёй?", {
     primaryGroup: "love_romance",
     secondaryGroup: "family_circle",
@@ -88,6 +103,12 @@ async function main() {
 
   assert.equal(routing.detectArchetype("вернётся ли он"), "B", "return question should use archetype B");
   assert.equal(routing.detectArchetype("почему он молчит"), "A", "why question should use archetype A");
+  assert.equal(routing.detectArchetype("он сам объявится"), "B", "will-appear question should use archetype B");
+  assert.equal(
+    routing.detectArchetype("если я сейчас соглашусь, потом не пожалею же?"),
+    "C",
+    "agreement regret question should use archetype C",
+  );
 
   const bridgeMultiplier = routing.getRouteWeightMultiplier("Хранитель Нитей", {
     primaryGroup: "love_romance",
