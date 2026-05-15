@@ -18,6 +18,7 @@ SITE_FILES = [
 ]
 SITE_DIRS = [
     "assets",
+    "public",
 ]
 
 

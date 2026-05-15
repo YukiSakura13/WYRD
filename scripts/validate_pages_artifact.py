@@ -16,6 +16,7 @@ REQUIRED_FILES = [
     DIST / ".nojekyll",
     DIST / "assets/css/styles.css",
     DIST / "assets/js/main.js",
+    DIST / "public/og-cover.png",
 ]
 
 
