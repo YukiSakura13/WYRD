@@ -62,7 +62,7 @@ export function shareCurrentCard(store) {
         throw new Error("share blob unavailable");
       }
 
-      return shareBlob(blob);
+      return shareBlob(blob, reading);
     })
     .then(function handleShareSuccess(result) {
       setShareState({
@@ -658,8 +658,15 @@ function canvasToBlob(canvas) {
   });
 }
 
-function shareBlob(blob) {
-  const file = new File([blob], "wyrd-card.png", { type: "image/png" });
+function shareBlob(blob, reading) {
+  const shareTitle = buildShareTitle(reading);
+  const shareText = buildShareText(reading);
+  const file = new File([blob], buildShareFileName(reading), { type: "image/png" });
+  const sharePayload = {
+    title: shareTitle,
+    text: shareText,
+    files: [file],
+  };
 
   if (canNativeShareFile(file)) {
     setShareState({
@@ -670,7 +677,7 @@ function shareBlob(blob) {
       message: "",
     });
 
-    return navigator.share({ files: [file] }).then(function finishNativeShare() {
+    return navigator.share(sharePayload).then(function finishNativeShare() {
       return "native";
     });
   }
@@ -685,7 +692,7 @@ function shareBlob(blob) {
     });
 
     return navigator
-      .share({ files: [file] })
+      .share(sharePayload)
       .then(function finishNativeShareWithoutCanShare() {
         return "native";
       })
@@ -694,13 +701,35 @@ function shareBlob(blob) {
           throw error;
         }
 
-        downloadBlob(blob, "wyrd-card.png");
+        downloadBlob(blob, buildShareFileName(reading));
         return "download";
       });
   }
 
-  downloadBlob(blob, "wyrd-card.png");
+  downloadBlob(blob, buildShareFileName(reading));
   return Promise.resolve("download");
+}
+
+function buildShareTitle(reading) {
+  const cardName = String(reading?.card?.name || reading?.name || "").trim();
+  return cardName ? `WYRD — ${cardName}` : "WYRD — Оракул духов леса";
+}
+
+function buildShareText(reading) {
+  const message = String(reading?.card?.message || reading?.message || "").trim();
+  return message ? `Послание карты: ${message}` : "Карта из оракула духов леса.";
+}
+
+function buildShareFileName(reading) {
+  const cardName = String(reading?.card?.name || reading?.name || "").trim();
+  const suffix = cardName
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-zа-яё0-9]+/gi, "-")
+    .replace(/^-+|-+$/g, "");
+
+  return suffix ? `wyrd-card-${suffix}.png` : "wyrd-card.png";
 }
 
 function canNativeShareFile(file) {
