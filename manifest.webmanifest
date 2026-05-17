@@ -5,5 +5,18 @@
   "start_url": "./",
   "display": "standalone",
   "background_color": "#101019",
-  "theme_color": "#101019"
+  "theme_color": "#101019",
+  "icons": [
+    {
+      "src": "./public/icons/icon-192-wyrd-owl-mark.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./public/icons/icon-512-wyrd-owl-mark.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
 }
