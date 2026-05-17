@@ -16,7 +16,9 @@ REQUIRED_FILES = [
     DIST / ".nojekyll",
     DIST / "assets/css/styles.css",
     DIST / "assets/js/main.js",
-    DIST / "public/og-cover-v2.png",
+    DIST / "public/social/og-wide-wyrd-owl-title.png",
+    DIST / "public/social/og-square-wyrd-owl-title.png",
+    DIST / "public/icons/icon-square-wyrd-owl-moon.png",
 ]
 
 
