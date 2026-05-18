@@ -126,14 +126,23 @@ async function main() {
     matched: true,
   });
 
+  checkRoute(routing, "Мой партнер не отожмет мой бизнес?", {
+    primaryGroup: "career_money",
+    matched: true,
+  });
+
+  checkRoute(routing, "Любит ли меня мой партнер?", {
+    primaryGroup: "love_romance",
+    matched: true,
+  });
+
   checkRoute(routing, "Работаю из дома и устала. Что делать?", {
     primaryGroup: "health_recovery",
     matched: true,
   });
 
   checkRoute(routing, "Что происходит в отношениях с мамой и семьёй?", {
-    primaryGroup: "love_romance",
-    secondaryGroup: "family_circle",
+    primaryGroup: "family_circle",
     matched: true,
   });
 

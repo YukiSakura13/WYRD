@@ -15,6 +15,124 @@ import {
   SOFT_KEYWORD_WEIGHT,
 } from "./config.js";
 
+const DOMAIN_CONTEXT_BOOST = 8;
+const STRONG_DOMAIN_CONTEXT_BOOST = 12;
+const CROSS_DOMAIN_PENALTY = 10;
+
+const CAREER_CONTEXTS = [
+  "работ",
+  "карьер",
+  "бизнес",
+  "проект",
+  "клиент",
+  "заказ",
+  "деньг",
+  "доход",
+  "зарплат",
+  "повыш",
+  "преми",
+  "начальник",
+  "коллег",
+  "офис",
+  "делов",
+  "доля",
+  "прибыль",
+  "контракт",
+  "сделк",
+  "отожм",
+  "отжать",
+  "заберет бизнес",
+  "заберёт бизнес",
+  "партнер по бизнесу",
+  "партнером по бизнесу",
+  "партнёр по бизнесу",
+  "деловой партнер",
+  "деловой партнёр",
+];
+
+const LOVE_CONTEXTS = [
+  "люб",
+  "любов",
+  "влюб",
+  "чувств",
+  "отнош",
+  "бывш",
+  "скучает",
+  "ревност",
+  "свидан",
+  "поцел",
+  "сердц",
+  "нравлюсь",
+  "нравит",
+  "симпат",
+  "флирт",
+  "расстав",
+  "измен",
+  "молчит",
+  "не пишет",
+  "напишет",
+  "ответит",
+  "объявится",
+  "тянется",
+  "между нами",
+  "с ним",
+  "с ней",
+  "он ко мне",
+  "она ко мне",
+];
+
+const STRONG_LOVE_CONTEXTS = LOVE_CONTEXTS.filter(function filterStrongLoveContext(context) {
+  return context !== "отнош";
+});
+
+const HEALTH_CONTEXTS = [
+  "устал",
+  "нет сил",
+  "сил нет",
+  "выгор",
+  "здоров",
+  "болит",
+  "голов",
+  "мигр",
+  "сон",
+  "спать",
+  "восстанов",
+  "отдых",
+  "отпуск",
+  "ресурс",
+  "истощ",
+  "перегруз",
+  "пауза",
+];
+
+const FAMILY_CONTEXTS = [
+  "семь",
+  "мама",
+  "папа",
+  "родител",
+  "родн",
+  "близк",
+  "друз",
+  "подруг",
+  "сестр",
+  "брат",
+  "дети",
+];
+
+const TRIAL_CONTEXTS = [
+  "тяжело",
+  "трудно",
+  "страшно",
+  "боюсь",
+  "криз",
+  "конфликт",
+  "давлен",
+  "тревог",
+  "не справ",
+  "хуже",
+  "плохо",
+];
+
 export function normalizeQuestion(question) {
   return typeof question === "string" ? question.trim().toLowerCase().replaceAll("ё", "е") : "";
 }
@@ -65,8 +183,71 @@ export function scoreQuestionGroups(question) {
 
   return {
     normalizedQuestion,
-    scores,
+    scores: applyDomainContextAdjustments(normalizedQuestion, scores),
   };
+}
+
+function applyDomainContextAdjustments(normalizedQuestion, scores) {
+  if (!normalizedQuestion) {
+    return scores;
+  }
+
+  const adjustedScores = { ...scores };
+  const hasCareerContext = hasAny(normalizedQuestion, CAREER_CONTEXTS);
+  const hasLoveContext = hasAny(normalizedQuestion, LOVE_CONTEXTS);
+  const hasStrongLoveContext = hasAny(normalizedQuestion, STRONG_LOVE_CONTEXTS);
+  const hasHealthContext = hasAny(normalizedQuestion, HEALTH_CONTEXTS);
+  const hasFamilyContext = hasAny(normalizedQuestion, FAMILY_CONTEXTS);
+  const hasTrialContext = hasAny(normalizedQuestion, TRIAL_CONTEXTS);
+
+  if (hasCareerContext) {
+    adjustedScores.career_money += DOMAIN_CONTEXT_BOOST;
+
+    if (hasAny(normalizedQuestion, ["бизнес", "клиент", "заказ", "деньг", "повыш", "начальник", "делов"])) {
+      adjustedScores.career_money += DOMAIN_CONTEXT_BOOST;
+    }
+
+    if (!hasLoveContext || hasAny(normalizedQuestion, ["партнер", "партнером", "партнёр", "встреча", "шанс", "пара"])) {
+      adjustedScores.love_romance = Math.max(0, adjustedScores.love_romance - CROSS_DOMAIN_PENALTY);
+    }
+
+    if (hasAny(normalizedQuestion, ["работаю из дома", "работа из дома", "из дома"])) {
+      adjustedScores.family_circle = Math.max(0, adjustedScores.family_circle - CROSS_DOMAIN_PENALTY);
+    }
+  }
+
+  if (hasHealthContext) {
+    adjustedScores.health_recovery += DOMAIN_CONTEXT_BOOST;
+
+    if (hasAny(normalizedQuestion, ["устал", "нет сил", "сил нет", "выгор", "истощ", "перегруз"])) {
+      adjustedScores.health_recovery += STRONG_DOMAIN_CONTEXT_BOOST;
+      adjustedScores.career_money = Math.max(0, adjustedScores.career_money - SOFT_KEYWORD_WEIGHT);
+    }
+  }
+
+  if (hasFamilyContext && !hasCareerContext) {
+    adjustedScores.family_circle += DOMAIN_CONTEXT_BOOST;
+
+    if (!hasStrongLoveContext) {
+      adjustedScores.love_romance = Math.max(0, adjustedScores.love_romance - CROSS_DOMAIN_PENALTY);
+    }
+  }
+
+  if (hasLoveContext && !hasCareerContext && (!hasFamilyContext || hasStrongLoveContext)) {
+    adjustedScores.love_romance += DOMAIN_CONTEXT_BOOST;
+  }
+
+  if (hasTrialContext && !hasCareerContext && !hasHealthContext) {
+    adjustedScores.trials_growth += SOFT_KEYWORD_WEIGHT;
+  }
+
+  return adjustedScores;
+}
+
+function hasAny(value, fragments) {
+  return fragments.some(function hasFragment(fragment) {
+    return value.includes(normalizeQuestion(fragment));
+  });
 }
 
 export function detectQuestionRoute(question) {
