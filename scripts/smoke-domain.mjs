@@ -106,6 +106,31 @@ async function main() {
     matched: true,
   });
 
+  checkRoute(routing, "Состоится ли моя деловая встреча с клиентом?", {
+    primaryGroup: "career_money",
+    matched: true,
+  });
+
+  checkRoute(routing, "У меня есть шанс на повышение?", {
+    primaryGroup: "career_money",
+    matched: true,
+  });
+
+  checkRoute(routing, "У меня конфликт с начальником как мне быть?", {
+    primaryGroup: "career_money",
+    matched: true,
+  });
+
+  checkRoute(routing, "Мы с партнером открываем бизнес и получится ли?", {
+    primaryGroup: "career_money",
+    matched: true,
+  });
+
+  checkRoute(routing, "Работаю из дома и устала. Что делать?", {
+    primaryGroup: "health_recovery",
+    matched: true,
+  });
+
   checkRoute(routing, "Что происходит в отношениях с мамой и семьёй?", {
     primaryGroup: "love_romance",
     secondaryGroup: "family_circle",

@@ -36,6 +36,15 @@ export function filterCardsByPrimaryGroup(cards, route) {
     return cards;
   }
 
+  const directGroupCards = QUESTION_ROUTE_CONFIG[route.primaryGroup]?.cards || [];
+  const directlyFilteredCards = cards.filter(function filterDirectCard(card) {
+    return directGroupCards.includes(card.name);
+  });
+
+  if (directlyFilteredCards.length) {
+    return directlyFilteredCards;
+  }
+
   const filteredCards = cards.filter(function filterCard(card) {
     return cardBelongsToGroup(card.name, route.primaryGroup);
   });

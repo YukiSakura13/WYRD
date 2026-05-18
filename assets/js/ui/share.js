@@ -354,8 +354,8 @@ function normalizeReading(reading) {
   return {
     key: reading.id || reading.card.id || "default",
     name: String(reading.card.name || "").trim(),
-    message: String(reading.card.message || "").trim(),
-    shadow: String(reading.card.shadow || "").trim(),
+    message: String(reading.message || reading.card.message || "").trim(),
+    shadow: String(reading.shadow || reading.card.shadow || "").trim(),
     card: reading.card,
   };
 }
@@ -716,7 +716,7 @@ function buildShareTitle(reading) {
 }
 
 function buildShareText(reading) {
-  const message = String(reading?.card?.message || reading?.message || "").trim();
+  const message = String(reading?.message || reading?.card?.message || "").trim();
   return message ? `Послание карты: ${message}` : "Карта из оракула духов леса.";
 }
 
