@@ -1,6 +1,7 @@
 import { createForestAudioController } from "./audio.js";
 import { CARDS, COVER_IMAGE } from "./data/cards.js";
 import { registerServiceWorker } from "./pwa.js";
+import { detectQuestionRoute } from "./cards/question-routing.js";
 import { createStateStore } from "./state/storage.js";
 import { createActionHandler, createInitialUIState, createKeyboardHandler } from "./ui/actions.js";
 import { createRenderer, getElements } from "./ui/render.js";
@@ -11,6 +12,29 @@ const uiState = createInitialUIState(store.getState());
 const elements = getElements();
 const renderer = createRenderer(elements);
 const audio = createForestAudioController();
+
+window.debugRoute = function debugRoute(question) {
+  const route = detectQuestionRoute(question);
+  const rankedScores = Object.entries(route.scores).sort(function sortByScore(left, right) {
+    return right[1] - left[1];
+  });
+
+  console.table(
+    rankedScores.map(function mapScore([group, score]) {
+      return {
+        group,
+        score,
+        winner: group === route.primaryGroup ? "← winner" : "",
+      };
+    }),
+  );
+  console.log("winner:", route.primaryGroup);
+  console.log("secondary:", route.secondaryGroup);
+  console.log("matched:", route.matched);
+  console.log("normalized:", route.normalizedQuestion);
+
+  return route;
+};
 
 function setScene(scene) {
   if (!isKnownScene(scene)) {

@@ -91,6 +91,21 @@ async function main() {
     matched: true,
   });
 
+  checkRoute(routing, "Смогу ли я улететь в отпуск?", {
+    primaryGroup: "health_recovery",
+    matched: true,
+  });
+
+  checkRoute(routing, "Поеду ли я за границу?", {
+    primaryGroup: "health_recovery",
+    matched: true,
+  });
+
+  checkRoute(routing, "Стоит ли ехать в другую страну?", {
+    primaryGroup: "health_recovery",
+    matched: true,
+  });
+
   checkRoute(routing, "Что происходит в отношениях с мамой и семьёй?", {
     primaryGroup: "love_romance",
     secondaryGroup: "family_circle",
