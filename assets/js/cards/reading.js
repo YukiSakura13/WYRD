@@ -3,7 +3,6 @@ import {
   detectQuestionRoute,
   filterCardsByPrimaryGroup,
   getRouteWeightMultiplier,
-  normalizeQuestion,
 } from "./question-routing.js";
 import { SPREADS_CONFIG } from "./spreads-config.js";
 
@@ -29,8 +28,6 @@ export function createReading(cards, isFree, now = new Date(), options = {}) {
     free: isFree,
     depthUnlocked: false,
     card,
-    message: buildSingleCardMessage(card, options.question || "", questionRoute),
-    shadow: buildSingleCardShadow(card, options.question || "", questionRoute),
   };
 }
 
@@ -234,93 +231,6 @@ function normalizeRecentCardNames(recentCardNames) {
 
 function rememberRecentCardName(cardName, recentCardNames) {
   return cardName ? [cardName, ...recentCardNames].slice(0, 7) : recentCardNames;
-}
-
-function buildSingleCardMessage(card, question, questionRoute) {
-  const normalizedQuestion = normalizeQuestion(question);
-  const group = questionRoute?.primaryGroup;
-
-  if (!questionRoute?.matched || !normalizedQuestion) {
-    return card.message;
-  }
-
-  if (group === "career_money") {
-    if (hasAny(normalizedQuestion, ["отожм", "отжать", "заберет бизнес", "заберет долю", "заберёт бизнес", "заберёт долю"])) {
-      return "Здесь важнее не гадать о намерениях партнёра, а защитить дело ясными условиями. Если есть тревога за бизнес, закрепи роли, доли и доступы так, чтобы доверие не держалось только на словах.";
-    }
-
-    if (hasAny(normalizedQuestion, ["деловая встреч", "клиент"])) {
-      return "Встреча может состояться, но её лучше держать в ясных рамках: меньше угадывать чужое настроение, больше опираться на факты. Подготовь главный вопрос и один спокойный следующий шаг.";
-    }
-
-    if (hasAny(normalizedQuestion, ["повышен", "повысят", "должност"])) {
-      return "Шанс на повышение есть там, где ты показываешь не только старание, но и ценность своей роли. Сейчас важно назвать свой вклад вслух и не ждать, что его заметят без твоего движения.";
-    }
-
-    if (hasAny(normalizedQuestion, ["конфликт", "начальник", "начальником"])) {
-      return "В конфликте с начальником тебе нужна не резкость, а твёрдая ясность. Сначала отдели обиду от сути дела, потом говори коротко: что происходит, что тебе нужно и где граница.";
-    }
-
-    if (hasAny(normalizedQuestion, ["бизнес", "проект", "партнером", "партнер"])) {
-      return "У этого дела есть почва, если вы заранее разделите роли, деньги и ответственность. Не проверяй бизнес только доверием: пусть у него будут правила, тогда союз выдержит реальность.";
-    }
-
-    return "Вопрос упирается не в удачу, а в ясное действие. Там, где ты называешь цену, роль и следующий шаг, дорога становится заметнее.";
-  }
-
-  if (group === "health_recovery") {
-    if (hasAny(normalizedQuestion, ["устал", "нет сил", "сил нет", "выгор", "работаю из дома"])) {
-      return "Это не лень и не слабость, а перегруз. Сейчас ответ не в том, чтобы сильнее собраться, а в том, чтобы вернуть телу паузу и убрать хотя бы одну лишнюю нагрузку.";
-    }
-
-    if (hasAny(normalizedQuestion, ["отпуск", "улет", "поезд", "путешеств", "за границу", "другую страну"])) {
-      return "Поездка выглядит как попытка вернуть себе воздух, а не просто сменить место. Дай ей шанс, но не тащи с собой всё, от чего ты едешь отдыхать.";
-    }
-
-    return "Тело просит бережности раньше, чем появится идеальный момент для отдыха. Начни с малого восстановления: сон, тишина, меньше давления на себя.";
-  }
-
-  if (group === "love_romance") {
-    return "Здесь важно не только то, что чувствует другой человек, но и что эта связь делает с тобой. Если рядом с надеждой всё время стоит тревога, лес просит смотреть не на обещания, а на живые поступки.";
-  }
-
-  if (group === "family_circle") {
-    return "Этот вопрос про близость, доверие и то, рядом с кем тебе становится теплее. Не всем нужно объяснять своё сердце: ищи тех, кто умеет быть рядом без лишнего шума.";
-  }
-
-  if (group === "trials_growth") {
-    return "Ты стоишь не перед наказанием, а перед трудным местом роста. Не пытайся решить всё сразу: выбери один честный шаг, который вернёт тебе опору.";
-  }
-
-  if (group === "fate_path") {
-    return "Ответ пока не раскрывается одной прямой линией. Смотри на то, куда тебя тянет спокойнее, а не громче: там путь начинает показывать себя.";
-  }
-
-  return card.message;
-}
-
-function buildSingleCardShadow(card, question, questionRoute) {
-  const normalizedQuestion = normalizeQuestion(question);
-
-  if (!questionRoute?.matched || !normalizedQuestion) {
-    return card.shadow;
-  }
-
-  if (questionRoute.primaryGroup === "career_money") {
-    return "Что ты пытаешься решить тревогой вместо ясного разговора или конкретного условия?";
-  }
-
-  if (questionRoute.primaryGroup === "health_recovery") {
-    return "Где ты называешь усталость слабостью, хотя на самом деле это просьба о восстановлении?";
-  }
-
-  return card.shadow;
-}
-
-function hasAny(value, fragments) {
-  return fragments.some(function hasFragment(fragment) {
-    return value.includes(normalizeQuestion(fragment));
-  });
 }
 
 function collectStates(cards) {

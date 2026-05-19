@@ -238,7 +238,7 @@ export function resolveRitual(deps, mode) {
     store.markDailyFreeUsed(new Date().toISOString());
     store.saveReading(reading, {
       date: reading.createdAt,
-      message: reading.message || reading.card.message,
+      message: reading.card.message,
       question: uiState.currentQuestion,
     });
     setScene(SCENES.RESULT);

@@ -286,8 +286,8 @@ export function createRenderer(elements) {
     elements.cardImage.alt = reading.card.name;
     elements.cardImage.classList.toggle("is-empty", !hasImage);
     elements.cardName.textContent = reading.card.name;
-    elements.cardMessage.textContent = reading.message || reading.card.message;
-    elements.cardShadow.textContent = reading.shadow || reading.card.shadow;
+    elements.cardMessage.textContent = reading.card.message;
+    elements.cardShadow.textContent = reading.card.shadow;
     updateCopyDensity(elements.cardMessage, {
       compactClass: "is-compact",
       condensedClass: "is-condensed",

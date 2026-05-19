@@ -141,6 +141,11 @@ async function main() {
     matched: true,
   });
 
+  checkRoute(routing, "Я постоянно думаю, что со мной что-то не так. Почему?", {
+    primaryGroup: "trials_growth",
+    matched: true,
+  });
+
   checkRoute(routing, "Что происходит в отношениях с мамой и семьёй?", {
     primaryGroup: "family_circle",
     matched: true,
