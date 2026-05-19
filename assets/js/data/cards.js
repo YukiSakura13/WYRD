@@ -3,6 +3,9 @@ import { CARD_LAYERS } from "../cards/layer-map.js";
 
 export const COVER_IMAGE = "./assets/images/cover/cover-moon-forest.webp";
 
+// Architecture rule: card.message and card.shadow are author text.
+// They must flow from cards.js to the single-card screen unchanged.
+// Do not overwrite, augment, or replace them with route/group/generated copy.
 const RAW_CARDS = [
   {
     id: "wyrd_001",
