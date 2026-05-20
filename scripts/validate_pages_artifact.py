@@ -19,11 +19,12 @@ REQUIRED_FILES = [
     DIST / "public/social/og-wide-wyrd-owl-title.png",
     DIST / "public/social/og-square-wyrd-owl-title.png",
     DIST / "public/icons/icon-square-wyrd-owl-moon.png",
-    DIST / "public/icons/icon-source-wyrd-owl-mark.png",
-    DIST / "public/icons/icon-512-wyrd-owl-mark.png",
-    DIST / "public/icons/icon-192-wyrd-owl-mark.png",
+    DIST / "public/icons/icon-source-wyrd-owl-symbol.png",
+    DIST / "public/icons/icon-512-wyrd-owl-symbol.png",
+    DIST / "public/icons/icon-192-wyrd-owl-symbol.png",
     DIST / "public/apple-touch-icon.png",
     DIST / "public/favicon-32.png",
+    DIST / "public/favicon-16.png",
 ]
 
 
