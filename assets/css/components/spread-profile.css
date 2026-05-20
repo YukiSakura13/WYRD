@@ -712,9 +712,15 @@
   inset: 0;
   z-index: 80;
   display: grid;
-  place-items: start center;
-  padding: max(1rem, env(safe-area-inset-top)) 1rem max(1rem, env(safe-area-inset-bottom));
+  align-items: start;
+  justify-items: center;
+  box-sizing: border-box;
+  padding:
+    max(1.25rem, calc(env(safe-area-inset-top) + 1rem))
+    1rem
+    max(1rem, calc(env(safe-area-inset-bottom) + 1rem));
   overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 body.spread-modal-open {
@@ -728,14 +734,16 @@ body.spread-modal-open {
 .spread-card-modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(5, 6, 12, 0.985);
   backdrop-filter: blur(14px);
 }
 
 .spread-card-modal-panel {
   position: relative;
-  width: min(100%, 33rem);
-  margin: auto 0;
+  width: min(100%, 31rem);
+  max-height: calc(100vh - 2.25rem);
+  max-height: calc(100dvh - max(2.25rem, calc(env(safe-area-inset-top) + env(safe-area-inset-bottom) + 2rem)));
+  margin: 0 auto;
   border: 1px solid var(--accent-18);
   border-radius: 8px;
   background:
@@ -744,7 +752,8 @@ body.spread-modal-open {
   box-shadow:
     0 30px 90px rgba(0, 0, 0, 0.56),
     0 0 36px var(--accent-08);
-  overflow: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   animation: spreadModalExpand 320ms var(--ease-out-strong) both;
 }
 
@@ -769,7 +778,7 @@ body.spread-modal-open {
 
 .spread-card-modal-image {
   width: 100%;
-  max-height: min(45vh, 30rem);
+  max-height: clamp(17rem, 44dvh, 25rem);
   aspect-ratio: 3 / 4;
   object-fit: contain;
   object-position: center;
@@ -779,7 +788,7 @@ body.spread-modal-open {
 }
 
 .spread-card-modal-copy {
-  padding: clamp(1.1rem, 4vw, 1.6rem) 0 clamp(1.4rem, 5vw, 2rem);
+  padding: clamp(0.95rem, 3vw, 1.35rem) 0 clamp(1.2rem, 4vw, 1.7rem);
   text-align: center;
 }
 
@@ -795,7 +804,7 @@ body.spread-modal-open {
 }
 
 .spread-card-modal-role {
-  margin: 0 28px 0.7rem;
+  margin: 0 28px 0.55rem;
 }
 
 .spread-card-modal-keyword {
@@ -806,7 +815,7 @@ body.spread-modal-open {
   margin: 0 0 0.2rem;
   color: var(--text-default);
   font-family: var(--display-font);
-  font-size: clamp(1.7rem, 7vw, 2.45rem);
+  font-size: clamp(1.55rem, 6vw, 2.25rem);
   font-weight: 400;
   letter-spacing: var(--tracking-tight);
   line-height: var(--leading-snug);
@@ -814,7 +823,7 @@ body.spread-modal-open {
 }
 
 .spread-card-modal-subtitle {
-  margin-bottom: 1rem;
+  margin-bottom: 0.85rem;
   text-align: center;
 }
 
@@ -823,7 +832,7 @@ body.spread-modal-open {
   align-items: center;
   gap: 0.7rem;
   justify-content: center;
-  margin: 1.15rem 28px 0.65rem;
+  margin: 0.95rem 28px 0.55rem;
   color: var(--text-accent);
   font-family: var(--ui-font);
   font-size: 0.62rem;
@@ -844,8 +853,8 @@ body.spread-modal-open {
 .spread-card-modal-shadow {
   color: var(--text-muted);
   font-family: var(--ui-font);
-  font-size: 0.94rem;
-  line-height: 1.75;
+  font-size: 0.9rem;
+  line-height: 1.65;
   text-align: center;
   padding: 0 28px;
 }
