@@ -22,9 +22,9 @@ REQUIRED_FILES = [
     DIST / "public/icons/icon-source-wyrd-owl-symbol.png",
     DIST / "public/icons/icon-512-wyrd-owl-symbol.png",
     DIST / "public/icons/icon-192-wyrd-owl-symbol.png",
-    DIST / "public/apple-touch-icon.png",
-    DIST / "public/favicon-32.png",
-    DIST / "public/favicon-16.png",
+    DIST / "public/apple-touch-icon-wyrd-owl-symbol.png",
+    DIST / "public/favicon-32-wyrd-owl-symbol.png",
+    DIST / "public/favicon-16-wyrd-owl-symbol.png",
 ]
 
 
