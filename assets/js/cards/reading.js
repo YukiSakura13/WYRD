@@ -71,8 +71,16 @@ function createThreeCardSpread(cards, options = {}) {
 
 function createFiveCardSpread(cards, options = {}) {
   const pinnedCardsByRole = {};
+  const previousAnchor = Array.isArray(options.previousSpread)
+    ? options.previousSpread.find((card) => Number(card.slot) === 1)
+    : null;
 
-  if (options.previousReading && options.previousReading.card) {
+  if (previousAnchor) {
+    pinnedCardsByRole.current_message = {
+      ...previousAnchor,
+      alreadyKnown: true,
+    };
+  } else if (options.previousReading && options.previousReading.card) {
     pinnedCardsByRole.current_message = {
       ...options.previousReading.card,
       alreadyKnown: true,

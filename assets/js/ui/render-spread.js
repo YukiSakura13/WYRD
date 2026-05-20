@@ -1,6 +1,6 @@
 import { SCENES } from "./scenes.js";
 import { createMoonIcon, formatTraceDate, getMoonPhase } from "./moon.js";
-import { getCardImage, getSpreadDelay, getSpreadStageNote, layerLabel } from "./render-helpers.js";
+import { getCardImage, getSpreadDelay, layerLabel } from "./render-helpers.js";
 
 export function createSpreadRenderer(elements) {
   let openSpreadCardId = null;
@@ -13,9 +13,8 @@ export function createSpreadRenderer(elements) {
     renderSpreadContinuation,
   };
 
-  function renderSpread(lastSpread, oracleReading = null) {
-    elements.spreadTitle.textContent = getSpreadTitle(lastSpread.length);
-    elements.spreadStageNote.textContent = getSpreadStageNote(lastSpread.length);
+  function renderSpread(lastSpread, oracleReading = null, question = "") {
+    renderSpreadQuestion(oracleReading ? oracleReading.question || "" : question || "");
     elements.spreadGrid.replaceChildren();
     elements.spreadGrid.className = "spread-grid";
     elements.spreadGrid.classList.add(`spread-grid--archetype-${getArchetypeId(oracleReading)}`);
@@ -103,7 +102,7 @@ export function createSpreadRenderer(elements) {
     elements.body?.classList.add("spread-modal-open");
     elements.spreadModalImage.src = getCardImage(card);
     elements.spreadModalImage.alt = card.name;
-    elements.spreadModalRole.textContent = card.spreadLabel || layerLabel(card.layer);
+    elements.spreadModalRole.textContent = `✦ ${card.spreadLabel || layerLabel(card.layer)} ✦`;
     elements.spreadModalKeyword.textContent = `✦ ${card.keyword} ✦`;
     elements.spreadModalName.textContent = card.name;
     elements.spreadModalSubtitle.textContent = card.subtitle;
@@ -154,26 +153,36 @@ export function createSpreadRenderer(elements) {
 
     const copy = elements.spreadContinuation.querySelector(".spread-continuation-copy");
     const button = elements.spreadContinuation.querySelector(".spread-continuation-btn");
+    const link = elements.spreadContinuation.querySelector(".spread-continuation-link");
+    elements.spreadContinuation.dataset.size = String(lastSpread.length);
 
     if (lastSpread.length === 5) {
       if (copy) {
-        copy.textContent = "Расклад завершён. Можно вернуться к колоде и задать новый вопрос.";
+        copy.textContent = "Лес открылся тебе до конца. Путь теперь твой.";
       }
 
       if (button) {
         button.dataset.action = "new-question";
-        button.textContent = "Задать новый вопрос";
+        button.textContent = "ЗАДАТЬ НОВЫЙ ВОПРОС";
+      }
+
+      if (link) {
+        link.hidden = true;
       }
       return;
     }
 
     if (copy) {
-      copy.textContent = "История уже открылась. Следующий слой ждёт твоего шага.";
+      copy.textContent = "Ты уже многое знаешь. Но пять карт откроют то, что три не сказали...";
     }
 
     if (button) {
       button.dataset.action = "spread-5";
-      button.textContent = "Продолжить путь";
+      button.textContent = "✦ РАСКРЫТЬ ПЯТЬ КАРТ ✦";
+    }
+
+    if (link) {
+      link.hidden = false;
     }
   }
 
@@ -187,12 +196,46 @@ export function createSpreadRenderer(elements) {
 
     if (!shouldShow || !oracleReading) {
       if (elements.oracleVoiceMessage) {
-        elements.oracleVoiceMessage.textContent = "";
+        elements.oracleVoiceMessage.replaceChildren();
       }
       return;
     }
 
-    elements.oracleVoiceMessage.textContent = oracleReading.oracle_message || "";
+    const prefix = document.createElement("span");
+    prefix.className = "oracle-voice-prefix";
+    prefix.textContent = "Духи леса шепчут:";
+
+    const lines = String(oracleReading.oracle_message || "")
+      .split("\n")
+      .map((line) => line.trim())
+      .filter((line, index, allLines) => line || allLines[index - 1]);
+    const fragments = [prefix];
+
+    lines.forEach(function appendOracleLine(line) {
+      const item = document.createElement("span");
+      item.className = line ? "oracle-voice-line" : "oracle-voice-gap";
+      item.textContent = line;
+      fragments.push(item);
+    });
+
+    elements.oracleVoiceMessage.replaceChildren(...fragments);
+  }
+
+  function renderSpreadQuestion(question) {
+    if (!elements.spreadQuestion || !elements.spreadQuestionText || !elements.spreadQuestionLabel) {
+      return;
+    }
+
+    if (question) {
+      elements.spreadQuestionLabel.hidden = false;
+      elements.spreadQuestionText.textContent = question;
+      elements.spreadQuestion.classList.remove("is-muted");
+      return;
+    }
+
+    elements.spreadQuestionLabel.hidden = false;
+    elements.spreadQuestionText.textContent = "Тайна приоткроется сама...";
+    elements.spreadQuestion.classList.add("is-muted");
   }
 
   function renderHistory(history) {
@@ -245,16 +288,4 @@ function getArchetypeId(oracleReading) {
   const archetype = typeof oracleReading?.archetype === "string" ? oracleReading.archetype.toLowerCase() : "a";
 
   return ["a", "b", "c", "d"].includes(archetype) ? archetype : "a";
-}
-
-function getSpreadTitle(cardCount) {
-  if (cardCount === 3) {
-    return "Расклад на 3 карты";
-  }
-
-  if (cardCount === 5) {
-    return "Расклад на 5 карт";
-  }
-
-  return `Расклад на ${cardCount} карт`;
 }

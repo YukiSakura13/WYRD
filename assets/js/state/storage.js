@@ -1,11 +1,13 @@
 import {
   clearExpiredDailyFreeUsedAt,
+  clearCurrentRitual,
   cloneState,
   createReadingState,
   createSpreadState,
   DEFAULT_STATE,
   hasFreeDrawAvailable,
   normalizeState,
+  popRitualLayer,
   resetState,
   unlockReadingDepth,
 } from "./model.js";
@@ -81,8 +83,14 @@ export function createStateStore(storage = getSafeStorage()) {
     unlockCurrentReadingDepth() {
       return commit(unlockReadingDepth(state));
     },
-    saveSpread(lastSpread, lastOracleReading = null) {
-      return commit(createSpreadState(state, lastSpread, lastOracleReading));
+    saveSpread(lastSpread, lastOracleReading = null, options = {}) {
+      return commit(createSpreadState(state, lastSpread, lastOracleReading, options));
+    },
+    goBackRitualLayer() {
+      return commit(popRitualLayer(state));
+    },
+    clearCurrentRitual() {
+      return commit(clearCurrentRitual(state));
     },
     reset() {
       return commit(resetState());

@@ -29,18 +29,6 @@ export function getSpreadDelay(card, count) {
   return `${revealOrder * 460}ms`;
 }
 
-export function getSpreadStageNote(count) {
-  if (count === 5) {
-    return "Лес открывает пять знаков: якорь, слои вокруг него и направление пути.";
-  }
-
-  if (count === 3) {
-    return "Первый знак уже знаком тебе. Теперь лес открывает два новых слоя вокруг него.";
-  }
-
-  return "";
-}
-
 function createEmptyCardImage() {
   const svg = `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400">
