@@ -239,6 +239,7 @@ function buildOracleMessage(meaning, questionEcho = "", routeGroup = null, optio
 
   if (options.positions) {
     return buildPositionAwareOracleMessage({
+      archetype: options.archetype,
       cards: options.cards,
       groupTone,
       meaning,
@@ -263,26 +264,67 @@ function buildOracleMessage(meaning, questionEcho = "", routeGroup = null, optio
   return [groupTone, opening, middle, closing].filter(Boolean).join(" ");
 }
 
-function buildPositionAwareOracleMessage({ cards, positions }) {
-  const positionLines = positions
+function buildPositionAwareOracleMessage({ archetype, cards, positions }) {
+  const cardPhrases = positions
     .map(function buildPositionLine(position, index) {
-      return buildPositionLineForCard(position, cards[index]);
+      return buildPositionPhraseForCard(position, cards[index]);
     })
     .filter(Boolean);
 
-  return positionLines.join(" ");
+  if (!cardPhrases.length) {
+    return "";
+  }
+
+  if (cardPhrases.length >= 5) {
+    return [
+      `Первый образ задаёт тон: ${cardPhrases[0]}`,
+      `Второй знак показывает то, что влияет на путь: ${cardPhrases[1]}`,
+      `Третий слой отвечает из тени: ${cardPhrases[2]}`,
+      `Четвёртый знак показывает движение: ${cardPhrases[3]}`,
+      `Пятый собирает линию в одно направление: ${cardPhrases[4]}`,
+      "",
+      getArchetypeClosing(archetype),
+    ].join("\n");
+  }
+
+  return [
+    `Первый образ задаёт тон: ${cardPhrases[0]}`,
+    `Второй слой слышится глубже: ${cardPhrases[1] || "то, что пока не названо."}`,
+    `Третий знак смещает путь: ${cardPhrases[2] || "ответ становится ближе."}`,
+    "",
+    getArchetypeClosing(archetype),
+  ].join("\n");
 }
 
-function buildPositionLineForCard(position, card) {
+function buildPositionPhraseForCard(position, card) {
   if (!position || !card) {
     return "";
   }
 
   const voice = POSITION_VOICE[position.id] || { lead: position.label || "Здесь проявляется", side: "message" };
   const sourceText = voice.side === "shadow" ? card.shadow || card.message : card.message || card.shadow;
-  const cardPhrase = makeCardPhrase(sourceText, position.id);
 
-  return `${voice.lead} ${cardPhrase}`;
+  return makeCardPhrase(sourceText, position.id);
+}
+
+function getArchetypeClosing(archetype) {
+  if (archetype === "A") {
+    return "Что в этом отражении ты уже узнаёшь?";
+  }
+
+  if (archetype === "B") {
+    return "Время уже оставило знак на тропе.";
+  }
+
+  if (archetype === "C") {
+    return "Сделай первый шаг там, где внутри становится тише.";
+  }
+
+  if (archetype === "D") {
+    return "Смотри не на слова, а на след, который человек оставляет после себя.";
+  }
+
+  return "Доверься движению, которое уже началось.";
 }
 
 function makeCardPhrase(text, positionId = "") {

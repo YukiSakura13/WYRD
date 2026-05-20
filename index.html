@@ -315,9 +315,9 @@
         </div>
       </section>
 
-      <section id="spread-result" hidden aria-labelledby="spread-title">
+      <section id="spread-result" hidden aria-label="Расклад карт">
         <div class="screen-nav">
-          <button class="btn-back-circle" data-action="back-to-deck" type="button" aria-label="Вернуться к колоде">←</button>
+          <button class="btn-back-circle" data-action="ritual-back" type="button" aria-label="Вернуться на предыдущий слой">←</button>
           <div class="screen-nav-title" aria-label="WYRD">
             <p class="screen-brand-word">WYRD</p>
             <div class="screen-brand-line" aria-hidden="true"></div>
@@ -325,9 +325,10 @@
           </div>
           <div class="screen-nav-spacer" aria-hidden="true"></div>
         </div>
-        <p class="gal-title" id="spread-title">Расклад</p>
-        <div class="gal-line"></div>
-        <p class="spread-stage-note" id="spread-stage-note"></p>
+        <div class="result-question spread-question" id="spread-question" aria-live="polite">
+          <p class="result-question-label" id="spread-question-label">ТВОЙ ВОПРОС</p>
+          <p class="result-question-text" id="spread-question-text"></p>
+        </div>
         <div class="spread-grid" id="spread-grid"></div>
         <section class="spread-detail" id="spread-detail" hidden aria-live="polite">
           <p class="spread-detail-role" id="spread-detail-role"></p>
@@ -349,6 +350,7 @@
         <div class="spread-continuation" id="spread-continuation" hidden>
           <p class="spread-continuation-copy">История уже открылась. Следующий слой ждёт твоего шага.</p>
           <button class="cover-btn spread-continuation-btn" data-action="spread-5" type="button">Продолжить путь</button>
+          <button class="spread-continuation-link" data-action="new-question" type="button">Задать новый вопрос</button>
         </div>
         <div class="spread-card-modal" id="spread-card-modal" hidden>
           <div class="spread-card-modal-backdrop" id="spread-card-modal-backdrop" aria-hidden="true"></div>
@@ -366,7 +368,9 @@
               <p class="spread-card-modal-keyword" id="spread-modal-keyword"></p>
               <h3 class="spread-card-modal-name" id="spread-modal-name"></h3>
               <p class="spread-card-modal-subtitle card-en" id="spread-modal-subtitle"></p>
+              <p class="spread-card-modal-section">Послание</p>
               <p class="spread-card-modal-message" id="spread-modal-message"></p>
+              <p class="spread-card-modal-section">Тень</p>
               <p class="spread-card-modal-shadow" id="spread-modal-shadow"></p>
             </div>
           </article>

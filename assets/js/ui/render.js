@@ -61,8 +61,9 @@ export function getElements(doc = document) {
     historySheetShadowText: doc.getElementById("history-sheet-shadow-text"),
     historySheetFooter: doc.getElementById("history-sheet-footer"),
     spreadGrid: doc.getElementById("spread-grid"),
-    spreadTitle: doc.getElementById("spread-title"),
-    spreadStageNote: doc.getElementById("spread-stage-note"),
+    spreadQuestion: doc.getElementById("spread-question"),
+    spreadQuestionLabel: doc.getElementById("spread-question-label"),
+    spreadQuestionText: doc.getElementById("spread-question-text"),
     spreadDetail: doc.getElementById("spread-detail"),
     spreadDetailRole: doc.getElementById("spread-detail-role"),
     spreadDetailImage: doc.getElementById("spread-detail-image"),
@@ -100,7 +101,7 @@ export function createRenderer(elements) {
     renderProfile(state);
     renderCurrentReading(state.currentReading, uiState.currentQuestion);
     renderHook(state, uiState);
-    spreadRenderer.renderSpread(state.lastSpread, state.lastOracleReading);
+    spreadRenderer.renderSpread(state.lastSpread, state.lastOracleReading, uiState.currentQuestion);
     spreadRenderer.renderOracleVoice(state.lastSpread, state.lastOracleReading);
     spreadRenderer.renderSpreadContinuation(state.lastSpread, uiState);
     const historyView = getHistoryView(state);
@@ -379,8 +380,8 @@ export function createRenderer(elements) {
       return;
     }
 
-    elements.resultQuestionLabel.hidden = true;
-    elements.resultQuestionText.textContent = "Держи свой вопрос в уме — карта его уже слышит.";
+    elements.resultQuestionLabel.hidden = false;
+    elements.resultQuestionText.textContent = "Тайна приоткроется сама...";
     elements.resultQuestion.classList.add("is-muted");
   }
 

@@ -115,6 +115,32 @@ export function createActionHandler(deps) {
       return;
     }
 
+    if (action === "ritual-back") {
+      audio.playSelect(store.getState().soundEnabled);
+      runTransition(function returnToPreviousRitualLayer() {
+        const nextState = store.goBackRitualLayer();
+
+        if (nextState.currentReading) {
+          setScene(SCENES.RESULT);
+          audio.sync({ enabled: nextState.soundEnabled, scene: SCENES.RESULT });
+          renderer.scrollTo(SCENES.RESULT);
+          return;
+        }
+
+        if (nextState.lastSpread.length) {
+          setScene(SCENES.SPREAD);
+          audio.sync({ enabled: nextState.soundEnabled, scene: SCENES.SPREAD });
+          renderer.scrollTo(SCENES.SPREAD);
+          return;
+        }
+
+        setScene(SCENES.DECK);
+        audio.sync({ enabled: nextState.soundEnabled, scene: SCENES.DECK });
+        renderer.scrollTo(SCENES.DECK);
+      });
+      return;
+    }
+
     if (action === "back-to-cover") {
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function returnToCover() {
@@ -132,6 +158,7 @@ export function createActionHandler(deps) {
         uiState.rawQuestion = "";
         uiState.continuationOffer = null;
         uiState.recentCardNames = [];
+        store.clearCurrentRitual();
         setScene(SCENES.DECK);
         audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.DECK });
         renderer.scrollTo(SCENES.DECK);
@@ -226,7 +253,7 @@ export function resolveRitual(deps, mode) {
 
   if (mode === "free") {
     const questionRoute = detectQuestionRoute(uiState.rawQuestion);
-    uiState.currentQuestion = questionRoute.displayQuestion || "";
+    uiState.currentQuestion = uiState.rawQuestion;
     const reading = createReading(cards, true, new Date(), {
       previousReading: getPreviousTraceReading(currentState, cards),
       question: uiState.rawQuestion,
@@ -253,7 +280,7 @@ export function resolveRitual(deps, mode) {
 
   if (mode === "extra-draw") {
     const questionRoute = detectQuestionRoute(uiState.rawQuestion);
-    uiState.currentQuestion = questionRoute.displayQuestion || "";
+    uiState.currentQuestion = uiState.rawQuestion;
     const reading = createReading(cards, false, new Date(), {
       previousReading: getPreviousTraceReading(currentState, cards),
       question: uiState.rawQuestion,

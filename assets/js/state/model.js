@@ -13,6 +13,7 @@ export const DEFAULT_STATE = Object.freeze({
   currentReading: null,
   lastSpread: [],
   lastOracleReading: null,
+  ritualStack: [],
 });
 
 const HISTORY_RETENTION_MONTHS = 3;
@@ -29,6 +30,7 @@ export function normalizeState(value) {
   next.lastSpread = Array.isArray(next.lastSpread) ? next.lastSpread.map(normalizeSpreadCard).filter(Boolean) : [];
   next.lastOracleReading =
     next.lastOracleReading && typeof next.lastOracleReading === "object" ? next.lastOracleReading : null;
+  next.ritualStack = Array.isArray(next.ritualStack) ? next.ritualStack.map(normalizeRitualLayer).filter(Boolean) : [];
   next.currentReading =
     next.currentReading && typeof next.currentReading === "object" ? normalizeReading(next.currentReading) : null;
   next.dailyFreeUsedAt = typeof next.dailyFreeUsedAt === "string" ? next.dailyFreeUsedAt : null;
@@ -76,6 +78,7 @@ export function createReadingState(state, reading, options = {}) {
     currentReading: reading,
     lastSpread: [],
     lastOracleReading: null,
+    ritualStack: createSingleRitualStack(reading),
     history: nextHistory,
   });
 }
@@ -96,12 +99,58 @@ export function unlockReadingDepth(state) {
   });
 }
 
-export function createSpreadState(state, lastSpread, lastOracleReading = null) {
+export function createSpreadState(state, lastSpread, lastOracleReading = null, options = {}) {
   return normalizeState({
     ...state,
     currentReading: null,
     lastSpread,
     lastOracleReading,
+    ritualStack: createSpreadRitualStack(state, lastSpread, lastOracleReading, options),
+  });
+}
+
+export function popRitualLayer(state) {
+  const stack = Array.isArray(state.ritualStack) ? state.ritualStack : [];
+
+  if (stack.length < 2) {
+    return normalizeState({
+      ...state,
+      currentReading: null,
+      lastSpread: [],
+      lastOracleReading: null,
+      ritualStack: [],
+    });
+  }
+
+  const nextStack = stack.slice(0, -1);
+  const previousLayer = nextStack[nextStack.length - 1];
+
+  if (previousLayer.type === "single") {
+    return normalizeState({
+      ...state,
+      currentReading: previousLayer.reading,
+      lastSpread: [],
+      lastOracleReading: null,
+      ritualStack: nextStack,
+    });
+  }
+
+  return normalizeState({
+    ...state,
+    currentReading: null,
+    lastSpread: previousLayer.spread,
+    lastOracleReading: previousLayer.oracleReading,
+    ritualStack: nextStack,
+  });
+}
+
+export function clearCurrentRitual(state) {
+  return normalizeState({
+    ...state,
+    currentReading: null,
+    lastSpread: [],
+    lastOracleReading: null,
+    ritualStack: [],
   });
 }
 
@@ -122,6 +171,36 @@ function enforceStateInvariants(state) {
   }
 
   return next;
+}
+
+function createSingleRitualStack(reading) {
+  return reading ? [{ type: "single", reading }] : [];
+}
+
+function createSpreadRitualStack(state, lastSpread, lastOracleReading, options) {
+  const spreadSize = Array.isArray(lastSpread) ? lastSpread.length : 0;
+  const layer = {
+    type: "spread",
+    size: spreadSize,
+    spread: lastSpread,
+    oracleReading: lastOracleReading,
+  };
+  const existingStack = Array.isArray(state.ritualStack) ? state.ritualStack : [];
+
+  if (options.replaceCurrentLayer) {
+    return [...existingStack.slice(0, -1), layer].filter(Boolean);
+  }
+
+  if (spreadSize === 3) {
+    const singleLayer = state.currentReading ? { type: "single", reading: state.currentReading } : existingStack[0];
+    return [singleLayer, layer].filter(Boolean);
+  }
+
+  if (spreadSize === 5) {
+    return [...existingStack.filter((item) => item.type !== "spread" || item.size !== 5), layer];
+  }
+
+  return [...existingStack, layer];
 }
 
 function normalizeSelectedMode(selectedMode) {
@@ -147,6 +226,34 @@ function normalizeReading(reading) {
     ...reading,
     card,
   };
+}
+
+function normalizeRitualLayer(layer) {
+  if (!layer || typeof layer !== "object") {
+    return null;
+  }
+
+  if (layer.type === "single") {
+    const reading = normalizeReading(layer.reading);
+    return reading ? { type: "single", reading } : null;
+  }
+
+  if (layer.type === "spread") {
+    const spread = Array.isArray(layer.spread) ? layer.spread.map(normalizeSpreadCard).filter(Boolean) : [];
+
+    if (!spread.length) {
+      return null;
+    }
+
+    return {
+      type: "spread",
+      size: spread.length,
+      spread,
+      oracleReading: layer.oracleReading && typeof layer.oracleReading === "object" ? layer.oracleReading : null,
+    };
+  }
+
+  return null;
 }
 
 function normalizeHistoryEntry(entry) {
