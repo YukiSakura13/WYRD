@@ -82,7 +82,6 @@ export function createSpreadRenderer(elements) {
     elements.spreadDetailImage.alt = card.name;
     elements.spreadDetailKeyword.textContent = `✦ ${card.keyword} ✦`;
     elements.spreadDetailName.textContent = card.name;
-    elements.spreadDetailSubtitle.textContent = card.subtitle;
     elements.spreadDetailMessage.textContent = card.message;
     elements.spreadDetailShadow.textContent = card.shadow;
   }
@@ -105,9 +104,10 @@ export function createSpreadRenderer(elements) {
     elements.spreadModalRole.textContent = `✦ ${card.spreadLabel || layerLabel(card.layer)} ✦`;
     elements.spreadModalKeyword.textContent = `✦ ${card.keyword} ✦`;
     elements.spreadModalName.textContent = card.name;
-    elements.spreadModalSubtitle.textContent = card.subtitle;
     elements.spreadModalMessage.textContent = card.message;
     elements.spreadModalShadow.textContent = card.shadow;
+    elements.spreadModal.scrollTop = 0;
+    elements.spreadModalPanel.scrollTop = 0;
     bindSpreadModalEvents();
 
     window.setTimeout(function focusModalClose() {

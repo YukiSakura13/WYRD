@@ -822,11 +822,6 @@ body.spread-modal-open {
   text-align: center;
 }
 
-.spread-card-modal-subtitle {
-  margin-bottom: 0.85rem;
-  text-align: center;
-}
-
 .spread-card-modal-section {
   display: flex;
   align-items: center;
@@ -925,10 +920,6 @@ body.spread-modal-open {
   font-weight: 400;
   letter-spacing: var(--tracking-tight);
   margin-bottom: 0.2rem;
-}
-
-.spread-detail-subtitle {
-  margin-bottom: 0.85rem;
 }
 
 .spread-detail-message,
