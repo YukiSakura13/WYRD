@@ -27,12 +27,15 @@ export function getElements(doc = document) {
     cardMedia: doc.querySelector("#share-card .share-card-media"),
     cardImage: doc.getElementById("card-image"),
     cardName: doc.getElementById("card-name"),
+    cardMoonMeta: doc.getElementById("card-moon-meta"),
     cardMessage: doc.getElementById("card-message"),
     cardShadowWrap: doc.getElementById("card-shadow-wrap"),
     cardShadow: doc.getElementById("card-shadow"),
     hookBlock: doc.getElementById("hook-block"),
     shareButton: doc.querySelector('#result [data-action="share-card"]'),
     shareButtonLabel: doc.getElementById("share-button-label"),
+    saveButton: doc.querySelector('#result [data-action="save-card"]'),
+    saveButtonLabel: doc.getElementById("save-button-label"),
     shareFeedback: doc.getElementById("share-feedback"),
     actionsPanel: doc.querySelector(".actions-panel"),
     deckTop: doc.querySelector(".deck-card-face"),
@@ -285,6 +288,7 @@ export function createRenderer(elements) {
     elements.cardImage.alt = reading.card.name;
     elements.cardImage.classList.toggle("is-empty", !hasImage);
     elements.cardName.textContent = reading.card.name;
+    renderCardMoonMeta(reading);
     elements.cardMessage.textContent = reading.card.message;
     elements.cardShadow.textContent = reading.card.shadow;
     updateCopyDensity(elements.cardMessage, {
@@ -383,6 +387,16 @@ export function createRenderer(elements) {
     elements.resultQuestion.classList.add("is-muted");
   }
 
+  function renderCardMoonMeta(reading) {
+    if (!elements.cardMoonMeta) {
+      return;
+    }
+
+    const date = new Date(reading.createdAt || Date.now());
+    const moon = getMoonPhase(date);
+    elements.cardMoonMeta.replaceChildren(createMoonIcon(moon.type), document.createTextNode(`${formatTraceDate(date)} · ${moon.name}`));
+  }
+
   function updateCopyDensity(element, classNames) {
     if (!element) {
       return;
@@ -425,7 +439,16 @@ export function createRenderer(elements) {
     }
 
     if (elements.shareButtonLabel) {
-      elements.shareButtonLabel.textContent = "ПОДЕЛИТЬСЯ КАРТОЙ";
+      elements.shareButtonLabel.textContent = "ПОДЕЛИТЬСЯ";
+    }
+
+    if (elements.saveButton) {
+      elements.saveButton.disabled = false;
+      elements.saveButton.classList.remove("is-loading");
+    }
+
+    if (elements.saveButtonLabel) {
+      elements.saveButtonLabel.textContent = "СОХРАНИТЬ";
     }
   }
 

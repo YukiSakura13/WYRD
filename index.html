@@ -273,31 +273,40 @@
                 <span class="card-divider-star">✦</span>
                 <span class="card-divider-line"></span>
               </div>
-            </div>
-            <div class="card-message-block">
-              <p class="lbl">ПОСЛАНИЕ</p>
-              <p class="card-msg" id="card-message"></p>
-            </div>
-            <div class="card-shadow-block card-shd-wrap" id="card-shadow-wrap">
-              <p class="lbl">ТЕНЬ</p>
-              <p class="card-shd" id="card-shadow"></p>
-              <p class="card-closing-star" aria-hidden="true">✦</p>
+              <div class="card-moon-meta" id="card-moon-meta" aria-label="Лунная дата карты"></div>
             </div>
           </article>
-          <button class="btn-share" data-action="share-card" type="button">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
-                 stroke="currentColor" stroke-width="1.5"
-                 stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="3" r="1.5"/>
-              <circle cx="4" cy="8" r="1.5"/>
-              <circle cx="12" cy="13" r="1.5"/>
-              <line x1="5.5" y1="7" x2="10.5" y2="4"/>
-              <line x1="5.5" y1="9" x2="10.5" y2="12"/>
-            </svg>
-            <span id="share-button-label">ПОДЕЛИТЬСЯ КАРТОЙ</span>
-          </button>
+          <div class="result-card-actions" aria-label="Действия с картой">
+            <button class="btn-share" data-action="share-card" type="button">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                   stroke="currentColor" stroke-width="1.5"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="3" r="1.5"/>
+                <circle cx="4" cy="8" r="1.5"/>
+                <circle cx="12" cy="13" r="1.5"/>
+                <line x1="5.5" y1="7" x2="10.5" y2="4"/>
+                <line x1="5.5" y1="9" x2="10.5" y2="12"/>
+              </svg>
+              <span id="share-button-label">ПОДЕЛИТЬСЯ</span>
+            </button>
+            <button class="btn-share btn-save-card" data-action="save-card" type="button">
+              <span aria-hidden="true">↓</span>
+              <span id="save-button-label">СОХРАНИТЬ</span>
+            </button>
+          </div>
           <p class="share-feedback" id="share-feedback" hidden aria-live="polite"></p>
         </div>
+
+        <section class="result-interpretation" aria-label="Толкование карты">
+          <div class="card-message-block">
+            <p class="lbl">ПОСЛАНИЕ</p>
+            <p class="card-msg" id="card-message"></p>
+          </div>
+          <div class="card-shadow-block card-shd-wrap" id="card-shadow-wrap">
+            <p class="lbl">ТЕНЬ</p>
+            <p class="card-shd" id="card-shadow"></p>
+          </div>
+        </section>
 
         <div class="hook-block" id="hook-block" hidden>
           <div class="hook-divider" aria-hidden="true">

@@ -1,4 +1,5 @@
 import { getCardImage } from "./render-helpers.js";
+import { formatTraceDate, getMoonPhase } from "./moon.js";
 
 let isSharing = false;
 let cachedShareKey = null;
@@ -102,6 +103,55 @@ export function shareCurrentCard(store) {
     });
 }
 
+export function saveCurrentCard(store) {
+  const button = document.querySelector('#result [data-action="save-card"]');
+  const buttonLabel = document.getElementById("save-button-label");
+  const feedback = document.getElementById("share-feedback");
+  const reading = store?.getState?.().currentReading || null;
+
+  if (!button || isSharing) {
+    return;
+  }
+
+  setShareState({
+    button,
+    buttonLabel,
+    feedback,
+    isLoading: true,
+    loadingLabel: "СОХРАНЯЕМ...",
+    idleLabel: "СОХРАНИТЬ",
+    message: "",
+  });
+
+  primeShareCard(reading)
+    .then(function handlePrimedBlob(blob) {
+      if (!blob) {
+        throw new Error("share blob unavailable");
+      }
+
+      downloadBlob(blob, buildShareFileName(reading));
+      setShareState({
+        button,
+        buttonLabel,
+        feedback,
+        isLoading: false,
+        idleLabel: "СОХРАНИТЬ",
+        message: "Изображение сохранено.",
+      });
+    })
+    .catch(function handleSaveError(error) {
+      console.error("save error:", error);
+      setShareState({
+        button,
+        buttonLabel,
+        feedback,
+        isLoading: false,
+        idleLabel: "СОХРАНИТЬ",
+        message: "Не удалось сохранить изображение. Попробуй ещё раз.",
+      });
+    });
+}
+
 function renderShareBlob(reading) {
   return prepareShareAssets(reading).then(function renderFromAssets(assets) {
     const palette = readPalette();
@@ -125,14 +175,13 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio)
   const width = SHARE_WIDTH;
   const height = SHARE_HEIGHT;
   const radius = 38;
-  const imageAreaHeight = Math.round(height * 0.53);
+  const imageAreaHeight = Math.round(height * 0.72);
   const logoZoneHeight = 88;
   const fadeHeight = Math.round(imageAreaHeight * fadeRatio);
   const fadeStartY = imageAreaHeight - fadeHeight;
-  const titleY = 838;
-  const dividerY = 902;
-  const messageLabelY = 966;
-  const shadowLabelY = 1218;
+  const titleY = 1232;
+  const dividerY = 1294;
+  const moonY = 1360;
 
   context.clearRect(0, 0, width, height);
   context.save();
@@ -184,10 +233,10 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio)
   drawCenteredText(context, reading.name, {
     x: width / 2,
     y: titleY,
-    font: `400 52px ${typography.display}`,
+    font: `400 60px ${typography.display}`,
     color: palette.parchmentText,
     maxWidth: width - 180,
-    lineHeight: 62,
+    lineHeight: 68,
     textAlign: "center",
   });
 
@@ -198,63 +247,11 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio)
     width: 300,
   });
 
-  drawLabel(context, "ПОСЛАНИЕ", {
+  drawMoonMeta(context, reading, {
     x: width / 2,
-    y: messageLabelY,
-    font: `600 28px ${typography.ui}`,
-    color: palette.gold,
-    tracking: 10,
-  });
-
-  const messageMetrics = fitParagraph(reading.message, {
-    maxWidth: width - 220,
-    maxHeight: 178,
-    initialFontSize: 42,
-    minFontSize: 31,
-    lineHeightRatio: 1.45,
-    fontFamily: typography.display,
-  });
-  drawParagraph(context, reading.message, {
-    x: width / 2,
-    y: 1024,
-    maxWidth: width - 220,
-    fontSize: messageMetrics.fontSize,
-    lineHeight: messageMetrics.lineHeight,
-    fontFamily: typography.display,
-    color: palette.parchmentText,
-    textAlign: "center",
-    baseline: "top",
-  });
-
-  drawLabel(context, "ТЕНЬ", {
-    x: width / 2,
-    y: shadowLabelY,
-    font: `600 24px ${typography.ui}`,
-    color: palette.gold,
-    tracking: 8,
-    alpha: 0.72,
-  });
-
-  const shadowMetrics = fitParagraph(reading.shadow, {
-    maxWidth: width - 240,
-    maxHeight: 128,
-    initialFontSize: 32,
-    minFontSize: 24,
-    lineHeightRatio: 1.48,
-    fontFamily: typography.display,
-    italic: true,
-  });
-  drawParagraph(context, reading.shadow, {
-    x: width / 2,
-    y: 1262,
-    maxWidth: width - 240,
-    fontSize: shadowMetrics.fontSize,
-    lineHeight: shadowMetrics.lineHeight,
-    fontFamily: typography.display,
-    color: palette.parchmentMuted,
-    italic: true,
-    textAlign: "center",
-    baseline: "top",
+    y: moonY,
+    color: palette.archiveGold,
+    font: `600 22px ${typography.ui}`,
   });
 
   if (assets.frameImage) {
@@ -353,6 +350,7 @@ function normalizeReading(reading) {
 
   return {
     key: reading.id || reading.card.id || "default",
+    createdAt: reading.createdAt || new Date().toISOString(),
     name: String(reading.card.name || "").trim(),
     message: String(reading.card.message || "").trim(),
     shadow: String(reading.card.shadow || "").trim(),
@@ -368,6 +366,7 @@ function readPalette() {
     parchmentBg: "rgb(242, 235, 221)",
     parchmentText: readCssValue(rootStyle, "--parchment", "#f0e8d8"),
     parchmentMuted: "rgba(240, 232, 216, 0.74)",
+    archiveGold: "rgba(154, 143, 122, 0.72)",
     gold: readCssValue(rootStyle, "--gold", "#c9a14a"),
     goldSoft: "rgba(201, 161, 74, 0.42)",
   };
@@ -410,6 +409,68 @@ function drawHeroImage(context, image, rect) {
   const drawY = rect.y + (rect.height - drawHeight) * rect.positionY;
 
   context.drawImage(image, drawX, drawY, drawWidth, drawHeight);
+}
+
+function drawMoonMeta(context, reading, options) {
+  const { x, y, color, font } = options;
+  const date = new Date(reading.createdAt || Date.now());
+  const moon = getMoonPhase(date);
+  const text = `${formatTraceDate(date)} · ${moon.name}`.toUpperCase();
+  const iconSize = 22;
+  const gap = 14;
+
+  context.save();
+  context.font = font;
+  context.fillStyle = color;
+  context.textAlign = "left";
+  context.textBaseline = "middle";
+
+  const textWidth = context.measureText(text).width;
+  const totalWidth = iconSize + gap + textWidth;
+  const startX = x - totalWidth / 2;
+
+  drawMoonGlyph(context, moon.type, startX + iconSize / 2, y, iconSize, color);
+  drawTrackedText(context, text, startX + iconSize + gap, y, 2.8);
+  context.restore();
+}
+
+function drawMoonGlyph(context, type, x, y, size, color) {
+  const radius = size / 2;
+
+  context.save();
+  context.beginPath();
+  context.arc(x, y, radius, 0, Math.PI * 2);
+  context.clip();
+
+  if (type === "fm") {
+    context.fillStyle = color;
+    context.fillRect(x - radius, y - radius, size, size);
+  } else if (type === "fq" || type === "lq") {
+    context.fillStyle = color;
+    context.fillRect(type === "fq" ? x : x - radius, y - radius, radius, size);
+  } else if (type === "wc" || type === "wac") {
+    context.fillStyle = color;
+    context.beginPath();
+    context.ellipse(type === "wc" ? x + radius * 0.44 : x - radius * 0.44, y, radius * 0.78, radius, 0, 0, Math.PI * 2);
+    context.fill();
+  } else if (type === "wg" || type === "wag") {
+    context.fillStyle = color;
+    context.fillRect(x - radius, y - radius, size, size);
+    context.globalCompositeOperation = "destination-out";
+    context.beginPath();
+    context.ellipse(type === "wg" ? x - radius * 0.52 : x + radius * 0.52, y, radius * 0.58, radius, 0, 0, Math.PI * 2);
+    context.fill();
+    context.globalCompositeOperation = "source-over";
+  }
+
+  context.restore();
+  context.save();
+  context.strokeStyle = color;
+  context.lineWidth = 1.4;
+  context.beginPath();
+  context.arc(x, y, radius, 0, Math.PI * 2);
+  context.stroke();
+  context.restore();
 }
 
 function drawPerimeterVignette(context, options) {
@@ -659,12 +720,8 @@ function canvasToBlob(canvas) {
 }
 
 function shareBlob(blob, reading) {
-  const shareTitle = buildShareTitle(reading);
-  const shareText = buildShareText(reading);
   const file = new File([blob], buildShareFileName(reading), { type: "image/png" });
   const sharePayload = {
-    title: shareTitle,
-    text: shareText,
     files: [file],
   };
 
@@ -710,16 +767,6 @@ function shareBlob(blob, reading) {
   return Promise.resolve("download");
 }
 
-function buildShareTitle(reading) {
-  const cardName = String(reading?.card?.name || reading?.name || "").trim();
-  return cardName ? `WYRD — ${cardName}` : "WYRD — Оракул духов леса";
-}
-
-function buildShareText(reading) {
-  const message = String(reading?.card?.message || "").trim();
-  return message ? `Послание карты: ${message}` : "Карта из оракула духов леса.";
-}
-
 function buildShareFileName(reading) {
   const cardName = String(reading?.card?.name || reading?.name || "").trim();
   const suffix = cardName
@@ -748,7 +795,7 @@ function canNativeShareFile(file) {
   }
 }
 
-function setShareState({ button, buttonLabel, feedback, isLoading, message }) {
+function setShareState({ button, buttonLabel, feedback, isLoading, message, loadingLabel = "ПОДГОТАВЛИВАЕМ...", idleLabel = "ПОДЕЛИТЬСЯ" }) {
   isSharing = isLoading;
 
   if (button) {
@@ -760,7 +807,7 @@ function setShareState({ button, buttonLabel, feedback, isLoading, message }) {
   }
 
   if (buttonLabel) {
-    buttonLabel.textContent = isLoading ? "ПОДГОТАВЛИВАЕМ КАРТУ..." : "ПОДЕЛИТЬСЯ КАРТОЙ";
+    buttonLabel.textContent = isLoading ? loadingLabel : idleLabel;
   }
 
   if (feedback) {
