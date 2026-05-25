@@ -1,13 +1,16 @@
 import { getCardImage } from "./render-helpers.js";
 import { formatTraceDate, getMoonPhase } from "./moon.js";
 
-let isSharing = false;
+let isShareInProgress = false;
+let isSaveInProgress = false;
 let cachedShareKey = null;
 let cachedShareBlobPromise = null;
 let frameImagePromise = null;
 
 const SHARE_WIDTH = 1024;
 const SHARE_HEIGHT = 1536;
+const STORY_WIDTH = 1080;
+const STORY_HEIGHT = 1920;
 const CANVAS_TIMEOUT_MS = 8000;
 const ASSET_TIMEOUT_MS = 3500;
 const DEFAULT_RESULT_ILLUSTRATION_FADE_HEIGHT = 0.42;
@@ -26,7 +29,7 @@ export function primeShareCard(reading) {
   }
 
   cachedShareKey = normalizedReading.key;
-  cachedShareBlobPromise = withTimeout(renderShareBlob(normalizedReading), CANVAS_TIMEOUT_MS, "share render timeout").catch(
+  cachedShareBlobPromise = withTimeout(generateShareCardPng(normalizedReading), CANVAS_TIMEOUT_MS, "share render timeout").catch(
     function handlePrimeError(error) {
       console.error("share prime error:", error);
       if (cachedShareKey === normalizedReading.key) {
@@ -43,13 +46,28 @@ export function shareCurrentCard(store) {
   const button = document.querySelector('#result [data-action="share-card"]');
   const buttonLabel = document.getElementById("share-button-label");
   const feedback = document.getElementById("share-feedback");
+  const saveButton = document.querySelector('#result [data-action="save-card"]');
   const reading = store?.getState?.().currentReading || null;
+  const normalizedReading = normalizeReading(reading);
 
-  if (!button || isSharing) {
+  if (!button || isShareInProgress || isSaveInProgress) {
     return;
   }
 
-  setShareState({
+  if (!normalizedReading) {
+    setShareButtonState({
+      button,
+      buttonLabel,
+      feedback,
+      isLoading: false,
+      message: "Не удалось найти карту для шеринга.",
+    });
+    return;
+  }
+
+  isShareInProgress = true;
+  setSaveButtonDisabled(saveButton, true);
+  setShareButtonState({
     button,
     buttonLabel,
     feedback,
@@ -57,32 +75,29 @@ export function shareCurrentCard(store) {
     message: "",
   });
 
-  primeShareCard(reading)
+  primeShareCard(normalizedReading)
     .then(function handlePrimedBlob(blob) {
       if (!blob) {
         throw new Error("share blob unavailable");
       }
 
-      return shareBlob(blob, reading);
+      return shareBlob(blob, normalizedReading);
     })
     .then(function handleShareSuccess(result) {
-      setShareState({
+      setShareButtonState({
         button,
         buttonLabel,
         feedback,
         isLoading: false,
-        message: "",
+        message:
+          result === "download"
+            ? "Системное меню «Поделиться» здесь недоступно. PNG карты отправлен в загрузки."
+            : "",
       });
-
-      if (result === "download") {
-        button.dataset.shareMode = "download";
-      } else {
-        delete button.dataset.shareMode;
-      }
     })
     .catch(function handleShareError(error) {
       if (isAbortError(error)) {
-        setShareState({
+        setShareButtonState({
           button,
           buttonLabel,
           feedback,
@@ -93,66 +108,217 @@ export function shareCurrentCard(store) {
       }
 
       console.error("share error:", error);
-      setShareState({
+      setShareButtonState({
         button,
         buttonLabel,
         feedback,
         isLoading: false,
         message: "Не удалось подготовить изображение. Попробуй ещё раз.",
       });
+    })
+    .finally(function finishShareFlow() {
+      isShareInProgress = false;
+      setSaveButtonDisabled(saveButton, false);
     });
 }
 
 export function saveCurrentCard(store) {
   const button = document.querySelector('#result [data-action="save-card"]');
   const buttonLabel = document.getElementById("save-button-label");
+  const shareButton = document.querySelector('#result [data-action="share-card"]');
   const feedback = document.getElementById("share-feedback");
+  const saveScreen = getSaveScreenElements();
   const reading = store?.getState?.().currentReading || null;
+  const normalizedReading = normalizeReading(reading);
 
-  if (!button || isSharing) {
+  if (!button || isSaveInProgress || isShareInProgress) {
     return;
   }
 
-  setShareState({
+  clearShareFeedback(feedback);
+  openSaveScreen(saveScreen);
+
+  if (!normalizedReading) {
+    showSaveScreenError(saveScreen, "Не удалось найти карту для сохранения.");
+    return;
+  }
+
+  isSaveInProgress = true;
+  setShareButtonDisabled(shareButton, true);
+  setSaveButtonState({
     button,
     buttonLabel,
-    feedback,
     isLoading: true,
-    loadingLabel: "СОХРАНЯЕМ...",
-    idleLabel: "СОХРАНИТЬ",
-    message: "",
   });
 
-  primeShareCard(reading)
-    .then(function handlePrimedBlob(blob) {
-      if (!blob) {
-        throw new Error("share blob unavailable");
-      }
+  const fileName = buildShareFileName(normalizedReading, "story");
 
-      downloadBlob(blob, buildShareFileName(reading));
-      setShareState({
-        button,
-        buttonLabel,
-        feedback,
-        isLoading: false,
-        idleLabel: "СОХРАНИТЬ",
-        message: "Изображение сохранено.",
-      });
+  withTimeout(generateStoryReadyPng(normalizedReading), CANVAS_TIMEOUT_MS, "story render timeout")
+    .then(function handleStoryBlob(storyBlob) {
+      return showSaveScreenImage(storyBlob, fileName, saveScreen);
     })
     .catch(function handleSaveError(error) {
+      if (isAbortError(error)) {
+        closeSaveScreen();
+        return;
+      }
+
       console.error("save error:", error);
-      setShareState({
+      showSaveScreenError(saveScreen);
+    })
+    .finally(function finishSaveFlow() {
+      isSaveInProgress = false;
+      setShareButtonDisabled(shareButton, false);
+      setSaveButtonState({
         button,
         buttonLabel,
-        feedback,
         isLoading: false,
-        idleLabel: "СОХРАНИТЬ",
-        message: "Не удалось сохранить изображение. Попробуй ещё раз.",
       });
     });
 }
 
-function renderShareBlob(reading) {
+export function closeSaveScreen() {
+  const saveScreen = getSaveScreenElements();
+  if (saveScreen.objectUrl) {
+    URL.revokeObjectURL(saveScreen.objectUrl);
+  }
+
+  if (saveScreen.backdrop) {
+    saveScreen.backdrop.hidden = true;
+  }
+
+  if (saveScreen.panel) {
+    saveScreen.panel.hidden = true;
+    delete saveScreen.panel.dataset.objectUrl;
+  }
+
+  if (saveScreen.image) {
+    saveScreen.image.hidden = true;
+    saveScreen.image.removeAttribute("src");
+  }
+
+  if (saveScreen.link) {
+    saveScreen.link.href = "#";
+    saveScreen.link.setAttribute("aria-disabled", "true");
+  }
+
+  if (saveScreen.loading) {
+    saveScreen.loading.hidden = false;
+  }
+}
+
+function getSaveScreenElements() {
+  const panel = document.getElementById("save-screen");
+  return {
+    panel,
+    backdrop: document.getElementById("save-screen-backdrop"),
+    copy: document.getElementById("save-screen-copy"),
+    loading: document.getElementById("save-screen-loading"),
+    image: document.getElementById("save-screen-image"),
+    link: document.getElementById("save-screen-link"),
+    objectUrl: panel?.dataset.objectUrl || "",
+  };
+}
+
+function openSaveScreen(saveScreen) {
+  if (saveScreen.objectUrl) {
+    URL.revokeObjectURL(saveScreen.objectUrl);
+  }
+
+  if (saveScreen.backdrop) {
+    saveScreen.backdrop.hidden = false;
+  }
+
+  if (saveScreen.panel) {
+    saveScreen.panel.hidden = false;
+    delete saveScreen.panel.dataset.objectUrl;
+  }
+
+  if (saveScreen.copy) {
+    saveScreen.copy.textContent = "Готовим изображение для Stories...";
+  }
+
+  if (saveScreen.loading) {
+    saveScreen.loading.hidden = false;
+  }
+
+  if (saveScreen.image) {
+    saveScreen.image.hidden = true;
+    saveScreen.image.removeAttribute("src");
+  }
+
+  if (saveScreen.link) {
+    saveScreen.link.href = "#";
+    saveScreen.link.setAttribute("aria-disabled", "true");
+  }
+}
+
+function showSaveScreenImage(blob, fileName, saveScreen) {
+  if (!saveScreen.panel || !saveScreen.image || !saveScreen.link) {
+    showSaveScreenError(saveScreen, "Не удалось открыть экран сохранения.");
+    return Promise.resolve();
+  }
+
+  const url = URL.createObjectURL(blob);
+  const previousUrl = saveScreen.panel.dataset.objectUrl;
+  if (previousUrl) {
+    URL.revokeObjectURL(previousUrl);
+  }
+
+  saveScreen.panel.dataset.objectUrl = url;
+  if (saveScreen.copy) {
+    saveScreen.copy.textContent = "Готово. Открой PNG или сохрани изображение из этого экрана.";
+  }
+  if (saveScreen.loading) {
+    saveScreen.loading.hidden = true;
+  }
+  saveScreen.image.src = url;
+  saveScreen.image.hidden = false;
+  saveScreen.link.href = url;
+  saveScreen.link.download = fileName;
+  saveScreen.link.removeAttribute("aria-disabled");
+  return Promise.resolve();
+}
+
+function showSaveScreenError(saveScreen, message = "Не удалось подготовить изображение. Попробуй ещё раз.") {
+  if (saveScreen.copy) {
+    saveScreen.copy.textContent = message;
+  }
+  if (saveScreen.loading) {
+    saveScreen.loading.hidden = true;
+  }
+}
+
+function generateStoryReadyPng(reading) {
+  if (!reading) {
+    return Promise.reject(new Error("story render reading unavailable"));
+  }
+
+  return prepareShareAssets(reading).then(function renderFromAssets(assets) {
+    const palette = readPalette();
+    const typography = readTypography();
+    const fadeRatio = readIllustrationFadeRatio();
+    const cardCanvas = document.createElement("canvas");
+    const storyCanvas = document.createElement("canvas");
+    const cardContext = cardCanvas.getContext("2d");
+    const storyContext = storyCanvas.getContext("2d");
+
+    cardCanvas.width = SHARE_WIDTH;
+    cardCanvas.height = SHARE_HEIGHT;
+    storyCanvas.width = STORY_WIDTH;
+    storyCanvas.height = STORY_HEIGHT;
+
+    if (!cardContext || !storyContext) {
+      throw new Error("story canvas context unavailable");
+    }
+
+    drawShareCard(cardContext, assets, reading, palette, typography, fadeRatio);
+    drawStoryPoster(storyContext, cardCanvas, palette);
+    return canvasToBlob(storyCanvas);
+  });
+}
+
+function generateShareCardPng(reading) {
   return prepareShareAssets(reading).then(function renderFromAssets(assets) {
     const palette = readPalette();
     const typography = readTypography();
@@ -181,7 +347,7 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio)
   const fadeStartY = imageAreaHeight - fadeHeight;
   const titleY = 1232;
   const dividerY = 1294;
-  const moonY = 1360;
+  const moonY = 1338;
 
   context.clearRect(0, 0, width, height);
   context.save();
@@ -258,6 +424,120 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio)
     context.drawImage(assets.frameImage, 0, 0, width, height);
   }
 
+  context.restore();
+}
+
+function drawStoryPoster(context, cardCanvas, palette) {
+  const width = STORY_WIDTH;
+  const height = STORY_HEIGHT;
+  const cardWidth = 850;
+  const cardHeight = Math.round(cardWidth * (SHARE_HEIGHT / SHARE_WIDTH));
+  const cardX = Math.round((width - cardWidth) / 2);
+  const cardY = 236;
+  const cardRadius = 34;
+
+  context.clearRect(0, 0, width, height);
+
+  const baseGradient = context.createLinearGradient(0, 0, 0, height);
+  baseGradient.addColorStop(0, palette.darkElevated);
+  baseGradient.addColorStop(0.44, palette.darkBase);
+  baseGradient.addColorStop(1, "#090910");
+  context.fillStyle = baseGradient;
+  context.fillRect(0, 0, width, height);
+
+  drawStoryTexture(context, {
+    width,
+    height,
+    color: palette.gold,
+  });
+
+  const halo = context.createRadialGradient(width / 2, cardY + cardHeight * 0.4, 0, width / 2, cardY + cardHeight * 0.4, 620);
+  halo.addColorStop(0, "rgba(201,161,74,0.16)");
+  halo.addColorStop(0.36, "rgba(201,161,74,0.07)");
+  halo.addColorStop(0.72, "rgba(201,161,74,0.025)");
+  halo.addColorStop(1, "rgba(201,161,74,0)");
+  context.fillStyle = halo;
+  context.fillRect(0, 0, width, height);
+
+  drawStoryCardShadow(context, {
+    x: cardX,
+    y: cardY,
+    width: cardWidth,
+    height: cardHeight,
+    radius: cardRadius,
+    gold: palette.gold,
+  });
+
+  context.save();
+  clipRoundedRect(context, cardX, cardY, cardWidth, cardHeight, cardRadius);
+  context.drawImage(cardCanvas, cardX, cardY, cardWidth, cardHeight);
+  context.restore();
+
+  context.save();
+  context.strokeStyle = "rgba(201,161,74,0.26)";
+  context.lineWidth = 1.4;
+  drawRoundedRectPath(context, cardX - 9, cardY - 9, cardWidth + 18, cardHeight + 18, cardRadius + 12);
+  context.stroke();
+  context.restore();
+
+  const lowerFade = context.createLinearGradient(0, height * 0.78, 0, height);
+  lowerFade.addColorStop(0, "rgba(9,9,16,0)");
+  lowerFade.addColorStop(1, "rgba(9,9,16,0.64)");
+  context.fillStyle = lowerFade;
+  context.fillRect(0, height * 0.78, width, height * 0.22);
+}
+
+function drawStoryTexture(context, options) {
+  const { width, height, color } = options;
+
+  context.save();
+  context.globalAlpha = 0.22;
+
+  const topGlow = context.createRadialGradient(width / 2, 0, 0, width / 2, 0, height * 0.62);
+  topGlow.addColorStop(0, "rgba(201,161,74,0.08)");
+  topGlow.addColorStop(1, "rgba(201,161,74,0)");
+  context.fillStyle = topGlow;
+  context.fillRect(0, 0, width, height);
+
+  context.strokeStyle = color;
+  context.globalAlpha = 0.08;
+  context.lineWidth = 1;
+  context.beginPath();
+  context.moveTo(140, 1540);
+  context.lineTo(404, 1540);
+  context.moveTo(676, 1540);
+  context.lineTo(940, 1540);
+  context.stroke();
+
+  drawCenteredText(context, "✦", {
+    x: width / 2,
+    y: 1540,
+    font: `400 24px ${readTypography().ui}`,
+    color,
+  });
+
+  context.restore();
+}
+
+function drawStoryCardShadow(context, options) {
+  const { x, y, width, height, radius, gold } = options;
+
+  context.save();
+  context.shadowColor = "rgba(0,0,0,0.72)";
+  context.shadowBlur = 42;
+  context.shadowOffsetY = 24;
+  context.fillStyle = "rgba(0,0,0,0.72)";
+  drawRoundedRectPath(context, x, y, width, height, radius);
+  context.fill();
+  context.restore();
+
+  context.save();
+  context.shadowColor = "rgba(201,161,74,0.16)";
+  context.shadowBlur = 26;
+  context.strokeStyle = "rgba(201,161,74,0.18)";
+  context.lineWidth = 2;
+  drawRoundedRectPath(context, x - 4, y - 4, width + 8, height + 8, radius + 8);
+  context.stroke();
   context.restore();
 }
 
@@ -692,6 +972,11 @@ function wrapText(context, text, maxWidth) {
 }
 
 function clipRoundedRect(context, x, y, width, height, radius) {
+  drawRoundedRectPath(context, x, y, width, height, radius);
+  context.clip();
+}
+
+function drawRoundedRectPath(context, x, y, width, height, radius) {
   context.beginPath();
   context.moveTo(x + radius, y);
   context.lineTo(x + width - radius, y);
@@ -703,14 +988,37 @@ function clipRoundedRect(context, x, y, width, height, radius) {
   context.lineTo(x, y + radius);
   context.quadraticCurveTo(x, y, x + radius, y);
   context.closePath();
-  context.clip();
 }
 
 function canvasToBlob(canvas) {
   return new Promise(function resolveBlob(resolve, reject) {
+    let didFinish = false;
+    const timeoutId = window.setTimeout(function handleCanvasBlobTimeout() {
+      if (didFinish) {
+        return;
+      }
+
+      try {
+        didFinish = true;
+        resolve(dataUrlToBlob(canvas.toDataURL("image/png")));
+      } catch (error) {
+        reject(error);
+      }
+    }, ASSET_TIMEOUT_MS);
+
     canvas.toBlob(function handleBlob(blob) {
+      if (didFinish) {
+        return;
+      }
+
+      didFinish = true;
+      window.clearTimeout(timeoutId);
       if (!blob) {
-        reject(new Error("canvas.toBlob returned null"));
+        try {
+          resolve(dataUrlToBlob(canvas.toDataURL("image/png")));
+        } catch (error) {
+          reject(error);
+        }
         return;
       }
 
@@ -719,55 +1027,37 @@ function canvasToBlob(canvas) {
   });
 }
 
+function dataUrlToBlob(dataUrl) {
+  const parts = dataUrl.split(",");
+  const meta = parts[0] || "";
+  const data = parts[1] || "";
+  const mimeMatch = meta.match(/^data:([^;]+);base64$/);
+  const mimeType = mimeMatch ? mimeMatch[1] : "image/png";
+  const binary = atob(data);
+  const bytes = new Uint8Array(binary.length);
+
+  for (let index = 0; index < binary.length; index += 1) {
+    bytes[index] = binary.charCodeAt(index);
+  }
+
+  return new Blob([bytes], { type: mimeType });
+}
+
 function shareBlob(blob, reading) {
   const file = new File([blob], buildShareFileName(reading), { type: "image/png" });
-  const sharePayload = {
-    files: [file],
-  };
+  const fileName = buildShareFileName(reading);
 
   if (canNativeShareFile(file)) {
-    setShareState({
-      button: document.querySelector('#result [data-action="share-card"]'),
-      buttonLabel: document.getElementById("share-button-label"),
-      feedback: document.getElementById("share-feedback"),
-      isLoading: false,
-      message: "",
-    });
-
-    return navigator.share(sharePayload).then(function finishNativeShare() {
+    return navigator.share({ files: [file] }).then(function finishNativeShare() {
       return "native";
     });
   }
 
-  if (navigator.share) {
-    setShareState({
-      button: document.querySelector('#result [data-action="share-card"]'),
-      buttonLabel: document.getElementById("share-button-label"),
-      feedback: document.getElementById("share-feedback"),
-      isLoading: false,
-      message: "",
-    });
-
-    return navigator
-      .share(sharePayload)
-      .then(function finishNativeShareWithoutCanShare() {
-        return "native";
-      })
-      .catch(function fallbackAfterShareError(error) {
-        if (isAbortError(error)) {
-          throw error;
-        }
-
-        downloadBlob(blob, buildShareFileName(reading));
-        return "download";
-      });
-  }
-
-  downloadBlob(blob, buildShareFileName(reading));
+  downloadBlob(blob, fileName);
   return Promise.resolve("download");
 }
 
-function buildShareFileName(reading) {
+function buildShareFileName(reading, variant = "card") {
   const cardName = String(reading?.card?.name || reading?.name || "").trim();
   const suffix = cardName
     .toLowerCase()
@@ -776,7 +1066,8 @@ function buildShareFileName(reading) {
     .replace(/[^a-zа-яё0-9]+/gi, "-")
     .replace(/^-+|-+$/g, "");
 
-  return suffix ? `wyrd-card-${suffix}.png` : "wyrd-card.png";
+  const prefix = variant === "story" ? "wyrd-story" : "wyrd-card";
+  return suffix ? `${prefix}-${suffix}.png` : `${prefix}.png`;
 }
 
 function canNativeShareFile(file) {
@@ -795,9 +1086,7 @@ function canNativeShareFile(file) {
   }
 }
 
-function setShareState({ button, buttonLabel, feedback, isLoading, message, loadingLabel = "ПОДГОТАВЛИВАЕМ...", idleLabel = "ПОДЕЛИТЬСЯ" }) {
-  isSharing = isLoading;
-
+function setShareButtonState({ button, buttonLabel, feedback, isLoading, message }) {
   if (button) {
     button.disabled = isLoading;
     button.classList.toggle("is-loading", isLoading);
@@ -807,12 +1096,44 @@ function setShareState({ button, buttonLabel, feedback, isLoading, message, load
   }
 
   if (buttonLabel) {
-    buttonLabel.textContent = isLoading ? loadingLabel : idleLabel;
+    buttonLabel.textContent = isLoading ? "ПОДГОТАВЛИВАЕМ..." : "ПОДЕЛИТЬСЯ";
   }
 
   if (feedback) {
     feedback.hidden = !message;
     feedback.textContent = message;
+  }
+}
+
+function clearShareFeedback(feedback) {
+  if (feedback) {
+    feedback.hidden = true;
+    feedback.textContent = "";
+  }
+}
+
+function setSaveButtonState({ button, buttonLabel, isLoading }) {
+  if (button) {
+    button.disabled = isLoading;
+    button.classList.toggle("is-loading", isLoading);
+  }
+
+  if (buttonLabel) {
+    buttonLabel.textContent = isLoading ? "СОХРАНЯЕМ..." : "СОХРАНИТЬ";
+  }
+}
+
+function setShareButtonDisabled(button, isDisabled) {
+  if (button) {
+    button.disabled = isDisabled;
+    button.classList.toggle("is-peer-loading", isDisabled);
+  }
+}
+
+function setSaveButtonDisabled(button, isDisabled) {
+  if (button) {
+    button.disabled = isDisabled;
+    button.classList.toggle("is-peer-loading", isDisabled);
   }
 }
 
@@ -824,7 +1145,9 @@ function downloadBlob(blob, fileName) {
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-  URL.revokeObjectURL(url);
+  window.setTimeout(function revokeDownloadUrl() {
+    URL.revokeObjectURL(url);
+  }, 4000);
 }
 
 function withTimeout(promise, timeoutMs, message) {

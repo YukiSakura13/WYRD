@@ -433,6 +433,37 @@ export function createRenderer(elements) {
       elements.shareFeedback.textContent = "";
     }
 
+    const saveScreen = document.getElementById("save-screen");
+    const saveScreenBackdrop = document.getElementById("save-screen-backdrop");
+    const saveScreenImage = document.getElementById("save-screen-image");
+    const saveScreenLink = document.getElementById("save-screen-link");
+    const saveScreenLoading = document.getElementById("save-screen-loading");
+    const saveScreenCopy = document.getElementById("save-screen-copy");
+    if (saveScreen) {
+      if (saveScreen.dataset.objectUrl) {
+        URL.revokeObjectURL(saveScreen.dataset.objectUrl);
+        delete saveScreen.dataset.objectUrl;
+      }
+      saveScreen.hidden = true;
+    }
+    if (saveScreenBackdrop) {
+      saveScreenBackdrop.hidden = true;
+    }
+    if (saveScreenImage) {
+      saveScreenImage.hidden = true;
+      saveScreenImage.removeAttribute("src");
+    }
+    if (saveScreenLink) {
+      saveScreenLink.href = "#";
+      saveScreenLink.setAttribute("aria-disabled", "true");
+    }
+    if (saveScreenLoading) {
+      saveScreenLoading.hidden = false;
+    }
+    if (saveScreenCopy) {
+      saveScreenCopy.textContent = "Готовим изображение для Stories...";
+    }
+
     if (elements.shareButton) {
       elements.shareButton.disabled = false;
       elements.shareButton.classList.remove("is-loading");

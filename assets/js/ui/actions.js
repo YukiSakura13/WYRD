@@ -3,7 +3,7 @@ import { buildLocalOracleReading } from "../cards/oracle-local.js";
 import { ARCHETYPE_POSITIONS, detectArchetype, detectQuestionRoute } from "../cards/question-routing.js";
 import { createTransitionRunner, getAudioScene, getReturnScene, playSpreadSequence, resetViewport } from "./flow.js";
 import { SCENES } from "./scenes.js";
-import { saveCurrentCard, shareCurrentCard } from "./share.js";
+import { closeSaveScreen, saveCurrentCard, shareCurrentCard } from "./share.js";
 
 export function createActionHandler(deps) {
   const { audio, cards, renderApp, renderer, setScene, store, uiState } = deps;
@@ -180,6 +180,11 @@ export function createActionHandler(deps) {
 
     if (action === "save-card") {
       saveCurrentCard(store);
+      return;
+    }
+
+    if (action === "close-save-screen") {
+      closeSaveScreen();
       return;
     }
 

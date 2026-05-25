@@ -278,19 +278,9 @@
           </article>
           <div class="result-card-actions" aria-label="Действия с картой">
             <button class="btn-share" data-action="share-card" type="button">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
-                   stroke="currentColor" stroke-width="1.5"
-                   stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="3" r="1.5"/>
-                <circle cx="4" cy="8" r="1.5"/>
-                <circle cx="12" cy="13" r="1.5"/>
-                <line x1="5.5" y1="7" x2="10.5" y2="4"/>
-                <line x1="5.5" y1="9" x2="10.5" y2="12"/>
-              </svg>
               <span id="share-button-label">ПОДЕЛИТЬСЯ</span>
             </button>
             <button class="btn-share btn-save-card" data-action="save-card" type="button">
-              <span aria-hidden="true">↓</span>
               <span id="save-button-label">СОХРАНИТЬ</span>
             </button>
           </div>
@@ -505,6 +495,24 @@
           </div>
         </aside>
       </section>
+
+      <div class="save-screen-backdrop" id="save-screen-backdrop" data-action="close-save-screen" hidden></div>
+      <aside class="save-screen" id="save-screen" role="dialog" aria-modal="true" aria-labelledby="save-screen-title" hidden>
+        <div class="save-screen-inner">
+          <button class="save-screen-close" data-action="close-save-screen" type="button" aria-label="Закрыть сохранение">×</button>
+          <p class="save-screen-kicker">WYRD ARCHIVE</p>
+          <h2 id="save-screen-title">Сохранить карту</h2>
+          <p class="save-screen-copy" id="save-screen-copy">Готовим изображение для Stories...</p>
+          <div class="save-screen-art" id="save-screen-art">
+            <div class="save-screen-loading" id="save-screen-loading" aria-hidden="true">
+              <span></span>
+            </div>
+            <img id="save-screen-image" alt="Готовое изображение карты для сохранения" hidden />
+          </div>
+          <a class="save-screen-link" id="save-screen-link" href="#" download="wyrd-story.png" aria-disabled="true">ОТКРЫТЬ PNG</a>
+          <p class="save-screen-hint">Если браузер не скачивает файл автоматически, открой PNG и сохрани изображение вручную.</p>
+        </div>
+      </aside>
 
       <div class="ornament">✦ ✦ ✦</div>
       <footer class="footer">Лес отвечает тем, кто умеет слушать тишину.</footer>
