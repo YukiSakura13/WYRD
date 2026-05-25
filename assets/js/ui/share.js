@@ -340,93 +340,104 @@ function generateShareCardPng(reading) {
 function drawShareCard(context, assets, reading, palette, typography, fadeRatio) {
   const width = SHARE_WIDTH;
   const height = SHARE_HEIGHT;
-  const radius = 38;
-  const logoZoneHeight = 116;
-  const imageX = 76;
-  const imageY = logoZoneHeight + 12;
-  const imageWidth = width - imageX * 2;
-  const imageHeight = 790;
-  const imageBottom = imageY + imageHeight;
-  const imageAreaHeight = imageBottom + 58;
-  const fadeHeight = Math.round(imageAreaHeight * fadeRatio);
-  const fadeStartY = imageAreaHeight - fadeHeight;
-  const titleY = imageBottom + 128;
-  const dividerY = titleY + 70;
-  const moonY = dividerY + 70;
+  const cardX = 54;
+  const cardY = 28;
+  const cardWidth = width - cardX * 2;
+  const cardHeight = height - cardY * 2;
+  const radius = 34;
+  const artX = cardX + 92;
+  const artY = cardY + 162;
+  const artWidth = cardWidth - 184;
+  const artHeight = 770;
+  const artBottom = artY + artHeight;
+  const titleY = artBottom + 112;
+  const dividerY = titleY + 66;
+  const moonY = dividerY + 64;
 
   context.clearRect(0, 0, width, height);
+
   context.save();
-  clipRoundedRect(context, 0, 0, width, height, radius);
+  context.shadowColor = "rgba(0, 0, 0, 0.72)";
+  context.shadowBlur = 28;
+  context.shadowOffsetY = 16;
+  context.fillStyle = "rgba(8, 8, 14, 0.86)";
+  drawRoundedRectPath(context, cardX, cardY, cardWidth, cardHeight, radius);
+  context.fill();
+  context.restore();
+
+  context.save();
+  clipRoundedRect(context, cardX, cardY, cardWidth, cardHeight, radius);
 
   context.fillStyle = palette.darkBase;
-  context.fillRect(0, 0, width, height);
+  context.fillRect(cardX, cardY, cardWidth, cardHeight);
 
-  const imageShell = context.createLinearGradient(0, 0, 0, imageBottom);
+  const imageShell = context.createLinearGradient(0, cardY, 0, artBottom + 90);
   imageShell.addColorStop(0, palette.darkBase);
   imageShell.addColorStop(0.28, palette.darkElevated);
   imageShell.addColorStop(1, palette.darkBase);
   context.fillStyle = imageShell;
-  context.fillRect(0, 0, width, imageAreaHeight);
+  context.fillRect(cardX, cardY, cardWidth, artBottom + 90 - cardY);
 
   context.save();
   context.shadowColor = "rgba(0, 0, 0, 0.58)";
-  context.shadowBlur = 24;
-  context.shadowOffsetY = 12;
+  context.shadowBlur = 22;
+  context.shadowOffsetY = 14;
   context.fillStyle = "rgba(242, 235, 221, 0.96)";
-  context.fillRect(imageX, imageY, imageWidth, imageHeight);
+  context.fillRect(artX, artY, artWidth, artHeight);
   context.restore();
 
   drawContainedImage(context, assets.cardImage, {
-    x: imageX,
-    y: imageY,
-    width: imageWidth,
-    height: imageHeight,
+    x: artX,
+    y: artY,
+    width: artWidth,
+    height: artHeight,
     background: palette.parchmentBg,
   });
 
-  const imageVignette = context.createRadialGradient(width / 2, imageY + imageHeight * 0.42, 120, width / 2, imageY + imageHeight * 0.42, 620);
+  context.save();
+  context.strokeStyle = "rgba(201, 161, 74, 0.28)";
+  context.lineWidth = 1.4;
+  context.strokeRect(artX + 0.5, artY + 0.5, artWidth - 1, artHeight - 1);
+  context.restore();
+
+  const imageVignette = context.createRadialGradient(width / 2, artY + artHeight * 0.44, 120, width / 2, artY + artHeight * 0.44, 560);
   imageVignette.addColorStop(0, "rgba(16,16,25,0)");
-  imageVignette.addColorStop(0.64, "rgba(16,16,25,0.04)");
-  imageVignette.addColorStop(1, "rgba(16,16,25,0.34)");
+  imageVignette.addColorStop(0.68, "rgba(16,16,25,0.03)");
+  imageVignette.addColorStop(1, "rgba(16,16,25,0.28)");
   context.fillStyle = imageVignette;
-  context.fillRect(imageX, imageY, imageWidth, imageHeight);
+  context.fillRect(artX, artY, artWidth, artHeight);
 
-  const fadeStartRatio = Math.max(0, Math.min(0.8, fadeStartY / imageAreaHeight));
-  const verticalFade = context.createLinearGradient(0, 0, 0, imageAreaHeight);
-  verticalFade.addColorStop(0, "rgba(16,16,25,0)");
-  verticalFade.addColorStop(0.52, "rgba(16,16,25,0)");
-  verticalFade.addColorStop(fadeStartRatio, "rgba(16,16,25,0)");
-  verticalFade.addColorStop(Math.min(0.92, fadeStartRatio + 0.16), "rgba(16,16,25,0.14)");
-  verticalFade.addColorStop(Math.min(0.97, fadeStartRatio + 0.3), "rgba(16,16,25,0.46)");
-  verticalFade.addColorStop(Math.min(0.995, fadeStartRatio + 0.44), "rgba(16,16,25,0.9)");
-  verticalFade.addColorStop(1, "rgba(16,16,25,1)");
-  context.fillStyle = verticalFade;
-  context.fillRect(0, 0, width, imageAreaHeight);
+  const artBottomFade = context.createLinearGradient(0, artBottom - 96, 0, artBottom + 44);
+  artBottomFade.addColorStop(0, "rgba(16,16,25,0)");
+  artBottomFade.addColorStop(0.58, "rgba(16,16,25,0.18)");
+  artBottomFade.addColorStop(1, "rgba(16,16,25,0.62)");
+  context.fillStyle = artBottomFade;
+  context.fillRect(artX, artBottom - 96, artWidth, 140);
 
-  const lowerSurface = context.createLinearGradient(0, imageAreaHeight - 90, 0, height);
-  lowerSurface.addColorStop(0, palette.darkBase);
+  const lowerSurface = context.createLinearGradient(0, artBottom - 20, 0, cardY + cardHeight);
+  lowerSurface.addColorStop(0, "rgba(16,16,25,0.82)");
   lowerSurface.addColorStop(0.22, palette.darkElevated);
   lowerSurface.addColorStop(1, palette.darkBase);
   context.fillStyle = lowerSurface;
-  context.fillRect(0, imageAreaHeight - 90, width, height - (imageAreaHeight - 90));
+  context.fillRect(cardX, artBottom - 20, cardWidth, cardY + cardHeight - (artBottom - 20));
 
   drawPerimeterVignette(context, {
     width,
     height,
-    topStrength: 0.12,
-    sideStrength: 0.14,
-    bottomStrength: 0.3,
+    topStrength: 0.2,
+    sideStrength: 0.2,
+    bottomStrength: 0.34,
     cornerStrength: 0.22,
-    imageAreaHeight,
+    imageAreaHeight: artBottom,
   });
 
   drawCenteredText(context, reading.name, {
     x: width / 2,
     y: titleY,
-    font: `400 60px ${typography.display}`,
+    font: `400 56px ${typography.display}`,
     color: palette.parchmentText,
-    maxWidth: width - 180,
-    lineHeight: 68,
+    maxWidth: cardWidth - 190,
+    lineHeight: 64,
     textAlign: "center",
   });
 
@@ -441,11 +452,11 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio)
     x: width / 2,
     y: moonY,
     color: "rgba(201, 161, 74, 0.76)",
-    font: `600 24px ${typography.ui}`,
+    font: `600 23px ${typography.ui}`,
   });
 
   if (assets.frameImage) {
-    context.drawImage(assets.frameImage, 0, 0, width, height);
+    context.drawImage(assets.frameImage, cardX, cardY, cardWidth, cardHeight);
   }
 
   context.restore();
