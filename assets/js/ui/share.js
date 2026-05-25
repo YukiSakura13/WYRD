@@ -341,13 +341,18 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio)
   const width = SHARE_WIDTH;
   const height = SHARE_HEIGHT;
   const radius = 38;
-  const imageAreaHeight = Math.round(height * 0.72);
-  const logoZoneHeight = 88;
+  const logoZoneHeight = 116;
+  const imageX = 76;
+  const imageY = logoZoneHeight + 12;
+  const imageWidth = width - imageX * 2;
+  const imageHeight = 790;
+  const imageBottom = imageY + imageHeight;
+  const imageAreaHeight = imageBottom + 58;
   const fadeHeight = Math.round(imageAreaHeight * fadeRatio);
   const fadeStartY = imageAreaHeight - fadeHeight;
-  const titleY = 1232;
-  const dividerY = 1294;
-  const moonY = 1338;
+  const titleY = imageBottom + 128;
+  const dividerY = titleY + 70;
+  const moonY = dividerY + 70;
 
   context.clearRect(0, 0, width, height);
   context.save();
@@ -356,35 +361,54 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio)
   context.fillStyle = palette.darkBase;
   context.fillRect(0, 0, width, height);
 
-  context.fillStyle = palette.darkBase;
+  const imageShell = context.createLinearGradient(0, 0, 0, imageBottom);
+  imageShell.addColorStop(0, palette.darkBase);
+  imageShell.addColorStop(0.28, palette.darkElevated);
+  imageShell.addColorStop(1, palette.darkBase);
+  context.fillStyle = imageShell;
   context.fillRect(0, 0, width, imageAreaHeight);
-  drawHeroImage(context, assets.cardImage, {
-    x: 24,
-    y: logoZoneHeight,
-    width: width - 48,
-    height: imageAreaHeight - logoZoneHeight,
-    background: palette.darkBase,
-    positionY: 0,
+
+  context.save();
+  context.shadowColor = "rgba(0, 0, 0, 0.58)";
+  context.shadowBlur = 24;
+  context.shadowOffsetY = 12;
+  context.fillStyle = "rgba(242, 235, 221, 0.96)";
+  context.fillRect(imageX, imageY, imageWidth, imageHeight);
+  context.restore();
+
+  drawContainedImage(context, assets.cardImage, {
+    x: imageX,
+    y: imageY,
+    width: imageWidth,
+    height: imageHeight,
+    background: palette.parchmentBg,
   });
+
+  const imageVignette = context.createRadialGradient(width / 2, imageY + imageHeight * 0.42, 120, width / 2, imageY + imageHeight * 0.42, 620);
+  imageVignette.addColorStop(0, "rgba(16,16,25,0)");
+  imageVignette.addColorStop(0.64, "rgba(16,16,25,0.04)");
+  imageVignette.addColorStop(1, "rgba(16,16,25,0.34)");
+  context.fillStyle = imageVignette;
+  context.fillRect(imageX, imageY, imageWidth, imageHeight);
 
   const fadeStartRatio = Math.max(0, Math.min(0.8, fadeStartY / imageAreaHeight));
   const verticalFade = context.createLinearGradient(0, 0, 0, imageAreaHeight);
   verticalFade.addColorStop(0, "rgba(16,16,25,0)");
-  verticalFade.addColorStop(0.42, "rgba(16,16,25,0)");
+  verticalFade.addColorStop(0.52, "rgba(16,16,25,0)");
   verticalFade.addColorStop(fadeStartRatio, "rgba(16,16,25,0)");
-  verticalFade.addColorStop(Math.min(0.96, fadeStartRatio + 0.2), "rgba(16,16,25,0.08)");
-  verticalFade.addColorStop(Math.min(0.98, fadeStartRatio + 0.38), "rgba(16,16,25,0.34)");
-  verticalFade.addColorStop(Math.min(0.995, fadeStartRatio + 0.55), "rgba(16,16,25,0.82)");
+  verticalFade.addColorStop(Math.min(0.92, fadeStartRatio + 0.16), "rgba(16,16,25,0.14)");
+  verticalFade.addColorStop(Math.min(0.97, fadeStartRatio + 0.3), "rgba(16,16,25,0.46)");
+  verticalFade.addColorStop(Math.min(0.995, fadeStartRatio + 0.44), "rgba(16,16,25,0.9)");
   verticalFade.addColorStop(1, "rgba(16,16,25,1)");
   context.fillStyle = verticalFade;
   context.fillRect(0, 0, width, imageAreaHeight);
 
-  const lowerSurface = context.createLinearGradient(0, imageAreaHeight - 24, 0, height);
+  const lowerSurface = context.createLinearGradient(0, imageAreaHeight - 90, 0, height);
   lowerSurface.addColorStop(0, palette.darkBase);
   lowerSurface.addColorStop(0.22, palette.darkElevated);
   lowerSurface.addColorStop(1, palette.darkBase);
   context.fillStyle = lowerSurface;
-  context.fillRect(0, imageAreaHeight - 24, width, height - (imageAreaHeight - 24));
+  context.fillRect(0, imageAreaHeight - 90, width, height - (imageAreaHeight - 90));
 
   drawPerimeterVignette(context, {
     width,
@@ -416,8 +440,8 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio)
   drawMoonMeta(context, reading, {
     x: width / 2,
     y: moonY,
-    color: palette.archiveGold,
-    font: `600 22px ${typography.ui}`,
+    color: "rgba(201, 161, 74, 0.76)",
+    font: `600 24px ${typography.ui}`,
   });
 
   if (assets.frameImage) {
@@ -705,12 +729,13 @@ function drawMoonMeta(context, reading, options) {
   context.textAlign = "left";
   context.textBaseline = "middle";
 
-  const textWidth = context.measureText(text).width;
+  const tracking = 2.8;
+  const textWidth = measureTrackedTextWidth(context, text, tracking);
   const totalWidth = iconSize + gap + textWidth;
   const startX = x - totalWidth / 2;
 
   drawMoonGlyph(context, moon.type, startX + iconSize / 2, y, iconSize, color);
-  drawTrackedText(context, text, startX + iconSize + gap, y, 2.8);
+  drawTrackedTextFromLeft(context, text, startX + iconSize + gap, y, tracking);
   context.restore();
 }
 
@@ -927,17 +952,35 @@ function drawTrackedText(context, text, x, y, tracking) {
   }
 
   const glyphs = Array.from(text);
-  const totalWidth =
-    glyphs.reduce(function sumWidth(total, glyph) {
-      return total + context.measureText(glyph).width;
-    }, 0) +
-    tracking * Math.max(glyphs.length - 1, 0);
+  const totalWidth = measureTrackedTextWidth(context, text, tracking);
   let cursorX = x - totalWidth / 2;
 
   glyphs.forEach(function drawGlyph(glyph) {
     context.fillText(glyph, cursorX, y);
     cursorX += context.measureText(glyph).width + tracking;
   });
+}
+
+function drawTrackedTextFromLeft(context, text, x, y, tracking) {
+  if (!tracking) {
+    context.fillText(text, x, y);
+    return;
+  }
+
+  let cursorX = x;
+  Array.from(text).forEach(function drawGlyph(glyph) {
+    context.fillText(glyph, cursorX, y);
+    cursorX += context.measureText(glyph).width + tracking;
+  });
+}
+
+function measureTrackedTextWidth(context, text, tracking) {
+  const glyphs = Array.from(text);
+  return (
+    glyphs.reduce(function sumWidth(total, glyph) {
+      return total + context.measureText(glyph).width;
+    }, 0) + tracking * Math.max(glyphs.length - 1, 0)
+  );
 }
 
 function wrapText(context, text, maxWidth) {
