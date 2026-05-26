@@ -490,13 +490,13 @@ const RAW_CARDS = [
   },
   {
     id: "wyrd_047",
-    name: "Бурундук Лесных Троп",
+    name: "Дух Скрытой Тропы",
     subtitle: "The Path Chipmunk",
     keyword: "Шаг",
     message:
       "Маленький шаг — это уже движение. Путь складывается из таких шагов, даже если ты их не замечаешь. Продолжай идти.",
     shadow: "Мелкие дела шумят вокруг, а что-то важное всё ещё ждёт твоего первого шага.",
-    image: "./assets/images/cards/burunduk_lesnykh_trop.webp",
+    image: "./assets/images/cards/dukh_skrytoy_tropy.webp",
   },
   {
     id: "wyrd_048",
