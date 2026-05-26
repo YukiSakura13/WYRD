@@ -1,5 +1,6 @@
 const BUILD_ID = new URLSearchParams(self.location.search).get("v") || "dev";
-const CACHE_NAME = `wyrd-runtime-${BUILD_ID}`;
+const CACHE_VERSION = "cards-20260526";
+const CACHE_NAME = `wyrd-runtime-${BUILD_ID}-${CACHE_VERSION}`;
 const RUNTIME_CACHEABLE_DESTINATIONS = new Set(["image", "audio", "video", "font"]);
 
 self.addEventListener("install", (event) => {
