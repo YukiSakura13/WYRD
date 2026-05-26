@@ -200,6 +200,7 @@ export function closeSaveScreen() {
   if (saveScreen.link) {
     saveScreen.link.href = "#";
     saveScreen.link.setAttribute("aria-disabled", "true");
+    saveScreen.link.removeAttribute("download");
   }
 
   if (saveScreen.loading) {
@@ -235,7 +236,7 @@ function openSaveScreen(saveScreen) {
   }
 
   if (saveScreen.copy) {
-    saveScreen.copy.textContent = "Готовим карту для твоего архива...";
+    saveScreen.copy.textContent = "Готовим карту...";
   }
 
   if (saveScreen.loading) {
@@ -250,10 +251,11 @@ function openSaveScreen(saveScreen) {
   if (saveScreen.link) {
     saveScreen.link.href = "#";
     saveScreen.link.setAttribute("aria-disabled", "true");
+    saveScreen.link.removeAttribute("download");
   }
 }
 
-function showSaveScreenImage(blob, fileName, saveScreen) {
+function showSaveScreenImage(blob, _fileName, saveScreen) {
   if (!saveScreen.panel || !saveScreen.image || !saveScreen.link) {
     showSaveScreenError(saveScreen, "Не удалось открыть экран сохранения.");
     return Promise.resolve();
@@ -267,7 +269,7 @@ function showSaveScreenImage(blob, fileName, saveScreen) {
 
   saveScreen.panel.dataset.objectUrl = url;
   if (saveScreen.copy) {
-    saveScreen.copy.textContent = "Карта готова. Открой изображение и сохрани его в Фото или Файлы.";
+    saveScreen.copy.textContent = "Карта готова.";
   }
   if (saveScreen.loading) {
     saveScreen.loading.hidden = true;
@@ -275,7 +277,7 @@ function showSaveScreenImage(blob, fileName, saveScreen) {
   saveScreen.image.src = url;
   saveScreen.image.hidden = false;
   saveScreen.link.href = url;
-  saveScreen.link.download = fileName;
+  saveScreen.link.removeAttribute("download");
   saveScreen.link.removeAttribute("aria-disabled");
   return Promise.resolve();
 }
