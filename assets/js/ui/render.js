@@ -394,7 +394,15 @@ export function createRenderer(elements) {
 
     const date = new Date(reading.createdAt || Date.now());
     const moon = getMoonPhase(date);
-    elements.cardMoonMeta.replaceChildren(createMoonIcon(moon.type), document.createTextNode(`${formatTraceDate(date)} · ${moon.name}`));
+    elements.cardMoonMeta.replaceChildren(createMoonIcon(moon.type), document.createTextNode(`${capitalizeFirst(moon.name)} · ${formatTraceDate(date)}`));
+  }
+
+  function capitalizeFirst(value) {
+    if (!value) {
+      return "";
+    }
+
+    return value.charAt(0).toUpperCase() + value.slice(1);
   }
 
   function updateCopyDensity(element, classNames) {

@@ -346,13 +346,13 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio)
   const cardHeight = height - cardY * 2;
   const radius = 34;
   const artX = cardX + 92;
-  const artY = cardY + 162;
+  const artY = cardY + 142;
   const artWidth = cardWidth - 184;
-  const artHeight = 770;
+  const artHeight = 850;
   const artBottom = artY + artHeight;
-  const titleY = artBottom + 112;
+  const titleY = artBottom + 94;
   const dividerY = titleY + 66;
-  const moonY = dividerY + 64;
+  const moonY = dividerY + 58;
 
   context.clearRect(0, 0, width, height);
 
@@ -451,8 +451,8 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio)
   drawMoonMeta(context, reading, {
     x: width / 2,
     y: moonY,
-    color: "rgba(201, 161, 74, 0.76)",
-    font: `600 23px ${typography.ui}`,
+    color: "rgba(201, 161, 74, 0.54)",
+    font: `500 18px ${typography.ui}`,
   });
 
   if (assets.frameImage) {
@@ -730,9 +730,9 @@ function drawMoonMeta(context, reading, options) {
   const { x, y, color, font } = options;
   const date = new Date(reading.createdAt || Date.now());
   const moon = getMoonPhase(date);
-  const text = `${formatTraceDate(date)} · ${moon.name}`.toUpperCase();
-  const iconSize = 22;
-  const gap = 14;
+  const text = `${capitalizeFirst(moon.name)} · ${formatTraceDate(date)}`;
+  const iconSize = 18;
+  const gap = 10;
 
   context.save();
   context.font = font;
@@ -740,7 +740,7 @@ function drawMoonMeta(context, reading, options) {
   context.textAlign = "left";
   context.textBaseline = "middle";
 
-  const tracking = 2.8;
+  const tracking = 1.2;
   const textWidth = measureTrackedTextWidth(context, text, tracking);
   const totalWidth = iconSize + gap + textWidth;
   const startX = x - totalWidth / 2;
@@ -748,6 +748,14 @@ function drawMoonMeta(context, reading, options) {
   drawMoonGlyph(context, moon.type, startX + iconSize / 2, y, iconSize, color);
   drawTrackedTextFromLeft(context, text, startX + iconSize + gap, y, tracking);
   context.restore();
+}
+
+function capitalizeFirst(value) {
+  if (!value) {
+    return "";
+  }
+
+  return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
 function drawMoonGlyph(context, type, x, y, size, color) {
