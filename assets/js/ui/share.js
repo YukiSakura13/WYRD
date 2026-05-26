@@ -235,7 +235,7 @@ function openSaveScreen(saveScreen) {
   }
 
   if (saveScreen.copy) {
-    saveScreen.copy.textContent = "Готовим изображение для Stories...";
+    saveScreen.copy.textContent = "Готовим карту для твоего архива...";
   }
 
   if (saveScreen.loading) {
@@ -267,7 +267,7 @@ function showSaveScreenImage(blob, fileName, saveScreen) {
 
   saveScreen.panel.dataset.objectUrl = url;
   if (saveScreen.copy) {
-    saveScreen.copy.textContent = "Готово. Открой PNG или сохрани изображение из этого экрана.";
+    saveScreen.copy.textContent = "Карта готова. Открой изображение и сохрани его в Фото или Файлы.";
   }
   if (saveScreen.loading) {
     saveScreen.loading.hidden = true;
@@ -280,7 +280,7 @@ function showSaveScreenImage(blob, fileName, saveScreen) {
   return Promise.resolve();
 }
 
-function showSaveScreenError(saveScreen, message = "Не удалось подготовить изображение. Попробуй ещё раз.") {
+function showSaveScreenError(saveScreen, message = "Не удалось подготовить карту. Попробуй ещё раз.") {
   if (saveScreen.copy) {
     saveScreen.copy.textContent = message;
   }
@@ -1181,7 +1181,7 @@ function setSaveButtonState({ button, buttonLabel, isLoading }) {
   }
 
   if (buttonLabel) {
-    buttonLabel.textContent = isLoading ? "СОХРАНЯЕМ..." : "СОХРАНИТЬ";
+    buttonLabel.textContent = isLoading ? "ГОТОВИМ..." : "СОХРАНИТЬ";
   }
 }
 
