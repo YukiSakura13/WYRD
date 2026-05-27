@@ -26,7 +26,7 @@ export const CARD_LAYERS = {
   Круг: "present",
   "Зимний Сон": "present",
   "Искра Леса": "present",
-  "Собиратель Орехов": "present",
+  "Хранительница Малых Радостей": "present",
   "Текущая Река": "present",
   "Перо Ветра": "present",
   "Соловей Рассвета": "present",

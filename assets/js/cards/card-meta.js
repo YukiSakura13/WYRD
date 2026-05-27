@@ -41,7 +41,7 @@ const BASE_CARD_META = {
   Корень: { state: "root", tone: "dark", links: ["survival", "memory", "choice"] },
   Круг: { state: "circle", tone: "light", links: ["cycle", "threads", "joy"] },
   "Искра Леса": { state: "spark", tone: "light", links: ["joy", "flow", "light"] },
-  "Собиратель Орехов": { state: "joy", tone: "light", links: ["spark", "circle", "light"] },
+  "Хранительница Малых Радостей": { state: "joy", tone: "light", links: ["spark", "circle", "light"] },
   "Текущая Река": { state: "flow", tone: "light", links: ["stillness", "choice", "acceptance"] },
   "Перо Ветра": { state: "release", tone: "light", links: ["flow", "stillness", "joy"] },
   "Соловей Рассвета": { state: "voice", tone: "light", links: ["dawn", "light", "choice"] },
