@@ -331,13 +331,13 @@ const RAW_CARDS = [
   },
   {
     id: "wyrd_032",
-    name: "Крыса Тёмных Троп",
+    name: "Дух Потайного Хода",
     subtitle: "The Rat of Dark Paths",
     keyword: "Выживание",
     message:
       "Там, где другие видят только стену, ты замечаешь щель. И находишь то, что другие просмотрели. То, что найдено, то твоё.",
     shadow: "Выживание стало слишком привычным. Где теперь жизнь, а где только способ не пропасть?",
-    image: "./assets/images/cards/krysa.webp",
+    image: "./assets/images/cards/dukh_potaynogo_khoda.webp",
   },
   {
     id: "wyrd_033",
