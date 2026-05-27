@@ -240,13 +240,13 @@ const RAW_CARDS = [
   },
   {
     id: "wyrd_023",
-    name: "Ёж Тайной Калитки",
-    subtitle: "The Hedgehog",
+    name: "Безмолвный Затворник",
+    subtitle: "The Silent Recluse",
     keyword: "Граница",
     message:
       "Твои иголки оберегают то, что уязвимо и ценно для тебя. Только ты решаешь, кого подпускать ближе. Своё пространство нужно беречь и открывать не каждому.",
     shadow: "Не прячешь ли ты за защитой страх близости?",
-    image: "./assets/images/cards/ezh.webp",
+    image: "./assets/images/cards/bezmolvnyy_zatvornik.webp",
   },
   {
     id: "wyrd_024",
