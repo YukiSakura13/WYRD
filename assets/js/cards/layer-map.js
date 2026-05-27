@@ -54,7 +54,7 @@ export const CARD_LAYERS = {
   "Судьбоносная Встреча": "future",
   Заря: "future",
   "Золотой Олень": "future",
-  Орёл: "future",
+  "Чтец Знаков": "future",
   "Цветущая Ветвь": "future",
   "Страж Порога": "future",
   "Страж с Ключом": "future",

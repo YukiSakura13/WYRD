@@ -28,7 +28,7 @@ const BASE_CARD_META = {
   Грибница: { state: "connection", tone: "neutral", links: ["threads", "fate", "joy"] },
   "Золотой Олень": { state: "blessing", tone: "light", links: ["dawn", "growth", "future_path"] },
   Заря: { state: "dawn", tone: "light", links: ["light", "growth", "future_path"] },
-  Орёл: { state: "vision", tone: "light", links: ["prophecy", "choice", "future_path"] },
+  "Чтец Знаков": { state: "vision", tone: "light", links: ["prophecy", "choice", "future_path"] },
   "Цветущая Ветвь": { state: "growth", tone: "light", links: ["rebirth", "dawn", "blessing"] },
   "Дух Потайного Хода": { state: "survival", tone: "dark", links: ["root", "fracture", "choice"] },
   Водяной: { state: "water_memory", tone: "dark", links: ["depth", "grief", "flow"] },
