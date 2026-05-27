@@ -12,7 +12,7 @@ const BASE_CARD_META = {
   "Древо Возрождения": { state: "rebirth", tone: "neutral", links: ["dawn", "growth", "circle"] },
   Плакальщица: { state: "grief", tone: "dark", links: ["rebirth", "stillness", "flow"] },
   "Страж Порога": { state: "threshold", tone: "light", links: ["choice", "future_path", "key"] },
-  "Волк с Зеркалом": { state: "memory", tone: "dark", links: ["fracture", "root", "threshold"] },
+  "Ночной Толкователь Теней": { state: "memory", tone: "dark", links: ["fracture", "root", "threshold"] },
   "Ткачиха Судьбы": { state: "threads", tone: "neutral", links: ["fate", "circle", "key"] },
   Уроборос: { state: "cycle", tone: "dark", links: ["rebirth", "circle", "fracture"] },
   "Лесной Знахарь": { state: "remedy", tone: "neutral", links: ["balance", "flow", "choice"] },

@@ -146,13 +146,13 @@ const RAW_CARDS = [
   },
   {
     id: "wyrd_014",
-    name: "Волк с Зеркалом",
+    name: "Ночной Толкователь Теней",
     subtitle: "The Mirror Wolf",
     keyword: "Прошлое отражение",
     message:
       "Ты всё ещё смотришь в зеркало, где живёт твоя старая версия. Пока ты не избавишься от этого отражения, настоящее так и будет искажаться.",
     shadow: "Почему прошлый образ до сих пор кажется убедительнее настоящего?",
-    image: "./assets/images/cards/volk_s_zerkalom.webp",
+    image: "./assets/images/cards/nochnoy_tolkovatel_teney.webp",
   },
   {
     id: "wyrd_015",
