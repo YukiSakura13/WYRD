@@ -459,14 +459,14 @@ const RAW_CARDS = [
   },
   {
     id: "wyrd_044",
-    name: "Текущая Река",
-    subtitle: "The Living Current",
+    name: "Странник Тихой Реки",
+    subtitle: "The Quiet River Wanderer",
     keyword: "Поток",
     message:
       "Ты уже плывёшь по течению. Поток не требует от тебя усилий. Там, где есть доверие, путь раскрывается сам.",
     shadow:
       "Течение несёт легко и приятно. Но если не выбирать направление, то как понять, к какому берегу приплывёшь?",
-    image: "./assets/images/cards/tekushchaya_reka.webp",
+    image: "./assets/images/cards/strannik_tikhoy_reki.webp",
   },
   {
     id: "wyrd_045",

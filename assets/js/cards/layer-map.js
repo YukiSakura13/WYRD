@@ -27,7 +27,7 @@ export const CARD_LAYERS = {
   "Зимний Сон": "present",
   "Искра Леса": "present",
   "Хранительница Малых Радостей": "present",
-  "Текущая Река": "present",
+  "Странник Тихой Реки": "present",
   "Перо Ветра": "present",
   "Соловей Рассвета": "present",
   "Дух Скрытой Тропы": "present",

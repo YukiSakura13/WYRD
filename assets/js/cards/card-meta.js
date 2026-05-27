@@ -42,7 +42,7 @@ const BASE_CARD_META = {
   Круг: { state: "circle", tone: "light", links: ["cycle", "threads", "joy"] },
   "Искра Леса": { state: "spark", tone: "light", links: ["joy", "flow", "light"] },
   "Хранительница Малых Радостей": { state: "joy", tone: "light", links: ["spark", "circle", "light"] },
-  "Текущая Река": { state: "flow", tone: "light", links: ["stillness", "choice", "acceptance"] },
+  "Странник Тихой Реки": { state: "flow", tone: "light", links: ["stillness", "choice", "acceptance"] },
   "Перо Ветра": { state: "release", tone: "light", links: ["flow", "stillness", "joy"] },
   "Соловей Рассвета": { state: "voice", tone: "light", links: ["dawn", "light", "choice"] },
   "Дух Скрытой Тропы": { state: "small_steps", tone: "light", links: ["path", "choice", "joy"] },
@@ -321,7 +321,7 @@ const CARD_META_V2_OVERRIDES = {
     short: "Редкий знак приходит тогда, когда путь уже готов открыться.",
     advice: "Иди за тем, что даёт тихую радость и внутренний свет.",
   },
-  "Текущая Река": {
+  "Странник Тихой Реки": {
     short: "Путь любит движение, даже если оно едва заметно со стороны.",
     advice: "Доверься течению там, где борьба только сужает дорогу.",
   },
