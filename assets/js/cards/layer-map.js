@@ -13,7 +13,7 @@ export const CARD_LAYERS = {
   Леший: "past",
   Выбор: "present",
   Тишина: "present",
-  "Паук Звёздной Сети": "present",
+  "Нити Между Мирами": "present",
   "Безмолвный Затворник": "present",
   "Дух Верного Момента": "present",
   Свеча: "present",

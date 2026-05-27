@@ -20,7 +20,7 @@ const BASE_CARD_META = {
   Рой: { state: "awakening", tone: "neutral", links: ["fracture", "flow", "future_path"] },
   "Хранитель Нитей": { state: "fate", tone: "neutral", links: ["threads", "choice", "circle"] },
   "Страж с Ключом": { state: "key", tone: "light", links: ["threshold", "prophecy", "vision"] },
-  "Паук Звёздной Сети": { state: "web", tone: "neutral", links: ["threads", "fate", "insight"] },
+  "Нити Между Мирами": { state: "web", tone: "neutral", links: ["threads", "fate", "insight"] },
   "Безмолвный Затворник": { state: "boundary", tone: "neutral", links: ["protection", "stillness", "choice"] },
   "Дух Верного Момента": { state: "patience", tone: "neutral", links: ["timing", "winter_rest", "dawn"] },
   Русалка: { state: "depth", tone: "dark", links: ["flow", "water_memory", "vision"] },

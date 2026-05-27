@@ -229,14 +229,14 @@ const RAW_CARDS = [
   },
   {
     id: "wyrd_022",
-    name: "Паук Звёздной Сети",
-    subtitle: "The Star Spider",
+    name: "Нити Между Мирами",
+    subtitle: "Threads Between Worlds",
     keyword: "Связи между событиями",
     message:
       "В этой ситуации всё не случайно. Паук чувствует каждую нить между людьми и событиями — каждое движение в паутине видно. Осмотрись ещё раз, прежде чем принимать решение.",
     shadow:
       "Ты замечаешь только мелочи, но пока не видишь, как они соединены. Что мешает взглянуть на всю паутину?",
-    image: "./assets/images/cards/pauk_zvezdnoy_seti.webp",
+    image: "./assets/images/cards/niti_mezhdu_mirami.webp",
   },
   {
     id: "wyrd_023",
