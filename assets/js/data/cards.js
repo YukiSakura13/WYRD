@@ -250,13 +250,13 @@ const RAW_CARDS = [
   },
   {
     id: "wyrd_024",
-    name: "Жаба Верного Часа",
+    name: "Дух Верного Момента",
     subtitle: "The Toad of the True Hour",
     keyword: "Терпение",
     message:
       "Всему своё время. То, что кажется неподвижным, уже начинает прорастать. Держи то, что должно дозреть.",
     shadow: "Ожидание стало привычным делом. Ты ещё помнишь, чего ждёшь?",
-    image: "./assets/images/cards/zhaba.webp",
+    image: "./assets/images/cards/dukh_vernogo_momenta.webp",
   },
   {
     id: "wyrd_025",

@@ -15,7 +15,7 @@ export const CARD_LAYERS = {
   Тишина: "present",
   "Паук Звёздной Сети": "present",
   "Ёж Тайной Калитки": "present",
-  "Жаба Верного Часа": "present",
+  "Дух Верного Момента": "present",
   Свеча: "present",
   Туман: "present",
   "Тёмный Гость": "present",
