@@ -1,5 +1,5 @@
 const BUILD_ID = new URLSearchParams(self.location.search).get("v") || "dev";
-const CACHE_VERSION = "cards-20260528-standard-batch-2";
+const CACHE_VERSION = "cards-20260528-small-joys-keeper";
 const CACHE_NAME = `wyrd-runtime-${BUILD_ID}-${CACHE_VERSION}`;
 const RUNTIME_CACHEABLE_DESTINATIONS = new Set(["image", "audio", "video", "font"]);
 
