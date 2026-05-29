@@ -41,16 +41,11 @@ export function getElements(doc = document) {
     deckTop: doc.querySelector(".deck-card-face"),
     soundButton: doc.querySelector('.top-actions [data-action="toggle-sound"]'),
     profileName: doc.getElementById("profile-name"),
-    profileMeta: doc.getElementById("profile-meta"),
-    profileTodaySection: doc.getElementById("profile-today-section"),
     historyEmptyState: doc.getElementById("history-empty-state"),
-    historyPreviousHeading: doc.getElementById("history-previous-heading"),
-    profileTodayCard: doc.getElementById("profile-today-card"),
-    profileDeckAction: doc.getElementById("profile-deck-action"),
-    profileTodayImage: doc.getElementById("profile-today-image"),
-    profileTodayKicker: doc.getElementById("profile-today-kicker"),
-    profileTodayTitle: doc.getElementById("profile-today-title"),
-    profileTodayMessage: doc.getElementById("profile-today-message"),
+    giftShelf: doc.getElementById("gift-shelf"),
+    giftShelfTrack: doc.getElementById("gift-shelf-track"),
+    historyGiftReveal: doc.getElementById("history-gift-reveal"),
+    historyTrailsHeading: doc.getElementById("history-trails-heading"),
     historyList: doc.getElementById("history-list"),
     historySheetBackdrop: doc.getElementById("history-sheet-backdrop"),
     historySheet: doc.getElementById("history-sheet"),
@@ -106,7 +101,8 @@ export function createRenderer(elements) {
     spreadRenderer.renderOracleVoice(state.lastSpread, state.lastOracleReading);
     spreadRenderer.renderSpreadContinuation(state.lastSpread, uiState);
     const historyView = getHistoryView(state);
-    spreadRenderer.renderHistory(historyView.previous);
+    spreadRenderer.renderHistory(historyView.traces);
+    renderGifts(getVisibleGifts(state));
     renderHistorySheet(state, uiState);
     renderContinuation(uiState.continuationOffer);
     renderVisibility(state, uiState);
@@ -171,39 +167,17 @@ export function createRenderer(elements) {
     if (elements.coverSoundButton) {
       updateCoverSoundButton(!state.soundEnabled);
     }
-    const historyView = getHistoryView(state);
-    const todayReading = historyView.today;
-    const hasAnyTrace = state.history.length > 0;
-
-    elements.historyEmptyState.hidden = hasAnyTrace;
-    elements.profileTodaySection.hidden = !hasAnyTrace;
-    elements.historyPreviousHeading.hidden = historyView.previous.length === 0;
-    elements.profileMeta.textContent = "Первый след сегодня ещё не оставлен.";
-    elements.profileMeta.hidden = Boolean(todayReading);
-    elements.profileDeckAction.hidden = Boolean(todayReading);
-
-    if (!elements.profileTodayCard) {
-      return;
+    elements.historyEmptyState.hidden = state.history.length > 0;
+    if (elements.historyTrailsHeading) {
+      elements.historyTrailsHeading.hidden = state.history.length === 0;
     }
-
-    elements.profileTodayCard.dataset.traceId = todayReading ? todayReading.id : "";
-    elements.profileTodayCard.hidden = !todayReading;
-
-    if (!todayReading) {
-      return;
-    }
-
-    renderTraceCard(elements, todayReading);
   }
 
   function getHistoryView(state) {
-    const todayKey = getLocalDayKey(new Date());
     const traces = state.history.map(hydrateTrace).filter(Boolean);
-    const today = traces.find((entry) => entry.dayKey === todayKey) || null;
 
     return {
-      today,
-      previous: traces.filter((entry) => entry.dayKey !== todayKey),
+      traces,
     };
   }
 
@@ -217,25 +191,6 @@ export function createRenderer(elements) {
       ...trace,
       card,
     };
-  }
-
-  function getLocalDayKey(date) {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-
-    return `${year}-${month}-${day}`;
-  }
-
-  function renderTraceCard(targets, trace) {
-    const card = trace.card;
-    const hasImage = Boolean(card.image);
-    targets.profileTodayImage.src = getCardImage(card);
-    targets.profileTodayImage.alt = card.name;
-    targets.profileTodayImage.classList.toggle("is-empty", !hasImage);
-    targets.profileTodayKicker.textContent = card.keyword;
-    targets.profileTodayTitle.textContent = card.name;
-    targets.profileTodayMessage.textContent = trace.question || card.message;
   }
 
   function renderHistorySheet(state, uiState) {
@@ -253,22 +208,181 @@ export function createRenderer(elements) {
 
     const card = trace.card;
     const date = new Date(trace.date);
-    const moon = getMoonPhase(date);
+    const moon = getStoredMoon(trace, date);
     elements.historySheetQuestion.hidden = !trace.question;
     elements.historySheetQuestionText.textContent = trace.question;
     elements.historySheetImage.src = getCardImage(card);
-    elements.historySheetImage.alt = card.name;
+    elements.historySheetImage.alt = trace.snapshot.cardTitle;
     elements.historySheetImage.classList.toggle("is-empty", !card.image);
-    elements.historySheetTitle.textContent = card.name;
-    elements.historySheetMessage.textContent = trace.message || card.message;
-    elements.historySheetShadow.hidden = !card.shadow;
-    elements.historySheetShadowText.textContent = card.shadow || "";
+    elements.historySheetTitle.textContent = trace.snapshot.cardTitle;
+    elements.historySheetMessage.textContent = trace.snapshot.oracleMessage;
+    elements.historySheetShadow.hidden = !trace.snapshot.shadowMessage;
+    elements.historySheetShadowText.textContent = trace.snapshot.shadowMessage || "";
     elements.historySheetFooter.replaceChildren();
     elements.historySheetFooter.append(createMoonIcon(moon.type), document.createTextNode(`${formatTraceDate(date)} · ${moon.name}`));
 
     window.requestAnimationFrame(function focusSheetClose() {
       elements.historySheetClose?.focus();
     });
+  }
+
+  function renderGifts(gifts) {
+    if (!elements.giftShelf || !elements.giftShelfTrack) {
+      return;
+    }
+
+    elements.giftShelf.hidden = gifts.length === 0;
+    elements.giftShelfTrack.classList.toggle("has-one-gift", gifts.length === 1);
+    elements.giftShelfTrack.replaceChildren();
+
+    const hasPendingGift = gifts.some((gift) => gift.pendingReveal);
+    if (elements.historyGiftReveal) {
+      elements.historyGiftReveal.hidden = !hasPendingGift;
+      elements.historyGiftReveal.classList.toggle("is-active", hasPendingGift);
+    }
+
+    gifts.forEach(function renderGift(gift) {
+      const giftMeta = getGiftMeta(gift.giftKey);
+      const receivedAt = new Date(gift.receivedAt);
+      const card = document.createElement("button");
+      card.className = "gift-card";
+      card.type = "button";
+      card.dataset.action = "flip-gift";
+      card.setAttribute("aria-pressed", "false");
+      card.setAttribute("aria-label", `Дар ${giftMeta.title}`);
+      card.classList.toggle("is-pending-reveal", gift.pendingReveal);
+
+      const inner = document.createElement("span");
+      inner.className = "gift-card-inner";
+
+      const front = document.createElement("span");
+      front.className = "gift-card-face gift-card-front";
+      const symbol = giftMeta.image ? document.createElement("img") : document.createElement("span");
+      symbol.className = giftMeta.image ? "gift-image" : "gift-symbol";
+      if (giftMeta.image) {
+        symbol.src = giftMeta.image;
+        symbol.alt = "";
+        symbol.loading = "lazy";
+        symbol.decoding = "async";
+      } else {
+        symbol.textContent = giftMeta.symbol;
+      }
+      const title = document.createElement("span");
+      title.className = "gift-title";
+      title.textContent = giftMeta.title;
+      front.append(symbol, title);
+
+      const back = document.createElement("span");
+      back.className = "gift-card-face gift-card-back";
+      const backImprint = giftMeta.image ? document.createElement("img") : document.createElement("span");
+      backImprint.className = giftMeta.image ? "gift-back-imprint" : "gift-back-symbol";
+      if (giftMeta.image) {
+        backImprint.src = giftMeta.image;
+        backImprint.alt = "";
+        backImprint.loading = "lazy";
+        backImprint.decoding = "async";
+      } else {
+        backImprint.textContent = giftMeta.symbol;
+      }
+      const backTitle = document.createElement("span");
+      backTitle.className = "gift-title";
+      backTitle.textContent = giftMeta.title;
+      const divider = document.createElement("span");
+      divider.className = "gift-divider";
+      const caption = document.createElement("span");
+      caption.className = "gift-caption";
+      const captionLines = giftMeta.captionLines || [giftMeta.caption];
+      captionLines.forEach(function appendCaptionLine(line, index) {
+        const lineNode = document.createElement("span");
+        lineNode.className = index === captionLines.length - 1 ? "gift-caption-line gift-caption-line--closing" : "gift-caption-line";
+        lineNode.textContent = line;
+        caption.appendChild(lineNode);
+      });
+      const date = document.createElement("span");
+      date.className = "gift-date";
+      date.textContent = `Обретено ${formatTraceDate(receivedAt)}`;
+      back.append(backImprint, backTitle, divider, caption, date);
+
+      inner.append(front, back);
+      card.append(inner);
+      elements.giftShelfTrack.appendChild(card);
+    });
+  }
+
+  function getVisibleGifts(state) {
+    const gifts = Array.isArray(state.gifts) ? state.gifts : [];
+
+    if (gifts.length || !hasGiftPreview()) {
+      return gifts;
+    }
+
+    return [
+      {
+        id: "gift-moon-preview",
+        receivedAt: new Date(2026, 4, 29, 12, 0, 0).toISOString(),
+        giftKey: "moon",
+        pendingReveal: false,
+        schemaVersion: 1,
+      },
+    ];
+  }
+
+  function hasGiftPreview() {
+    try {
+      return new URLSearchParams(window.location.search).get("previewGift") === "moon";
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function getStoredMoon(trace, fallbackDate) {
+    const moon = trace.moonPhase ? getMoonByType(trace.moonPhase) : null;
+
+    return moon || getMoonPhase(fallbackDate);
+  }
+
+  function getMoonByType(type) {
+    const names = {
+      nm: "новолуние",
+      wc: "растущий серп",
+      fq: "первая четверть",
+      wg: "растущая луна",
+      fm: "полнолуние",
+      wag: "убывающая луна",
+      lq: "последняя четверть",
+      wac: "убывающий серп",
+    };
+
+    return names[type] ? { type, name: names[type] } : null;
+  }
+
+  function getGiftMeta(giftKey) {
+    const gifts = {
+      moon: {
+        title: "Лунная",
+        symbol: "☾",
+        image: "./assets/images/gifts/lunnaya.webp",
+        caption: "Луна не спешит менять форму. Всему своё время.",
+        captionLines: ["Луна не спешит", "менять форму.", "Всему своё время."],
+      },
+      root: {
+        title: "Корневая",
+        symbol: "✦",
+        caption: "То, что держит тебя, растёт глубже видимого.",
+      },
+      star: {
+        title: "Звёздная",
+        symbol: "✧",
+        caption: "Малый свет тоже указывает дорогу.",
+      },
+      threshold: {
+        title: "Пороговая",
+        symbol: "◇",
+        caption: "Лес открывает проход тем, кто возвращается.",
+      },
+    };
+
+    return gifts[giftKey] || gifts.moon;
   }
 
   function renderCurrentReading(reading, question) {

@@ -10,6 +10,7 @@ export const DEFAULT_STATE = Object.freeze({
   selectedMode: "single",
   dailyFreeUsedAt: null,
   history: [],
+  gifts: [],
   currentReading: null,
   lastSpread: [],
   lastOracleReading: null,
@@ -27,6 +28,7 @@ export function normalizeState(value) {
   const next = value && typeof value === "object" ? { ...base, ...value } : base;
 
   next.history = Array.isArray(next.history) ? pruneExpiredHistory(next.history.map(normalizeHistoryEntry).filter(Boolean)) : [];
+  next.gifts = Array.isArray(next.gifts) ? normalizeGifts(next.gifts) : [];
   next.lastSpread = Array.isArray(next.lastSpread) ? next.lastSpread.map(normalizeSpreadCard).filter(Boolean) : [];
   next.lastOracleReading =
     next.lastOracleReading && typeof next.lastOracleReading === "object" ? next.lastOracleReading : null;
@@ -72,6 +74,10 @@ export function createReadingState(state, reading, options = {}) {
           message: options.message,
           question: options.question,
         });
+  const nextGifts =
+    options.saveDailyTrace === false
+      ? state.gifts
+      : createGiftsAfterTrace(state.gifts, nextHistory, state.history);
 
   return normalizeState({
     ...state,
@@ -80,6 +86,21 @@ export function createReadingState(state, reading, options = {}) {
     lastOracleReading: null,
     ritualStack: createSingleRitualStack(reading),
     history: nextHistory,
+    gifts: nextGifts,
+  });
+}
+
+export function revealPendingGifts(state) {
+  if (!Array.isArray(state.gifts) || !state.gifts.some((gift) => gift.pendingReveal)) {
+    return cloneState(state);
+  }
+
+  return normalizeState({
+    ...state,
+    gifts: state.gifts.map((gift) => ({
+      ...gift,
+      pendingReveal: false,
+    })),
   });
 }
 
@@ -268,15 +289,20 @@ function normalizeHistoryEntry(entry) {
     }
 
     const dayKey = normalizeDayKey(entry.dayKey) || getLocalDayKey(new Date(date));
+    const timezone = normalizeTimezone(entry.timezone);
     const id = typeof entry.id === "string" && entry.id ? entry.id : `daily-trace-${dayKey}`;
+    const card = CARD_BY_ID.get(entry.cardId) || null;
+    const snapshot = normalizeTraceSnapshot(entry.snapshot, entry, card);
 
     return {
       id,
       dayKey,
+      timezone,
       date,
       cardId: entry.cardId,
       question: typeof entry.question === "string" ? entry.question : "",
-      message: typeof entry.message === "string" ? entry.message : "",
+      moonPhase: normalizeMoonPhase(entry.moonPhase) || getMoonPhaseType(new Date(date)),
+      snapshot,
     };
   }
 
@@ -292,10 +318,16 @@ function normalizeHistoryEntry(entry) {
     return {
       id: `daily-trace-${dayKey}`,
       dayKey,
+      timezone: getLocalTimezone(),
       date,
       cardId: card.id,
       question: typeof entry.question === "string" ? entry.question : "",
-      message: typeof entry.message === "string" ? entry.message : card.message || "",
+      moonPhase: getMoonPhaseType(new Date(date)),
+      snapshot: {
+        cardTitle: card.name || "",
+        oracleMessage: typeof entry.message === "string" ? entry.message : card.message || "",
+        shadowMessage: card.shadow || "",
+      },
     };
   }
 
@@ -308,7 +340,9 @@ function saveDailyTrace(history, reading, options) {
   }
 
   const date = normalizeDateString(options.date) || new Date().toISOString();
-  const dayKey = getLocalDayKey(new Date(date));
+  const traceDate = new Date(date);
+  const dayKey = getLocalDayKey(traceDate);
+  const timezone = getLocalTimezone();
 
   if (history.some((entry) => entry.dayKey === dayKey)) {
     return pruneExpiredHistory(history);
@@ -318,10 +352,16 @@ function saveDailyTrace(history, reading, options) {
     {
       id: `daily-trace-${dayKey}`,
       dayKey,
+      timezone,
       date,
       cardId: reading.card.id,
       question: typeof options.question === "string" ? options.question : "",
-      message: typeof options.message === "string" && options.message ? options.message : reading.card.message || "",
+      moonPhase: getMoonPhaseType(traceDate),
+      snapshot: {
+        cardTitle: reading.card.name || "",
+        oracleMessage: typeof options.message === "string" && options.message ? options.message : reading.card.message || "",
+        shadowMessage: reading.card.shadow || "",
+      },
     },
     ...history,
   ]);
@@ -367,6 +407,188 @@ export function getLocalDayKey(date = new Date()) {
   const day = String(date.getDate()).padStart(2, "0");
 
   return `${year}-${month}-${day}`;
+}
+
+function getLocalTimezone() {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+  } catch (error) {
+    return "UTC";
+  }
+}
+
+function normalizeTimezone(value) {
+  return typeof value === "string" && value.trim() ? value : getLocalTimezone();
+}
+
+function normalizeTraceSnapshot(snapshot, entry, card) {
+  const source = snapshot && typeof snapshot === "object" ? snapshot : {};
+
+  return {
+    cardTitle:
+      typeof source.cardTitle === "string" && source.cardTitle
+        ? source.cardTitle
+        : card?.name || "",
+    oracleMessage:
+      typeof source.oracleMessage === "string" && source.oracleMessage
+        ? source.oracleMessage
+        : typeof entry.message === "string" && entry.message
+          ? entry.message
+          : card?.message || "",
+    shadowMessage:
+      typeof source.shadowMessage === "string" && source.shadowMessage
+        ? source.shadowMessage
+        : card?.shadow || "",
+  };
+}
+
+function normalizeMoonPhase(value) {
+  return ["nm", "wc", "fq", "wg", "fm", "wag", "lq", "wac"].includes(value) ? value : null;
+}
+
+function getMoonPhaseType(date) {
+  const knownNewMoon = new Date(Date.UTC(2000, 0, 6, 18, 14, 0));
+  const msPerDay = 86400000;
+  const lunarCycle = 29.53058770576;
+  const daysSince = (date - knownNewMoon) / msPerDay;
+  const phase = ((daysSince % lunarCycle) + lunarCycle) % lunarCycle;
+
+  if (phase < 1.85) {
+    return "nm";
+  }
+  if (phase < 7.38) {
+    return "wc";
+  }
+  if (phase < 11.08) {
+    return "fq";
+  }
+  if (phase < 14.77) {
+    return "wg";
+  }
+  if (phase < 16.62) {
+    return "fm";
+  }
+  if (phase < 20.31) {
+    return "wag";
+  }
+  if (phase < 24) {
+    return "lq";
+  }
+
+  return "wac";
+}
+
+function normalizeGifts(gifts) {
+  const seen = new Set();
+
+  return gifts
+    .map(normalizeGiftEntry)
+    .filter(Boolean)
+    .filter((gift) => {
+      if (seen.has(gift.id)) {
+        return false;
+      }
+      seen.add(gift.id);
+      return true;
+    })
+    .sort((a, b) => new Date(b.receivedAt) - new Date(a.receivedAt));
+}
+
+function normalizeGiftEntry(entry) {
+  if (!entry || typeof entry !== "object") {
+    return null;
+  }
+
+  const receivedAt = normalizeDateString(entry.receivedAt);
+  if (!receivedAt) {
+    return null;
+  }
+
+  const giftKey = typeof entry.giftKey === "string" && entry.giftKey ? entry.giftKey : "moon";
+
+  return {
+    id: typeof entry.id === "string" && entry.id ? entry.id : `gift-${giftKey}-${receivedAt}`,
+    receivedAt,
+    giftKey,
+    pendingReveal: Boolean(entry.pendingReveal),
+    schemaVersion: Number.isInteger(entry.schemaVersion) ? entry.schemaVersion : 1,
+  };
+}
+
+function createGiftsAfterTrace(gifts, nextHistory, previousHistory) {
+  if (nextHistory.length === previousHistory.length) {
+    return gifts;
+  }
+
+  const newestTrace = nextHistory[0];
+  const streakLength = getConsecutiveTraceCount(nextHistory, newestTrace.dayKey);
+  const expectedGiftCount = Math.floor(streakLength / 7);
+  const currentStreakGiftCount = countGiftsInCurrentStreak(gifts, newestTrace.dayKey, streakLength);
+
+  if (expectedGiftCount <= currentStreakGiftCount || streakLength < 7) {
+    return gifts;
+  }
+
+  const giftKey = getGiftKey(gifts.length);
+
+  return [
+    {
+      id: `gift-${giftKey}-${newestTrace.dayKey}`,
+      receivedAt: newestTrace.date,
+      giftKey,
+      pendingReveal: true,
+      schemaVersion: 1,
+    },
+    ...gifts,
+  ];
+}
+
+function countGiftsInCurrentStreak(gifts, startDayKey, streakLength) {
+  const streakDays = new Set();
+  const cursor = parseLocalDayKey(startDayKey);
+
+  for (let index = 0; cursor && index < streakLength; index += 1) {
+    streakDays.add(formatLocalDayKey(cursor));
+    cursor.setDate(cursor.getDate() - 1);
+  }
+
+  return gifts.filter((gift) => streakDays.has(getLocalDayKey(new Date(gift.receivedAt)))).length;
+}
+
+function getConsecutiveTraceCount(history, startDayKey) {
+  const dayKeys = new Set(history.map((entry) => entry.dayKey).filter(Boolean));
+  const cursor = parseLocalDayKey(startDayKey);
+  let count = 0;
+
+  while (cursor && dayKeys.has(formatLocalDayKey(cursor))) {
+    count += 1;
+    cursor.setDate(cursor.getDate() - 1);
+  }
+
+  return count;
+}
+
+function parseLocalDayKey(dayKey) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dayKey);
+  if (!match) {
+    return null;
+  }
+
+  return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+}
+
+function formatLocalDayKey(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+function getGiftKey(index) {
+  const giftKeys = ["moon", "root", "star", "threshold"];
+
+  return giftKeys[index % giftKeys.length];
 }
 
 function normalizeSpreadCard(card) {

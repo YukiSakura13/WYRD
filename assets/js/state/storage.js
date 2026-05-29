@@ -9,6 +9,7 @@ import {
   normalizeState,
   popRitualLayer,
   resetState,
+  revealPendingGifts as createRevealedGiftState,
   unlockReadingDepth,
 } from "./model.js";
 
@@ -79,6 +80,9 @@ export function createStateStore(storage = getSafeStorage()) {
     },
     saveReading(reading, options = {}) {
       return commit(createReadingState(state, reading, options));
+    },
+    revealPendingGifts() {
+      return commit(createRevealedGiftState(state));
     },
     unlockCurrentReadingDepth() {
       return commit(unlockReadingDepth(state));

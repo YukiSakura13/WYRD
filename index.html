@@ -424,10 +424,11 @@
           <div class="screen-nav-spacer" aria-hidden="true"></div>
         </div>
 
-        <div class="history-intro">
-          <h1 id="profile-name">Следы в лесу</h1>
-          <p>Один день — один след.</p>
-          <p>Здесь остаётся первое послание дня.</p>
+        <div class="history-gift-reveal" id="history-gift-reveal" aria-hidden="true" hidden>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
         </div>
 
         <div class="history-empty-state" id="history-empty-state" hidden>
@@ -438,24 +439,18 @@
           </button>
         </div>
 
-        <div class="profile-box" id="profile-today-section">
-          <h2 class="history-section-title">Сегодня</h2>
-          <p class="profile-meta" id="profile-meta">Первый след сегодня ещё не оставлен.</p>
-          <div class="profile-today-card" id="profile-today-card" data-action="open-history-entry" role="button" tabindex="0" hidden>
-            <img class="profile-today-image" id="profile-today-image" src="" alt="" loading="lazy" decoding="async" />
-            <div class="profile-today-copy">
-              <p class="profile-today-kicker" id="profile-today-kicker"></p>
-              <h2 class="profile-today-title" id="profile-today-title"></h2>
-              <p class="profile-today-message" id="profile-today-message"></p>
-            </div>
+        <section class="gift-shelf" id="gift-shelf" aria-label="Дары леса" hidden>
+          <div class="gift-shelf-heading">
+            <h2>Дары леса</h2>
+            <p>Лес иногда оставляет не ответы, а знаки.</p>
           </div>
-          <button class="reset-btn profile-primary-action" id="profile-deck-action" data-action="back-to-deck" type="button">
-            Перейти к колоде
-          </button>
-        </div>
+          <div class="gift-shelf-track" id="gift-shelf-track"></div>
+        </section>
 
-        <div class="history-heading" id="history-previous-heading" hidden>
-          <h2>Раньше</h2>
+        <div class="history-intro" id="history-trails-heading">
+          <h1 id="profile-name">Следы в лесу</h1>
+          <p>Один день — один след.</p>
+          <p>Здесь остаётся первое послание дня.</p>
         </div>
         <div class="history-list" id="history-list" aria-live="polite"></div>
 
