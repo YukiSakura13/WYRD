@@ -203,6 +203,14 @@ export function createActionHandler(deps) {
       setScene(SCENES.PROFILE);
       audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.PROFILE });
       renderer.scrollTo(SCENES.PROFILE);
+      revealPendingGiftsAfterAnimation(store, renderApp);
+      return;
+    }
+
+    if (action === "flip-gift") {
+      audio.playSelect(store.getState().soundEnabled);
+      trigger.classList.toggle("is-flipped");
+      trigger.setAttribute("aria-pressed", String(trigger.classList.contains("is-flipped")));
       return;
     }
 
@@ -239,6 +247,19 @@ export function createActionHandler(deps) {
       resolveRitual(deps, mode);
     });
   }
+}
+
+function revealPendingGiftsAfterAnimation(store, renderApp) {
+  const hasPendingGift = store.getState().gifts?.some((gift) => gift.pendingReveal);
+
+  if (!hasPendingGift) {
+    return;
+  }
+
+  window.setTimeout(function clearPendingGiftReveal() {
+    store.revealPendingGifts();
+    renderApp();
+  }, 1500);
 }
 
 function updatePressedSoundControl(trigger, soundEnabled) {

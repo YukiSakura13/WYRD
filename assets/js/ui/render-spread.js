@@ -252,36 +252,61 @@ export function createSpreadRenderer(elements) {
       item.dataset.traceId = trace.id;
       item.setAttribute("role", "button");
       item.setAttribute("tabindex", "0");
-      item.setAttribute("aria-label", `Открыть послание ${trace.card.name}`);
+      item.setAttribute("aria-label", `Открыть след ${trace.snapshot.cardTitle}`);
       item.dataset.tone = trace.card.tone || "neutral";
 
       const image = document.createElement("img");
       image.src = getCardImage(trace.card);
-      image.alt = trace.card.name;
+      image.alt = trace.snapshot.cardTitle;
       image.classList.toggle("is-empty", !trace.card.image);
 
       const content = document.createElement("div");
       content.className = "history-item-copy";
       const title = document.createElement("h3");
-      title.textContent = trace.card.name;
-
-      const message = document.createElement("p");
-      message.textContent = trace.question || trace.message || trace.card.message;
+      title.textContent = trace.snapshot.cardTitle;
 
       const meta = document.createElement("div");
       meta.className = "history-item-meta";
       const date = new Date(trace.date);
-      const moon = getMoonPhase(date);
+      const moon = getStoredMoon(trace, date);
       const moonText = document.createElement("span");
       moonText.className = "history-item-moon-label";
-      moonText.textContent = `${formatTraceDate(date)} · ${moon.name}`;
+      moonText.textContent = `${formatTraceDate(date)} · ${formatCompactMoonName(moon.name)}`;
       meta.append(createMoonIcon(moon.type), moonText);
 
-      content.append(title, message);
-      item.append(image, content, meta);
+      content.append(title, meta);
+      item.append(image, content);
       elements.historyList.appendChild(item);
     });
   }
+}
+
+function formatCompactMoonName(name) {
+  const compactNames = {
+    "растущий серп": "раст. серп",
+    "растущая луна": "раст. луна",
+    "убывающая луна": "убыв. луна",
+    "убывающий серп": "убыв. серп",
+    "первая четверть": "1 четверть",
+    "последняя четверть": "посл. четверть",
+  };
+
+  return compactNames[name] || name;
+}
+
+function getStoredMoon(trace, fallbackDate) {
+  const names = {
+    nm: "новолуние",
+    wc: "растущий серп",
+    fq: "первая четверть",
+    wg: "растущая луна",
+    fm: "полнолуние",
+    wag: "убывающая луна",
+    lq: "последняя четверть",
+    wac: "убывающий серп",
+  };
+
+  return names[trace.moonPhase] ? { type: trace.moonPhase, name: names[trace.moonPhase] } : getMoonPhase(fallbackDate);
 }
 
 function getArchetypeId(oracleReading) {
