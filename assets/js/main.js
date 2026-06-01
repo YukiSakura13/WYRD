@@ -3,7 +3,7 @@ import { CARDS, COVER_IMAGE } from "./data/cards.js";
 import { registerServiceWorker } from "./pwa.js";
 import { detectQuestionRoute } from "./cards/question-routing.js";
 import { createStateStore } from "./state/storage.js";
-import { createActionHandler, createInitialUIState, createKeyboardHandler } from "./ui/actions.js";
+import { createActionHandler, createDeckQuestionGuidance, createInitialUIState, createKeyboardHandler } from "./ui/actions.js";
 import { createRenderer, getElements } from "./ui/render.js";
 import { SCENES, isKnownScene } from "./ui/scenes.js";
 
@@ -12,6 +12,7 @@ const uiState = createInitialUIState(store.getState());
 const elements = getElements();
 const renderer = createRenderer(elements);
 const audio = createForestAudioController();
+const deckQuestionGuidance = createDeckQuestionGuidance();
 
 window.debugRoute = function debugRoute(question) {
   const route = detectQuestionRoute(question);
@@ -53,6 +54,7 @@ if (elements.coverArt) {
 function renderApp() {
   const state = store.syncDayBoundary();
   renderer.render(state, uiState);
+  deckQuestionGuidance.sync("render");
 }
 
 function renderCoverSoundState(soundEnabled) {
@@ -117,4 +119,5 @@ if (uiState.activeScene !== SCENES.COVER) {
 } else {
   renderApp();
 }
+deckQuestionGuidance.connect();
 registerServiceWorker();

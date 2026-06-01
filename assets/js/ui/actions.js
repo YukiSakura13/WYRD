@@ -393,6 +393,129 @@ export function createInitialUIState(state) {
   };
 }
 
+export function createDeckQuestionGuidance() {
+  let transferTimer = null;
+  let questionHeldInHeart = false;
+
+  return {
+    connect,
+    sync: updateDeckQuestionState,
+  };
+
+  function connect() {
+    const questionEl = document.getElementById("question-input");
+    const deckCard = document.querySelector("[data-action='draw']");
+
+    if (!questionEl || !deckCard) {
+      return;
+    }
+
+    questionEl.addEventListener("input", function handleQuestionInput() {
+      questionHeldInHeart = false;
+      updateDeckQuestionState("input");
+    });
+
+    questionEl.addEventListener("focus", function handleQuestionFocus() {
+      questionHeldInHeart = false;
+      updateDeckQuestionState("focus");
+    });
+
+    questionEl.addEventListener("blur", function handleQuestionBlur() {
+      updateDeckQuestionState("blur");
+    });
+
+    questionEl.addEventListener("beforeinput", function handleQuestionLineBreak(event) {
+      if (event.inputType !== "insertLineBreak") {
+        return;
+      }
+
+      event.preventDefault();
+      acceptQuestionIntent(questionEl, deckCard);
+    });
+
+    questionEl.addEventListener("keydown", function handleQuestionEnter(event) {
+      if (event.key !== "Enter" || event.shiftKey) {
+        return;
+      }
+
+      event.preventDefault();
+      acceptQuestionIntent(questionEl, deckCard);
+    });
+
+    updateDeckQuestionState("init");
+  }
+
+  function acceptQuestionIntent(questionEl, deckCard) {
+    const hasQuestion = questionEl.value.trim().length > 0;
+
+    questionHeldInHeart = !hasQuestion;
+    if (!hasQuestion) {
+      questionEl.value = "";
+    }
+
+    questionEl.blur();
+    updateDeckQuestionState(hasQuestion ? "accept" : "hold");
+    transferIntentToDeck(deckCard);
+  }
+
+  function updateDeckQuestionState(source) {
+    const deckWrap = document.getElementById("deck-wrap");
+    const questionEl = document.getElementById("question-input");
+    const touchMain = document.getElementById("deck-touch-main");
+    const status = document.getElementById("deck-question-status");
+
+    if (!deckWrap || !questionEl) {
+      return;
+    }
+
+    const hasQuestion = questionEl.value.trim().length > 0;
+    const isFocused = document.activeElement === questionEl;
+    const isQuestionHeld = questionHeldInHeart && !hasQuestion && !isFocused;
+    const isReady = hasQuestion && (!isFocused || source === "accept");
+    const isWriting = hasQuestion && isFocused && source !== "accept";
+    const isDeckReady = isReady || isQuestionHeld;
+
+    deckWrap.classList.toggle("is-question-empty", !hasQuestion);
+    deckWrap.classList.toggle("is-question-writing", isWriting);
+    deckWrap.classList.toggle("is-question-ready", isDeckReady);
+
+    if (touchMain) {
+      touchMain.textContent = isReady
+        ? "✦ коснись колоды, чтобы начать расклад ✦"
+        : isQuestionHeld
+          ? "✦ коснись колоды, чтобы начать ✦"
+          : "✦ коснись колоды ✦";
+    }
+
+    if (status) {
+      status.textContent = isReady
+        ? "Вопрос принят. Теперь коснись колоды."
+        : isQuestionHeld
+          ? "Вопрос оставлен в сердце. Теперь коснись колоды."
+          : hasQuestion
+            ? "Когда вопрос готов, нажми Enter или коснись колоды."
+            : "Сначала задай вопрос. Потом коснись колоды.";
+    }
+  }
+
+  function transferIntentToDeck(deckCard) {
+    const deckWrap = document.getElementById("deck-wrap");
+
+    if (!deckWrap) {
+      return;
+    }
+
+    window.clearTimeout(transferTimer);
+    deckWrap.classList.add("is-intent-transferred");
+    deckCard.focus({ preventScroll: true });
+
+    transferTimer = window.setTimeout(function clearTransferState() {
+      deckWrap.classList.remove("is-intent-transferred");
+    }, 920);
+  }
+
+}
+
 function syncQuestionFromInput(uiState) {
   const questionEl = document.getElementById("question-input");
 

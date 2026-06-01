@@ -385,15 +385,21 @@
         </header>
 
         <section class="deck-question-zone" aria-label="Поле вопроса">
-          <label class="sr-only" for="question-input">Твой вопрос</label>
-          <textarea
-            id="question-input"
-            class="deck-question-input"
-            rows="2"
-            maxlength="280"
-            aria-label="Твой вопрос"
-            placeholder="Держи вопрос в уме или запиши его здесь..."
-          ></textarea>
+          <label class="deck-question-label" for="question-input">Твой вопрос</label>
+          <div class="deck-question-shell">
+            <span class="deck-question-orbit" aria-hidden="true"></span>
+            <textarea
+              id="question-input"
+              class="deck-question-input"
+              rows="2"
+              maxlength="280"
+              aria-describedby="deck-question-status"
+              placeholder="Напиши вопрос или держи его в сердце..."
+            ></textarea>
+          </div>
+          <p class="deck-question-status sr-only" id="deck-question-status" aria-live="polite">
+            Сначала задай вопрос. Потом коснись колоды.
+          </p>
         </section>
 
         <section class="deck-card-zone" aria-label="Колода">
@@ -401,8 +407,11 @@
             <span class="deck-card-stack deck-card-stack--left" aria-hidden="true"></span>
             <span class="deck-card-stack deck-card-stack--mid" aria-hidden="true"></span>
             <span class="deck-card-face" aria-hidden="true"></span>
+            <span class="deck-card-moon-glow" aria-hidden="true"></span>
           </button>
-          <p class="deck-touch-copy">✦ коснись колоды ✦</p>
+          <button class="deck-touch-copy" data-action="draw" type="button" aria-label="Коснуться колоды, чтобы начать расклад">
+            <span id="deck-touch-main">✦ коснись колоды ✦</span>
+          </button>
         </section>
 
         <section class="deck-whisper-zone" aria-label="Тихая подпись">
