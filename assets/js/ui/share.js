@@ -1160,7 +1160,7 @@ function setShareButtonState({ button, buttonLabel, feedback, isLoading, message
   }
 
   if (buttonLabel) {
-    buttonLabel.textContent = isLoading ? "ПОДГОТАВЛИВАЕМ..." : "ПОДЕЛИТЬСЯ";
+    buttonLabel.textContent = isLoading ? "ПОДГОТАВЛИВАЕМ..." : "ПОДЕЛИТЬСЯ КАРТОЙ";
   }
 
   if (feedback) {
