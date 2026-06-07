@@ -22,7 +22,7 @@ const BASE_CARD_META = {
   "Страж с Ключом": { state: "key", tone: "light", links: ["threshold", "prophecy", "vision"] },
   "Нити Между Мирами": { state: "web", tone: "neutral", links: ["threads", "fate", "insight"] },
   "Безмолвный Затворник": { state: "boundary", tone: "neutral", links: ["protection", "stillness", "choice"] },
-  "Дух Верного Момента": { state: "patience", tone: "neutral", links: ["timing", "winter_rest", "dawn"] },
+  "Верный Момент": { state: "patience", tone: "neutral", links: ["timing", "winter_rest", "dawn"] },
   Русалка: { state: "depth", tone: "dark", links: ["flow", "water_memory", "vision"] },
   Свеча: { state: "light", tone: "light", links: ["dawn", "future_path", "spark"] },
   Грибница: { state: "connection", tone: "neutral", links: ["threads", "fate", "joy"] },
@@ -55,7 +55,7 @@ const BASE_CARD_META = {
   "Лесной Резчик": { state: "craft", tone: "neutral", links: ["root", "growth", "voice"] },
   "Лестница Ветвей": { state: "ascent", tone: "light", links: ["future_path", "vision", "growth"] },
   "Золотая Мера": { state: "fair_measure", tone: "neutral", links: ["balance", "harvest", "root"] },
-  "Хранитель Прощающего Сердца": {
+  "Прощающее Сердце": {
     state: "forgiveness",
     tone: "light",
     links: ["grief", "love", "release"],
@@ -361,7 +361,7 @@ const CARD_META_V2_OVERRIDES = {
     short: "У этого пути есть своя честная цена, и она уже начинает проявляться.",
     advice: "Смотри трезво на ценность своего труда и не уменьшай её из страха.",
   },
-  "Хранитель Прощающего Сердца": {
+  "Прощающее Сердце": {
     short: "Прощение возвращает тепло туда, где слишком долго жила одна только боль.",
     advice: "Отпускай обиду там, где сердце уже готово выбрать исцеление вместо повторения раны.",
   },

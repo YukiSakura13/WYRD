@@ -250,13 +250,13 @@ const RAW_CARDS = [
   },
   {
     id: "wyrd_024",
-    name: "Дух Верного Момента",
-    subtitle: "The Toad of the True Hour",
+    name: "Верный Момент",
+    subtitle: "The True Moment",
     keyword: "Терпение",
     message:
       "Всему своё время. То, что кажется неподвижным, уже начинает прорастать. Держи то, что должно дозреть.",
     shadow: "Ожидание стало привычным делом. Ты ещё помнишь, чего ждёшь?",
-    image: "./assets/images/cards/dukh_vernogo_momenta.webp",
+    image: "./assets/images/cards/vernyy_moment.webp",
   },
   {
     id: "wyrd_025",
@@ -594,14 +594,14 @@ const RAW_CARDS = [
   },
   {
     id: "wyrd_057",
-    name: "Хранитель Прощающего Сердца",
-    subtitle: "Keeper of the Forgiving Heart",
+    name: "Прощающее Сердце",
+    subtitle: "The Forgiving Heart",
     keyword: "Прощение",
     message:
       "Твоё сердце разбито, и обида пока не отпускает. Прощение не отменяет того, что случилось, но помогает свету излечить шрамы души. Можешь ли ты позволить себе больше не держаться за то, что ранит?",
     shadow:
       "Иногда боль остаётся просто потому, что отпускать её страшнее, чем нести. Что ты всё ещё защищаешь своей обидой?",
-    image: "./assets/images/cards/khranitel_proshchayushchego_serdtsa.webp",
+    image: "./assets/images/cards/proshchayushchee_serdtse.webp",
   },
   {
     id: "wyrd_058",
