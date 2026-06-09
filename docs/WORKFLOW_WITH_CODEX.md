@@ -35,6 +35,7 @@ Codex должен опираться не только на код, но и н�
 4. [docs/WYRD_UI_RULES.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_UI_RULES.md) — если задача касается интерфейса, анимации, мобильного UX, раскладов или Голоса Оракула
 5. [docs/SPREAD_MODEL.md](/Users/marinamart/Desktop/Oracle_dev/docs/SPREAD_MODEL.md) — если задача касается раскладов, позиций карт, layer, spread logic или Голоса Оракула
 6. [docs/ORACLE_VOICE_RULES.md](/Users/marinamart/Desktop/Oracle_dev/docs/ORACLE_VOICE_RULES.md) — если задача касается Голоса Оракула, `message`, `shadow`, логики синтеза расклада или будущего `LLM`-промпта
+7. [docs/WYRD_MASTER_CARD_STYLE.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_MASTER_CARD_STYLE.md) — если задача касается генерации, замены, нормализации, фона, формата или визуального стиля карт
 
 ### Для технических задач
 
@@ -128,6 +129,7 @@ Codex должен опираться не только на код, но и н�
 - для UI, motion и раскладов дополнительно сверяться с [docs/WYRD_UI_RULES.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_UI_RULES.md)
 - для моделей чтения и логики расклада дополнительно сверяться с [docs/SPREAD_MODEL.md](/Users/marinamart/Desktop/Oracle_dev/docs/SPREAD_MODEL.md)
 - для Голоса Оракула дополнительно сверяться с [docs/ORACLE_VOICE_RULES.md](/Users/marinamart/Desktop/Oracle_dev/docs/ORACLE_VOICE_RULES.md)
+- для работы с изображениями карт дополнительно сверяться с [docs/WYRD_MASTER_CARD_STYLE.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_MASTER_CARD_STYLE.md); визуальная сила карты важнее механической одинаковости фона, масштаба и кропа
 
 ---
 
@@ -160,3 +162,7 @@ Codex должен опираться не только на код, но и н�
 ### 2026-05-09
 
 - обновлено правило проверки: локальный `http.server` допустим для smoke-check, финальная publish-проверка идёт через GitHub Actions и GitHub Pages
+
+### 2026-06-06
+
+- добавлен отдельный источник правил для арт-дирекшена и обработки изображений карт: [docs/WYRD_MASTER_CARD_STYLE.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_MASTER_CARD_STYLE.md)
