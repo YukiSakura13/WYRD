@@ -3,3 +3,4 @@ Thumbs.db
 tmp/
 *.xlsx
 .dist-pages/
+assets/images/cards-normalized-preview/
