@@ -166,13 +166,13 @@ const RAW_CARDS = [
   },
   {
     id: "wyrd_016",
-    name: "Уроборос",
-    subtitle: "The Eternal Serpent",
+    name: "Следы Возвращения",
+    subtitle: "The Returning Tracks",
     keyword: "Цикл",
     message:
       "Ты снова подходишь к тому же месту. Но круг — не тюрьма, если внутри горит свеча. Этот цикл не ловушка, он готовит новый виток.",
     shadow: "Движение по кругу кажется бесконечным. Но что если дело не в круге, а в том, что внутри него нужно что-то изменить?",
-    image: "./assets/images/cards/uroboros.webp",
+    image: "./assets/images/cards/sledy_vozvrashcheniya.webp",
   },
   {
     id: "wyrd_017",

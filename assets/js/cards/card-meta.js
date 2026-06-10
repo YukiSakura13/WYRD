@@ -14,7 +14,7 @@ const BASE_CARD_META = {
   "Страж Порога": { state: "threshold", tone: "light", links: ["choice", "future_path", "key"] },
   "Ночной Толкователь Теней": { state: "memory", tone: "dark", links: ["fracture", "root", "threshold"] },
   "Ткачиха Судьбы": { state: "threads", tone: "neutral", links: ["fate", "circle", "key"] },
-  Уроборос: { state: "cycle", tone: "dark", links: ["rebirth", "circle", "fracture"] },
+  "Следы Возвращения": { state: "cycle", tone: "dark", links: ["rebirth", "circle", "fracture"] },
   "Лесной Знахарь": { state: "remedy", tone: "neutral", links: ["balance", "flow", "choice"] },
   "Вещий Ворон": { state: "prophecy", tone: "neutral", links: ["vision", "key", "future_path"] },
   Рой: { state: "awakening", tone: "neutral", links: ["fracture", "flow", "future_path"] },

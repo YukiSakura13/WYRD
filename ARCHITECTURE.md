@@ -258,7 +258,7 @@
 13. `Страж Порога / The Threshold Guardian`
 14. `Волк с Зеркалом / The Mirror Wolf`
 15. `Ткачиха Судьбы / The Fate Weaver`
-16. `Уроборос / The Eternal Serpent`
+16. `Следы Возвращения / The Returning Tracks`
 17. `Лесной Знахарь / The Forest Shaman`
 18. `Вещий Ворон / The Oracle Raven`
 19. `Рой / The Swarm`
