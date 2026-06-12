@@ -4,6 +4,7 @@ import { registerServiceWorker } from "./pwa.js";
 import { detectQuestionRoute } from "./cards/question-routing.js";
 import { createStateStore } from "./state/storage.js";
 import { createActionHandler, createDeckQuestionGuidance, createInitialUIState, createKeyboardHandler } from "./ui/actions.js";
+import { createCoverCtaAnimation } from "./ui/cover-cta.js";
 import { createRenderer, getElements } from "./ui/render.js";
 import { SCENES, isKnownScene } from "./ui/scenes.js";
 
@@ -50,6 +51,8 @@ function setScene(scene) {
 if (elements.coverArt) {
   elements.coverArt.src = COVER_IMAGE;
 }
+
+createCoverCtaAnimation(document.querySelector(".cover-cta-button"));
 
 function renderApp() {
   const state = store.syncDayBoundary();
