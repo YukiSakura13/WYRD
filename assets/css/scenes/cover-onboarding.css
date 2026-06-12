@@ -564,7 +564,7 @@
   justify-content: center;
   gap: 6px;
   padding: 0;
-  color: rgba(201, 161, 74, 0.68);
+  color: rgba(201, 161, 74, 0.76);
   cursor: pointer;
   justify-self: center;
   border-radius: 6px;
@@ -593,8 +593,8 @@
   display: block;
   overflow: visible;
   color: currentColor;
-  opacity: 0.68;
-  filter: drop-shadow(0 0 8px rgba(201, 161, 74, 0.1));
+  opacity: 0.78;
+  filter: drop-shadow(0 0 8px rgba(201, 161, 74, 0.14));
   animation: iconFloat 6.2s ease-in-out infinite;
   transition: opacity 0.2s ease, transform 0.2s ease, color 0.2s ease, filter 0.2s ease;
 }
@@ -644,7 +644,7 @@
   min-height: 0;
   text-align: center;
   text-transform: uppercase;
-  color: rgba(201, 161, 74, 0.64);
+  color: rgba(201, 161, 74, 0.74);
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.72);
   white-space: nowrap;
 }
@@ -672,13 +672,13 @@
 .cover-icon-btn.sound-off .cover-icon-svg,
 .cover-icon-btn[aria-pressed="true"] .cover-icon-svg,
 .cover-icon-btn[data-sound-state="off"] .cover-icon-svg {
-  opacity: 0.66;
+  opacity: 0.74;
 }
 
 .cover-icon-btn.sound-off .cover-icon-label,
 .cover-icon-btn[aria-pressed="true"] .cover-icon-label,
 .cover-icon-btn[data-sound-state="off"] .cover-icon-label {
-  color: #8a6727;
+  color: rgba(201, 161, 74, 0.62);
 }
 
 .cover-icon-btn:focus-visible {
