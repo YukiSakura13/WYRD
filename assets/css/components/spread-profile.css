@@ -522,14 +522,24 @@
   position: absolute;
   z-index: 1;
   left: 50%;
-  bottom: 13.8%;
+  bottom: 11.8%;
   color: rgba(201, 161, 74, 0.7);
-  font-size: clamp(0.76rem, 2.35vw, 0.84rem);
+  font-size: clamp(0.74rem, 2.25vw, 0.82rem);
   font-style: italic;
-  line-height: 1.25;
+  line-height: 1.18;
   text-shadow: 0 0 16px rgba(201, 161, 74, 0.1);
   transform: translateX(-50%);
+  white-space: normal;
+}
+
+.gift-date-label,
+.gift-date-value {
+  display: block;
   white-space: nowrap;
+}
+
+.gift-date-value {
+  margin-top: 0.08rem;
 }
 
 .gift-card.is-pending-reveal {

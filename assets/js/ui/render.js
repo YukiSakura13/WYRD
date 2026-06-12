@@ -290,7 +290,13 @@ export function createRenderer(elements) {
       backTitle.style.setProperty("--gift-title-size", `${getGiftTitleSize(giftMeta.title)}rem`);
       const date = document.createElement("span");
       date.className = "gift-date";
-      date.textContent = `Обретено ${formatTraceDate(receivedAt)}`;
+      const dateLabel = document.createElement("span");
+      dateLabel.className = "gift-date-label";
+      dateLabel.textContent = "Обретено";
+      const dateValue = document.createElement("span");
+      dateValue.className = "gift-date-value";
+      dateValue.textContent = formatGiftDate(receivedAt);
+      date.append(dateLabel, dateValue);
       back.append(starField, mainStar, backTitle, date);
 
       inner.append(front, back);
@@ -317,6 +323,25 @@ export function createRenderer(elements) {
         schemaVersion: 1,
       };
     });
+  }
+
+  function formatGiftDate(date) {
+    const months = [
+      "января",
+      "февраля",
+      "марта",
+      "апреля",
+      "мая",
+      "июня",
+      "июля",
+      "августа",
+      "сентября",
+      "октября",
+      "ноября",
+      "декабря",
+    ];
+
+    return `${date.getDate()}\u00a0${months[date.getMonth()]}`;
   }
 
   function getPreviewGiftKeys() {
