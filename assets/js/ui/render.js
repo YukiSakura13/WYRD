@@ -367,6 +367,8 @@ export function createRenderer(elements) {
       flower: "flower",
       floral: "flower",
       tsvetochnaya: "flower",
+      honey: "honey",
+      medovaya: "honey",
     };
 
     return giftAliases[value.toLowerCase()] || null;
@@ -499,6 +501,11 @@ export function createRenderer(elements) {
         title: "Цветочная",
         symbol: "✧",
         image: "./assets/images/gifts/tsvetochnaya.webp",
+      },
+      honey: {
+        title: "Медовая",
+        symbol: "✦",
+        image: "./assets/images/gifts/medovaya.webp",
       },
       root: {
         title: "Корневая",
