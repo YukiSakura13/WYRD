@@ -91,6 +91,17 @@ export function createRenderer(elements) {
   let previousScene = null;
   const spreadRenderer = createSpreadRenderer(elements);
   const cardsById = new Map(CARDS.map((card) => [card.id, card]));
+  const giftStarPoints = [
+    { x: 23, y: 17 },
+    { x: 75, y: 14 },
+    { x: 18, y: 38 },
+    { x: 83, y: 34 },
+    { x: 27, y: 61 },
+    { x: 72, y: 58 },
+    { x: 36, y: 86 },
+    { x: 62, y: 78 },
+    { x: 79, y: 88 },
+  ];
 
   function render(state, uiState) {
     renderShell(uiState);
@@ -267,72 +278,188 @@ export function createRenderer(elements) {
       } else {
         symbol.textContent = giftMeta.symbol;
       }
-      const title = document.createElement("span");
-      title.className = "gift-title";
-      title.textContent = giftMeta.title;
-      front.append(symbol, title);
+      front.append(symbol);
 
       const back = document.createElement("span");
       back.className = "gift-card-face gift-card-back";
-      const backImprint = giftMeta.image ? document.createElement("img") : document.createElement("span");
-      backImprint.className = giftMeta.image ? "gift-back-imprint" : "gift-back-symbol";
-      if (giftMeta.image) {
-        backImprint.src = giftMeta.image;
-        backImprint.alt = "";
-        backImprint.loading = "lazy";
-        backImprint.decoding = "async";
-      } else {
-        backImprint.textContent = giftMeta.symbol;
-      }
+      const starField = createGiftStarField();
+      const mainStar = createGiftMainStar();
       const backTitle = document.createElement("span");
-      backTitle.className = "gift-title";
+      backTitle.className = "gift-title gift-title-back";
       backTitle.textContent = giftMeta.title;
-      const divider = document.createElement("span");
-      divider.className = "gift-divider";
-      const caption = document.createElement("span");
-      caption.className = "gift-caption";
-      const captionLines = giftMeta.captionLines || [giftMeta.caption];
-      captionLines.forEach(function appendCaptionLine(line, index) {
-        const lineNode = document.createElement("span");
-        lineNode.className = index === captionLines.length - 1 ? "gift-caption-line gift-caption-line--closing" : "gift-caption-line";
-        lineNode.textContent = line;
-        caption.appendChild(lineNode);
-      });
+      backTitle.style.setProperty("--gift-title-size", `${getGiftTitleSize(giftMeta.title)}rem`);
       const date = document.createElement("span");
       date.className = "gift-date";
       date.textContent = `Обретено ${formatTraceDate(receivedAt)}`;
-      back.append(backImprint, backTitle, divider, caption, date);
+      back.append(starField, mainStar, backTitle, date);
 
       inner.append(front, back);
       card.append(inner);
       elements.giftShelfTrack.appendChild(card);
+      startGiftTwinkle(back);
     });
   }
 
   function getVisibleGifts(state) {
     const gifts = Array.isArray(state.gifts) ? state.gifts : [];
 
-    if (gifts.length || !hasGiftPreview()) {
+    const previewGiftKeys = getPreviewGiftKeys();
+    if (gifts.length || previewGiftKeys.length === 0) {
       return gifts;
     }
 
-    return [
-      {
-        id: "gift-moon-preview",
-        receivedAt: new Date(2026, 4, 29, 12, 0, 0).toISOString(),
-        giftKey: "moon",
+    return previewGiftKeys.map(function createPreviewGift(giftKey, index) {
+      return {
+        id: `gift-${giftKey}-preview`,
+        receivedAt: new Date(2026, 4, 29 + index, 12, 0, 0).toISOString(),
+        giftKey,
         pendingReveal: false,
         schemaVersion: 1,
-      },
-    ];
+      };
+    });
   }
 
-  function hasGiftPreview() {
+  function getPreviewGiftKeys() {
+    if (!isGiftPreviewEnabled()) {
+      return [];
+    }
+
     try {
-      return new URLSearchParams(window.location.search).get("previewGift") === "moon";
+      const giftParam = new URLSearchParams(window.location.search).get("previewGift");
+      if (!giftParam) {
+        return [];
+      }
+
+      const giftKeys = giftParam
+        .split(",")
+        .map((value) => normalizeGiftKey(value.trim()))
+        .filter(Boolean);
+
+      return Array.from(new Set(giftKeys));
     } catch (error) {
+      return [];
+    }
+  }
+
+  function isGiftPreviewEnabled() {
+    if (window.WYRD_ENABLE_GIFT_PREVIEW === true) {
+      return true;
+    }
+
+    const buildId = document.querySelector('meta[name="wyrd-build"]')?.content || window.WYRD_BUILD_ID || "";
+    if (/^(prod|production)$/i.test(buildId)) {
       return false;
     }
+
+    return (
+      window.location.protocol === "file:" ||
+      ["localhost", "127.0.0.1", "::1"].includes(window.location.hostname) ||
+      /^(dev|staging)$/i.test(buildId)
+    );
+  }
+
+  function normalizeGiftKey(value) {
+    const giftAliases = {
+      lunnaya: "moon",
+      moon: "moon",
+      ammonite: "ammonite",
+      ammonitovaya: "ammonite",
+      flower: "flower",
+      floral: "flower",
+      tsvetochnaya: "flower",
+    };
+
+    return giftAliases[value.toLowerCase()] || null;
+  }
+
+  function createGiftStarField() {
+    const starField = document.createElement("span");
+    starField.className = "gift-star-field";
+    starField.setAttribute("aria-hidden", "true");
+
+    giftStarPoints.forEach(function appendStarPoint(point) {
+      const star = document.createElement("span");
+      star.className = "gift-star-point";
+      star.style.setProperty("--x", `${point.x}%`);
+      star.style.setProperty("--y", `${point.y}%`);
+      starField.appendChild(star);
+    });
+
+    return starField;
+  }
+
+  function createGiftMainStar() {
+    const mainStar = document.createElement("span");
+    mainStar.className = "gift-main-star";
+    mainStar.setAttribute("aria-hidden", "true");
+    return mainStar;
+  }
+
+  function getGiftTitleSize(title) {
+    const length = Array.from(title || "").length;
+    return Math.max(1.36, Math.min(1.86, 2.12 - length * 0.07));
+  }
+
+  function startGiftTwinkle(container) {
+    if (!container || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+
+    const mainStar = container.querySelector(".gift-main-star");
+    const starPoints = Array.from(container.querySelectorAll(".gift-star-point"));
+
+    scheduleGiftStarBreath(mainStar);
+
+    starPoints.forEach(function twinkleStarPoint(star, index) {
+      window.setTimeout(function startPointTwinkle() {
+        scheduleTwinkle(star, {
+          min: 0.24,
+          max: 0.72,
+          delayMin: 3000,
+          delayMax: 6000,
+        });
+      }, index * 260 + Math.random() * 1200);
+    });
+  }
+
+  function scheduleTwinkle(element, options) {
+    if (!element || !document.contains(element)) {
+      return;
+    }
+
+    const delay = randomBetween(options.delayMin, options.delayMax);
+    window.setTimeout(function updateTwinkle() {
+      if (!element || !document.contains(element)) {
+        return;
+      }
+
+      const max = options.rareMax && Math.random() > 0.86 ? options.rareMax : options.max;
+      element.style.opacity = randomBetween(options.min, max).toFixed(2);
+      scheduleTwinkle(element, options);
+    }, delay);
+  }
+
+  function scheduleGiftStarBreath(star) {
+    if (!star || !document.contains(star)) {
+      return;
+    }
+
+    const delay = randomBetween(8000, 14000);
+    window.setTimeout(function breatheGiftStar() {
+      if (!star || !document.contains(star)) {
+        return;
+      }
+
+      star.classList.add("is-lit");
+      window.setTimeout(function dimGiftStar() {
+        star.classList.remove("is-lit");
+        scheduleGiftStarBreath(star);
+      }, randomBetween(2200, 3200));
+    }, delay);
+  }
+
+  function randomBetween(min, max) {
+    return min + Math.random() * (max - min);
   }
 
   function getStoredMoon(trace, fallbackDate) {
@@ -362,8 +489,16 @@ export function createRenderer(elements) {
         title: "Лунная",
         symbol: "☾",
         image: "./assets/images/gifts/lunnaya.webp",
-        caption: "Луна не спешит менять форму. Всему своё время.",
-        captionLines: ["Луна не спешит", "менять форму.", "Всему своё время."],
+      },
+      ammonite: {
+        title: "Аммонитовая",
+        symbol: "✦",
+        image: "./assets/images/gifts/ammonitovaya.webp",
+      },
+      flower: {
+        title: "Цветочная",
+        symbol: "✧",
+        image: "./assets/images/gifts/tsvetochnaya.webp",
       },
       root: {
         title: "Корневая",

@@ -342,15 +342,28 @@
 }
 
 .gift-card {
+  display: block;
   width: clamp(164px, 44vw, 214px);
   aspect-ratio: 3 / 4;
   flex: 0 0 auto;
   border: 0;
+  padding: 0;
   background: transparent;
   color: var(--text-default);
   cursor: pointer;
   perspective: 900px;
   scroll-snap-align: start;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.gift-card:focus {
+  outline: none;
+}
+
+.gift-card:focus-visible {
+  outline: 2px solid rgba(243, 225, 170, 0.84);
+  outline-offset: 4px;
 }
 
 .gift-card-inner {
@@ -370,36 +383,39 @@
   position: absolute;
   inset: 0;
   display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-rows: minmax(0, 1fr);
   place-items: center;
-  gap: 0.55rem;
-  padding: 0.72rem;
-  border: 1px solid rgba(201, 161, 74, 0.48);
+  overflow: hidden;
+  padding: 0.46rem;
+  border: 1px solid var(--border-focus);
   border-radius: 10px;
-  background:
-    radial-gradient(circle at 50% 34%, rgba(201, 161, 74, 0.2), transparent 38%),
-    linear-gradient(180deg, rgba(25, 24, 38, 0.98), rgba(8, 9, 17, 0.98));
+  background: var(--color-bg-card-bottom);
   box-shadow:
     0 20px 56px rgba(0, 0, 0, 0.42),
     0 0 34px rgba(201, 161, 74, 0.08),
     inset 0 0 0 1px rgba(242, 235, 221, 0.06);
   backface-visibility: hidden;
-}
-
-.gift-card-face::before {
-  content: "";
-  position: absolute;
-  inset: 0.48rem;
-  border: 1px solid rgba(201, 161, 74, 0.24);
-  border-radius: 7px;
   pointer-events: none;
 }
 
+.gift-card-front::before {
+  content: "";
+  position: absolute;
+  inset: 0.42rem;
+  border: 1px solid var(--accent-30);
+  border-radius: 7px;
+  pointer-events: none;
+  z-index: 1;
+}
+
 .gift-card-back {
-  grid-template-rows: auto auto 1fr auto;
-  align-content: center;
-  gap: 0.52rem;
+  display: block;
+  padding: 0.88rem 0.82rem;
   transform: rotateY(180deg);
+}
+
+.gift-card-back::before {
+  content: none;
 }
 
 .gift-symbol {
@@ -414,17 +430,15 @@
   width: 100%;
   height: 100%;
   min-width: 0;
+  grid-area: 1 / 1;
   object-fit: cover;
-  border: 1px solid rgba(242, 235, 221, 0.24);
-  border-radius: 7px 7px 3px 3px;
-  background:
-    radial-gradient(circle at center, rgba(242, 235, 221, 0.09), transparent 58%),
-    rgba(13, 14, 24, 0.96);
+  border-radius: 7px;
+  background: var(--color-bg-card-bottom);
   box-shadow:
     0 12px 28px rgba(0, 0, 0, 0.36),
-    0 0 0 6px rgba(242, 235, 221, 0.035),
     0 0 28px rgba(201, 161, 74, 0.13);
-  filter: brightness(1.18) contrast(1.08);
+  filter: brightness(1.08) contrast(1.04);
+  user-select: none;
 }
 
 .gift-title {
@@ -436,86 +450,86 @@
   text-align: center;
 }
 
-.gift-card-front .gift-title {
-  padding-bottom: 0.08rem;
-}
-
-.gift-card-back .gift-title {
-  margin-top: 1.1rem;
-  font-size: clamp(1.08rem, 3.4vw, 1.28rem);
-  line-height: 1.12;
-}
-
-.gift-back-symbol {
-  display: block;
-  color: rgba(201, 161, 74, 0.86);
-  font-family: var(--display-font);
-  font-size: clamp(2.2rem, 9vw, 3.2rem);
-  line-height: 1;
-  text-align: center;
-  text-shadow: 0 0 22px rgba(201, 161, 74, 0.22);
-}
-
-.gift-back-imprint {
+.gift-title-back {
   position: absolute;
-  top: 1.05rem;
-  right: 1.15rem;
-  display: block;
-  width: clamp(1.55rem, 6vw, 2.05rem);
-  height: clamp(2rem, 8vw, 2.65rem);
-  object-fit: cover;
-  object-position: 30% 50%;
-  border-radius: 999px;
-  opacity: 0.2;
-  filter: brightness(1.24) contrast(1.08) saturate(0.75);
-  mask-image: radial-gradient(ellipse at center, #000 36%, rgba(0, 0, 0, 0.5) 62%, transparent 100%);
-  box-shadow:
-    0 0 16px rgba(201, 161, 74, 0.08),
-    inset 0 0 0 1px rgba(201, 161, 74, 0.18);
+  top: 46%;
+  left: 50%;
+  z-index: 1;
+  max-width: 100%;
+  color: var(--text-default);
+  font-size: clamp(1.34rem, 2.5vw, var(--gift-title-size));
+  line-height: 1.04;
+  white-space: nowrap;
+  text-shadow: 0 0 20px rgba(240, 232, 216, 0.08);
+  transform: translate(-50%, -50%);
 }
 
-.gift-divider {
+.gift-star-field {
+  position: absolute;
+  inset: 0;
   display: block;
-  width: min(52%, 5.2rem);
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(201, 161, 74, 0.22), transparent);
+  pointer-events: none;
+}
+
+.gift-star-point {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  display: block;
+  width: 2px;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--gold);
+  opacity: 0.3;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.72s ease-out;
+  box-shadow: 0 0 5px rgba(201, 161, 74, 0.16);
+}
+
+.gift-main-star {
+  position: absolute;
+  top: 16.5%;
+  left: 50%;
+  z-index: 1;
+  display: block;
+  width: clamp(2.02rem, 7.3vw, 2.34rem);
+  height: clamp(2.02rem, 7.3vw, 2.34rem);
+  background: url("../../images/gifts/gift-back-star.svg") center / contain no-repeat;
+  opacity: 0.88;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 0 9px rgba(201, 161, 74, 0.2));
+  transition:
+    opacity 2.2s ease-in-out,
+    filter 2.2s ease-in-out;
+}
+
+.gift-main-star.is-lit {
+  opacity: 1;
+  filter:
+    drop-shadow(0 0 11px rgba(201, 161, 74, 0.28))
+    drop-shadow(0 0 18px rgba(201, 161, 74, 0.1));
 }
 
 .gift-caption,
 .gift-date {
   display: block;
-  color: rgba(240, 232, 216, 0.72);
-  font-family: var(--ui-font);
-  font-size: clamp(0.78rem, 2.6vw, 0.88rem);
+  font-family: var(--display-font);
   line-height: var(--leading-relaxed);
   text-align: center;
 }
 
-.gift-caption {
-  align-self: center;
-  display: grid;
-  gap: 0.08rem;
-  color: rgba(240, 232, 216, 0.68);
-  font-family: var(--ui-font);
-  font-size: clamp(0.78rem, 2.4vw, 0.9rem);
-  line-height: 1.48;
-}
-
-.gift-caption-line {
-  display: block;
-}
-
-.gift-caption-line--closing {
-  margin-top: 0.28rem;
-  color: rgba(240, 232, 216, 0.84);
-  font-family: var(--display-font);
-  font-size: clamp(0.9rem, 2.8vw, 1.02rem);
-  font-style: italic;
-}
-
 .gift-date {
-  color: rgba(154, 143, 122, 0.72);
-  font-size: clamp(0.66rem, 2.2vw, 0.74rem);
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: 13.8%;
+  color: rgba(201, 161, 74, 0.7);
+  font-size: clamp(0.76rem, 2.35vw, 0.84rem);
+  font-style: italic;
+  line-height: 1.25;
+  text-shadow: 0 0 16px rgba(201, 161, 74, 0.1);
+  transform: translateX(-50%);
+  white-space: nowrap;
 }
 
 .gift-card.is-pending-reveal {
@@ -2021,6 +2035,10 @@ body[data-scene="deck"] .footer {
   .gift-card.is-pending-reveal,
   .history-gift-reveal span {
     animation: none !important;
+  }
+
+  .gift-main-star {
+    opacity: 0.65 !important;
   }
 
   .transition-veil,
