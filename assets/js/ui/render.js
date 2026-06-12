@@ -394,6 +394,8 @@ export function createRenderer(elements) {
       tsvetochnaya: "flower",
       honey: "honey",
       medovaya: "honey",
+      forest: "forest",
+      lesnaya: "forest",
     };
 
     return giftAliases[value.toLowerCase()] || null;
@@ -531,6 +533,11 @@ export function createRenderer(elements) {
         title: "Медовая",
         symbol: "✦",
         image: "./assets/images/gifts/medovaya.webp",
+      },
+      forest: {
+        title: "Лесная",
+        symbol: "✦",
+        image: "./assets/images/gifts/lesnaya.webp",
       },
       root: {
         title: "Корневая",
