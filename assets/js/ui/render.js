@@ -565,7 +565,7 @@ export function createRenderer(elements) {
       transparent: {
         title: "Прозрачная",
         symbol: "✦",
-        image: "./assets/images/gifts/prozrachnaya.webp",
+        image: "./assets/images/gifts/prozrachnaya.webp?v=2",
       },
       root: {
         title: "Корневая",
