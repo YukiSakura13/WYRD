@@ -406,6 +406,8 @@ export function createRenderer(elements) {
       rechnaya: "river",
       transparent: "transparent",
       prozrachnaya: "transparent",
+      morning: "morning",
+      utrennyaya: "morning",
     };
 
     return giftAliases[value.toLowerCase()] || null;
@@ -573,6 +575,11 @@ export function createRenderer(elements) {
         title: "Прозрачная",
         symbol: "✦",
         image: "./assets/images/gifts/prozrachnaya.webp?v=2",
+      },
+      morning: {
+        title: "Утренняя",
+        symbol: "✦",
+        image: "./assets/images/gifts/utrennyaya.webp",
       },
       root: {
         title: "Корневая",
