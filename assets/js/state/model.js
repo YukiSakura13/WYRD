@@ -592,6 +592,7 @@ function getGiftKey(index) {
     "flower",
     "honey",
     "night",
+    "malachite",
     "forest",
     "crystal",
     "river",

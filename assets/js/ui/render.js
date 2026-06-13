@@ -396,6 +396,8 @@ export function createRenderer(elements) {
       medovaya: "honey",
       night: "night",
       nochnaya: "night",
+      malachite: "malachite",
+      malahitovaya: "malachite",
       forest: "forest",
       lesnaya: "forest",
       crystal: "crystal",
@@ -546,6 +548,11 @@ export function createRenderer(elements) {
         title: "Ночная",
         symbol: "✦",
         image: "./assets/images/gifts/nochnaya.webp",
+      },
+      malachite: {
+        title: "Малахитовая",
+        symbol: "✦",
+        image: "./assets/images/gifts/malahitovaya.webp",
       },
       forest: {
         title: "Лесная",
