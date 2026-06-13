@@ -398,6 +398,8 @@ export function createRenderer(elements) {
       lesnaya: "forest",
       crystal: "crystal",
       kristalnaya: "crystal",
+      river: "river",
+      rechnaya: "river",
     };
 
     return giftAliases[value.toLowerCase()] || null;
@@ -545,6 +547,11 @@ export function createRenderer(elements) {
         title: "Кристальная",
         symbol: "✦",
         image: "./assets/images/gifts/kristalnaya.webp",
+      },
+      river: {
+        title: "Речная",
+        symbol: "✦",
+        image: "./assets/images/gifts/rechnaya.webp",
       },
       root: {
         title: "Корневая",
