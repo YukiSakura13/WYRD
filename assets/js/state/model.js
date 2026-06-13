@@ -591,6 +591,7 @@ function getGiftKey(index) {
     "ammonite",
     "flower",
     "honey",
+    "night",
     "forest",
     "crystal",
     "river",

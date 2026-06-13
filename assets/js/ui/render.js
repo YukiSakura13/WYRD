@@ -394,6 +394,8 @@ export function createRenderer(elements) {
       tsvetochnaya: "flower",
       honey: "honey",
       medovaya: "honey",
+      night: "night",
+      nochnaya: "night",
       forest: "forest",
       lesnaya: "forest",
       crystal: "crystal",
@@ -539,6 +541,11 @@ export function createRenderer(elements) {
         title: "Медовая",
         symbol: "✦",
         image: "./assets/images/gifts/medovaya.webp",
+      },
+      night: {
+        title: "Ночная",
+        symbol: "✦",
+        image: "./assets/images/gifts/nochnaya.webp",
       },
       forest: {
         title: "Лесная",
