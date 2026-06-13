@@ -400,6 +400,8 @@ export function createRenderer(elements) {
       kristalnaya: "crystal",
       river: "river",
       rechnaya: "river",
+      transparent: "transparent",
+      prozrachnaya: "transparent",
     };
 
     return giftAliases[value.toLowerCase()] || null;
@@ -552,6 +554,11 @@ export function createRenderer(elements) {
         title: "Речная",
         symbol: "✦",
         image: "./assets/images/gifts/rechnaya.webp",
+      },
+      transparent: {
+        title: "Прозрачная",
+        symbol: "✦",
+        image: "./assets/images/gifts/prozrachnaya.webp",
       },
       root: {
         title: "Корневая",
