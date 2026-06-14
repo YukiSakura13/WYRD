@@ -402,6 +402,8 @@ export function createRenderer(elements) {
       mohovaya: "moss",
       forest: "forest",
       lesnaya: "forest",
+      cedar: "cedar",
+      kedrovaya: "cedar",
       crystal: "crystal",
       kristalnaya: "crystal",
       river: "river",
@@ -567,6 +569,11 @@ export function createRenderer(elements) {
         title: "Лесная",
         symbol: "✦",
         image: "./assets/images/gifts/lesnaya.webp",
+      },
+      cedar: {
+        title: "Кедровая",
+        symbol: "✦",
+        image: "./assets/images/gifts/kedrovaya.webp",
       },
       crystal: {
         title: "Кристальная",
