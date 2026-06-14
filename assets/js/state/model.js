@@ -593,6 +593,7 @@ function getGiftKey(index) {
     "honey",
     "night",
     "malachite",
+    "moss",
     "forest",
     "crystal",
     "river",
