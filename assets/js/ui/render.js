@@ -398,6 +398,8 @@ export function createRenderer(elements) {
       nochnaya: "night",
       malachite: "malachite",
       malahitovaya: "malachite",
+      wild: "wild",
+      dikaya: "wild",
       moss: "moss",
       mohovaya: "moss",
       quiet: "quiet",
@@ -563,6 +565,11 @@ export function createRenderer(elements) {
         title: "Малахитовая",
         symbol: "✦",
         image: "./assets/images/gifts/malahitovaya.webp",
+      },
+      wild: {
+        title: "Дикая",
+        symbol: "✦",
+        image: "./assets/images/gifts/dikaya.webp",
       },
       moss: {
         title: "Моховая",
