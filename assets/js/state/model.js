@@ -600,6 +600,7 @@ function getGiftKey(index) {
     "crystal",
     "river",
     "transparent",
+    "ringing",
     "morning",
     "root",
     "star",

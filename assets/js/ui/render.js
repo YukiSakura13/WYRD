@@ -412,6 +412,8 @@ export function createRenderer(elements) {
       rechnaya: "river",
       transparent: "transparent",
       prozrachnaya: "transparent",
+      ringing: "ringing",
+      zvonkaya: "ringing",
       morning: "morning",
       utrennyaya: "morning",
     };
@@ -596,6 +598,11 @@ export function createRenderer(elements) {
         title: "Прозрачная",
         symbol: "✦",
         image: "./assets/images/gifts/prozrachnaya.webp?v=2",
+      },
+      ringing: {
+        title: "Звонкая",
+        symbol: "✦",
+        image: "./assets/images/gifts/zvonkaya.webp",
       },
       morning: {
         title: "Утренняя",
