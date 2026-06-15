@@ -400,6 +400,8 @@ export function createRenderer(elements) {
       malahitovaya: "malachite",
       moss: "moss",
       mohovaya: "moss",
+      quiet: "quiet",
+      tihaya: "quiet",
       forest: "forest",
       lesnaya: "forest",
       cedar: "cedar",
@@ -564,6 +566,11 @@ export function createRenderer(elements) {
         title: "Моховая",
         symbol: "✦",
         image: "./assets/images/gifts/mohovaya.webp",
+      },
+      quiet: {
+        title: "Тихая",
+        symbol: "✦",
+        image: "./assets/images/gifts/tihaya.webp",
       },
       forest: {
         title: "Лесная",
