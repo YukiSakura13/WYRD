@@ -389,6 +389,8 @@ export function createRenderer(elements) {
       moon: "moon",
       ammonite: "ammonite",
       ammonitovaya: "ammonite",
+      resonant: "resonant",
+      zvenyashaya: "resonant",
       flower: "flower",
       floral: "flower",
       tsvetochnaya: "flower",
@@ -547,6 +549,11 @@ export function createRenderer(elements) {
         title: "Аммонитовая",
         symbol: "✦",
         image: "./assets/images/gifts/ammonitovaya.webp",
+      },
+      resonant: {
+        title: "Звенящая",
+        symbol: "✦",
+        image: "./assets/images/gifts/zvenyashaya.webp",
       },
       flower: {
         title: "Цветочная",
