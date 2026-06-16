@@ -38,7 +38,7 @@
       rel="stylesheet"
     />
     <link rel="manifest" href="./manifest.webmanifest?v=dev" />
-    <link rel="stylesheet" href="./assets/css/styles.css?v=dev" />
+    <link rel="stylesheet" href="./assets/css/styles.css?v=button-roles-2" />
   </head>
   <body>
     <div class="scene-fog scene-fog--back" aria-hidden="true"></div>
@@ -236,7 +236,7 @@
             <p class="ritual-line" style="--ritual-delay: 2940ms">Прочитай ответ духов леса</p>
             <p class="ritual-line" style="--ritual-delay: 3920ms">Захочется спросить снова. Возвращайся</p>
           </div>
-          <button class="ritual-btn" data-action="enter-ritual" type="button">Войти в ритуал</button>
+          <button class="ritual-btn" data-action="enter-ritual" type="button">✦ ВОЙТИ В РИТУАЛ ✦</button>
         </div>
         <div class="ritual-ornament" aria-hidden="true">✦ ✦ ✦</div>
         <p class="ritual-whisper">Лес отвечает тем, кто умеет слушать тишину</p>
@@ -250,7 +250,6 @@
             <div class="screen-brand-line" aria-hidden="true"></div>
             <p class="screen-brand-subtitle">Оракул духов леса</p>
           </div>
-          <div class="screen-nav-spacer" aria-hidden="true"></div>
         </div>
         <div class="result-question" id="result-question" aria-live="polite">
           <p class="result-question-label" id="result-question-label">ТВОЙ ВОПРОС</p>
@@ -322,7 +321,6 @@
             <div class="screen-brand-line" aria-hidden="true"></div>
             <p class="screen-brand-subtitle">Оракул духов леса</p>
           </div>
-          <div class="screen-nav-spacer" aria-hidden="true"></div>
         </div>
         <div class="result-question spread-question" id="spread-question" aria-live="polite">
           <p class="result-question-label" id="spread-question-label">ТВОЙ ВОПРОС</p>
@@ -429,7 +427,6 @@
             <div class="screen-brand-line" aria-hidden="true"></div>
             <p class="screen-brand-subtitle">Оракул духов леса</p>
           </div>
-          <div class="screen-nav-spacer" aria-hidden="true"></div>
         </div>
 
         <div class="history-gift-reveal" id="history-gift-reveal" aria-hidden="true" hidden>
@@ -441,8 +438,8 @@
 
         <div class="history-empty-state" id="history-empty-state" hidden>
           <p>Ты только вступаешь в лес.</p>
-          <p>Первый след появится здесь после первого послания.</p>
-          <button class="reset-btn profile-primary-action" data-action="back-to-deck" type="button">
+          <p>Когда придёт первое послание, здесь останется след.</p>
+          <button class="reset-btn profile-primary-action history-empty-action" data-action="back-to-deck" type="button" aria-label="Перейти к колоде">
             Перейти к колоде
           </button>
         </div>

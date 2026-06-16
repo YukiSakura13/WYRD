@@ -1,6 +1,6 @@
 @import "./tokens.css";
 @import "./base.css";
-@import "./scenes/cover-onboarding.css";
+@import "./scenes/cover-onboarding.css?v=button-roles-2";
 @import "./scenes/deck.css";
-@import "./components/reading.css";
-@import "./components/spread-profile.css";
+@import "./components/reading.css?v=button-roles-2";
+@import "./components/spread-profile.css?v=button-roles-2";
