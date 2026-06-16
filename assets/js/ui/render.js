@@ -396,6 +396,8 @@ export function createRenderer(elements) {
       medovaya: "honey",
       night: "night",
       nochnaya: "night",
+      fragile: "fragile",
+      hrupkaya: "fragile",
       malachite: "malachite",
       malahitovaya: "malachite",
       wild: "wild",
@@ -560,6 +562,11 @@ export function createRenderer(elements) {
         title: "Ночная",
         symbol: "✦",
         image: "./assets/images/gifts/nochnaya.webp",
+      },
+      fragile: {
+        title: "Хрупкая",
+        symbol: "✦",
+        image: "./assets/images/gifts/hrupkaya.webp",
       },
       malachite: {
         title: "Малахитовая",
