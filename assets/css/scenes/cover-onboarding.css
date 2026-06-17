@@ -233,19 +233,100 @@
 @keyframes ritualLineReveal {
   0% {
     opacity: 0;
-    transform: translateY(18px) scale(0.985);
-    filter: blur(16px);
+    transform: translateY(10px);
+    filter: blur(8px);
   }
 
-  45% {
-    opacity: 0.5;
-    filter: blur(8px);
+  55% {
+    opacity: 0.64;
+    filter: blur(2px);
   }
 
   100% {
     opacity: 1;
     transform: translateY(0);
     filter: blur(0);
+  }
+}
+
+@keyframes ritualMistWake {
+  0% {
+    transform: translate3d(-14%, 10%, 0) scale(1.04);
+  }
+
+  50% {
+    transform: translate3d(4%, -12%, 0) scale(1.2);
+  }
+
+  100% {
+    transform: translate3d(16%, 4%, 0) scale(1.1);
+  }
+}
+
+@keyframes ritualMistWakeReverse {
+  0% {
+    transform: translate3d(15%, 8%, 0) scale(1.08);
+  }
+
+  50% {
+    transform: translate3d(-7%, -13%, 0) scale(1.22);
+  }
+
+  100% {
+    transform: translate3d(-17%, 4%, 0) scale(1.1);
+  }
+}
+
+@keyframes ritualMistBreath {
+  0% {
+    opacity: 0.54;
+  }
+
+  50% {
+    opacity: 0.92;
+  }
+
+  100% {
+    opacity: 0.64;
+  }
+}
+
+@keyframes ritualMistRise {
+  0% {
+    opacity: 0.14;
+    transform: translate3d(-4%, 16%, 0) scale(1.04);
+  }
+
+  46% {
+    opacity: 0.34;
+    transform: translate3d(2%, -6%, 0) scale(1.12);
+  }
+
+  100% {
+    opacity: 0.2;
+    transform: translate3d(7%, 8%, 0) scale(1.07);
+  }
+}
+
+@keyframes ritualLineSpark {
+  0% {
+    opacity: 0;
+    top: -0.7rem;
+    transform: scaleY(0.55);
+  }
+
+  18% {
+    opacity: 0.95;
+  }
+
+  72% {
+    opacity: 0.82;
+  }
+
+  100% {
+    opacity: 0;
+    top: calc(100% - 0.4rem);
+    transform: scaleY(0.9);
   }
 }
 
@@ -830,10 +911,11 @@ body[data-scene="onboarding"] #profile {
     max(1rem, calc(env(safe-area-inset-bottom) + 0.5rem));
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   isolation: isolate;
-  overflow: clip;
+  overflow-x: clip;
+  overflow-y: auto;
   z-index: 120;
 }
 
@@ -861,9 +943,10 @@ body[data-scene="onboarding"] #profile {
 .ritual-bg-overlay {
   z-index: -2;
   background:
-    linear-gradient(180deg, rgba(5, 6, 10, 0.18) 0%, rgba(7, 8, 12, 0.28) 22%, rgba(9, 10, 14, 0.42) 64%, rgba(7, 7, 11, 0.62) 100%),
-    radial-gradient(circle at center 38%, rgba(201, 161, 74, 0.06), transparent 38%),
-    linear-gradient(90deg, rgba(5, 5, 8, 0.36) 0%, rgba(5, 5, 8, 0.1) 18%, rgba(5, 5, 8, 0.1) 82%, rgba(5, 5, 8, 0.36) 100%);
+    linear-gradient(180deg, rgba(5, 6, 10, 0.2) 0%, rgba(7, 8, 12, 0.3) 22%, rgba(9, 10, 14, 0.44) 64%, rgba(7, 7, 11, 0.68) 100%),
+    radial-gradient(ellipse at center 47%, rgba(3, 4, 7, 0.32), rgba(3, 4, 7, 0.08) 34%, transparent 58%),
+    radial-gradient(circle at center 32%, rgba(201, 161, 74, 0.07), transparent 34%),
+    linear-gradient(90deg, rgba(5, 5, 8, 0.42) 0%, rgba(5, 5, 8, 0.1) 18%, rgba(5, 5, 8, 0.1) 82%, rgba(5, 5, 8, 0.42) 100%);
   animation: ritualGlowPulse 11s ease-in-out infinite alternate;
 }
 
@@ -885,9 +968,9 @@ body[data-scene="onboarding"] #profile {
 }
 
 .ritual-mist {
-  position: absolute;
-  inset: auto -12% -8%;
-  height: 34svh;
+  position: fixed;
+  inset: auto -28% -14%;
+  height: clamp(18rem, 44svh, 29rem);
   pointer-events: none;
   z-index: -1;
 }
@@ -897,29 +980,50 @@ body[data-scene="onboarding"] #profile {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 20% 72%, rgba(255, 255, 255, 0.09), transparent 34%),
-    radial-gradient(ellipse at 78% 68%, rgba(255, 255, 255, 0.07), transparent 28%),
-    radial-gradient(ellipse at 50% 100%, rgba(255, 255, 255, 0.05), transparent 42%);
-  filter: blur(26px);
+    radial-gradient(ellipse at 18% 72%, rgba(218, 226, 224, 0.28), transparent 36%),
+    radial-gradient(ellipse at 78% 68%, rgba(218, 226, 224, 0.24), transparent 30%),
+    radial-gradient(ellipse at 50% 100%, rgba(218, 226, 224, 0.2), transparent 48%);
+  filter: blur(20px);
   animation:
-    fogDrift 22s ease-in-out infinite alternate,
-    mistBreath 10s ease-in-out infinite alternate;
+    ritualMistWake 8s ease-in-out infinite alternate,
+    ritualMistBreath 4.8s ease-in-out infinite alternate;
+}
+
+.ritual-mist::after {
+  content: "";
+  position: absolute;
+  inset: 28% 4% -6%;
+  background:
+    radial-gradient(ellipse at 30% 88%, rgba(226, 232, 229, 0.2), transparent 34%),
+    radial-gradient(ellipse at 68% 82%, rgba(226, 232, 229, 0.16), transparent 30%),
+    linear-gradient(180deg, transparent 0%, rgba(226, 232, 229, 0.1) 58%, transparent 100%);
+  filter: blur(18px);
+  opacity: 0.18;
+  animation: ritualMistRise 6.5s ease-in-out infinite alternate;
+}
+
+.ritual-mist--front::after {
+  inset: 18% 0 -10%;
+  filter: blur(24px);
+  animation-duration: 7.2s;
+  animation-direction: alternate-reverse;
 }
 
 .ritual-mist--rear {
-  opacity: 0.46;
+  opacity: 0.72;
 }
 
 .ritual-mist--front {
-  inset: auto -16% -14%;
-  height: 40svh;
-  opacity: 0.3;
+  inset: auto -32% -17%;
+  height: clamp(19rem, 50svh, 32rem);
+  opacity: 0.68;
 }
 
 .ritual-mist--front::before {
-  filter: blur(42px);
-  animation-duration: 24s;
-  animation-direction: alternate-reverse;
+  filter: blur(31px);
+  animation:
+    ritualMistWakeReverse 9.5s ease-in-out infinite alternate,
+    ritualMistBreath 5.4s ease-in-out infinite alternate;
 }
 
 .ritual-back,
@@ -931,14 +1035,15 @@ body[data-scene="onboarding"] #profile {
 }
 
 .ritual-back {
-  align-self: flex-start;
-  margin-left: max(0rem, env(safe-area-inset-left));
+  position: absolute;
+  top: max(1rem, calc(env(safe-area-inset-top) + 0.45rem));
+  left: max(1.25rem, calc(env(safe-area-inset-left) + 1.25rem));
 }
 
 .ritual-content {
-  width: min(100%, 34rem);
+  width: min(100%, 32rem);
   margin: 0 auto;
-  padding-top: clamp(2.25rem, 6svh, 4rem);
+  padding-top: clamp(4.6rem, 12svh, 7rem);
   text-align: center;
 }
 
@@ -969,20 +1074,23 @@ body[data-scene="onboarding"] #profile {
 .ritual-divider {
   width: min(10rem, 34vw);
   height: 1px;
-  margin: 0 auto 1.55rem;
+  margin: 0 auto clamp(4.2rem, 10svh, 6.2rem);
   background: linear-gradient(90deg, transparent 0%, rgba(201, 161, 74, 0.12) 12%, rgba(201, 161, 74, 0.72) 50%, rgba(201, 161, 74, 0.12) 88%, transparent 100%);
   box-shadow: 0 0 12px rgba(201, 161, 74, 0.14);
 }
 
 .ritual-title {
+  width: min(100%, 24rem);
   color: rgba(201, 161, 74, 0.88);
   font-family: var(--ui-font);
-  font-size: clamp(0.98rem, 2.6vw, 1.1rem);
+  font-size: clamp(0.82rem, 2.4vw, 0.96rem);
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
   line-height: 1.45;
   text-transform: uppercase;
-  margin-bottom: 1.3rem;
+  margin: 0 auto 0.75rem;
+  padding-left: calc(1rem + 2px);
+  text-align: left;
   text-shadow:
     0 0 12px rgba(201, 161, 74, 0.08),
     0 0 22px rgba(201, 161, 74, 0.05);
@@ -990,29 +1098,68 @@ body[data-scene="onboarding"] #profile {
 
 .ritual-lines {
   display: grid;
-  gap: 0.78rem;
-  margin-bottom: 1.45rem;
+  gap: 0.72rem;
+  position: relative;
+  width: min(100%, 24rem);
+  margin: 0 auto clamp(3.4rem, 8svh, 4.8rem);
+  padding: 0.2rem 0 0.2rem 1.45rem;
+  text-align: left;
+}
+
+.ritual-lines::before {
+  content: "";
+  position: absolute;
+  top: -0.35rem;
+  bottom: -0.35rem;
+  left: 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(201, 161, 74, 0.52) 18%, rgba(201, 161, 74, 0.34) 52%, transparent);
+  box-shadow: 0 0 10px rgba(201, 161, 74, 0.08);
+}
+
+.ritual-lines::after {
+  content: "";
+  position: absolute;
+  top: -0.35rem;
+  left: -1px;
+  width: 3px;
+  height: 2.2rem;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle, rgba(244, 220, 154, 0.95) 0 18%, transparent 34%),
+    linear-gradient(180deg, transparent, rgba(216, 177, 90, 0.86), transparent);
+  filter:
+    blur(0.2px)
+    drop-shadow(0 0 8px rgba(216, 177, 90, 0.38));
+  opacity: 0;
+  transform-origin: top;
+  pointer-events: none;
+}
+
+.ritual-onboarding.is-visible .ritual-lines::after {
+  animation: ritualLineSpark 1.9s cubic-bezier(0.22, 0.72, 0.26, 1) 180ms both;
 }
 
 .ritual-line {
   opacity: 0.0001;
   position: relative;
-  transform: translateY(24px) scale(0.985);
-  color: var(--parchment);
+  transform: translateY(10px);
+  color: rgba(240, 232, 216, 0.7);
   font-family: var(--display-font);
-  font-size: clamp(1.05rem, 3vw, 1.35rem);
-  line-height: 1.58;
-  text-align: center;
-  padding: 0.08rem 0;
+  font-size: clamp(0.98rem, 2.8vw, 1.12rem);
+  font-weight: 400;
+  line-height: 1.68;
+  text-align: left;
+  padding: 0;
   text-shadow:
-    0 0 18px rgba(242, 235, 221, 0.08),
-    0 0 28px rgba(201, 161, 74, 0.05);
-  filter: blur(14px);
+    0 2px 12px rgba(0, 0, 0, 0.58),
+    0 0 20px rgba(201, 161, 74, 0.04);
+  filter: blur(8px);
   animation: none;
 }
 
 .ritual-onboarding.is-visible .ritual-line {
-  animation: ritualLineReveal 2.45s cubic-bezier(0.18, 0.76, 0.22, 1) forwards;
+  animation: ritualLineReveal 1.55s cubic-bezier(0.2, 0.74, 0.22, 1) forwards;
   animation-delay: var(--ritual-delay, 0ms);
 }
 

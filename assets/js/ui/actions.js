@@ -20,6 +20,18 @@ export function createActionHandler(deps) {
     if (action === "enter") {
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function enterForest() {
+        if (!store.getState().onboardingSeen) {
+          uiState.onboardingReturn = SCENES.COVER;
+          setScene(SCENES.ONBOARDING);
+          audio.sync({
+            allowInit: true,
+            enabled: store.getState().soundEnabled,
+            scene: SCENES.ONBOARDING,
+          });
+          renderer.scrollTo(SCENES.ONBOARDING);
+          return;
+        }
+
         setScene(SCENES.DECK);
         audio.sync({
           allowInit: true,
@@ -216,7 +228,6 @@ export function createActionHandler(deps) {
 
     if (action === "replay-onboarding") {
       audio.playSelect(store.getState().soundEnabled);
-      store.resetOnboardingSeen();
       uiState.onboardingReturn = uiState.activeScene === SCENES.COVER ? SCENES.COVER : SCENES.DECK;
       setScene(SCENES.ONBOARDING);
       audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.ONBOARDING });
@@ -250,6 +261,10 @@ export function createActionHandler(deps) {
 }
 
 function revealPendingGiftsAfterAnimation(store, renderApp) {
+  if (isPreviewGiftRevealActive()) {
+    return;
+  }
+
   const hasPendingGift = store.getState().gifts?.some((gift) => gift.pendingReveal);
 
   if (!hasPendingGift) {
@@ -259,7 +274,15 @@ function revealPendingGiftsAfterAnimation(store, renderApp) {
   window.setTimeout(function clearPendingGiftReveal() {
     store.revealPendingGifts();
     renderApp();
-  }, 1500);
+  }, 5900);
+}
+
+function isPreviewGiftRevealActive() {
+  try {
+    return new URLSearchParams(window.location.search).has("previewGiftReveal");
+  } catch (error) {
+    return false;
+  }
 }
 
 function updatePressedSoundControl(trigger, soundEnabled) {

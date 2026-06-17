@@ -45,6 +45,7 @@ export function getElements(doc = document) {
     giftShelf: doc.getElementById("gift-shelf"),
     giftShelfTrack: doc.getElementById("gift-shelf-track"),
     historyGiftReveal: doc.getElementById("history-gift-reveal"),
+    historyGiftRevealStatus: doc.getElementById("history-gift-reveal-status"),
     historyTrailsHeading: doc.getElementById("history-trails-heading"),
     historyList: doc.getElementById("history-list"),
     historySheetBackdrop: doc.getElementById("history-sheet-backdrop"),
@@ -243,14 +244,10 @@ export function createRenderer(elements) {
     }
 
     elements.giftShelf.hidden = gifts.length === 0;
+    elements.giftShelf.classList.toggle("has-pending-gift", gifts.some((gift) => gift.pendingReveal));
     elements.giftShelfTrack.classList.toggle("has-one-gift", gifts.length === 1);
+    elements.giftShelfTrack.classList.remove("is-making-room");
     elements.giftShelfTrack.replaceChildren();
-
-    const hasPendingGift = gifts.some((gift) => gift.pendingReveal);
-    if (elements.historyGiftReveal) {
-      elements.historyGiftReveal.hidden = !hasPendingGift;
-      elements.historyGiftReveal.classList.toggle("is-active", hasPendingGift);
-    }
 
     gifts.forEach(function renderGift(gift) {
       const giftMeta = getGiftMeta(gift.giftKey);
@@ -259,6 +256,7 @@ export function createRenderer(elements) {
       card.className = "gift-card";
       card.type = "button";
       card.dataset.action = "flip-gift";
+      card.dataset.giftId = gift.id;
       card.setAttribute("aria-pressed", "false");
       card.setAttribute("aria-label", `Дар ${giftMeta.title}`);
       card.classList.toggle("is-pending-reveal", gift.pendingReveal);
@@ -304,24 +302,152 @@ export function createRenderer(elements) {
       elements.giftShelfTrack.appendChild(card);
       startGiftTwinkle(back);
     });
+
+    renderGiftRevealRitual(gifts);
   }
 
   function getVisibleGifts(state) {
     const gifts = Array.isArray(state.gifts) ? state.gifts : [];
 
     const previewGiftKeys = getPreviewGiftKeys();
-    if (gifts.length || previewGiftKeys.length === 0) {
+    if (gifts.length) {
       return gifts;
     }
 
-    return previewGiftKeys.map(function createPreviewGift(giftKey, index) {
+    const previewRevealGiftKey = getPreviewGiftRevealKey();
+    if (previewGiftKeys.length === 0 && !previewRevealGiftKey) {
+      return [];
+    }
+
+    const giftKeys = previewRevealGiftKey && !previewGiftKeys.includes(previewRevealGiftKey)
+      ? [previewRevealGiftKey, ...previewGiftKeys]
+      : previewGiftKeys;
+
+    return giftKeys.map(function createPreviewGift(giftKey, index) {
       return {
         id: `gift-${giftKey}-preview`,
         receivedAt: new Date(2026, 4, 29 + index, 12, 0, 0).toISOString(),
         giftKey,
-        pendingReveal: false,
+        pendingReveal: giftKey === previewRevealGiftKey,
         schemaVersion: 1,
       };
+    });
+  }
+
+  function renderGiftRevealRitual(gifts) {
+    if (!elements.historyGiftReveal) {
+      return;
+    }
+
+    const pendingGift = gifts.find((gift) => gift.pendingReveal);
+    elements.historyGiftReveal.hidden = !pendingGift;
+    elements.historyGiftReveal.classList.toggle("is-active", Boolean(pendingGift));
+    elements.historyGiftReveal.replaceChildren();
+
+    if (!pendingGift) {
+      elements.giftShelfTrack?.classList.remove("is-making-room");
+      if (elements.historyGiftRevealStatus) {
+        elements.historyGiftRevealStatus.textContent = "";
+      }
+      return;
+    }
+
+    const giftMeta = getGiftMeta(pendingGift.giftKey);
+    const veil = document.createElement("span");
+    veil.className = "gift-reveal-veil";
+    const glimmer = document.createElement("span");
+    glimmer.className = "gift-reveal-glimmer";
+    const star = document.createElement("span");
+    star.className = "gift-reveal-star";
+    const card = document.createElement("span");
+    card.className = "gift-reveal-card";
+    const cardFrame = document.createElement("span");
+    cardFrame.className = "gift-reveal-card-frame";
+    const image = giftMeta.image ? document.createElement("img") : document.createElement("span");
+
+    image.className = giftMeta.image ? "gift-reveal-image" : "gift-reveal-symbol";
+    if (giftMeta.image) {
+      image.src = giftMeta.image;
+      image.alt = "";
+      image.decoding = "async";
+    } else {
+      image.textContent = giftMeta.symbol;
+    }
+
+    cardFrame.append(image);
+    card.append(cardFrame);
+    elements.historyGiftReveal.append(veil, glimmer, star, card, ...createGiftRevealParticles());
+    positionGiftRevealCard(card, pendingGift);
+
+    if (elements.historyGiftRevealStatus) {
+      elements.historyGiftRevealStatus.textContent = `Лес оставил новый дар: ${giftMeta.title}.`;
+    }
+  }
+
+  function positionGiftRevealCard(card, gift) {
+    if (!card || !gift) {
+      return;
+    }
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    window.setTimeout(function waitForVisibleShelf() {
+      const target = elements.giftShelfTrack?.querySelector(`[data-gift-id="${gift.id}"]`);
+
+      if (target) {
+        elements.giftShelfTrack?.classList.add("is-making-room");
+        target.scrollIntoView({
+          behavior: prefersReducedMotion ? "auto" : "smooth",
+          block: "nearest",
+          inline: "center",
+        });
+      }
+
+      window.setTimeout(function waitForShelfToMakeRoom() {
+        window.requestAnimationFrame(function measureGiftTarget() {
+          const target = elements.giftShelfTrack?.querySelector(`[data-gift-id="${gift.id}"]`);
+          const targetRect = target?.getBoundingClientRect();
+          const cardRect = card.getBoundingClientRect();
+
+          if (!targetRect || !cardRect.width || !cardRect.height) {
+            return;
+          }
+
+          const targetCenterX = targetRect.left + targetRect.width / 2;
+          const targetCenterY = targetRect.top + targetRect.height / 2;
+          const cardCenterX = window.innerWidth / 2;
+          const cardCenterY = window.innerHeight / 2;
+          const finalScale = Math.max(0.24, Math.min(0.58, targetRect.width / cardRect.width));
+
+          card.style.setProperty("--gift-reveal-to-x", `${targetCenterX - cardCenterX}px`);
+          card.style.setProperty("--gift-reveal-to-y", `${targetCenterY - cardCenterY}px`);
+          card.style.setProperty("--gift-reveal-mid-x", `${(targetCenterX - cardCenterX) * 0.78}px`);
+          card.style.setProperty("--gift-reveal-mid-y", `${(targetCenterY - cardCenterY) * 0.78}px`);
+          card.style.setProperty("--gift-reveal-mid-scale", (finalScale * 1.18).toFixed(3));
+          card.style.setProperty("--gift-reveal-final-scale", finalScale.toFixed(3));
+          card.classList.add("is-positioned");
+        });
+      }, prefersReducedMotion ? 0 : 620);
+    }, prefersReducedMotion ? 0 : 90);
+  }
+
+  function createGiftRevealParticles() {
+    return [
+      { x: 18, y: 62, size: 4, delay: 0 },
+      { x: 27, y: 38, size: 3, delay: 180 },
+      { x: 38, y: 72, size: 5, delay: 320 },
+      { x: 51, y: 29, size: 3, delay: 120 },
+      { x: 63, y: 69, size: 4, delay: 420 },
+      { x: 72, y: 34, size: 5, delay: 260 },
+      { x: 82, y: 57, size: 3, delay: 540 },
+    ].map(function createParticle(point) {
+      const particle = document.createElement("span");
+      particle.className = "gift-reveal-particle";
+      particle.style.setProperty("--x", `${point.x}%`);
+      particle.style.setProperty("--y", `${point.y}%`);
+      particle.style.setProperty("--size", `${point.size}px`);
+      particle.style.setProperty("--delay", `${point.delay}ms`);
+      return particle;
     });
   }
 
@@ -363,6 +489,18 @@ export function createRenderer(elements) {
       return Array.from(new Set(giftKeys));
     } catch (error) {
       return [];
+    }
+  }
+
+  function getPreviewGiftRevealKey() {
+    if (!isGiftPreviewEnabled()) {
+      return null;
+    }
+
+    try {
+      return normalizeGiftKey(new URLSearchParams(window.location.search).get("previewGiftReveal") || "");
+    } catch (error) {
+      return null;
     }
   }
 
