@@ -392,42 +392,46 @@ export function createRenderer(elements) {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     window.setTimeout(function waitForVisibleShelf() {
+      const track = elements.giftShelfTrack;
       const target = elements.giftShelfTrack?.querySelector(`[data-gift-id="${gift.id}"]`);
+      const targetRect = target?.getBoundingClientRect();
+      const cardRect = card.getBoundingClientRect();
 
-      if (target) {
-        elements.giftShelfTrack?.classList.add("is-making-room");
-        target.scrollIntoView({
-          behavior: prefersReducedMotion ? "auto" : "smooth",
-          block: "nearest",
-          inline: "center",
-        });
+      if (!target || !track || !targetRect || !cardRect.width || !cardRect.height) {
+        return;
       }
 
-      window.setTimeout(function waitForShelfToMakeRoom() {
-        window.requestAnimationFrame(function measureGiftTarget() {
-          const target = elements.giftShelfTrack?.querySelector(`[data-gift-id="${gift.id}"]`);
-          const targetRect = target?.getBoundingClientRect();
-          const cardRect = card.getBoundingClientRect();
+      const currentScrollLeft = track.scrollLeft;
+      const maxScrollLeft = Math.max(0, track.scrollWidth - track.clientWidth);
+      const targetCenterOffset = target.offsetLeft + target.offsetWidth / 2;
+      const desiredScrollLeft = Math.max(0, Math.min(maxScrollLeft, targetCenterOffset - track.clientWidth / 2));
+      const scrollDelta = desiredScrollLeft - currentScrollLeft;
+      const targetCenterX = targetRect.left + targetRect.width / 2 - scrollDelta;
+      const targetCenterY = targetRect.top + targetRect.height / 2;
+      const cardCenterX = window.innerWidth / 2;
+      const cardCenterY = window.innerHeight / 2;
+      const finalScale = Math.max(0.24, Math.min(0.58, targetRect.width / cardRect.width));
 
-          if (!targetRect || !cardRect.width || !cardRect.height) {
-            return;
-          }
-
-          const targetCenterX = targetRect.left + targetRect.width / 2;
-          const targetCenterY = targetRect.top + targetRect.height / 2;
-          const cardCenterX = window.innerWidth / 2;
-          const cardCenterY = window.innerHeight / 2;
-          const finalScale = Math.max(0.24, Math.min(0.58, targetRect.width / cardRect.width));
-
-          card.style.setProperty("--gift-reveal-to-x", `${targetCenterX - cardCenterX}px`);
-          card.style.setProperty("--gift-reveal-to-y", `${targetCenterY - cardCenterY}px`);
-          card.style.setProperty("--gift-reveal-mid-x", `${(targetCenterX - cardCenterX) * 0.78}px`);
-          card.style.setProperty("--gift-reveal-mid-y", `${(targetCenterY - cardCenterY) * 0.78}px`);
-          card.style.setProperty("--gift-reveal-mid-scale", (finalScale * 1.18).toFixed(3));
-          card.style.setProperty("--gift-reveal-final-scale", finalScale.toFixed(3));
-          card.classList.add("is-positioned");
+      track.classList.add("is-making-room");
+      if (typeof track.scrollTo === "function") {
+        track.scrollTo({
+          left: desiredScrollLeft,
+          behavior: prefersReducedMotion ? "auto" : "smooth",
         });
-      }, prefersReducedMotion ? 0 : 620);
+      } else {
+        track.scrollLeft = desiredScrollLeft;
+      }
+
+      card.style.setProperty("--gift-reveal-to-x", `${targetCenterX - cardCenterX}px`);
+      card.style.setProperty("--gift-reveal-to-y", `${targetCenterY - cardCenterY}px`);
+      card.style.setProperty("--gift-reveal-mid-x", `${(targetCenterX - cardCenterX) * 0.78}px`);
+      card.style.setProperty("--gift-reveal-mid-y", `${(targetCenterY - cardCenterY) * 0.78}px`);
+      card.style.setProperty("--gift-reveal-mid-scale", (finalScale * 1.18).toFixed(3));
+      card.style.setProperty("--gift-reveal-final-scale", finalScale.toFixed(3));
+
+      window.setTimeout(function startGiftFlight() {
+        card.classList.add("is-positioned");
+      }, prefersReducedMotion ? 0 : 340);
     }, prefersReducedMotion ? 0 : 90);
   }
 
