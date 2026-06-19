@@ -328,7 +328,7 @@ export function createRenderer(elements) {
         id: `gift-${giftKey}-preview`,
         receivedAt: new Date(2026, 4, 29 + index, 12, 0, 0).toISOString(),
         giftKey,
-        pendingReveal: giftKey === previewRevealGiftKey,
+        pendingReveal: giftKey === previewRevealGiftKey && !isPreviewGiftRevealShown(giftKey),
         schemaVersion: 1,
       };
     });
@@ -377,11 +377,41 @@ export function createRenderer(elements) {
     cardFrame.append(image);
     card.append(cardFrame);
     elements.historyGiftReveal.append(veil, glimmer, star, card, ...createGiftRevealParticles());
-    positionGiftRevealCard(card, pendingGift);
+    runGiftRevealTimeline(card, pendingGift);
 
     if (elements.historyGiftRevealStatus) {
       elements.historyGiftRevealStatus.textContent = `Лес оставил новый дар: ${giftMeta.title}.`;
     }
+  }
+
+  function runGiftRevealTimeline(card, gift) {
+    if (!card || !gift) {
+      return;
+    }
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    card.classList.add("is-manifesting");
+
+    if (prefersReducedMotion) {
+      positionGiftRevealCard(card, gift);
+      return;
+    }
+
+    window.setTimeout(function holdManifestedGift() {
+      if (!document.contains(card)) {
+        return;
+      }
+
+      card.classList.add("is-holding");
+    }, 1800);
+
+    window.setTimeout(function settleManifestedGift() {
+      if (!document.contains(card)) {
+        return;
+      }
+
+      positionGiftRevealCard(card, gift);
+    }, 2450);
   }
 
   function positionGiftRevealCard(card, gift) {
@@ -391,13 +421,13 @@ export function createRenderer(elements) {
 
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    window.setTimeout(function waitForVisibleShelf() {
+    window.setTimeout(function prepareGiftFlight() {
       const track = elements.giftShelfTrack;
       const target = elements.giftShelfTrack?.querySelector(`[data-gift-id="${gift.id}"]`);
       const targetRect = target?.getBoundingClientRect();
       const cardRect = card.getBoundingClientRect();
 
-      if (!target || !track || !targetRect || !cardRect.width || !cardRect.height) {
+      if (!document.contains(card) || !target || !track || !targetRect || !cardRect.width || !cardRect.height) {
         return;
       }
 
@@ -430,25 +460,39 @@ export function createRenderer(elements) {
       card.style.setProperty("--gift-reveal-final-scale", finalScale.toFixed(3));
 
       window.setTimeout(function startGiftFlight() {
-        card.classList.add("is-positioned");
+        if (!document.contains(card)) {
+          return;
+        }
+
+        card.classList.add("is-flying", "is-positioned");
       }, prefersReducedMotion ? 0 : 340);
-    }, prefersReducedMotion ? 0 : 90);
+    }, 0);
   }
 
   function createGiftRevealParticles() {
     return [
-      { x: 18, y: 62, size: 4, delay: 0 },
-      { x: 27, y: 38, size: 3, delay: 180 },
-      { x: 38, y: 72, size: 5, delay: 320 },
-      { x: 51, y: 29, size: 3, delay: 120 },
-      { x: 63, y: 69, size: 4, delay: 420 },
-      { x: 72, y: 34, size: 5, delay: 260 },
-      { x: 82, y: 57, size: 3, delay: 540 },
+      { x: 43, y: 34, dx: -8, dy: -6, size: 3, delay: 0 },
+      { x: 57, y: 34, dx: 8, dy: -6, size: 4, delay: 180 },
+      { x: 35, y: 48, dx: -12, dy: 0, size: 3, delay: 320 },
+      { x: 65, y: 48, dx: 12, dy: 0, size: 3, delay: 120 },
+      { x: 40, y: 64, dx: -9, dy: 8, size: 5, delay: 420 },
+      { x: 60, y: 64, dx: 9, dy: 8, size: 4, delay: 260 },
+      { x: 50, y: 29, dx: 0, dy: -12, size: 3, delay: 540 },
+      { x: 50, y: 70, dx: 0, dy: 12, size: 3, delay: 700 },
+      { x: 50, y: 50, dx: 0, dy: 0, size: 2, delay: 380 },
     ].map(function createParticle(point) {
       const particle = document.createElement("span");
       particle.className = "gift-reveal-particle";
       particle.style.setProperty("--x", `${point.x}%`);
       particle.style.setProperty("--y", `${point.y}%`);
+      particle.style.setProperty("--dx", `${point.dx}px`);
+      particle.style.setProperty("--dy", `${point.dy}px`);
+      particle.style.setProperty("--dx-soft", `${point.dx * 0.65}px`);
+      particle.style.setProperty("--dy-soft", `${point.dy * 0.65}px`);
+      particle.style.setProperty("--dx-wide", `${point.dx * 1.3}px`);
+      particle.style.setProperty("--dy-wide", `${point.dy * 1.3}px`);
+      particle.style.setProperty("--dx-far", `${point.dx * 1.8}px`);
+      particle.style.setProperty("--dy-far", `${point.dy * 1.8}px`);
       particle.style.setProperty("--size", `${point.size}px`);
       particle.style.setProperty("--delay", `${point.delay}ms`);
       return particle;
@@ -505,6 +549,23 @@ export function createRenderer(elements) {
       return normalizeGiftKey(new URLSearchParams(window.location.search).get("previewGiftReveal") || "");
     } catch (error) {
       return null;
+    }
+  }
+
+  function getPreviewGiftRevealSessionKey(giftKey) {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      return `wyrd.previewGiftRevealShown:${giftKey}:${params.get("v") || ""}`;
+    } catch (error) {
+      return `wyrd.previewGiftRevealShown:${giftKey}`;
+    }
+  }
+
+  function isPreviewGiftRevealShown(giftKey) {
+    try {
+      return window.sessionStorage.getItem(getPreviewGiftRevealSessionKey(giftKey)) === "1";
+    } catch (error) {
+      return false;
     }
   }
 
