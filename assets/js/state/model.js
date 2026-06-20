@@ -588,6 +588,7 @@ function formatLocalDayKey(date) {
 function getGiftKey(index) {
   const giftKeys = [
     "moon",
+    "free",
     "ammonite",
     "resonant",
     "flower",

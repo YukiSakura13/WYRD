@@ -571,6 +571,8 @@ export function createRenderer(elements) {
     const giftAliases = {
       lunnaya: "moon",
       moon: "moon",
+      free: "free",
+      volnaya: "free",
       ammonite: "ammonite",
       ammonitovaya: "ammonite",
       resonant: "resonant",
@@ -730,6 +732,11 @@ export function createRenderer(elements) {
         title: "Лунная",
         symbol: "☾",
         image: "./assets/images/gifts/lunnaya.webp",
+      },
+      free: {
+        title: "Вольная",
+        symbol: "✦",
+        image: "./assets/images/gifts/volnaya.webp",
       },
       ammonite: {
         title: "Аммонитовая",
