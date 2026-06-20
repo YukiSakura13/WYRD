@@ -2291,27 +2291,15 @@ body[data-scene="deck"] .footer {
 
   .ritual-divider {
     width: min(8rem, 30vw);
-    margin-bottom: clamp(3.2rem, 8svh, 4.4rem);
-  }
-
-  .ritual-title {
-    width: min(100%, 24rem);
-    font-size: clamp(0.82rem, 2.4vw, 0.96rem);
-    letter-spacing: 0.16em;
-    margin: 0 auto 0.75rem;
-    padding-left: calc(1.45rem + 1px);
-    text-align: left;
   }
 
   .ritual-lines {
-    width: min(100%, 24rem);
-    margin-bottom: clamp(3.4rem, 8svh, 4.8rem);
-    padding-left: 1.45rem;
+    width: min(100%, 28rem);
   }
 
   .ritual-line {
-    font-size: clamp(0.98rem, 2.8vw, 1.12rem);
-    line-height: 1.68;
+    font-size: clamp(1rem, 3.4vw, 1.16rem);
+    line-height: 1.36;
   }
 
   .ritual-btn {
