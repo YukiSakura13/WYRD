@@ -39,6 +39,25 @@ export function formatTraceDate(date) {
   return `${date.getDate()}\u00a0${months[date.getMonth()]}`;
 }
 
+export function formatFullTraceDate(date) {
+  const months = [
+    "января",
+    "февраля",
+    "марта",
+    "апреля",
+    "мая",
+    "июня",
+    "июля",
+    "августа",
+    "сентября",
+    "октября",
+    "ноября",
+    "декабря",
+  ];
+
+  return `${date.getDate()}\u00a0${months[date.getMonth()]}`;
+}
+
 export function createMoonIcon(type) {
   const id = `moon-clip-${moonIconId}`;
   moonIconId += 1;

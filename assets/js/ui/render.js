@@ -2,7 +2,7 @@ import { SCENES } from "./scenes.js";
 import { CARDS } from "../data/cards.js";
 import { createSpreadRenderer } from "./render-spread.js";
 import { getCardImage } from "./render-helpers.js";
-import { createMoonIcon, formatTraceDate, getMoonPhase } from "./moon.js";
+import { createMoonIcon, formatFullTraceDate, formatTraceDate, getMoonPhase } from "./moon.js";
 import { primeShareCard } from "./share.js";
 
 export function getElements(doc = document) {
@@ -293,7 +293,7 @@ export function createRenderer(elements) {
       dateLabel.textContent = "Обретено";
       const dateValue = document.createElement("span");
       dateValue.className = "gift-date-value";
-      dateValue.textContent = formatGiftDate(receivedAt);
+      dateValue.textContent = formatFullTraceDate(receivedAt);
       date.append(dateLabel, dateValue);
       back.append(starField, mainStar, backTitle, date);
 
@@ -497,25 +497,6 @@ export function createRenderer(elements) {
       particle.style.setProperty("--delay", `${point.delay}ms`);
       return particle;
     });
-  }
-
-  function formatGiftDate(date) {
-    const months = [
-      "января",
-      "февраля",
-      "марта",
-      "апреля",
-      "мая",
-      "июня",
-      "июля",
-      "августа",
-      "сентября",
-      "октября",
-      "ноября",
-      "декабря",
-    ];
-
-    return `${date.getDate()}\u00a0${months[date.getMonth()]}`;
   }
 
   function getPreviewGiftKeys() {
@@ -983,7 +964,18 @@ export function createRenderer(elements) {
 
     const date = new Date(reading.createdAt || Date.now());
     const moon = getMoonPhase(date);
-    elements.cardMoonMeta.replaceChildren(createMoonIcon(moon.type), document.createTextNode(`${capitalizeFirst(moon.name)} · ${formatTraceDate(date)}`));
+    const phaseName = capitalizeFirst(moon.name);
+    const formattedDate = formatFullTraceDate(date);
+    const phase = document.createElement("span");
+    const dateLine = document.createElement("span");
+
+    phase.className = "card-moon-phase";
+    phase.append(createMoonIcon(moon.type), document.createTextNode(phaseName));
+    dateLine.className = "card-moon-date";
+    dateLine.textContent = formattedDate;
+
+    elements.cardMoonMeta.setAttribute("aria-label", `${phaseName}, ${formattedDate}`);
+    elements.cardMoonMeta.replaceChildren(phase, dateLine);
   }
 
   function capitalizeFirst(value) {
