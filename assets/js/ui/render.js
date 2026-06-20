@@ -599,6 +599,8 @@ export function createRenderer(elements) {
       tsvetochnaya: "flower",
       honey: "honey",
       medovaya: "honey",
+      ancient: "ancient",
+      drevnyaya: "ancient",
       night: "night",
       nochnaya: "night",
       fragile: "fragile",
@@ -767,6 +769,11 @@ export function createRenderer(elements) {
         title: "Медовая",
         symbol: "✦",
         image: "./assets/images/gifts/medovaya.webp",
+      },
+      ancient: {
+        title: "Древняя",
+        symbol: "✦",
+        image: "./assets/images/gifts/drevnyaya.webp",
       },
       night: {
         title: "Ночная",

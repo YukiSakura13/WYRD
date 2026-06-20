@@ -592,6 +592,7 @@ function getGiftKey(index) {
     "resonant",
     "flower",
     "honey",
+    "ancient",
     "night",
     "fragile",
     "malachite",
