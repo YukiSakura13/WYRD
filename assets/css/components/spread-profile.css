@@ -1750,10 +1750,11 @@ body[data-scene="deck"] .footer {
   body[data-scene="deck"] #main {
     padding: 0;
     min-height: 100svh;
-    height: 100svh;
+    /* The deck can be taller than a short viewport; keep its CTA in document flow. */
+    height: auto;
     display: block;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
   }
 
   body[data-scene="deck"] .hdr {
