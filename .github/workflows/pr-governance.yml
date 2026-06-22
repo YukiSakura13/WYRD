@@ -1,0 +1,21 @@
+name: PR Governance
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+jobs:
+  validate-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Test PR body validator
+        run: python3 scripts/test_validate_pr_body.py
+
+      - name: Validate PR body
+        run: python3 scripts/validate_pr_body.py --event-file "$GITHUB_EVENT_PATH"
