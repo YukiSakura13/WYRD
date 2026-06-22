@@ -51,3 +51,5 @@
 - `.dist-pages` валиден;
 - GitHub Actions публикует зелёный deploy;
 - GitHub Pages показывает свежую версию сайта.
+
+Дополнительно каждая задача проходит канонический [Definition of Ready & Done](/Users/marinamart/Desktop/Oracle_dev/docs/DEFINITION_OF_READY_DONE.md): PR содержит Linear link и self-review, а после deploy в Linear записываются evidence, риски и follow-ups.

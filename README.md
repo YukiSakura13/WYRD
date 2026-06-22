@@ -9,6 +9,7 @@
 - `ARCHITECTURE.md` — архитектура сайта
 - `docs/REFINEMENT_BASELINE.md` — baseline поведения и regression checklist для рефакторинга
 - `docs/RELEASE_CHECKLIST.md` — минимальные quality gates перед push и после публикации
+- `docs/DEFINITION_OF_READY_DONE.md` — обязательный цикл Linear → PR → deploy → evidence
 - `docs/README.md` — индекс всей документации
 - `docs/PROJECT_BRIEF.md` — краткое описание продукта
 - `docs/ROADMAP_VISUAL.md` — визуальная карта страниц и сценариев
@@ -64,6 +65,8 @@
 2. `node scripts/smoke-state.mjs`
 3. `python3 scripts/prepare_pages.py`
 4. `python3 scripts/validate_pages_artifact.py`
+
+Pull requests дополнительно проходят workflow `PR Governance`: он проверяет ссылку на Linear, acceptance evidence, self-review, deploy plan и follow-ups.
 
 Тот же набор артефактных проверок закреплён и в GitHub Actions workflow `Deploy Pages`.
 
