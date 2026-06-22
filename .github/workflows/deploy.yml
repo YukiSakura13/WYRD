@@ -30,6 +30,9 @@ jobs:
           node scripts/smoke-domain.mjs
           node scripts/smoke-state.mjs
 
+      - name: Validate product scope
+        run: python3 scripts/validate_product_scope.py
+
       - name: Prepare Pages Artifact
         run: python3 scripts/prepare_pages.py
 
