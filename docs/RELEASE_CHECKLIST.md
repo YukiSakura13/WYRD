@@ -16,8 +16,9 @@
 
 1. `node scripts/smoke-domain.mjs`
 2. `node scripts/smoke-state.mjs`
-3. `python3 scripts/prepare_pages.py`
-4. `python3 scripts/validate_pages_artifact.py`
+3. `python3 scripts/validate_product_scope.py`
+4. `python3 scripts/prepare_pages.py`
+5. `python3 scripts/validate_pages_artifact.py`
 
 Если затронут UI, стили, изображения или service worker, дополнительно полезно:
 
