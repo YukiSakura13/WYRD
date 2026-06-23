@@ -131,6 +131,11 @@ def main() -> None:
     for phrase in ("pushState", "popstate", "hashchange", "replaceState", "restoreFromOnboarding", "focus({ preventScroll: true })"):
         require(phrase in navigation, f"About navigation contract is missing: {phrase}")
 
+    require(
+        "if (restoreScroll || isRootTarget)" in navigation,
+        "Onboarding return must restore the saved About scroll even when the URL contains a section hash",
+    )
+
     require("elements.aboutSection.hidden = scene !== SCENES.ABOUT" in render, "About visibility is not scene-driven")
     print("About page validation passed")
 

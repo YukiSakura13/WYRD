@@ -123,7 +123,7 @@ export function createAboutNavigation(deps) {
       const target = doc.getElementById(targetId) || doc.getElementById(ABOUT_HASH.slice(1));
       const isRootTarget = targetId === ABOUT_HASH.slice(1);
 
-      if (isRootTarget) {
+      if (restoreScroll || isRootTarget) {
         win.scrollTo({ top: restoreScroll ? uiState.aboutScrollTop || 0 : 0, behavior: "auto" });
       } else {
         target?.scrollIntoView({ block: "start", behavior: "auto" });
