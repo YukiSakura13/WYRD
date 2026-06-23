@@ -13,6 +13,7 @@
 - `docs/TELEGRAM_BETA_SCOPE.md` — утверждённое позиционирование и границы первой беты
 - `docs/LORE_CANON_RULES.md` — non-spoiler правила утверждённой Lore Bible v1.1
 - `docs/PUBLIC_LORE_COPY.md` — утверждённая публичная копия для страницы «О WYRD»
+- `docs/RESPONSIVE_STRATEGY.md` — общие breakpoints, layout tokens, safe areas и scroll policy
 - `docs/README.md` — индекс всей документации
 - `docs/PROJECT_BRIEF.md` — краткое описание продукта
 - `docs/ROADMAP_VISUAL.md` — визуальная карта страниц и сценариев
@@ -69,8 +70,9 @@
 3. `python3 scripts/validate_product_scope.py`
 4. `python3 scripts/validate_lore_canon.py`
 5. `python3 scripts/validate_public_lore.py`
-6. `python3 scripts/prepare_pages.py`
-7. `python3 scripts/validate_pages_artifact.py`
+6. `python3 scripts/validate_responsive_strategy.py`
+7. `python3 scripts/prepare_pages.py`
+8. `python3 scripts/validate_pages_artifact.py`
 
 Pull requests дополнительно проходят workflow `PR Governance`: он проверяет ссылку на Linear, acceptance evidence, self-review, deploy plan и follow-ups.
 

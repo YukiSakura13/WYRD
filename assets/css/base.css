@@ -16,6 +16,7 @@ body {
   font-size: var(--text-md);
   line-height: var(--leading-relaxed);
   min-height: 100vh;
+  min-height: var(--layout-viewport-min);
   overflow-x: hidden;
   background-image:
     radial-gradient(circle at top, var(--accent-10), transparent 30%),
@@ -42,7 +43,8 @@ body[data-scene="result"] #main,
 body[data-scene="spread"] #main,
 body[data-scene="profile"] #main {
   max-width: none;
-  min-height: 100svh;
+  min-height: 100vh;
+  min-height: var(--layout-viewport-min);
   padding: 0;
 }
 
