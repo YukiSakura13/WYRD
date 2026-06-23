@@ -15,7 +15,8 @@ Scope определяет [TELEGRAM_BETA_SCOPE.md](TELEGRAM_BETA_SCOPE.md), а 
 
 - `live` Cover «Войти в лес» и существующее ритуальное знакомство.
 - `live` Вопрос в свободной форме или «в сердце».
-- `mvp` Настоящий first-run, постоянная страница «О WYRD» и безопасный повтор знакомства.
+- `live` Постоянная адаптивная страница «О WYRD» с утверждённым публичным лором и replay entry.
+- `mvp` Настоящий versioned first-run и полный state contract безопасного повтора знакомства.
 
 ### Карты и чтение
 
@@ -63,6 +64,10 @@ Scope определяет [TELEGRAM_BETA_SCOPE.md](TELEGRAM_BETA_SCOPE.md), а 
 Новая возможность сначала получает Linear issue с priority, dependencies и release scope. Изменение границ первой беты требует product decision и обновления [TELEGRAM_BETA_SCOPE.md](TELEGRAM_BETA_SCOPE.md).
 
 ## Change Log
+
+### 2026-06-23
+
+- страница «О WYRD» переведена в production baseline; versioned first-run остаётся MVP-задачей YUK-48.
 
 ### 2026-06-22
 

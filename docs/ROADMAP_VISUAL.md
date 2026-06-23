@@ -31,7 +31,7 @@ flowchart LR
 flowchart TD
     Cover["Cover / Войти в лес<br/>LIVE"] --> Onboarding["First-run onboarding<br/>P0"]
     Onboarding --> Deck["Deck / вопрос<br/>LIVE"]
-    Cover --> About["О WYRD<br/>P0"]
+    Cover --> About["О WYRD<br/>LIVE"]
     About --> Onboarding
     Deck --> Single["1 карта<br/>LIVE"]
     Single --> Spread3["3 карты<br/>LIVE"]
@@ -65,6 +65,10 @@ flowchart LR
 ```
 
 ## Change Log
+
+### 2026-06-23
+
+- постоянная страница «О WYRD» переведена в LIVE; first-run onboarding остаётся P0.
 
 ### 2026-06-22
 
