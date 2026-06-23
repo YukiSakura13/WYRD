@@ -23,5 +23,8 @@ jobs:
       - name: Validate lore canon
         run: python3 scripts/validate_lore_canon.py
 
+      - name: Validate public lore
+        run: python3 scripts/validate_public_lore.py
+
       - name: Validate PR body
         run: python3 scripts/validate_pr_body.py --event-file "$GITHUB_EVENT_PATH"

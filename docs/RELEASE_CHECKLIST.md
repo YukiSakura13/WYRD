@@ -18,14 +18,15 @@
 2. `node scripts/smoke-state.mjs`
 3. `python3 scripts/validate_product_scope.py`
 4. `python3 scripts/validate_lore_canon.py`
-5. `python3 scripts/prepare_pages.py`
-6. `python3 scripts/validate_pages_artifact.py`
+5. `python3 scripts/validate_public_lore.py`
+6. `python3 scripts/prepare_pages.py`
+7. `python3 scripts/validate_pages_artifact.py`
 
 Если затронут UI, стили, изображения или service worker, дополнительно полезно:
 
-5. `python3 -m http.server 4173`
-6. Открыть локально `http://localhost:4173`
-7. Проверить cover, draw, result, spreads, profile и sound toggle по [REFINEMENT_BASELINE.md](/Users/marinamart/Desktop/Oracle_dev/docs/REFINEMENT_BASELINE.md)
+8. `python3 -m http.server 4173`
+9. Открыть локально `http://localhost:4173`
+10. Проверить cover, draw, result, spreads, profile и sound toggle по [REFINEMENT_BASELINE.md](/Users/marinamart/Desktop/Oracle_dev/docs/REFINEMENT_BASELINE.md)
 
 ## GitHub Pages publish check
 

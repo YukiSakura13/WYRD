@@ -16,18 +16,19 @@
 
 1. [TELEGRAM_BETA_SCOPE.md](/Users/marinamart/Desktop/Oracle_dev/docs/TELEGRAM_BETA_SCOPE.md)
 2. [LORE_CANON_RULES.md](/Users/marinamart/Desktop/Oracle_dev/docs/LORE_CANON_RULES.md)
-3. [PROJECT_BRIEF.md](/Users/marinamart/Desktop/Oracle_dev/docs/PROJECT_BRIEF.md)
-4. [ROADMAP_VISUAL.md](/Users/marinamart/Desktop/Oracle_dev/docs/ROADMAP_VISUAL.md)
-5. [ROADMAP.md](/Users/marinamart/Desktop/Oracle_dev/docs/ROADMAP.md)
-6. [FEATURES.md](/Users/marinamart/Desktop/Oracle_dev/docs/FEATURES.md)
-7. [REFINEMENT_BASELINE.md](/Users/marinamart/Desktop/Oracle_dev/docs/REFINEMENT_BASELINE.md)
-8. [RELEASE_CHECKLIST.md](/Users/marinamart/Desktop/Oracle_dev/docs/RELEASE_CHECKLIST.md)
-9. [DEFINITION_OF_READY_DONE.md](/Users/marinamart/Desktop/Oracle_dev/docs/DEFINITION_OF_READY_DONE.md)
-10. [../ARCHITECTURE.md](/Users/marinamart/Desktop/Oracle_dev/ARCHITECTURE.md)
-11. [CONTENT_MODEL.md](/Users/marinamart/Desktop/Oracle_dev/docs/CONTENT_MODEL.md)
-12. [ADR.md](/Users/marinamart/Desktop/Oracle_dev/docs/ADR.md)
-13. [WORKFLOW_WITH_CODEX.md](/Users/marinamart/Desktop/Oracle_dev/docs/WORKFLOW_WITH_CODEX.md)
-14. [WYRD_MASTER_CARD_STYLE.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_MASTER_CARD_STYLE.md)
+3. [PUBLIC_LORE_COPY.md](/Users/marinamart/Desktop/Oracle_dev/docs/PUBLIC_LORE_COPY.md)
+4. [PROJECT_BRIEF.md](/Users/marinamart/Desktop/Oracle_dev/docs/PROJECT_BRIEF.md)
+5. [ROADMAP_VISUAL.md](/Users/marinamart/Desktop/Oracle_dev/docs/ROADMAP_VISUAL.md)
+6. [ROADMAP.md](/Users/marinamart/Desktop/Oracle_dev/docs/ROADMAP.md)
+7. [FEATURES.md](/Users/marinamart/Desktop/Oracle_dev/docs/FEATURES.md)
+8. [REFINEMENT_BASELINE.md](/Users/marinamart/Desktop/Oracle_dev/docs/REFINEMENT_BASELINE.md)
+9. [RELEASE_CHECKLIST.md](/Users/marinamart/Desktop/Oracle_dev/docs/RELEASE_CHECKLIST.md)
+10. [DEFINITION_OF_READY_DONE.md](/Users/marinamart/Desktop/Oracle_dev/docs/DEFINITION_OF_READY_DONE.md)
+11. [../ARCHITECTURE.md](/Users/marinamart/Desktop/Oracle_dev/ARCHITECTURE.md)
+12. [CONTENT_MODEL.md](/Users/marinamart/Desktop/Oracle_dev/docs/CONTENT_MODEL.md)
+13. [ADR.md](/Users/marinamart/Desktop/Oracle_dev/docs/ADR.md)
+14. [WORKFLOW_WITH_CODEX.md](/Users/marinamart/Desktop/Oracle_dev/docs/WORKFLOW_WITH_CODEX.md)
+15. [WYRD_MASTER_CARD_STYLE.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_MASTER_CARD_STYLE.md)
 
 ---
 
@@ -37,6 +38,7 @@
 
 - [TELEGRAM_BETA_SCOPE.md](/Users/marinamart/Desktop/Oracle_dev/docs/TELEGRAM_BETA_SCOPE.md) — утверждённое позиционирование, in-scope/out-of-scope и safety-границы первой беты
 - [LORE_CANON_RULES.md](/Users/marinamart/Desktop/Oracle_dev/docs/LORE_CANON_RULES.md) — роли Леса, духов, Оракула, Совы/Ворона и implementable safety-границы Lore Bible v1.1
+- [PUBLIC_LORE_COPY.md](/Users/marinamart/Desktop/Oracle_dev/docs/PUBLIC_LORE_COPY.md) — короткая утверждённая публичная копия для страницы «О WYRD» и контракт реализации YUK-132
 - [PROJECT_BRIEF.md](/Users/marinamart/Desktop/Oracle_dev/docs/PROJECT_BRIEF.md) — краткое описание проекта, целей и продукта
 - [ROADMAP_VISUAL.md](/Users/marinamart/Desktop/Oracle_dev/docs/ROADMAP_VISUAL.md) — визуальная карта страниц и пользовательского сценария
 - [ROADMAP.md](/Users/marinamart/Desktop/Oracle_dev/docs/ROADMAP.md) — план развития
