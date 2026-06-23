@@ -16,6 +16,7 @@
   - системного промпта для `LLM`
 
 Этот документ не заменяет:
+- [LORE_CANON_RULES.md](LORE_CANON_RULES.md)
 - [SPREAD_MODEL.md](/Users/marinamart/Desktop/Oracle_dev/docs/SPREAD_MODEL.md)
 - [ORACLE_VOICE_GUIDE.md](/Users/marinamart/Desktop/Oracle_dev/docs/ORACLE_VOICE_GUIDE.md)
 

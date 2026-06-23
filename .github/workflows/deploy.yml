@@ -33,6 +33,9 @@ jobs:
       - name: Validate product scope
         run: python3 scripts/validate_product_scope.py
 
+      - name: Validate lore canon
+        run: python3 scripts/validate_lore_canon.py
+
       - name: Prepare Pages Artifact
         run: python3 scripts/prepare_pages.py
 
