@@ -4,6 +4,7 @@ import { registerServiceWorker } from "./pwa.js";
 import { detectQuestionRoute } from "./cards/question-routing.js";
 import { createStateStore } from "./state/storage.js";
 import { createActionHandler, createDeckQuestionGuidance, createInitialUIState, createKeyboardHandler } from "./ui/actions.js";
+import { createAboutNavigation } from "./ui/about-navigation.js";
 import { createCoverCtaAnimation } from "./ui/cover-cta.js";
 import { createRenderer, getElements } from "./ui/render.js";
 import { SCENES, isKnownScene } from "./ui/scenes.js";
@@ -14,6 +15,10 @@ const elements = getElements();
 const renderer = createRenderer(elements);
 const audio = createForestAudioController();
 const deckQuestionGuidance = createDeckQuestionGuidance();
+const aboutNavigation = createAboutNavigation({
+  setScene,
+  uiState,
+});
 
 window.debugRoute = function debugRoute(question) {
   const route = detectQuestionRoute(question);
@@ -99,6 +104,7 @@ document.addEventListener(
 document.addEventListener(
   "click",
   createActionHandler({
+    aboutNavigation,
     audio,
     cards: CARDS,
     renderApp,
@@ -112,15 +118,21 @@ document.addEventListener(
 document.addEventListener(
   "keydown",
   createKeyboardHandler({
+    aboutNavigation,
     renderApp,
     uiState,
   }),
 );
 
-if (uiState.activeScene !== SCENES.COVER) {
-  setScene(uiState.activeScene);
-} else {
-  renderApp();
+aboutNavigation.connect();
+const startedFromAboutLink = aboutNavigation.syncFromLocation({ focus: false });
+
+if (!startedFromAboutLink) {
+  if (uiState.activeScene !== SCENES.COVER) {
+    setScene(uiState.activeScene);
+  } else {
+    renderApp();
+  }
 }
 deckQuestionGuidance.connect();
 registerServiceWorker();

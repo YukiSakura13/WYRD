@@ -6,7 +6,7 @@ import { SCENES } from "./scenes.js";
 import { closeSaveScreen, saveCurrentCard, shareCurrentCard } from "./share.js";
 
 export function createActionHandler(deps) {
-  const { audio, cards, renderApp, renderer, setScene, store, uiState } = deps;
+  const { aboutNavigation, audio, cards, renderApp, renderer, setScene, store, uiState } = deps;
   const runTransition = createTransitionRunner(renderApp, uiState);
 
   return function onClick(event) {
@@ -36,6 +36,7 @@ export function createActionHandler(deps) {
     if (action === "enter-ritual") {
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function continueToDeck() {
+        aboutNavigation.clearRoute();
         store.markOnboardingSeen();
         setScene(SCENES.DECK);
         audio.sync({
@@ -59,10 +60,34 @@ export function createActionHandler(deps) {
           return;
         }
 
+        if (returnTarget === SCENES.ABOUT) {
+          audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.DECK });
+          aboutNavigation.restoreFromOnboarding();
+          return;
+        }
+
         setScene(SCENES.DECK);
         audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.DECK });
         renderer.scrollTo(SCENES.DECK);
       });
+      return;
+    }
+
+    if (action === "open-about") {
+      audio.playSelect(store.getState().soundEnabled);
+      aboutNavigation.open(trigger);
+      return;
+    }
+
+    if (action === "back-from-about") {
+      audio.playSelect(store.getState().soundEnabled);
+      aboutNavigation.close();
+      return;
+    }
+
+    if (action === "about-jump") {
+      event.preventDefault();
+      aboutNavigation.jump(trigger.getAttribute("href") || "");
       return;
     }
 
@@ -216,8 +241,13 @@ export function createActionHandler(deps) {
 
     if (action === "replay-onboarding") {
       audio.playSelect(store.getState().soundEnabled);
-      store.resetOnboardingSeen();
-      uiState.onboardingReturn = uiState.activeScene === SCENES.COVER ? SCENES.COVER : SCENES.DECK;
+      aboutNavigation.rememberScroll();
+      uiState.onboardingReturn =
+        uiState.activeScene === SCENES.ABOUT
+          ? SCENES.ABOUT
+          : uiState.activeScene === SCENES.COVER
+            ? SCENES.COVER
+            : SCENES.DECK;
       setScene(SCENES.ONBOARDING);
       audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.ONBOARDING });
       renderer.scrollTo(SCENES.ONBOARDING);
@@ -380,6 +410,9 @@ export function resolveRitual(deps, mode) {
 export function createInitialUIState(state) {
   return {
     activeScene: SCENES.COVER,
+    aboutReturnScene: SCENES.COVER,
+    aboutReturnScrollTop: 0,
+    aboutScrollTop: 0,
     continuationOffer: null,
     currentQuestion: "",
     profileReturnScene: getReturnScene(null, state),
@@ -528,7 +561,7 @@ function syncQuestionFromInput(uiState) {
 }
 
 export function createKeyboardHandler(deps) {
-  const { renderApp, uiState } = deps;
+  const { aboutNavigation, renderApp, uiState } = deps;
 
   return function onKeyDown(event) {
     const trigger = event.target.closest?.("[data-action='open-history-entry']");
@@ -541,6 +574,12 @@ export function createKeyboardHandler(deps) {
     if (event.key === "Escape" && uiState.activeHistoryTraceId) {
       event.preventDefault();
       closeHistoryEntry(uiState, renderApp);
+      return;
+    }
+
+    if (event.key === "Escape" && uiState.activeScene === SCENES.ABOUT) {
+      event.preventDefault();
+      aboutNavigation.close();
     }
   };
 }

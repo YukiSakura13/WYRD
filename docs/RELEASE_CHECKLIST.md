@@ -16,18 +16,20 @@
 
 1. `node scripts/smoke-domain.mjs`
 2. `node scripts/smoke-state.mjs`
-3. `python3 scripts/validate_product_scope.py`
-4. `python3 scripts/validate_lore_canon.py`
-5. `python3 scripts/validate_public_lore.py`
-6. `python3 scripts/validate_responsive_strategy.py`
-7. `python3 scripts/prepare_pages.py`
-8. `python3 scripts/validate_pages_artifact.py`
+3. `node scripts/smoke-about.mjs`
+4. `python3 scripts/validate_product_scope.py`
+5. `python3 scripts/validate_lore_canon.py`
+6. `python3 scripts/validate_public_lore.py`
+7. `python3 scripts/validate_responsive_strategy.py`
+8. `python3 scripts/validate_about_page.py`
+9. `python3 scripts/prepare_pages.py`
+10. `python3 scripts/validate_pages_artifact.py`
 
 Если затронут UI, стили, изображения или service worker, дополнительно полезно:
 
-9. `python3 -m http.server 4173`
-10. Открыть локально `http://localhost:4173`
-11. Проверить cover, draw, result, spreads, profile и sound toggle по [REFINEMENT_BASELINE.md](/Users/marinamart/Desktop/Oracle_dev/docs/REFINEMENT_BASELINE.md)
+11. `python3 -m http.server 4173`
+12. Открыть локально `http://localhost:4173`
+13. Проверить cover, «О WYRD», draw, result, spreads, profile и sound toggle по [REFINEMENT_BASELINE.md](/Users/marinamart/Desktop/Oracle_dev/docs/REFINEMENT_BASELINE.md)
 
 ## GitHub Pages publish check
 

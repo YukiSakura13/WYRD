@@ -159,13 +159,13 @@
           </button>
 
           <nav class="cover-nav" aria-label="Дополнительные действия">
-            <button class="cover-icon-btn" data-action="replay-onboarding" type="button">
+            <button class="cover-icon-btn" data-action="open-about" type="button">
               <span class="cover-icon-visual" aria-hidden="true">
                 <svg class="cover-icon-svg" viewBox="0 0 1254 1254" focusable="false">
                   <use href="#icon-tarot-cards"></use>
                 </svg>
               </span>
-              <span class="cover-icon-label">Обряд</span>
+              <span class="cover-icon-label">О WYRD</span>
             </button>
             <button class="cover-icon-btn" data-action="open-profile" type="button">
               <span class="cover-icon-visual" aria-hidden="true">
@@ -210,6 +210,97 @@
         <button class="text-btn" data-action="toggle-sound" type="button" aria-pressed="true">Звук леса: вкл</button>
         <button class="text-btn" data-action="open-profile" type="button">Профиль / история</button>
       </div>
+
+      <section class="about-wyrd" id="about-wyrd" hidden aria-labelledby="about-wyrd-title">
+        <div class="about-wyrd-shell">
+          <header class="about-wyrd-nav">
+            <button class="about-back" data-action="back-from-about" type="button" aria-label="Вернуться назад">←</button>
+            <p class="about-page-label">О WYRD</p>
+            <span class="about-nav-spacer" aria-hidden="true"></span>
+          </header>
+
+          <div class="about-hero">
+            <div class="about-book-mark" aria-hidden="true">
+              <svg viewBox="0 0 1254 1254" focusable="false">
+                <use href="#icon-magic-book"></use>
+              </svg>
+            </div>
+            <p class="about-eyebrow">О мире, ритуале и голосах леса</p>
+            <h1 class="about-title" id="about-wyrd-title" tabindex="-1">Книга леса</h1>
+            <div class="about-title-rule" aria-hidden="true"></div>
+          </div>
+
+          <div class="about-layout">
+            <nav class="about-toc" aria-label="Разделы Книги леса">
+              <a class="about-toc-link" href="#about-wyrd-what" data-action="about-jump">Что такое WYRD</a>
+              <a class="about-toc-link" href="#about-wyrd-ritual" data-action="about-jump">Как проходит ритуал</a>
+              <a class="about-toc-link" href="#about-wyrd-voices" data-action="about-jump">Кто говорит</a>
+              <a class="about-toc-link" href="#about-wyrd-boundaries" data-action="about-jump">Границы Леса</a>
+              <a class="about-toc-link" href="#about-wyrd-listen" data-action="about-jump">Как слушать</a>
+            </nav>
+
+            <div class="about-sections">
+              <section class="about-section" id="about-wyrd-what" tabindex="-1" aria-labelledby="about-wyrd-what-title">
+                <p class="about-section-index" aria-hidden="true">01</p>
+                <h2 id="about-wyrd-what-title">Что такое WYRD</h2>
+                <div class="about-copy-body" data-public-lore-copy="Что такое WYRD">
+                  <p>WYRD — это плетение настоящего: узор, который складывается из выборов, страхов, желаний, встреч и поступков. Здесь Лес отвечает не готовой судьбой, а символическим образом того, что происходит сейчас. Карты помогают остановиться, заметить напряжение и увидеть возможное направление. Это не экзамен и не приговор: смысл рождается во встрече образа с твоим вопросом. Лес показывает нить, но следующий шаг всегда остаётся за тобой.</p>
+                </div>
+              </section>
+
+              <section class="about-section" id="about-wyrd-ritual" tabindex="-1" aria-labelledby="about-wyrd-ritual-title">
+                <p class="about-section-index" aria-hidden="true">02</p>
+                <h2 id="about-wyrd-ritual-title">Как проходит ритуал</h2>
+                <div class="about-copy-body" data-public-lore-copy="Как проходит ритуал">
+                  <p>Задай вопрос словами или оставь его в сердце. Коснись колоды и открой первую карту: в ней есть Послание и Тень — две стороны одного смыслового узла. Если хочется увидеть больше связей, углуби чтение до трёх, а затем до пяти карт: <strong>1 → 3 → 5</strong>. В конце Голос Оракула соединит карты в общий узор, не повторяя их по очереди. После чтения можно сохранить След и вернуться к нему позже.</p>
+                </div>
+              </section>
+
+              <section class="about-section about-section--voices" id="about-wyrd-voices" tabindex="-1" aria-labelledby="about-wyrd-voices-title">
+                <p class="about-section-index" aria-hidden="true">03</p>
+                <h2 id="about-wyrd-voices-title">Кто говорит</h2>
+                <div class="about-copy-body" data-public-lore-copy="Кто говорит">
+                  <dl class="about-voices">
+                    <div class="about-voice">
+                      <dt>Лес</dt>
+                      <dd>— пространство и сила мира. Он показывает образ текущей нити, но не знает за тебя единственно верного ответа.</dd>
+                    </div>
+                    <div class="about-voice">
+                      <dt>Духи</dt>
+                      <dd>— силы со своей природой, Посланием и Тенью. Они не делятся на добрых и злых и не судят человека.</dd>
+                    </div>
+                    <div class="about-voice">
+                      <dt>Оракул</dt>
+                      <dd>— голос, который соединяет несколько карт в один узор. Это не отдельное божество, существо или собеседник.</dd>
+                    </div>
+                    <div class="about-voice">
+                      <dt>Сова</dt>
+                      <dd>— знак присутствия, памяти и наблюдения. Её образ живёт в символах WYRD, но она не ведёт по Лесу и не рассказывает историю.</dd>
+                    </div>
+                  </dl>
+                </div>
+              </section>
+
+              <section class="about-section" id="about-wyrd-boundaries" tabindex="-1" aria-labelledby="about-wyrd-boundaries-title">
+                <p class="about-section-index" aria-hidden="true">04</p>
+                <h2 id="about-wyrd-boundaries-title">Что Лес делает — и чего не делает</h2>
+                <div class="about-copy-body" data-public-lore-copy="Что Лес делает — и чего не делает">
+                  <p>Лес помогает посмотреть на вопрос под новым углом, заметить действующий узор и возможный следующий шаг. Он не предсказывает неизбежное будущее, не гарантирует исход и не утверждает скрытые мысли или факты о тебе и других людях. WYRD не ставит диагнозы и не заменяет медицинскую помощь, а также не даёт юридических или финансовых решений. Если ситуация требует профессиональной поддержки, обратись к подходящему специалисту. Карты оставляют выбор и ответственность тебе.</p>
+                </div>
+              </section>
+
+              <section class="about-section" id="about-wyrd-listen" tabindex="-1" aria-labelledby="about-wyrd-listen-title">
+                <p class="about-section-index" aria-hidden="true">05</p>
+                <h2 id="about-wyrd-listen-title">Как слушать</h2>
+                <div class="about-copy-body" data-public-lore-copy="Как слушать">
+                  <p>Не ищи единственную «правильную» расшифровку. Заметь первый отклик, прочитай Послание и Тень, а затем спроси себя: что уже узнаётся в этом образе и какой шаг возможен сейчас? Можно написать вопрос или оставить его в сердце — WYRD не считывает и не сохраняет невведённые слова. Если захочется снова пройти короткое введение в мир, выбери <strong>«Повторить знакомство»</strong>. Повтор не сбрасывает Следы, историю или прогресс.</p>
+                </div>
+                <button class="about-replay" data-action="replay-onboarding" type="button">Повторить знакомство</button>
+              </section>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section class="ritual-onboarding" id="ritual-onboarding" hidden>
         <img
