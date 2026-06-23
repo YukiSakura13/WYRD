@@ -39,6 +39,9 @@ jobs:
       - name: Validate public lore
         run: python3 scripts/validate_public_lore.py
 
+      - name: Validate responsive strategy
+        run: python3 scripts/validate_responsive_strategy.py
+
       - name: Prepare Pages Artifact
         run: python3 scripts/prepare_pages.py
 

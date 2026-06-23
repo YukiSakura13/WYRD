@@ -49,6 +49,7 @@
 
 ### Доступность
 
+- Общая layout-проверка следует [RESPONSIVE_STRATEGY.md](/Users/marinamart/Desktop/Oracle_dev/docs/RESPONSIVE_STRATEGY.md).
 - Кнопки доступны с клавиатуры.
 - У интерактивных элементов есть видимый focus.
 - Текст читаем на мобильной и десктопной ширине.
@@ -56,7 +57,7 @@
 
 ### Публикация
 
-- локальные smoke-checks проходят: `smoke-domain`, `smoke-state`, `prepare_pages`, `validate_pages_artifact`
+- локальные smoke-checks проходят: `smoke-domain`, `smoke-state`, `validate_responsive_strategy`, `prepare_pages`, `validate_pages_artifact`
 - `index.html` публикуется с актуальным `wyrd-build`.
 - `main.js`, `styles.css`, `manifest.webmanifest`, `sw.js` приходят с актуальной versioned query string.
 - После обновления GitHub Pages сайт не застревает на старой версии.

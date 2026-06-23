@@ -740,8 +740,13 @@
   position: relative;
   z-index: 10;
   min-height: 100vh;
-  padding: 3rem 1.5rem 5rem;
-  max-width: 860px;
+  min-height: var(--layout-viewport-min);
+  padding:
+    var(--layout-page-padding-block-start)
+    max(var(--layout-gutter-inline), var(--layout-safe-inline-end))
+    var(--layout-page-padding-block-end)
+    max(var(--layout-gutter-inline), var(--layout-safe-inline-start));
+  max-width: var(--layout-content-reading);
   margin: 0 auto;
   opacity: 0;
   transition: opacity calc(var(--dur-ritual) * 1.25) var(--ease-standard);
@@ -795,7 +800,8 @@ body[data-scene="onboarding"] .top-actions {
 
 body[data-scene="onboarding"] #main {
   max-width: none;
-  min-height: 100svh;
+  min-height: 100vh;
+  min-height: var(--layout-viewport-min);
   padding: 0;
 }
 
