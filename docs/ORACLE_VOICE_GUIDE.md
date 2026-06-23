@@ -1,5 +1,7 @@
 # WYRD Oracle Voice Guide v1
 
+Canon and safety source: [LORE_CANON_RULES.md](LORE_CANON_RULES.md).
+
 ## Core voice
 WYRD speaks like a forest oracle:
 

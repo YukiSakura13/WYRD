@@ -20,5 +20,8 @@ jobs:
       - name: Validate product scope
         run: python3 scripts/validate_product_scope.py
 
+      - name: Validate lore canon
+        run: python3 scripts/validate_lore_canon.py
+
       - name: Validate PR body
         run: python3 scripts/validate_pr_body.py --event-file "$GITHUB_EVENT_PATH"
