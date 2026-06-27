@@ -158,43 +158,6 @@
             />
           </button>
 
-          <nav class="cover-nav" aria-label="Дополнительные действия">
-            <button class="cover-icon-btn" data-action="replay-onboarding" type="button">
-              <span class="cover-icon-visual" aria-hidden="true">
-                <svg class="cover-icon-svg" viewBox="0 0 1254 1254" focusable="false">
-                  <use href="#icon-tarot-cards"></use>
-                </svg>
-              </span>
-              <span class="cover-icon-label">Обряд</span>
-            </button>
-            <button class="cover-icon-btn" data-action="open-profile" type="button">
-              <span class="cover-icon-visual" aria-hidden="true">
-                <svg class="cover-icon-svg" viewBox="0 0 1254 1254" focusable="false">
-                  <use href="#icon-magic-book"></use>
-                </svg>
-              </span>
-              <span class="cover-icon-label">История</span>
-            </button>
-            <button
-              class="cover-icon-btn"
-              data-action="toggle-sound"
-              id="cover-sound-btn"
-              type="button"
-              aria-pressed="false"
-              aria-label="Звук включён"
-              data-sound-state="on"
-            >
-              <span class="cover-icon-visual" aria-hidden="true">
-                <svg class="cover-icon-svg cover-icon-sound-on" viewBox="0 0 1254 1254" focusable="false">
-                  <use href="#icon-ornament-bell"></use>
-                </svg>
-                <svg class="cover-icon-svg cover-icon-sound-muted" viewBox="0 0 1254 1254" focusable="false">
-                  <use href="#icon-ornament-bell-muted"></use>
-                </svg>
-              </span>
-              <span class="cover-icon-label" id="cover-sound-label">Звук</span>
-            </button>
-          </nav>
         </div>
       </section>
     </div>
@@ -210,6 +173,120 @@
         <button class="text-btn" data-action="toggle-sound" type="button" aria-pressed="true">Звук леса: вкл</button>
         <button class="text-btn" data-action="open-profile" type="button">Профиль / история</button>
       </div>
+
+      <section class="forest-home" id="forest-home" hidden aria-labelledby="forest-title">
+        <div class="forest-bg" aria-hidden="true"></div>
+        <div class="forest-bg forest-bg--drift" aria-hidden="true"></div>
+        <header class="forest-topbar">
+          <div class="forest-day" aria-label="Сегодня в лесу">
+            <div class="forest-day-moon" id="forest-day-moon" aria-hidden="true"></div>
+            <div class="forest-day-copy">
+              <p class="forest-date" id="forest-date">Сегодня</p>
+              <p class="forest-moon" id="forest-moon">Луна наблюдает</p>
+              <p class="forest-lunar" id="forest-lunar">Лунный день скоро проявится</p>
+              <p class="forest-zodiac" id="forest-zodiac">Луна в Скорпионе</p>
+            </div>
+          </div>
+          <div class="forest-tools" aria-label="Действия">
+            <button class="forest-icon-btn" data-action="open-reminders" type="button" aria-label="Духи леса напомнят">
+              <svg viewBox="0 0 1254 1254" aria-hidden="true" focusable="false">
+                <use href="#icon-ornament-bell"></use>
+              </svg>
+            </button>
+            <button class="forest-icon-btn" data-action="open-settings" type="button" aria-label="Настройки">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M12 8.4a3.6 3.6 0 1 0 0 7.2 3.6 3.6 0 0 0 0-7.2Z" fill="none" stroke="currentColor" stroke-width="1.6" />
+                <path d="M19.2 13.1v-2.2l-2.1-.6a5.9 5.9 0 0 0-.7-1.6l1.1-1.9-1.6-1.6-1.9 1.1a6 6 0 0 0-1.6-.7L11.8 3H9.6L9 5.1a6 6 0 0 0-1.6.7L5.5 4.7 3.9 6.3 5 8.2a6 6 0 0 0-.7 1.6l-2.1.6v2.2l2.1.6c.2.6.4 1.1.7 1.6l-1.1 1.9 1.6 1.6 1.9-1.1c.5.3 1 .5 1.6.7l.6 2.1h2.2l.6-2.1c.6-.2 1.1-.4 1.6-.7l1.9 1.1 1.6-1.6-1.1-1.9c.3-.5.5-1 .7-1.6l2.1-.6Z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.35" />
+              </svg>
+            </button>
+          </div>
+        </header>
+
+        <div class="forest-hero-card">
+          <button class="forest-card forest-card--daily" data-action="open-daily-card" type="button" aria-label="Спросить духов, раскрыть карту">
+            <span class="forest-card-art" aria-hidden="true">
+              <span class="forest-card-glow"></span>
+              <span class="forest-card-back"></span>
+            </span>
+            <span class="forest-card-title" id="forest-title">Раскрыть карту</span>
+          </button>
+        </div>
+
+        <div class="forest-grid" aria-label="Пути леса">
+          <button class="forest-tile forest-tile--lunar" data-action="open-lunar-day" type="button">
+            <span class="forest-tile-visual forest-tile-visual--lunar" aria-hidden="true"></span>
+            <span class="forest-tile-text">
+              <span class="forest-tile-title">Лунный день</span>
+              <span class="forest-tile-copy">День глазами духов леса</span>
+            </span>
+          </button>
+          <button class="forest-tile forest-tile--yes-no" data-action="open-yes-no" type="button">
+            <span class="forest-tile-visual" aria-hidden="true">◇</span>
+            <span class="forest-tile-text">
+              <span class="forest-tile-title">Нет или Да</span>
+              <span class="forest-tile-copy">Короткий знак от духов</span>
+            </span>
+          </button>
+          <button class="forest-tile forest-tile--night" data-action="open-night-images" type="button">
+            <span class="forest-tile-visual" aria-hidden="true">✧</span>
+            <span class="forest-tile-text">
+              <span class="forest-tile-title">Образы ночи</span>
+              <span class="forest-tile-copy">То, что пришло во сне</span>
+            </span>
+          </button>
+          <button class="forest-tile forest-tile--traces" data-action="open-profile" type="button">
+            <span class="forest-tile-visual" aria-hidden="true">✦</span>
+            <span class="forest-tile-text">
+              <span class="forest-tile-title">Следы в лесу</span>
+              <span class="forest-tile-copy">История и Дары</span>
+            </span>
+          </button>
+          <button class="forest-tile forest-tile--book" data-action="open-spirit-book" type="button">
+            <span class="forest-tile-visual" aria-hidden="true">☉</span>
+            <span class="forest-tile-text">
+              <span class="forest-tile-title">История духов леса</span>
+              <span class="forest-tile-copy">Пять глав о мире WYRD</span>
+            </span>
+          </button>
+        </div>
+      </section>
+
+      <section class="forest-placeholder" id="forest-placeholder" hidden aria-labelledby="forest-placeholder-title">
+        <div class="forest-bg" aria-hidden="true"></div>
+        <button class="btn-back-circle forest-placeholder-back" data-action="back-to-forest" type="button" aria-label="Вернуться в Лес">←</button>
+        <article class="forest-placeholder-panel">
+          <p class="forest-placeholder-kicker" id="forest-placeholder-kicker">WYRD</p>
+          <h1 id="forest-placeholder-title">Лес ждёт</h1>
+          <p id="forest-placeholder-copy">Этот путь скоро откроется.</p>
+        </article>
+      </section>
+
+      <section class="spirit-book" id="spirit-book" hidden aria-labelledby="spirit-book-title">
+        <div class="forest-bg spirit-book-bg" aria-hidden="true"></div>
+        <button class="btn-back-circle spirit-book-back" data-action="back-to-forest" type="button" aria-label="Вернуться в Лес">←</button>
+
+        <article class="spirit-book-page" aria-live="polite">
+          <div class="spirit-book-art" id="spirit-book-art">
+            <img id="spirit-book-image" src="./assets/images/spirit-book/spirit-book-01.webp" alt="" loading="lazy" decoding="async" />
+            <span class="spirit-book-mist spirit-book-mist--rear"></span>
+            <span class="spirit-book-mist spirit-book-mist--front"></span>
+            <span class="spirit-book-fern spirit-book-fern--left"></span>
+            <span class="spirit-book-fern spirit-book-fern--right"></span>
+          </div>
+
+          <div class="spirit-book-copy">
+            <p class="spirit-book-kicker" id="spirit-book-counter">Глава 1 из 5</p>
+            <h1 id="spirit-book-title">История духов леса</h1>
+            <div class="spirit-book-text" id="spirit-book-text"></div>
+          </div>
+        </article>
+
+        <nav class="spirit-book-controls" aria-label="Страницы книги">
+          <button class="spirit-book-arrow" data-action="spirit-book-prev" type="button" aria-label="Предыдущая глава">←</button>
+          <div class="spirit-book-dots" id="spirit-book-dots" aria-label="Выбор главы"></div>
+          <button class="spirit-book-arrow" data-action="spirit-book-next" type="button" aria-label="Следующая глава">→</button>
+        </nav>
+      </section>
 
       <section class="ritual-onboarding" id="ritual-onboarding" hidden>
         <img
@@ -228,14 +305,14 @@
           <p class="ritual-brand">WYRD</p>
           <p class="ritual-kicker">Оракул духов леса</p>
           <div class="ritual-divider" aria-hidden="true"></div>
-          <div class="ritual-lines" aria-label="Шаги ритуала">
+          <div class="ritual-lines" aria-label="Как спросить духов">
             <p class="ritual-line" style="--ritual-delay: 0ms">Вспомни свой вопрос</p>
             <p class="ritual-line" style="--ritual-delay: 650ms">Запиши его в поле</p>
             <p class="ritual-line ritual-line--choice" style="--ritual-delay: 1300ms">Или держи в мыслях</p>
             <p class="ritual-line ritual-line--action ritual-line--emphasis" style="--ritual-delay: 2050ms">Коснись колоды</p>
             <p class="ritual-line ritual-line--result" style="--ritual-delay: 2800ms">Духи леса ответят</p>
           </div>
-          <button class="ritual-btn" data-action="enter-ritual" type="button">НАЧАТЬ ГАДАНИЕ</button>
+          <button class="ritual-btn" data-action="enter-ritual" type="button">ПРОДОЛЖИТЬ В ЛЕС</button>
         </div>
       </section>
 
@@ -370,7 +447,7 @@
       </section>
 
       <section class="deck-scene" id="deck-wrap" aria-label="Экран колоды WYRD">
-        <button class="deck-back" data-action="back-to-cover" type="button" aria-label="Назад">←</button>
+        <button class="deck-back" data-action="back-to-forest" type="button" aria-label="Вернуться в Лес">←</button>
 
         <header class="deck-header">
           <h2 class="deck-brand">WYRD</h2>
@@ -418,7 +495,7 @@
 
       <section id="profile" hidden aria-labelledby="profile-name">
         <div class="screen-nav">
-          <button class="btn-back-circle" data-action="back-to-cover" type="button" aria-label="Вернуться на главный экран">←</button>
+          <button class="btn-back-circle" data-action="close-profile" type="button" aria-label="Вернуться назад">←</button>
           <div class="screen-nav-title" aria-label="WYRD">
             <p class="screen-brand-word">WYRD</p>
             <div class="screen-brand-line" aria-hidden="true"></div>

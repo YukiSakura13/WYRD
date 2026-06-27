@@ -1,5 +1,6 @@
 import { SCENES } from "./scenes.js";
 import { CARDS } from "../data/cards.js";
+import { SPIRIT_BOOK_PAGES } from "../data/spirit-book.js";
 import { createSpreadRenderer } from "./render-spread.js";
 import { getCardImage } from "./render-helpers.js";
 import { createMoonIcon, formatFullTraceDate, formatTraceDate, getMoonPhase } from "./moon.js";
@@ -15,6 +16,25 @@ export function getElements(doc = document) {
     coverBreathNodes: Array.from(doc.querySelectorAll(".cover-cta-button")),
     main: doc.getElementById("main"),
     transitionVeil: doc.getElementById("transition-veil"),
+    forestSection: doc.getElementById("forest-home"),
+    forestDate: doc.getElementById("forest-date"),
+    forestMoon: doc.getElementById("forest-moon"),
+    forestLunar: doc.getElementById("forest-lunar"),
+    forestZodiac: doc.getElementById("forest-zodiac"),
+    forestDayMoon: doc.getElementById("forest-day-moon"),
+    forestPlaceholder: doc.getElementById("forest-placeholder"),
+    forestPlaceholderKicker: doc.getElementById("forest-placeholder-kicker"),
+    forestPlaceholderTitle: doc.getElementById("forest-placeholder-title"),
+    forestPlaceholderCopy: doc.getElementById("forest-placeholder-copy"),
+    spiritBookSection: doc.getElementById("spirit-book"),
+    spiritBookArt: doc.getElementById("spirit-book-art"),
+    spiritBookImage: doc.getElementById("spirit-book-image"),
+    spiritBookCounter: doc.getElementById("spirit-book-counter"),
+    spiritBookTitle: doc.getElementById("spirit-book-title"),
+    spiritBookText: doc.getElementById("spirit-book-text"),
+    spiritBookDots: doc.getElementById("spirit-book-dots"),
+    spiritBookPrev: doc.querySelector("[data-action='spirit-book-prev']"),
+    spiritBookNext: doc.querySelector("[data-action='spirit-book-next']"),
     onboardingSection: doc.getElementById("ritual-onboarding"),
     deckWrap: doc.getElementById("deck-wrap"),
     resultQuestion: doc.getElementById("result-question"),
@@ -92,6 +112,38 @@ export function createRenderer(elements) {
   let previousScene = null;
   const spreadRenderer = createSpreadRenderer(elements);
   const cardsById = new Map(CARDS.map((card) => [card.id, card]));
+  const placeholderContent = {
+    [SCENES.LUNAR_DAY]: {
+      kicker: "Лунный день",
+      title: "День глазами духов леса",
+      copy: "Здесь появится полный текст лунного дня и тихий знак текущей Луны.",
+    },
+    [SCENES.YES_NO]: {
+      kicker: "Нет или Да",
+      title: "Короткий ответ духов",
+      copy: "Скоро здесь появится карта рубашкой вверх: коснись её, и духи вернут краткий знак.",
+    },
+    [SCENES.NIGHT_IMAGES]: {
+      kicker: "Образы ночи",
+      title: "То, что пришло во сне",
+      copy: "Здесь можно будет описать образ ночи и получить короткий отклик духов леса.",
+    },
+    [SCENES.SPIRIT_BOOK]: {
+      kicker: "История духов леса",
+      title: "Пять глав о мире WYRD",
+      copy: "Здесь откроется листаемая книга о духах леса, знаках и пути.",
+    },
+    [SCENES.SETTINGS]: {
+      kicker: "Настройки",
+      title: "Тихие параметры леса",
+      copy: "Здесь появятся звук леса, музыка, вибрация, поддержка и путь к экрану «Немного о тебе».",
+    },
+    [SCENES.REMINDERS]: {
+      kicker: "Духи леса напомнят",
+      title: "Лес позовёт тебя",
+      copy: "Здесь можно будет выбрать время, дни недели и особые лунные напоминания.",
+    },
+  };
   const giftStarPoints = [
     { x: 23, y: 17 },
     { x: 75, y: 14 },
@@ -106,6 +158,9 @@ export function createRenderer(elements) {
 
   function render(state, uiState) {
     renderShell(uiState);
+    renderForestDay();
+    renderForestPlaceholder(uiState);
+    renderSpiritBook(uiState);
     renderProfile(state);
     renderCurrentReading(state.currentReading, uiState.currentQuestion);
     renderHook(state, uiState);
@@ -122,11 +177,18 @@ export function createRenderer(elements) {
 
   function scrollTo(name) {
     const targetMap = {
+      forest: elements.forestSection,
       deck: elements.deckWrap,
       profile: elements.profileSection,
       onboarding: elements.onboardingSection,
       result: elements.resultSection,
       spread: elements.spreadResultSection,
+      "lunar-day": elements.forestPlaceholder,
+      "yes-no": elements.forestPlaceholder,
+      "night-images": elements.forestPlaceholder,
+      "spirit-book": elements.spiritBookSection,
+      settings: elements.forestPlaceholder,
+      reminders: elements.forestPlaceholder,
     };
 
     const target = targetMap[name];
@@ -183,6 +245,130 @@ export function createRenderer(elements) {
     if (elements.historyTrailsHeading) {
       elements.historyTrailsHeading.hidden = state.history.length === 0;
     }
+  }
+
+  function renderForestDay(date = new Date()) {
+    if (!elements.forestDate) {
+      return;
+    }
+
+    const moon = getMoonPhase(date);
+    const lunarDay = getApproximateLunarDay(date);
+    const moonZodiac = getApproximateMoonZodiac(date);
+    elements.forestDate.textContent = formatFullTraceDate(date);
+    elements.forestMoon.textContent = capitalizeFirst(moon.name);
+    elements.forestLunar.textContent = `${lunarDay}-й лунный день`;
+    elements.forestZodiac.textContent = `Луна в ${moonZodiac}`;
+
+    if (elements.forestDayMoon) {
+      elements.forestDayMoon.replaceChildren(createMoonIcon(moon.type));
+    }
+  }
+
+  function getApproximateLunarDay(date) {
+    const knownNewMoon = new Date(Date.UTC(2000, 0, 6, 18, 14, 0));
+    const msPerDay = 86400000;
+    const lunarCycle = 29.53058770576;
+    const daysSince = (date - knownNewMoon) / msPerDay;
+    const phase = ((daysSince % lunarCycle) + lunarCycle) % lunarCycle;
+
+    return Math.max(1, Math.min(29, Math.floor(phase)));
+  }
+
+  function getApproximateMoonZodiac(date) {
+    const signs = [
+      "Скорпионе",
+      "Стрельце",
+      "Козероге",
+      "Водолее",
+      "Рыбах",
+      "Овне",
+      "Тельце",
+      "Близнецах",
+      "Раке",
+      "Льве",
+      "Деве",
+      "Весах",
+    ];
+    const scorpioReference = new Date(Date.UTC(2026, 5, 26, 12, 0, 0));
+    const msPerDay = 86400000;
+    const moonOrbitDays = 27.321661;
+    const signDays = moonOrbitDays / signs.length;
+    const daysSinceReference = (date - scorpioReference) / msPerDay;
+    const signIndex = Math.floor(((daysSinceReference / signDays) % signs.length + signs.length) % signs.length);
+
+    return signs[signIndex];
+  }
+
+  function renderForestPlaceholder(uiState) {
+    if (!elements.forestPlaceholderTitle) {
+      return;
+    }
+
+    const content = placeholderContent[uiState.activeScene] || placeholderContent[SCENES.SETTINGS];
+    elements.forestPlaceholderKicker.textContent = content.kicker;
+    elements.forestPlaceholderTitle.textContent = content.title;
+    elements.forestPlaceholderCopy.textContent = content.copy;
+  }
+
+  function renderSpiritBook(uiState) {
+    if (!elements.spiritBookTitle || !elements.spiritBookImage || !elements.spiritBookText) {
+      return;
+    }
+
+    const lastPageIndex = SPIRIT_BOOK_PAGES.length - 1;
+    const pageIndex = Math.max(0, Math.min(lastPageIndex, uiState.spiritBookPage || 0));
+    const page = SPIRIT_BOOK_PAGES[pageIndex];
+
+    uiState.spiritBookPage = pageIndex;
+    if (elements.spiritBookArt) {
+      elements.spiritBookArt.dataset.page = String(pageIndex + 1);
+    }
+    elements.spiritBookImage.hidden = !page.image;
+    if (page.image) {
+      elements.spiritBookImage.src = page.image;
+      elements.spiritBookImage.alt = page.alt;
+    } else {
+      elements.spiritBookImage.removeAttribute("src");
+      elements.spiritBookImage.alt = "";
+    }
+    elements.spiritBookCounter.textContent = `Глава ${pageIndex + 1} из ${SPIRIT_BOOK_PAGES.length}`;
+    elements.spiritBookTitle.textContent = page.title;
+    elements.spiritBookText.replaceChildren(
+      ...page.paragraphs.map(function createParagraph(text) {
+        const paragraph = document.createElement("p");
+        paragraph.textContent = text;
+        return paragraph;
+      }),
+    );
+
+    if (elements.spiritBookPrev) {
+      elements.spiritBookPrev.disabled = pageIndex === 0;
+    }
+    if (elements.spiritBookNext) {
+      elements.spiritBookNext.disabled = pageIndex === lastPageIndex;
+    }
+
+    renderSpiritBookDots(pageIndex);
+  }
+
+  function renderSpiritBookDots(activeIndex) {
+    if (!elements.spiritBookDots) {
+      return;
+    }
+
+    elements.spiritBookDots.replaceChildren(
+      ...SPIRIT_BOOK_PAGES.map(function createDot(page, index) {
+        const dot = document.createElement("button");
+        dot.className = "spirit-book-dot";
+        dot.type = "button";
+        dot.dataset.action = "spirit-book-page";
+        dot.dataset.page = String(index);
+        dot.setAttribute("aria-label", `Открыть главу ${index + 1}: ${page.title}`);
+        dot.setAttribute("aria-current", index === activeIndex ? "page" : "false");
+        return dot;
+      }),
+    );
   }
 
   function getHistoryView(state) {
@@ -909,7 +1095,12 @@ export function createRenderer(elements) {
   function renderVisibility(state, uiState) {
     const scene = uiState.activeScene;
     const isOnboarding = scene === SCENES.ONBOARDING;
+    const isSpiritBook = scene === SCENES.SPIRIT_BOOK;
+    const isForestPlaceholder = Boolean(placeholderContent[scene]) && !isSpiritBook;
 
+    elements.forestSection.hidden = scene !== SCENES.FOREST;
+    elements.forestPlaceholder.hidden = !isForestPlaceholder;
+    elements.spiritBookSection.hidden = !isSpiritBook;
     elements.profileSection.hidden = scene !== SCENES.PROFILE;
     elements.onboardingSection.hidden = !isOnboarding;
     elements.onboardingSection.classList.toggle("is-visible", isOnboarding);

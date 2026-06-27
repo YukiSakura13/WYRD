@@ -1,4 +1,5 @@
 const SCENE_LEVELS = {
+  forest: 0.024,
   onboarding: 0.024,
   deck: 0.028,
   result: 0.034,

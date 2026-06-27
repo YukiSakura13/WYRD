@@ -1,5 +1,6 @@
 import { createReading, createSpread } from "../cards/reading.js";
 import { buildLocalOracleReading } from "../cards/oracle-local.js";
+import { SPIRIT_BOOK_PAGES } from "../data/spirit-book.js";
 import { ARCHETYPE_POSITIONS, detectArchetype, detectQuestionRoute } from "../cards/question-routing.js";
 import { createTransitionRunner, getAudioScene, getReturnScene, playSpreadSequence, resetViewport } from "./flow.js";
 import { SCENES } from "./scenes.js";
@@ -32,14 +33,14 @@ export function createActionHandler(deps) {
           return;
         }
 
-        setScene(SCENES.DECK);
+        setScene(SCENES.FOREST);
         audio.sync({
           allowInit: true,
           enabled: store.getState().soundEnabled,
-          scene: SCENES.DECK,
+          scene: SCENES.FOREST,
         });
         window.setTimeout(function scrollAfterEntry() {
-          renderer.scrollTo(SCENES.DECK);
+          renderer.scrollTo(SCENES.FOREST);
         }, 80);
       });
       return;
@@ -49,12 +50,12 @@ export function createActionHandler(deps) {
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function continueToDeck() {
         store.markOnboardingSeen();
-        setScene(SCENES.DECK);
+        setScene(SCENES.FOREST);
         audio.sync({
           enabled: store.getState().soundEnabled,
-          scene: SCENES.DECK,
+          scene: SCENES.FOREST,
         });
-        renderer.scrollTo(SCENES.DECK);
+        renderer.scrollTo(SCENES.FOREST);
       });
       return;
     }
@@ -66,14 +67,14 @@ export function createActionHandler(deps) {
 
         if (returnTarget === SCENES.COVER) {
           setScene(SCENES.COVER);
-          audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.DECK });
+          audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.FOREST });
           window.scrollTo({ top: 0, behavior: "smooth" });
           return;
         }
 
-        setScene(SCENES.DECK);
-        audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.DECK });
-        renderer.scrollTo(SCENES.DECK);
+        setScene(SCENES.FOREST);
+        audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.FOREST });
+        renderer.scrollTo(SCENES.FOREST);
       });
       return;
     }
@@ -107,6 +108,72 @@ export function createActionHandler(deps) {
       // Save raw question for routing and a display question for the result screen.
       syncQuestionFromInput(uiState);
       startRitual("free");
+      return;
+    }
+
+    if (action === "open-daily-card") {
+      audio.playSelect(store.getState().soundEnabled);
+      runTransition(function openDailyCard() {
+        setScene(SCENES.DECK);
+        audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.DECK });
+        renderer.scrollTo(SCENES.DECK);
+      });
+      return;
+    }
+
+    if (action === "open-lunar-day") {
+      openForestPlaceholder(SCENES.LUNAR_DAY);
+      return;
+    }
+
+    if (action === "open-yes-no") {
+      openForestPlaceholder(SCENES.YES_NO);
+      return;
+    }
+
+    if (action === "open-night-images") {
+      openForestPlaceholder(SCENES.NIGHT_IMAGES);
+      return;
+    }
+
+    if (action === "open-spirit-book") {
+      uiState.spiritBookPage = 0;
+      openForestPlaceholder(SCENES.SPIRIT_BOOK);
+      return;
+    }
+
+    if (action === "spirit-book-prev") {
+      audio.playSelect(store.getState().soundEnabled);
+      uiState.spiritBookPage = Math.max(0, (uiState.spiritBookPage || 0) - 1);
+      renderApp();
+      return;
+    }
+
+    if (action === "spirit-book-next") {
+      audio.playSelect(store.getState().soundEnabled);
+      uiState.spiritBookPage = Math.min(SPIRIT_BOOK_PAGES.length - 1, (uiState.spiritBookPage || 0) + 1);
+      renderApp();
+      return;
+    }
+
+    if (action === "spirit-book-page") {
+      const page = Number(trigger.dataset.page);
+      if (!Number.isInteger(page)) {
+        return;
+      }
+      audio.playSelect(store.getState().soundEnabled);
+      uiState.spiritBookPage = Math.max(0, Math.min(SPIRIT_BOOK_PAGES.length - 1, page));
+      renderApp();
+      return;
+    }
+
+    if (action === "open-settings") {
+      openForestPlaceholder(SCENES.SETTINGS);
+      return;
+    }
+
+    if (action === "open-reminders") {
+      openForestPlaceholder(SCENES.REMINDERS);
       return;
     }
 
@@ -159,6 +226,16 @@ export function createActionHandler(deps) {
         setScene(SCENES.COVER);
         audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.DECK });
         window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+      return;
+    }
+
+    if (action === "back-to-forest") {
+      audio.playSelect(store.getState().soundEnabled);
+      runTransition(function returnToForest() {
+        setScene(SCENES.FOREST);
+        audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.FOREST });
+        renderer.scrollTo(SCENES.FOREST);
       });
       return;
     }
@@ -228,7 +305,7 @@ export function createActionHandler(deps) {
 
     if (action === "replay-onboarding") {
       audio.playSelect(store.getState().soundEnabled);
-      uiState.onboardingReturn = uiState.activeScene === SCENES.COVER ? SCENES.COVER : SCENES.DECK;
+      uiState.onboardingReturn = uiState.activeScene === SCENES.COVER ? SCENES.COVER : SCENES.FOREST;
       setScene(SCENES.ONBOARDING);
       audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.ONBOARDING });
       renderer.scrollTo(SCENES.ONBOARDING);
@@ -256,6 +333,15 @@ export function createActionHandler(deps) {
     renderApp();
     runTransition(function resolveAfterTransition() {
       resolveRitual(deps, mode);
+    });
+  }
+
+  function openForestPlaceholder(scene) {
+    audio.playSelect(store.getState().soundEnabled);
+    runTransition(function showForestPlaceholder() {
+      setScene(scene);
+      audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.FOREST });
+      renderer.scrollTo(scene);
     });
   }
 }
@@ -439,6 +525,7 @@ export function createInitialUIState(state) {
     historyReturnTraceId: null,
     pinCurrentReadingForSpread: false,
     recentCardNames: [],
+    spiritBookPage: 0,
     transitioning: false,
   };
 }
@@ -591,6 +678,28 @@ export function createKeyboardHandler(deps) {
     if (event.key === "Escape" && uiState.activeHistoryTraceId) {
       event.preventDefault();
       closeHistoryEntry(uiState, renderApp);
+      return;
+    }
+
+    if (uiState.activeScene === SCENES.SPIRIT_BOOK) {
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        uiState.spiritBookPage = Math.max(0, (uiState.spiritBookPage || 0) - 1);
+        renderApp();
+        return;
+      }
+
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        uiState.spiritBookPage = Math.min(SPIRIT_BOOK_PAGES.length - 1, (uiState.spiritBookPage || 0) + 1);
+        renderApp();
+        return;
+      }
+
+      if (event.key === "Escape") {
+        event.preventDefault();
+        document.querySelector("#spirit-book [data-action='back-to-forest']")?.click();
+      }
     }
   };
 }
