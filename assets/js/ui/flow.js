@@ -6,7 +6,9 @@ export function getAudioScene(scene) {
     scene === SCENES.RESULT ||
     scene === SCENES.SPREAD ||
     scene === SCENES.ONBOARDING ||
-    scene === SCENES.PROFILE
+    scene === SCENES.PROFILE ||
+    scene === SCENES.SETTINGS ||
+    scene === SCENES.ABOUT_YOU
   ) {
     return scene;
   }

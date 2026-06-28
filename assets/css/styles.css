@@ -3,6 +3,7 @@
 @import "./scenes/cover-onboarding.css?v=button-roles-2";
 @import "./scenes/forest.css";
 @import "./scenes/spirit-book.css";
+@import "./scenes/settings.css";
 @import "./scenes/deck.css";
 @import "./components/reading.css?v=button-roles-2";
 @import "./components/spread-profile.css?v=button-roles-2";

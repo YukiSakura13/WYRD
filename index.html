@@ -261,6 +261,131 @@
         </article>
       </section>
 
+      <section class="settings-screen" id="settings-screen" hidden aria-labelledby="settings-title">
+        <div class="forest-bg settings-bg" aria-hidden="true"></div>
+        <div class="settings-shell">
+          <button class="btn-back-circle settings-back" data-action="back-to-forest" type="button" aria-label="Вернуться в Лес">←</button>
+          <header class="settings-header">
+            <h1 id="settings-title">Настройки</h1>
+          </header>
+
+          <div class="settings-groups" aria-label="Параметры приложения">
+            <section class="settings-group settings-group--intro" aria-label="Немного о тебе">
+              <button class="settings-row" data-action="open-about-you" type="button">
+                <span class="settings-row-icon" aria-hidden="true">✦</span>
+                <span class="settings-row-copy">
+                  <span class="settings-row-title">Начнём с тебя</span>
+                  <span class="settings-row-value" id="settings-profile-summary">Так тебя увидят духи леса</span>
+                </span>
+                <span class="settings-row-arrow" aria-hidden="true">›</span>
+              </button>
+            </section>
+
+            <section class="settings-group" aria-label="Звук, музыка и вибрация">
+              <div class="settings-panel">
+                <button class="settings-row settings-row--toggle" id="setting-sound-toggle" data-action="toggle-sound" type="button" aria-pressed="true">
+                  <span class="settings-row-icon" aria-hidden="true">◌</span>
+                  <span class="settings-row-title">Звук леса</span>
+                  <span class="settings-toggle" aria-hidden="true"></span>
+                </button>
+                <button class="settings-row settings-row--toggle" id="setting-music-toggle" data-action="toggle-music" type="button" aria-pressed="true">
+                  <span class="settings-row-icon" aria-hidden="true">♪</span>
+                  <span class="settings-row-title">Музыка</span>
+                  <span class="settings-toggle" aria-hidden="true"></span>
+                </button>
+                <button class="settings-row settings-row--toggle" id="setting-vibration-toggle" data-action="toggle-vibration" type="button" aria-pressed="true">
+                  <span class="settings-row-icon" aria-hidden="true">◇</span>
+                  <span class="settings-row-title">Вибрация</span>
+                  <span class="settings-toggle" aria-hidden="true"></span>
+                </button>
+              </div>
+            </section>
+
+            <section class="settings-group" aria-label="Информация">
+              <details class="settings-details">
+                <summary>
+                  <span>О приложении</span>
+                  <span aria-hidden="true">›</span>
+                </summary>
+                <p>WYRD собирает разные способы получить знак от духов леса в одном мире: карты, лунный день, образы ночи и личные следы.</p>
+              </details>
+              <details class="settings-details">
+                <summary>
+                  <span>Поддержка</span>
+                  <span aria-hidden="true">›</span>
+                </summary>
+                <p>Раздел для связи с командой WYRD и сообщений о том, что требует внимания.</p>
+              </details>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section class="about-you-screen" id="about-you-screen" hidden aria-labelledby="about-you-title">
+        <div class="forest-bg settings-bg" aria-hidden="true"></div>
+        <div class="settings-shell about-you-shell">
+          <button class="btn-back-circle settings-back" data-action="close-about-you" type="button" aria-label="Назад">←</button>
+          <header class="settings-header about-you-header">
+            <h1 id="about-you-title">Немного о тебе</h1>
+            <p class="settings-kicker about-you-subtitle">Так тебя увидят духи леса</p>
+          </header>
+
+          <form class="about-form" id="about-you-form">
+            <section class="about-section about-section--avatar" aria-label="Выбор облика">
+              <div class="about-avatar-track" id="about-avatar-track" role="radiogroup" aria-label="Выбор облика"></div>
+            </section>
+
+            <label class="about-field" for="about-name-input">
+              <span class="sr-only">Имя</span>
+              <input
+                id="about-name-input"
+                name="name"
+                type="text"
+                maxlength="36"
+                autocomplete="given-name"
+                placeholder="Имя"
+              />
+            </label>
+
+            <section class="about-section about-section--pronoun" aria-label="Выбор обращения">
+              <div class="about-segmented" id="about-pronoun-group" role="radiogroup" aria-label="Выбор обращения">
+                <button class="about-segment" data-action="select-pronoun" data-pronoun="she" type="button" role="radio" aria-checked="false">она</button>
+                <button class="about-segment" data-action="select-pronoun" data-pronoun="he" type="button" role="radio" aria-checked="false">он</button>
+                <button class="about-segment" data-action="select-pronoun" data-pronoun="neutral" type="button" role="radio" aria-checked="true">без разницы</button>
+              </div>
+            </section>
+
+            <label class="about-select-row" for="about-zodiac-select">
+              <span class="about-select-copy">
+                <span class="about-select-title">Твой знак</span>
+                <span class="about-select-note">Можно оставить пустым</span>
+              </span>
+              <select id="about-zodiac-select" name="zodiac">
+                <option value="">Не выбрано</option>
+                <option value="aries">Овен</option>
+                <option value="taurus">Телец</option>
+                <option value="gemini">Близнецы</option>
+                <option value="cancer">Рак</option>
+                <option value="leo">Лев</option>
+                <option value="virgo">Дева</option>
+                <option value="libra">Весы</option>
+                <option value="scorpio">Скорпион</option>
+                <option value="sagittarius">Стрелец</option>
+                <option value="capricorn">Козерог</option>
+                <option value="aquarius">Водолей</option>
+                <option value="pisces">Рыбы</option>
+              </select>
+            </label>
+
+            <input class="sr-only" id="about-avatar-upload" type="file" accept="image/png,image/jpeg,image/webp" />
+            <p class="about-save-status sr-only" id="about-save-status" aria-live="polite"></p>
+            <div class="about-actions">
+              <button class="about-save" data-action="save-about-you" type="button">✦ Духи запомнят ✦</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
       <section class="spirit-book" id="spirit-book" hidden aria-labelledby="spirit-book-title">
         <div class="forest-bg spirit-book-bg" aria-hidden="true"></div>
         <button class="btn-back-circle spirit-book-back" data-action="back-to-forest" type="button" aria-label="Вернуться в Лес">←</button>

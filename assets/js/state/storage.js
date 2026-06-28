@@ -48,10 +48,41 @@ export function createStateStore(storage = getSafeStorage()) {
         soundEnabled: !state.soundEnabled,
       });
     },
+    toggleMusic() {
+      return commit({
+        ...state,
+        musicEnabled: !state.musicEnabled,
+      });
+    },
+    setMusicTheme(musicTheme) {
+      return commit({
+        ...state,
+        musicTheme,
+      });
+    },
+    toggleVibration() {
+      return commit({
+        ...state,
+        vibrationEnabled: !state.vibrationEnabled,
+      });
+    },
     setAmbienceVolume(ambienceVolume) {
       return commit({
         ...state,
         ambienceVolume,
+      });
+    },
+    saveUserProfile(userProfile) {
+      const nextProfile = {
+        ...state.userProfile,
+        ...userProfile,
+        personalizationSeen: true,
+      };
+
+      return commit({
+        ...state,
+        profileName: nextProfile.name || DEFAULT_STATE.profileName,
+        userProfile: nextProfile,
       });
     },
     markOnboardingSeen() {

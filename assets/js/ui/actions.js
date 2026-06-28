@@ -49,7 +49,19 @@ export function createActionHandler(deps) {
     if (action === "enter-ritual") {
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function continueToDeck() {
-        store.markOnboardingSeen();
+        const nextState = store.markOnboardingSeen();
+        if (!nextState.userProfile?.personalizationSeen) {
+          uiState.aboutReturnScene = SCENES.FOREST;
+          uiState.aboutDraft = { ...nextState.userProfile };
+          setScene(SCENES.ABOUT_YOU);
+          audio.sync({
+            enabled: store.getState().soundEnabled,
+            scene: SCENES.ABOUT_YOU,
+          });
+          renderer.scrollTo(SCENES.ABOUT_YOU);
+          return;
+        }
+
         setScene(SCENES.FOREST);
         audio.sync({
           enabled: store.getState().soundEnabled,
@@ -83,6 +95,18 @@ export function createActionHandler(deps) {
       const nextState = store.toggleSound();
       updatePressedSoundControl(trigger, nextState.soundEnabled);
       audio.sync({ enabled: nextState.soundEnabled, scene: getAudioScene(uiState.activeScene) });
+      renderApp();
+      return;
+    }
+
+    if (action === "toggle-music") {
+      store.toggleMusic();
+      renderApp();
+      return;
+    }
+
+    if (action === "toggle-vibration") {
+      store.toggleVibration();
       renderApp();
       return;
     }
@@ -168,7 +192,90 @@ export function createActionHandler(deps) {
     }
 
     if (action === "open-settings") {
-      openForestPlaceholder(SCENES.SETTINGS);
+      audio.playSelect(store.getState().soundEnabled);
+      runTransition(function openSettings() {
+        setScene(SCENES.SETTINGS);
+        audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.SETTINGS });
+        renderer.scrollTo(SCENES.SETTINGS);
+      });
+      return;
+    }
+
+    if (action === "open-about-you") {
+      audio.playSelect(store.getState().soundEnabled);
+      runTransition(function openAboutYou() {
+        uiState.aboutReturnScene = SCENES.SETTINGS;
+        uiState.aboutDraft = { ...store.getState().userProfile };
+        setScene(SCENES.ABOUT_YOU);
+        audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.ABOUT_YOU });
+        renderer.scrollTo(SCENES.ABOUT_YOU);
+      });
+      return;
+    }
+
+    if (action === "close-about-you") {
+      audio.playSelect(store.getState().soundEnabled);
+      runTransition(function closeAboutYou() {
+        const returnScene = uiState.aboutReturnScene || SCENES.SETTINGS;
+        uiState.aboutDraft = null;
+        setScene(returnScene);
+        audio.sync({ enabled: store.getState().soundEnabled, scene: getAudioScene(returnScene) });
+        renderer.scrollTo(returnScene);
+      });
+      return;
+    }
+
+    if (action === "select-avatar") {
+      audio.playSelect(store.getState().soundEnabled);
+      uiState.aboutDraft = {
+        ...readAboutDraftFromForm(store, uiState),
+        avatarId: trigger.dataset.avatarId || "wolf",
+      };
+      renderApp();
+      return;
+    }
+
+    if (action === "select-custom-avatar") {
+      audio.playSelect(store.getState().soundEnabled);
+      const draft = readAboutDraftFromForm(store, uiState);
+      if (draft.customAvatar) {
+        uiState.aboutDraft = {
+          ...draft,
+          avatarId: "custom",
+        };
+        renderApp();
+        return;
+      }
+
+      document.getElementById("about-avatar-upload")?.click();
+      return;
+    }
+
+    if (action === "select-pronoun") {
+      audio.playSelect(store.getState().soundEnabled);
+      uiState.aboutDraft = {
+        ...readAboutDraftFromForm(store, uiState),
+        pronoun: trigger.dataset.pronoun || "neutral",
+      };
+      renderApp();
+      return;
+    }
+
+    if (action === "save-about-you" || action === "skip-about-you") {
+      audio.playSelect(store.getState().soundEnabled);
+      const nextProfile = action === "skip-about-you"
+        ? { ...readAboutDraftFromForm(store, uiState), name: "", zodiac: "" }
+        : readAboutDraftFromForm(store, uiState);
+      const nextState = store.saveUserProfile(nextProfile);
+      uiState.aboutDraft = { ...nextState.userProfile };
+      updateAboutStatus(action === "skip-about-you" ? "Можно будет вернуться позже." : "Духи запомнили.");
+      window.setTimeout(function returnAfterSave() {
+        const returnScene = uiState.aboutReturnScene || SCENES.SETTINGS;
+        uiState.aboutDraft = null;
+        setScene(returnScene);
+        audio.sync({ enabled: store.getState().soundEnabled, scene: getAudioScene(returnScene) });
+        renderer.scrollTo(returnScene);
+      }, 320);
       return;
     }
 
@@ -346,6 +453,99 @@ export function createActionHandler(deps) {
   }
 }
 
+export function createChangeHandler(deps) {
+  const { renderApp, store, uiState } = deps;
+
+  return function onChange(event) {
+    const input = event.target.closest?.("#about-avatar-upload");
+    if (!input) {
+      return;
+    }
+
+    const file = input.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+      updateAboutStatus("Не удалось прочитать изображение.");
+      input.value = "";
+      return;
+    }
+
+    createAvatarDataUrl(file)
+      .then(function applyAvatar(dataUrl) {
+        uiState.aboutDraft = {
+          ...readAboutDraftFromForm(store, uiState),
+          avatarId: "custom",
+          customAvatar: dataUrl,
+        };
+        input.value = "";
+        updateAboutStatus("Облик загружен.");
+        renderApp();
+      })
+      .catch(function handleAvatarError() {
+        input.value = "";
+        updateAboutStatus("Не удалось прочитать изображение.");
+      });
+  };
+}
+
+function readAboutDraftFromForm(store, uiState) {
+  const stateProfile = store.getState().userProfile || {};
+  const draft = uiState.aboutDraft || stateProfile;
+  const nameInput = document.getElementById("about-name-input");
+  const zodiacSelect = document.getElementById("about-zodiac-select");
+
+  return {
+    ...stateProfile,
+    ...draft,
+    name: nameInput ? nameInput.value.replace(/\s+/g, " ").trim().slice(0, 36) : draft.name || "",
+    zodiac: zodiacSelect ? zodiacSelect.value : draft.zodiac || "",
+  };
+}
+
+function updateAboutStatus(message) {
+  const status = document.getElementById("about-save-status");
+  if (status) {
+    status.textContent = message;
+  }
+}
+
+function createAvatarDataUrl(file) {
+  return new Promise(function avatarPromise(resolve, reject) {
+    const image = new Image();
+    const url = URL.createObjectURL(file);
+
+    image.onload = function handleImageLoad() {
+      try {
+        const size = 512;
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        const side = Math.min(image.naturalWidth || image.width, image.naturalHeight || image.height);
+        const sourceX = ((image.naturalWidth || image.width) - side) / 2;
+        const sourceY = ((image.naturalHeight || image.height) - side) / 2;
+
+        canvas.width = size;
+        canvas.height = size;
+        context.drawImage(image, sourceX, sourceY, side, side, 0, 0, size, size);
+        URL.revokeObjectURL(url);
+        resolve(canvas.toDataURL("image/webp", 0.82));
+      } catch (error) {
+        URL.revokeObjectURL(url);
+        reject(error);
+      }
+    };
+
+    image.onerror = function handleImageError() {
+      URL.revokeObjectURL(url);
+      reject(new Error("Avatar image cannot be loaded"));
+    };
+
+    image.src = url;
+  });
+}
+
 function revealPendingGiftsAfterAnimation(store, renderApp) {
   const previewGiftRevealKey = getPreviewGiftRevealKey();
   const hasPendingGift = store.getState().gifts?.some((gift) => gift.pendingReveal);
@@ -519,6 +719,8 @@ export function createInitialUIState(state) {
     continuationOffer: null,
     currentQuestion: "",
     profileReturnScene: getReturnScene(null, state),
+    aboutReturnScene: SCENES.SETTINGS,
+    aboutDraft: null,
     rawQuestion: "",
     onboardingReturn: SCENES.COVER,
     activeHistoryTraceId: null,

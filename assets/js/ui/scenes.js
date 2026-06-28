@@ -11,6 +11,7 @@ export const SCENES = Object.freeze({
   NIGHT_IMAGES: "night-images",
   SPIRIT_BOOK: "spirit-book",
   SETTINGS: "settings",
+  ABOUT_YOU: "about-you",
   REMINDERS: "reminders",
 });
 

@@ -3,7 +3,13 @@ import { CARDS, COVER_IMAGE } from "./data/cards.js";
 import { registerServiceWorker } from "./pwa.js";
 import { detectQuestionRoute } from "./cards/question-routing.js";
 import { createStateStore } from "./state/storage.js";
-import { createActionHandler, createDeckQuestionGuidance, createInitialUIState, createKeyboardHandler } from "./ui/actions.js";
+import {
+  createActionHandler,
+  createChangeHandler,
+  createDeckQuestionGuidance,
+  createInitialUIState,
+  createKeyboardHandler,
+} from "./ui/actions.js";
 import { createCoverCtaAnimation } from "./ui/cover-cta.js";
 import { createRenderer, getElements } from "./ui/render.js";
 import { SCENES, isKnownScene } from "./ui/scenes.js";
@@ -104,6 +110,15 @@ document.addEventListener(
     renderApp,
     renderer,
     setScene,
+    store,
+    uiState,
+  }),
+);
+
+document.addEventListener(
+  "change",
+  createChangeHandler({
+    renderApp,
     store,
     uiState,
   }),

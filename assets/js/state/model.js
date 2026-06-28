@@ -4,7 +4,18 @@ const CARD_BY_ID = new Map(CARDS.map((card) => [card.id, card]));
 
 export const DEFAULT_STATE = Object.freeze({
   profileName: "Странник",
+  userProfile: {
+    avatarId: "wolf",
+    customAvatar: "",
+    name: "",
+    pronoun: "neutral",
+    zodiac: "",
+    personalizationSeen: false,
+  },
   soundEnabled: true,
+  musicEnabled: true,
+  musicTheme: "calm",
+  vibrationEnabled: true,
   ambienceVolume: 0.58,
   onboardingSeen: false,
   selectedMode: "single",
@@ -18,6 +29,33 @@ export const DEFAULT_STATE = Object.freeze({
 });
 
 const HISTORY_RETENTION_MONTHS = 3;
+const AVATAR_IDS = new Set([
+  "wolf",
+  "mushroom",
+  "forest-spark",
+  "white-fox",
+  "flower-spirit",
+  "horned-spirit",
+  "moon-cat",
+  "custom",
+]);
+const PRONOUNS = new Set(["she", "he", "neutral"]);
+const ZODIAC_IDS = new Set([
+  "",
+  "aries",
+  "taurus",
+  "gemini",
+  "cancer",
+  "leo",
+  "virgo",
+  "libra",
+  "scorpio",
+  "sagittarius",
+  "capricorn",
+  "aquarius",
+  "pisces",
+]);
+const MUSIC_THEMES = new Set(["calm", "forest", "celtic"]);
 
 export function cloneState(value) {
   return JSON.parse(JSON.stringify(value));
@@ -37,7 +75,11 @@ export function normalizeState(value) {
     next.currentReading && typeof next.currentReading === "object" ? normalizeReading(next.currentReading) : null;
   next.dailyFreeUsedAt = typeof next.dailyFreeUsedAt === "string" ? next.dailyFreeUsedAt : null;
   next.profileName = typeof next.profileName === "string" ? next.profileName : base.profileName;
+  next.userProfile = normalizeUserProfile(next.userProfile, base.userProfile, next.profileName);
   next.soundEnabled = Boolean(next.soundEnabled);
+  next.musicEnabled = typeof next.musicEnabled === "boolean" ? next.musicEnabled : base.musicEnabled;
+  next.musicTheme = MUSIC_THEMES.has(next.musicTheme) ? next.musicTheme : base.musicTheme;
+  next.vibrationEnabled = typeof next.vibrationEnabled === "boolean" ? next.vibrationEnabled : base.vibrationEnabled;
   next.ambienceVolume = normalizeAmbienceVolume(next.ambienceVolume, base.ambienceVolume);
   next.onboardingSeen = Boolean(next.onboardingSeen);
   next.selectedMode = normalizeSelectedMode(next.selectedMode);
@@ -182,6 +224,10 @@ export function resetState() {
 function enforceStateInvariants(state) {
   const next = { ...state };
 
+  if (next.userProfile?.name) {
+    next.profileName = next.userProfile.name;
+  }
+
   if (next.lastSpread.length) {
     next.currentReading = null;
   }
@@ -192,6 +238,33 @@ function enforceStateInvariants(state) {
   }
 
   return next;
+}
+
+function normalizeUserProfile(value, baseProfile, legacyProfileName) {
+  const source = value && typeof value === "object" ? value : {};
+  const legacyName = legacyProfileName && legacyProfileName !== DEFAULT_STATE.profileName ? legacyProfileName : "";
+  const name = normalizeShortText(source.name ?? legacyName, 36);
+  const customAvatar = typeof source.customAvatar === "string" ? source.customAvatar : "";
+  const avatarId = AVATAR_IDS.has(source.avatarId) && (source.avatarId !== "custom" || customAvatar)
+    ? source.avatarId
+    : baseProfile.avatarId;
+
+  return {
+    avatarId,
+    customAvatar,
+    name,
+    pronoun: PRONOUNS.has(source.pronoun) ? source.pronoun : baseProfile.pronoun,
+    zodiac: ZODIAC_IDS.has(source.zodiac) ? source.zodiac : baseProfile.zodiac,
+    personalizationSeen: Boolean(source.personalizationSeen),
+  };
+}
+
+function normalizeShortText(value, maxLength) {
+  if (typeof value !== "string") {
+    return "";
+  }
+
+  return value.replace(/\s+/g, " ").trim().slice(0, maxLength);
 }
 
 function createSingleRitualStack(reading) {
