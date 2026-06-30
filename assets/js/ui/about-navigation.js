@@ -168,6 +168,7 @@ export function createAboutNavigation(deps) {
 function normalizeReturnScene(scene) {
   if (
     scene === SCENES.COVER ||
+    scene === SCENES.FOREST ||
     scene === SCENES.DECK ||
     scene === SCENES.RESULT ||
     scene === SCENES.SPREAD ||

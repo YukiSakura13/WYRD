@@ -1,6 +1,10 @@
 import { SCENES } from "./scenes.js";
 
 export function getAudioScene(scene) {
+  if (scene === SCENES.FOREST) {
+    return scene;
+  }
+
   if (scene === SCENES.RESULT || scene === SCENES.SPREAD || scene === SCENES.ONBOARDING || scene === SCENES.PROFILE) {
     return scene;
   }
@@ -9,7 +13,7 @@ export function getAudioScene(scene) {
 }
 
 export function getReturnScene(scene, state) {
-  if (scene === SCENES.COVER || scene === SCENES.DECK || scene === SCENES.RESULT || scene === SCENES.SPREAD) {
+  if (scene === SCENES.COVER || scene === SCENES.FOREST || scene === SCENES.DECK || scene === SCENES.RESULT || scene === SCENES.SPREAD) {
     return scene;
   }
 
