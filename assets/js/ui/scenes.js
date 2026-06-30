@@ -1,5 +1,6 @@
 export const SCENES = Object.freeze({
   COVER: "cover",
+  FOREST: "forest",
   ABOUT: "about",
   ONBOARDING: "onboarding",
   DECK: "deck",

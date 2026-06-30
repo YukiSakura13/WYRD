@@ -15,6 +15,7 @@ export function getElements(doc = document) {
     coverBreathNodes: Array.from(doc.querySelectorAll(".cover-cta-button")),
     main: doc.getElementById("main"),
     transitionVeil: doc.getElementById("transition-veil"),
+    forestSection: doc.getElementById("forest-home"),
     aboutSection: doc.getElementById("about-wyrd"),
     onboardingSection: doc.getElementById("ritual-onboarding"),
     deckWrap: doc.getElementById("deck-wrap"),
@@ -111,6 +112,7 @@ export function createRenderer(elements) {
 
   function scrollTo(name) {
     const targetMap = {
+      forest: elements.forestSection,
       about: elements.aboutSection,
       deck: elements.deckWrap,
       profile: elements.profileSection,
@@ -449,6 +451,7 @@ export function createRenderer(elements) {
     const scene = uiState.activeScene;
     const isOnboarding = scene === SCENES.ONBOARDING;
 
+    elements.forestSection.hidden = scene !== SCENES.FOREST;
     elements.aboutSection.hidden = scene !== SCENES.ABOUT;
     elements.profileSection.hidden = scene !== SCENES.PROFILE;
     elements.onboardingSection.hidden = !isOnboarding;

@@ -20,15 +20,28 @@ export function createActionHandler(deps) {
     if (action === "enter") {
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function enterForest() {
-        setScene(SCENES.DECK);
+        setScene(SCENES.FOREST);
         audio.sync({
           allowInit: true,
           enabled: store.getState().soundEnabled,
-          scene: SCENES.DECK,
+          scene: SCENES.FOREST,
         });
         window.setTimeout(function scrollAfterEntry() {
-          renderer.scrollTo(SCENES.DECK);
+          renderer.scrollTo(SCENES.FOREST);
         }, 80);
+      });
+      return;
+    }
+
+    if (action === "open-daily-card") {
+      audio.playSelect(store.getState().soundEnabled);
+      runTransition(function openDailyCard() {
+        setScene(SCENES.DECK);
+        audio.sync({
+          enabled: store.getState().soundEnabled,
+          scene: SCENES.DECK,
+        });
+        renderer.scrollTo(SCENES.DECK);
       });
       return;
     }
@@ -63,6 +76,13 @@ export function createActionHandler(deps) {
         if (returnTarget === SCENES.ABOUT) {
           audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.DECK });
           aboutNavigation.restoreFromOnboarding();
+          return;
+        }
+
+        if (returnTarget === SCENES.FOREST) {
+          setScene(SCENES.FOREST);
+          audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.FOREST });
+          renderer.scrollTo(SCENES.FOREST);
           return;
         }
 
