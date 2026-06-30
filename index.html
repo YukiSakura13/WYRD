@@ -34,7 +34,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Forum&family=IM+Fell+English:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="manifest" href="./manifest.webmanifest?v=dev" />
@@ -177,77 +177,109 @@
       <section class="forest-home" id="forest-home" hidden aria-labelledby="forest-title">
         <div class="forest-bg" aria-hidden="true"></div>
         <div class="forest-bg forest-bg--drift" aria-hidden="true"></div>
-        <header class="forest-topbar">
-          <div class="forest-day" aria-label="Сегодня в лесу">
-            <div class="forest-day-moon" id="forest-day-moon" aria-hidden="true"></div>
-            <div class="forest-day-copy">
-              <p class="forest-date" id="forest-date">Сегодня</p>
-              <p class="forest-moon" id="forest-moon">Луна наблюдает</p>
-              <p class="forest-lunar" id="forest-lunar">Лунный день скоро проявится</p>
-              <p class="forest-zodiac" id="forest-zodiac">Луна в Скорпионе</p>
-            </div>
-          </div>
-          <div class="forest-tools" aria-label="Действия">
-            <button class="forest-icon-btn" data-action="open-reminders" type="button" aria-label="Духи леса напомнят">
-              <svg viewBox="0 0 1254 1254" aria-hidden="true" focusable="false">
-                <use href="#icon-ornament-bell"></use>
-              </svg>
-            </button>
-            <button class="forest-icon-btn" data-action="open-settings" type="button" aria-label="Настройки">
+        <div class="forest-shell">
+          <header class="forest-topbar" aria-label="Главные действия">
+            <button class="forest-avatar-btn" data-action="open-about-you" type="button" aria-label="Немного о тебе">
               <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path d="M12 8.4a3.6 3.6 0 1 0 0 7.2 3.6 3.6 0 0 0 0-7.2Z" fill="none" stroke="currentColor" stroke-width="1.6" />
-                <path d="M19.2 13.1v-2.2l-2.1-.6a5.9 5.9 0 0 0-.7-1.6l1.1-1.9-1.6-1.6-1.9 1.1a6 6 0 0 0-1.6-.7L11.8 3H9.6L9 5.1a6 6 0 0 0-1.6.7L5.5 4.7 3.9 6.3 5 8.2a6 6 0 0 0-.7 1.6l-2.1.6v2.2l2.1.6c.2.6.4 1.1.7 1.6l-1.1 1.9 1.6 1.6 1.9-1.1c.5.3 1 .5 1.6.7l.6 2.1h2.2l.6-2.1c.6-.2 1.1-.4 1.6-.7l1.9 1.1 1.6-1.6-1.1-1.9c.3-.5.5-1 .7-1.6l2.1-.6Z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.35" />
+                <circle cx="12" cy="8.4" r="3.5" fill="none" stroke="currentColor" stroke-width="1.1" />
+                <path d="M5 20c0-3.9 3.1-6.4 7-6.4s7 2.5 7 6.4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.1" />
+              </svg>
+            </button>
+            <button class="forest-settings-btn" data-action="open-settings" type="button" aria-label="Настройки">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="1.2" />
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" />
+              </svg>
+            </button>
+          </header>
+
+          <div class="forest-brand">
+            <p class="forest-brand-title" aria-label="WYRD">WYRD</p>
+            <div class="forest-brand-divider" aria-hidden="true"></div>
+            <p class="forest-brand-subtitle">Оракул духов леса</p>
+          </div>
+
+          <div class="forest-hero-card">
+            <button class="forest-card forest-card--daily" data-action="open-daily-card" type="button" aria-label="Раскрыть карту">
+              <img class="forest-card-frame" src="./assets/images/forest-home/f-hero2.png" alt="" decoding="async" />
+              <span class="forest-card-art" aria-hidden="true">
+                <img class="forest-card-fern" src="./assets/images/forest-home/fern-hero2.png" alt="" decoding="async" />
+              </span>
+              <span class="forest-card-text">
+                <span class="forest-card-title" id="forest-title">РАСКРЫТЬ<br />КАРТУ</span>
+                <span class="forest-card-copy">карта дня · гадание</span>
+              </span>
+            </button>
+          </div>
+
+          <div class="forest-grid" aria-label="Пути леса">
+            <button class="forest-tile forest-tile--lunar" data-action="open-lunar-day" type="button">
+              <span class="forest-tile-marker" aria-hidden="true"><span></span><span>✦</span><span></span></span>
+              <span class="forest-tile-visual" aria-hidden="true">
+                <img src="./assets/images/forest-home/moon.png" alt="" decoding="async" />
+                <span class="forest-moon-spark forest-moon-spark--1"></span>
+                <span class="forest-moon-spark forest-moon-spark--2"></span>
+                <span class="forest-moon-spark forest-moon-spark--3"></span>
+                <span class="forest-moon-spark forest-moon-spark--4"></span>
+                <span class="forest-moon-spark forest-moon-spark--5"></span>
+                <span class="forest-moon-spark forest-moon-spark--6"></span>
+                <span class="forest-moon-spark forest-moon-spark--7"></span>
+                <span class="forest-moon-spark forest-moon-spark--8"></span>
+                <span class="forest-moon-spark forest-moon-spark--9"></span>
+              </span>
+              <span class="forest-tile-text">
+                <span class="forest-tile-title">ЛУННЫЙ ДЕНЬ</span>
+                <span class="forest-tile-copy">день глазами<br />духов леса</span>
+              </span>
+            </button>
+            <button class="forest-tile forest-tile--yes-no" data-action="open-yes-no" type="button">
+              <span class="forest-tile-marker" aria-hidden="true"><span></span><span>✦</span><span></span></span>
+              <span class="forest-tile-visual" aria-hidden="true">
+                <img src="./assets/images/forest-home/leaves-fall.png" alt="" decoding="async" />
+              </span>
+              <span class="forest-tile-text">
+                <span class="forest-tile-title">НЕТ ИЛИ ДА</span>
+                <span class="forest-tile-copy">короткий знак<br />от духов</span>
+              </span>
+            </button>
+            <button class="forest-tile forest-tile--night" data-action="open-night-images" type="button">
+              <span class="forest-tile-marker" aria-hidden="true"><span></span><span>✦</span><span></span></span>
+              <span class="forest-tile-visual" aria-hidden="true">
+                <img src="./assets/images/forest-home/moth2.png" alt="" decoding="async" />
+              </span>
+              <span class="forest-tile-text">
+                <span class="forest-tile-title">ОБРАЗЫ НОЧИ</span>
+                <span class="forest-tile-copy">сонник · что<br />пришло во сне</span>
+              </span>
+            </button>
+            <button class="forest-tile forest-tile--traces" data-action="open-profile" type="button">
+              <span class="forest-tile-marker" aria-hidden="true"><span></span><span>✦</span><span></span></span>
+              <span class="forest-tile-visual" aria-hidden="true">
+                <img src="./assets/images/forest-home/tracks.png" alt="" decoding="async" />
+              </span>
+              <span class="forest-tile-text">
+                <span class="forest-tile-title">СЛЕДЫ В ЛЕСУ</span>
+                <span class="forest-tile-copy">твоя история и дары</span>
+              </span>
+              <svg class="forest-tile-arrow" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M9 6l6 6-6 6"></path>
+              </svg>
+            </button>
+            <button class="forest-tile forest-tile--book" data-action="open-spirit-book" type="button">
+              <span class="forest-tile-marker" aria-hidden="true"><span></span><span>✦</span><span></span></span>
+              <span class="forest-tile-visual" aria-hidden="true">
+                <img src="./assets/images/forest-home/acorn.png" alt="" decoding="async" />
+              </span>
+              <span class="forest-tile-text">
+                <span class="forest-tile-title">ИСТОРИЯ<br />ДУХОВ ЛЕСА</span>
+                <span class="forest-tile-copy">сказание о мире Wyrd</span>
+                <span class="forest-tile-chip">ПЯТЬ ГЛАВ</span>
+              </span>
+              <svg class="forest-tile-arrow" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M9 6l6 6-6 6"></path>
               </svg>
             </button>
           </div>
-        </header>
-
-        <div class="forest-hero-card">
-          <button class="forest-card forest-card--daily" data-action="open-daily-card" type="button" aria-label="Спросить духов, раскрыть карту">
-            <span class="forest-card-art" aria-hidden="true">
-              <span class="forest-card-glow"></span>
-              <span class="forest-card-back"></span>
-            </span>
-            <span class="forest-card-title" id="forest-title">Раскрыть карту</span>
-          </button>
-        </div>
-
-        <div class="forest-grid" aria-label="Пути леса">
-          <button class="forest-tile forest-tile--lunar" data-action="open-lunar-day" type="button">
-            <span class="forest-tile-visual forest-tile-visual--lunar" aria-hidden="true"></span>
-            <span class="forest-tile-text">
-              <span class="forest-tile-title">Лунный день</span>
-              <span class="forest-tile-copy">День глазами духов леса</span>
-            </span>
-          </button>
-          <button class="forest-tile forest-tile--yes-no" data-action="open-yes-no" type="button">
-            <span class="forest-tile-visual" aria-hidden="true">◇</span>
-            <span class="forest-tile-text">
-              <span class="forest-tile-title">Нет или Да</span>
-              <span class="forest-tile-copy">Короткий знак от духов</span>
-            </span>
-          </button>
-          <button class="forest-tile forest-tile--night" data-action="open-night-images" type="button">
-            <span class="forest-tile-visual" aria-hidden="true">✧</span>
-            <span class="forest-tile-text">
-              <span class="forest-tile-title">Образы ночи</span>
-              <span class="forest-tile-copy">То, что пришло во сне</span>
-            </span>
-          </button>
-          <button class="forest-tile forest-tile--traces" data-action="open-profile" type="button">
-            <span class="forest-tile-visual" aria-hidden="true">✦</span>
-            <span class="forest-tile-text">
-              <span class="forest-tile-title">Следы в лесу</span>
-              <span class="forest-tile-copy">История и Дары</span>
-            </span>
-          </button>
-          <button class="forest-tile forest-tile--book" data-action="open-spirit-book" type="button">
-            <span class="forest-tile-visual" aria-hidden="true">☉</span>
-            <span class="forest-tile-text">
-              <span class="forest-tile-title">История духов леса</span>
-              <span class="forest-tile-copy">Пять глав о мире WYRD</span>
-            </span>
-          </button>
         </div>
       </section>
 
