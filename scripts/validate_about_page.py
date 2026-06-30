@@ -93,7 +93,8 @@ def main() -> None:
 
     for phrase in (
         'data-action="open-about"',
-        '<span class="cover-icon-label">О WYRD</span>',
+        'class="forest-tile forest-tile--book" data-action="open-about"',
+        'ИСТОРИЯ<br />ДУХОВ ЛЕСА',
         'id="about-wyrd"',
         'aria-labelledby="about-wyrd-title"',
         'id="about-wyrd-title" tabindex="-1">Книга леса</h1>',
