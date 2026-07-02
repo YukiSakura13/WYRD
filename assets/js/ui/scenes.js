@@ -1,6 +1,11 @@
 export const SCENES = Object.freeze({
   COVER: "cover",
   FOREST: "forest",
+  SETTINGS: "settings",
+  ABOUT_YOU: "about-you",
+  REMINDERS: "reminders",
+  APP_INFO: "app-info",
+  SPIRIT_BOOK: "spirit-book",
   ABOUT: "about",
   ONBOARDING: "onboarding",
   DECK: "deck",

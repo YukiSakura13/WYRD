@@ -1,9 +1,12 @@
 import { createReading, createSpread } from "../cards/reading.js";
 import { buildLocalOracleReading } from "../cards/oracle-local.js";
+import { SPIRIT_BOOK_PAGES } from "../data/spirit-book.js";
 import { ARCHETYPE_POSITIONS, detectArchetype, detectQuestionRoute } from "../cards/question-routing.js";
 import { createTransitionRunner, getAudioScene, getReturnScene, playSpreadSequence, resetViewport } from "./flow.js";
 import { SCENES } from "./scenes.js";
 import { closeSaveScreen, saveCurrentCard, shareCurrentCard } from "./share.js";
+
+const REMINDER_DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 
 export function createActionHandler(deps) {
   const { aboutNavigation, audio, cards, renderApp, renderer, setScene, store, uiState } = deps;
@@ -116,6 +119,231 @@ export function createActionHandler(deps) {
       updatePressedSoundControl(trigger, nextState.soundEnabled);
       audio.sync({ enabled: nextState.soundEnabled, scene: getAudioScene(uiState.activeScene) });
       renderApp();
+      return;
+    }
+
+    if (action === "toggle-vibration") {
+      store.toggleVibration();
+      renderApp();
+      return;
+    }
+
+    if (action === "open-settings") {
+      audio.playSelect(store.getState().soundEnabled);
+      runTransition(function openSettings() {
+        setScene(SCENES.SETTINGS);
+        audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.SETTINGS });
+        renderer.scrollTo(SCENES.SETTINGS);
+      });
+      return;
+    }
+
+    if (action === "open-app-info") {
+      audio.playSelect(store.getState().soundEnabled);
+      runTransition(function openAppInfo() {
+        setScene(SCENES.APP_INFO);
+        audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.SETTINGS });
+        renderer.scrollTo(SCENES.APP_INFO);
+      });
+      return;
+    }
+
+    if (action === "open-spirit-book") {
+      audio.playSelect(store.getState().soundEnabled);
+      runTransition(function openSpiritBook() {
+        uiState.spiritBookPage = 0;
+        setScene(SCENES.SPIRIT_BOOK);
+        audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.FOREST });
+        renderer.scrollTo(SCENES.SPIRIT_BOOK);
+      });
+      return;
+    }
+
+    if (action === "spirit-book-prev") {
+      audio.playSelect(store.getState().soundEnabled);
+      uiState.spiritBookPage = Math.max(0, (uiState.spiritBookPage || 0) - 1);
+      renderApp();
+      return;
+    }
+
+    if (action === "spirit-book-next") {
+      audio.playSelect(store.getState().soundEnabled);
+      uiState.spiritBookPage = Math.min(SPIRIT_BOOK_PAGES.length - 1, (uiState.spiritBookPage || 0) + 1);
+      renderApp();
+      return;
+    }
+
+    if (action === "spirit-book-page") {
+      const page = Number(trigger.dataset.page);
+      if (!Number.isInteger(page)) {
+        return;
+      }
+      audio.playSelect(store.getState().soundEnabled);
+      uiState.spiritBookPage = Math.max(0, Math.min(SPIRIT_BOOK_PAGES.length - 1, page));
+      renderApp();
+      return;
+    }
+
+    if (action === "open-about-you") {
+      audio.playSelect(store.getState().soundEnabled);
+      runTransition(function openAboutYou() {
+        uiState.aboutReturnScene = uiState.activeScene === SCENES.SETTINGS ? SCENES.SETTINGS : SCENES.FOREST;
+        uiState.aboutDraft = { ...store.getState().userProfile };
+        setScene(SCENES.ABOUT_YOU);
+        audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.ABOUT_YOU });
+        renderer.scrollTo(SCENES.ABOUT_YOU);
+      });
+      return;
+    }
+
+    if (action === "close-about-you") {
+      audio.playSelect(store.getState().soundEnabled);
+      runTransition(function closeAboutYou() {
+        const returnScene = uiState.aboutReturnScene || SCENES.FOREST;
+        uiState.aboutDraft = null;
+        setScene(returnScene);
+        audio.sync({ enabled: store.getState().soundEnabled, scene: getAudioScene(returnScene) });
+        renderer.scrollTo(returnScene);
+      });
+      return;
+    }
+
+    if (action === "select-avatar") {
+      audio.playSelect(store.getState().soundEnabled);
+      uiState.aboutDraft = {
+        ...readAboutDraftFromForm(store, uiState),
+        avatarId: trigger.dataset.avatarId || "wolf",
+      };
+      renderApp();
+      return;
+    }
+
+    if (action === "upload-avatar") {
+      audio.playSelect(store.getState().soundEnabled);
+      document.getElementById("about-avatar-upload")?.click();
+      return;
+    }
+
+    if (action === "select-pronoun") {
+      audio.playSelect(store.getState().soundEnabled);
+      uiState.aboutDraft = {
+        ...readAboutDraftFromForm(store, uiState),
+        pronoun: trigger.dataset.pronoun || "neutral",
+      };
+      renderApp();
+      return;
+    }
+
+    if (action === "save-about-you") {
+      audio.playSelect(store.getState().soundEnabled);
+      const nextState = store.saveUserProfile(readAboutDraftFromForm(store, uiState));
+      uiState.aboutDraft = { ...nextState.userProfile };
+      updateAboutStatus("Сохранено.");
+      window.setTimeout(function returnAfterSave() {
+        const returnScene = uiState.aboutReturnScene || SCENES.FOREST;
+        uiState.aboutDraft = null;
+        setScene(returnScene);
+        audio.sync({ enabled: store.getState().soundEnabled, scene: getAudioScene(returnScene) });
+        renderer.scrollTo(returnScene);
+      }, 220);
+      return;
+    }
+
+    if (action === "open-reminders") {
+      audio.playSelect(store.getState().soundEnabled);
+      runTransition(function openReminders() {
+        uiState.remindersDraft = { ...store.getState().reminders };
+        setScene(SCENES.REMINDERS);
+        audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.FOREST });
+        renderer.scrollTo(SCENES.REMINDERS);
+      });
+      return;
+    }
+
+    if (action === "toggle-reminder-day") {
+      audio.playSelect(store.getState().soundEnabled);
+      const draft = readRemindersDraftFromForm(store, uiState);
+      const day = trigger.dataset.day;
+      const days = new Set(draft.days);
+
+      if (days.has(day)) {
+        days.delete(day);
+      } else if (REMINDER_DAYS.includes(day)) {
+        days.add(day);
+      }
+
+      uiState.remindersDraft = {
+        ...draft,
+        days: REMINDER_DAYS.filter((item) => days.has(item)),
+      };
+      renderApp();
+      return;
+    }
+
+    if (action === "toggle-all-reminder-days") {
+      audio.playSelect(store.getState().soundEnabled);
+      const draft = readRemindersDraftFromForm(store, uiState);
+      uiState.remindersDraft = {
+        ...draft,
+        days: draft.days.length === REMINDER_DAYS.length ? [] : REMINDER_DAYS,
+      };
+      renderApp();
+      return;
+    }
+
+    if (action === "toggle-monthly-reminder") {
+      audio.playSelect(store.getState().soundEnabled);
+      const draft = readRemindersDraftFromForm(store, uiState);
+      uiState.remindersDraft = {
+        ...draft,
+        monthlyFirst: !draft.monthlyFirst,
+      };
+      renderApp();
+      return;
+    }
+
+    if (action === "save-reminders") {
+      audio.playSelect(store.getState().soundEnabled);
+      uiState.remindersDraft = {
+        ...readRemindersDraftFromForm(store, uiState),
+        enabled: true,
+      };
+      store.saveReminders(uiState.remindersDraft);
+      updateRemindersStatus("Уведомления сохранены.");
+      renderApp();
+      return;
+    }
+
+    if (action === "disable-reminders") {
+      audio.playSelect(store.getState().soundEnabled);
+      uiState.remindersDraft = {
+        ...readRemindersDraftFromForm(store, uiState),
+        enabled: false,
+      };
+      store.saveReminders(uiState.remindersDraft);
+      updateRemindersStatus("Уведомления отключены.");
+      renderApp();
+      return;
+    }
+
+    if (action === "back-to-settings") {
+      audio.playSelect(store.getState().soundEnabled);
+      runTransition(function returnToSettings() {
+        uiState.remindersDraft = null;
+        setScene(SCENES.SETTINGS);
+        audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.SETTINGS });
+        renderer.scrollTo(SCENES.SETTINGS);
+      });
+      return;
+    }
+
+    if (action === "back-to-forest") {
+      audio.playSelect(store.getState().soundEnabled);
+      runTransition(function returnToForest() {
+        setScene(SCENES.FOREST);
+        audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.FOREST });
+        renderer.scrollTo(SCENES.FOREST);
+      });
       return;
     }
 
@@ -312,6 +540,145 @@ function revealPendingGiftsAfterAnimation(store, renderApp) {
   }, 1500);
 }
 
+function readAboutDraftFromForm(store, uiState) {
+  const stateProfile = store.getState().userProfile || {};
+  const draft = uiState.aboutDraft || stateProfile;
+  const nameInput = document.getElementById("about-name-input");
+  const zodiacSelect = document.getElementById("about-zodiac-select");
+
+  return {
+    ...stateProfile,
+    ...draft,
+    name: nameInput ? nameInput.value.replace(/\s+/g, " ").trim().slice(0, 36) : draft.name || "",
+    zodiac: zodiacSelect ? zodiacSelect.value : draft.zodiac || "",
+  };
+}
+
+function readRemindersDraftFromForm(store, uiState) {
+  const stateReminders = store.getState().reminders || {};
+  const draft = uiState.remindersDraft || stateReminders;
+  const timeInput = document.getElementById("reminders-time-input");
+
+  return {
+    ...stateReminders,
+    ...draft,
+    time: normalizeReminderTime(timeInput?.value, draft.time || "07:00"),
+    days: Array.isArray(draft.days) ? draft.days.filter((day) => REMINDER_DAYS.includes(day)) : [],
+    monthlyFirst: Boolean(draft.monthlyFirst),
+  };
+}
+
+function normalizeReminderTime(value, fallback) {
+  if (typeof value !== "string") {
+    return fallback;
+  }
+
+  const compact = value.replace(/[^\d]/g, "");
+  const normalized = compact.length === 3 ? `0${compact}` : compact;
+
+  if (normalized.length !== 4) {
+    return fallback;
+  }
+
+  const hours = Number(normalized.slice(0, 2));
+  const minutes = Number(normalized.slice(2, 4));
+
+  if (hours > 23 || minutes > 59) {
+    return fallback;
+  }
+
+  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+}
+
+function updateAboutStatus(message) {
+  const status = document.getElementById("about-save-status");
+  if (status) {
+    status.textContent = message;
+  }
+}
+
+function updateRemindersStatus(message) {
+  const status = document.getElementById("reminders-save-status");
+  if (status) {
+    status.textContent = message;
+  }
+}
+
+export function createInputChangeHandler(deps) {
+  const { renderApp, store, uiState } = deps;
+
+  return function onInputChange(event) {
+    if (event.target?.id === "about-avatar-upload") {
+      handleAvatarUpload(event.target, store, uiState, renderApp);
+      return;
+    }
+
+    if (event.target?.id === "reminders-time-input") {
+      uiState.remindersDraft = readRemindersDraftFromForm(store, uiState);
+      renderApp();
+    }
+  };
+}
+
+function handleAvatarUpload(input, store, uiState, renderApp) {
+  const file = input.files?.[0];
+
+  if (!file || !file.type.startsWith("image/")) {
+    input.value = "";
+    return;
+  }
+
+  resizeAvatarImage(file)
+    .then(function selectCustomAvatar(dataUrl) {
+      uiState.aboutDraft = {
+        ...readAboutDraftFromForm(store, uiState),
+        avatarId: "custom",
+        customAvatarImage: dataUrl,
+      };
+      input.value = "";
+      renderApp();
+    })
+    .catch(function clearFailedUpload() {
+      input.value = "";
+      updateAboutStatus("Не удалось загрузить изображение.");
+    });
+}
+
+function resizeAvatarImage(file) {
+  return new Promise(function loadFile(resolve, reject) {
+    const reader = new FileReader();
+
+    reader.onload = function handleRead() {
+      const image = new Image();
+
+      image.onload = function handleImageLoad() {
+        const size = 512;
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        const sourceSize = Math.min(image.naturalWidth, image.naturalHeight);
+        const sourceX = (image.naturalWidth - sourceSize) / 2;
+        const sourceY = (image.naturalHeight - sourceSize) / 2;
+
+        canvas.width = size;
+        canvas.height = size;
+        context.drawImage(image, sourceX, sourceY, sourceSize, sourceSize, 0, 0, size, size);
+
+        const mimeType = canvas.toDataURL("image/webp", 0.82).startsWith("data:image/webp")
+          ? "image/webp"
+          : "image/jpeg";
+
+        resolve(canvas.toDataURL(mimeType, 0.82));
+      };
+
+      image.onerror = reject;
+      image.src = reader.result;
+    };
+
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 function updatePressedSoundControl(trigger, soundEnabled) {
   const isMuted = !soundEnabled;
   trigger.classList.toggle("sound-off", isMuted);
@@ -431,12 +798,15 @@ export function createInitialUIState(state) {
   return {
     activeScene: SCENES.COVER,
     aboutReturnScene: SCENES.COVER,
+    aboutDraft: null,
     aboutReturnScrollTop: 0,
     aboutScrollTop: 0,
     continuationOffer: null,
     currentQuestion: "",
     profileReturnScene: getReturnScene(null, state),
     rawQuestion: "",
+    remindersDraft: null,
+    spiritBookPage: 0,
     onboardingReturn: SCENES.COVER,
     activeHistoryTraceId: null,
     historyReturnTraceId: null,

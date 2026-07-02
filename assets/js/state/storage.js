@@ -48,10 +48,38 @@ export function createStateStore(storage = getSafeStorage()) {
         soundEnabled: !state.soundEnabled,
       });
     },
+    toggleVibration() {
+      return commit({
+        ...state,
+        vibrationEnabled: !state.vibrationEnabled,
+      });
+    },
     setAmbienceVolume(ambienceVolume) {
       return commit({
         ...state,
         ambienceVolume,
+      });
+    },
+    saveUserProfile(userProfile) {
+      const nextProfile = {
+        ...state.userProfile,
+        ...userProfile,
+        personalizationSeen: true,
+      };
+
+      return commit({
+        ...state,
+        profileName: nextProfile.name || DEFAULT_STATE.profileName,
+        userProfile: nextProfile,
+      });
+    },
+    saveReminders(reminders) {
+      return commit({
+        ...state,
+        reminders: {
+          ...state.reminders,
+          ...reminders,
+        },
       });
     },
     markOnboardingSeen() {

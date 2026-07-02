@@ -29,9 +29,7 @@ body[data-scene="forest"] {
 body[data-scene="forest"] #main {
   display: flex;
   justify-content: center;
-  background:
-    linear-gradient(90deg, rgba(7, 7, 9, 0.98), rgba(10, 10, 13, 0.92) 18%, rgba(10, 10, 13, 0.92) 82%, rgba(7, 7, 9, 0.98)),
-    #070709;
+  background: #070709;
 }
 
 .forest-home {
@@ -40,7 +38,14 @@ body[data-scene="forest"] #main {
   padding: 0;
   overflow-x: hidden;
   overflow-y: auto;
-  background: #070709;
+  background-color: #070709;
+  background-image:
+    radial-gradient(115% 70% at 50% -8%, rgba(42, 46, 60, 0.34), rgba(7, 7, 9, 0) 55%),
+    linear-gradient(180deg, rgba(7, 7, 9, 0.32) 0%, rgba(7, 7, 9, 0.55) 42%, rgba(4, 4, 6, 0.92) 100%),
+    url("../../images/forest-home/bg.jpg");
+  background-size: cover, cover, cover;
+  background-position: center top, center top, center top;
+  background-repeat: no-repeat;
   color: rgba(239, 226, 196, 0.94);
   scrollbar-color: rgba(168, 140, 84, 0.32) transparent;
 }
@@ -63,13 +68,7 @@ body[data-scene="forest"] #main {
   padding: 0;
   overflow: hidden;
   box-sizing: border-box;
-  background-color: #070709;
-  background-image:
-    radial-gradient(115% 70% at 50% -8%, rgba(42, 46, 60, 0.34), rgba(7, 7, 9, 0) 55%),
-    linear-gradient(180deg, rgba(7, 7, 9, 0.32) 0%, rgba(7, 7, 9, 0.55) 42%, rgba(4, 4, 6, 0.92) 100%),
-    url("../../images/forest-home/bg.jpg");
-  background-size: cover, cover, cover;
-  background-position: center top, center top, center top;
+  background: transparent;
   font-family: "Cormorant Garamond", Georgia, serif;
 }
 
@@ -85,10 +84,10 @@ body[data-scene="forest"] #main {
 
 .forest-avatar-btn,
 .forest-settings-btn {
-  width: 52px;
-  height: 52px;
-  min-width: 52px;
-  min-height: 52px;
+  width: 60px;
+  height: 60px;
+  min-width: 60px;
+  min-height: 60px;
   padding: 0;
   border: 1px solid rgba(168, 140, 84, 0.45);
   border-radius: 50%;
@@ -107,8 +106,8 @@ body[data-scene="forest"] #main {
 
 .forest-avatar-btn svg,
 .forest-settings-btn svg {
-  width: 26px;
-  height: 26px;
+  width: 30px;
+  height: 30px;
 }
 
 .forest-avatar-btn {
@@ -180,7 +179,8 @@ body[data-scene="forest"] #main {
 
 .forest-hero-card {
   width: auto;
-  margin: 26px 14px 0;
+  margin: 26px 0 0;
+  padding: 0 14px;
 }
 
 .forest-card,
@@ -215,10 +215,11 @@ body[data-scene="forest"] #main {
 }
 
 .forest-card {
-  width: 100%;
+  width: calc(100% + 34px);
   min-height: 0;
   aspect-ratio: 1536 / 1024;
   height: auto;
+  margin-inline: -17px;
   padding: 12% 11%;
   border: 0;
   border-radius: 0;

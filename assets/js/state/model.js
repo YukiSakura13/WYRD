@@ -4,7 +4,22 @@ const CARD_BY_ID = new Map(CARDS.map((card) => [card.id, card]));
 
 export const DEFAULT_STATE = Object.freeze({
   profileName: "Странник",
+  userProfile: {
+    avatarId: "",
+    customAvatarImage: "",
+    name: "",
+    pronoun: "neutral",
+    zodiac: "",
+    personalizationSeen: false,
+  },
+  reminders: {
+    enabled: false,
+    time: "07:00",
+    days: [],
+    monthlyFirst: false,
+  },
   soundEnabled: true,
+  vibrationEnabled: true,
   ambienceVolume: 0.58,
   onboardingSeen: false,
   selectedMode: "single",
@@ -18,6 +33,24 @@ export const DEFAULT_STATE = Object.freeze({
 });
 
 const HISTORY_RETENTION_MONTHS = 3;
+const AVATAR_IDS = new Set(["", "wolf", "mushroom", "forest-spark", "white-fox", "flower-spirit", "horned-spirit", "moon-cat", "custom"]);
+const PRONOUNS = new Set(["she", "he", "neutral"]);
+const REMINDER_DAYS = new Set(["mon", "tue", "wed", "thu", "fri", "sat", "sun"]);
+const ZODIAC_IDS = new Set([
+  "",
+  "aries",
+  "taurus",
+  "gemini",
+  "cancer",
+  "leo",
+  "virgo",
+  "libra",
+  "scorpio",
+  "sagittarius",
+  "capricorn",
+  "aquarius",
+  "pisces",
+]);
 
 export function cloneState(value) {
   return JSON.parse(JSON.stringify(value));
@@ -37,7 +70,10 @@ export function normalizeState(value) {
     next.currentReading && typeof next.currentReading === "object" ? normalizeReading(next.currentReading) : null;
   next.dailyFreeUsedAt = typeof next.dailyFreeUsedAt === "string" ? next.dailyFreeUsedAt : null;
   next.profileName = typeof next.profileName === "string" ? next.profileName : base.profileName;
+  next.userProfile = normalizeUserProfile(next.userProfile, base.userProfile, next.profileName);
+  next.reminders = normalizeReminders(next.reminders, base.reminders);
   next.soundEnabled = Boolean(next.soundEnabled);
+  next.vibrationEnabled = typeof next.vibrationEnabled === "boolean" ? next.vibrationEnabled : base.vibrationEnabled;
   next.ambienceVolume = normalizeAmbienceVolume(next.ambienceVolume, base.ambienceVolume);
   next.onboardingSeen = Boolean(next.onboardingSeen);
   next.selectedMode = normalizeSelectedMode(next.selectedMode);
@@ -182,6 +218,10 @@ export function resetState() {
 function enforceStateInvariants(state) {
   const next = { ...state };
 
+  if (next.userProfile?.name) {
+    next.profileName = next.userProfile.name;
+  }
+
   if (next.lastSpread.length) {
     next.currentReading = null;
   }
@@ -192,6 +232,48 @@ function enforceStateInvariants(state) {
   }
 
   return next;
+}
+
+function normalizeUserProfile(value, baseProfile, legacyProfileName) {
+  const source = value && typeof value === "object" ? value : {};
+  const legacyName = legacyProfileName && legacyProfileName !== DEFAULT_STATE.profileName ? legacyProfileName : "";
+
+  return {
+    avatarId: AVATAR_IDS.has(source.avatarId) ? source.avatarId : baseProfile.avatarId,
+    customAvatarImage: normalizeDataImage(source.customAvatarImage),
+    name: normalizeShortText(source.name ?? legacyName, 36),
+    pronoun: PRONOUNS.has(source.pronoun) ? source.pronoun : baseProfile.pronoun,
+    zodiac: ZODIAC_IDS.has(source.zodiac) ? source.zodiac : baseProfile.zodiac,
+    personalizationSeen: Boolean(source.personalizationSeen),
+  };
+}
+
+function normalizeReminders(value, baseReminders) {
+  const source = value && typeof value === "object" ? value : {};
+  const days = Array.isArray(source.days) ? source.days.filter((day) => REMINDER_DAYS.has(day)) : baseReminders.days;
+
+  return {
+    enabled: Boolean(source.enabled),
+    time: typeof source.time === "string" && /^\d{2}:\d{2}$/.test(source.time) ? source.time : baseReminders.time,
+    days: Array.from(new Set(days)),
+    monthlyFirst: Boolean(source.monthlyFirst),
+  };
+}
+
+function normalizeDataImage(value) {
+  if (typeof value !== "string") {
+    return "";
+  }
+
+  return /^data:image\/(png|jpe?g|webp);base64,/i.test(value) ? value : "";
+}
+
+function normalizeShortText(value, maxLength) {
+  if (typeof value !== "string") {
+    return "";
+  }
+
+  return value.replace(/\s+/g, " ").trim().slice(0, maxLength);
 }
 
 function createSingleRitualStack(reading) {

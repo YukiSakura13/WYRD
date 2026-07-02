@@ -1,5 +1,7 @@
 import { SCENES } from "./scenes.js";
 import { CARDS } from "../data/cards.js";
+import { AVATAR_OPTIONS, PRONOUN_OPTIONS, ZODIAC_OPTIONS } from "../data/personalization.js";
+import { SPIRIT_BOOK_PAGES } from "../data/spirit-book.js";
 import { createSpreadRenderer } from "./render-spread.js";
 import { getCardImage } from "./render-helpers.js";
 import { createMoonIcon, formatTraceDate, getMoonPhase } from "./moon.js";
@@ -16,6 +18,36 @@ export function getElements(doc = document) {
     main: doc.getElementById("main"),
     transitionVeil: doc.getElementById("transition-veil"),
     forestSection: doc.getElementById("forest-home"),
+    forestAvatarButton: doc.getElementById("forest-avatar-button"),
+    forestAvatarImage: doc.getElementById("forest-avatar-image"),
+    settingsSection: doc.getElementById("settings-screen"),
+    remindersSection: doc.getElementById("reminders-screen"),
+    appInfoSection: doc.getElementById("app-info-screen"),
+    spiritBookSection: doc.getElementById("spirit-book"),
+    spiritBookArt: doc.getElementById("spirit-book-art"),
+    spiritBookImage: doc.getElementById("spirit-book-image"),
+    spiritBookCounter: doc.getElementById("spirit-book-counter"),
+    spiritBookTitle: doc.getElementById("spirit-book-title"),
+    spiritBookText: doc.getElementById("spirit-book-text"),
+    spiritBookDots: doc.getElementById("spirit-book-dots"),
+    spiritBookPrev: doc.querySelector("[data-action='spirit-book-prev']"),
+    spiritBookNext: doc.querySelector("[data-action='spirit-book-next']"),
+    settingsProfileSummary: doc.getElementById("settings-profile-summary"),
+    settingSoundToggle: doc.getElementById("setting-sound-toggle"),
+    settingVibrationToggle: doc.getElementById("setting-vibration-toggle"),
+    aboutYouSection: doc.getElementById("about-you-screen"),
+    aboutAvatarTrack: doc.getElementById("about-avatar-track"),
+    aboutAvatarUpload: doc.getElementById("about-avatar-upload"),
+    aboutNameInput: doc.getElementById("about-name-input"),
+    aboutPronounGroup: doc.getElementById("about-pronoun-group"),
+    aboutZodiacSelect: doc.getElementById("about-zodiac-select"),
+    aboutSaveStatus: doc.getElementById("about-save-status"),
+    remindersTimeInput: doc.getElementById("reminders-time-input"),
+    remindersDaysSummary: doc.getElementById("reminders-days-summary"),
+    remindersDays: doc.getElementById("reminders-days"),
+    remindersMonthlyToggle: doc.getElementById("reminders-monthly-toggle"),
+    remindersSaveButton: doc.getElementById("reminders-save-button"),
+    remindersSaveStatus: doc.getElementById("reminders-save-status"),
     aboutSection: doc.getElementById("about-wyrd"),
     onboardingSection: doc.getElementById("ritual-onboarding"),
     deckWrap: doc.getElementById("deck-wrap"),
@@ -96,6 +128,11 @@ export function createRenderer(elements) {
 
   function render(state, uiState) {
     renderShell(uiState);
+    renderForestAvatar(state);
+    renderSettings(state);
+    renderAboutYou(state, uiState);
+    renderReminders(state, uiState);
+    renderSpiritBook(uiState);
     renderProfile(state);
     renderCurrentReading(state.currentReading, uiState.currentQuestion);
     renderHook(state, uiState);
@@ -113,6 +150,11 @@ export function createRenderer(elements) {
   function scrollTo(name) {
     const targetMap = {
       forest: elements.forestSection,
+      settings: elements.settingsSection,
+      "about-you": elements.aboutYouSection,
+      reminders: elements.remindersSection,
+      "app-info": elements.appInfoSection,
+      "spirit-book": elements.spiritBookSection,
       about: elements.aboutSection,
       deck: elements.deckWrap,
       profile: elements.profileSection,
@@ -175,6 +217,284 @@ export function createRenderer(elements) {
     if (elements.historyTrailsHeading) {
       elements.historyTrailsHeading.hidden = state.history.length === 0;
     }
+  }
+
+  function renderSettings(state) {
+    syncSettingsToggle(elements.settingSoundToggle, state.soundEnabled, "Звук леса");
+    syncSettingsToggle(elements.settingVibrationToggle, state.vibrationEnabled, "Тихий отклик");
+
+    if (!elements.settingsProfileSummary) {
+      return;
+    }
+
+    const profile = state.userProfile || {};
+    const parts = [];
+
+    if (profile.name) {
+      parts.push(profile.name);
+    }
+
+    if (profile.avatarId) {
+      parts.push("аватар выбран");
+    }
+
+    const pronoun = PRONOUN_OPTIONS.find((option) => option.id === profile.pronoun);
+    if (pronoun && pronoun.id !== "neutral") {
+      parts.push(pronoun.label);
+    }
+
+    const zodiac = ZODIAC_OPTIONS.find((option) => option.id === profile.zodiac);
+    if (zodiac?.id) {
+      parts.push(zodiac.label);
+    }
+
+    elements.settingsProfileSummary.textContent = parts.length
+      ? parts.join(" · ")
+      : "Имя, аватар и обращение";
+  }
+
+  function renderForestAvatar(state) {
+    if (!elements.forestAvatarButton || !elements.forestAvatarImage) {
+      return;
+    }
+
+    const image = getAvatarImage(state.userProfile);
+    elements.forestAvatarButton.classList.toggle("has-avatar", Boolean(image));
+    elements.forestAvatarImage.hidden = !image;
+
+    if (image && elements.forestAvatarImage.src !== image) {
+      elements.forestAvatarImage.src = image;
+    }
+
+    if (!image) {
+      elements.forestAvatarImage.removeAttribute("src");
+    }
+  }
+
+  function syncSettingsToggle(button, enabled, title) {
+    if (!button) {
+      return;
+    }
+
+    button.classList.toggle("is-on", Boolean(enabled));
+    button.setAttribute("aria-pressed", String(Boolean(enabled)));
+    button.setAttribute("aria-label", `${title}: ${enabled ? "включено" : "выключено"}`);
+  }
+
+  function getAvatarImage(profile = {}) {
+    if (profile.avatarId === "custom" && profile.customAvatarImage) {
+      return profile.customAvatarImage;
+    }
+
+    return AVATAR_OPTIONS.find((option) => option.id === profile.avatarId)?.image || "";
+  }
+
+  function formatReminderDays(days) {
+    if (!days.length) {
+      return "Не выбрано";
+    }
+
+    if (days.length === 7) {
+      return "Каждый день";
+    }
+
+    const labels = {
+      mon: "Пн",
+      tue: "Вт",
+      wed: "Ср",
+      thu: "Чт",
+      fri: "Пт",
+      sat: "Сб",
+      sun: "Вс",
+    };
+
+    return days.map((day) => labels[day]).filter(Boolean).join(", ");
+  }
+
+  function renderAboutYou(state, uiState) {
+    if (!elements.aboutYouSection) {
+      return;
+    }
+
+    const profile = uiState.aboutDraft || state.userProfile || {};
+    renderAvatarOptions(profile);
+    renderPronounOptions(profile.pronoun || "neutral");
+
+    if (elements.aboutNameInput && elements.aboutNameInput.value !== (profile.name || "")) {
+      elements.aboutNameInput.value = profile.name || "";
+    }
+
+    if (elements.aboutZodiacSelect && elements.aboutZodiacSelect.value !== (profile.zodiac || "")) {
+      elements.aboutZodiacSelect.value = profile.zodiac || "";
+    }
+  }
+
+  function renderAvatarOptions(profile) {
+    if (!elements.aboutAvatarTrack) {
+      return;
+    }
+
+    const activeAvatar = profile.avatarId || "";
+    elements.aboutAvatarTrack.replaceChildren(
+      ...AVATAR_OPTIONS.map(function createAvatarButton(option) {
+        const isSelected = activeAvatar === option.id;
+        const button = document.createElement("button");
+        button.className = "about-avatar";
+        button.type = "button";
+        button.dataset.action = "select-avatar";
+        button.dataset.avatarId = option.id;
+        button.setAttribute("role", "radio");
+        button.setAttribute("aria-checked", String(isSelected));
+        button.setAttribute("aria-label", `Выбрать облик: ${option.title}`);
+        button.classList.toggle("is-selected", isSelected);
+
+        const image = document.createElement("img");
+        image.src = option.image;
+        image.alt = "";
+        image.loading = "lazy";
+        image.decoding = "async";
+        button.appendChild(image);
+
+        return button;
+      }),
+      createAvatarUploadButton(profile),
+    );
+  }
+
+  function createAvatarUploadButton(profile) {
+    const hasCustomImage = Boolean(profile.customAvatarImage);
+    const isSelected = profile.avatarId === "custom" && hasCustomImage;
+    const button = document.createElement("button");
+    button.className = "about-upload-avatar";
+    button.type = "button";
+    button.dataset.action = "upload-avatar";
+    button.setAttribute("role", "radio");
+    button.setAttribute("aria-checked", String(isSelected));
+    button.setAttribute("aria-label", hasCustomImage ? "Заменить свой аватар" : "Загрузить свой аватар");
+    button.classList.toggle("is-selected", isSelected);
+
+    if (hasCustomImage) {
+      const image = document.createElement("img");
+      image.src = profile.customAvatarImage;
+      image.alt = "";
+      image.loading = "lazy";
+      image.decoding = "async";
+      button.appendChild(image);
+      return button;
+    }
+
+    button.innerHTML =
+      '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>';
+    return button;
+  }
+
+  function renderPronounOptions(pronoun) {
+    if (!elements.aboutPronounGroup) {
+      return;
+    }
+
+    PRONOUN_OPTIONS.forEach(function updatePronoun(option) {
+      const button = elements.aboutPronounGroup.querySelector(`[data-pronoun="${option.id}"]`);
+      const isSelected = option.id === pronoun;
+
+      if (!button) {
+        return;
+      }
+
+      button.classList.toggle("is-selected", isSelected);
+      button.setAttribute("aria-checked", String(isSelected));
+    });
+  }
+
+  function renderReminders(state, uiState) {
+    const reminders = uiState.remindersDraft || state.reminders || {};
+    const selectedDays = Array.isArray(reminders.days) ? reminders.days : [];
+
+    if (elements.remindersTimeInput && elements.remindersTimeInput.value !== (reminders.time || "07:00")) {
+      elements.remindersTimeInput.value = reminders.time || "07:00";
+    }
+
+    if (elements.remindersDaysSummary) {
+      elements.remindersDaysSummary.textContent = formatReminderDays(selectedDays);
+    }
+
+    if (elements.remindersDays) {
+      Array.from(elements.remindersDays.querySelectorAll("[data-day]")).forEach(function updateDay(button) {
+        const isSelected = selectedDays.includes(button.dataset.day);
+        button.classList.toggle("is-selected", isSelected);
+        button.setAttribute("aria-pressed", String(isSelected));
+      });
+    }
+
+    syncSettingsToggle(elements.remindersMonthlyToggle, Boolean(reminders.monthlyFirst), "Первое число месяца");
+
+    if (elements.remindersSaveButton) {
+      elements.remindersSaveButton.textContent = reminders.enabled ? "Сохранить" : "Включить уведомления";
+    }
+  }
+
+  function renderSpiritBook(uiState) {
+    if (!elements.spiritBookTitle || !elements.spiritBookImage || !elements.spiritBookText) {
+      return;
+    }
+
+    const lastPageIndex = SPIRIT_BOOK_PAGES.length - 1;
+    const pageIndex = Math.max(0, Math.min(lastPageIndex, uiState.spiritBookPage || 0));
+    const page = SPIRIT_BOOK_PAGES[pageIndex];
+
+    uiState.spiritBookPage = pageIndex;
+
+    if (elements.spiritBookArt) {
+      elements.spiritBookArt.dataset.page = String(pageIndex + 1);
+    }
+
+    elements.spiritBookImage.hidden = !page.image;
+    if (page.image) {
+      elements.spiritBookImage.src = page.image;
+      elements.spiritBookImage.alt = page.alt;
+    } else {
+      elements.spiritBookImage.removeAttribute("src");
+      elements.spiritBookImage.alt = "";
+    }
+
+    elements.spiritBookCounter.textContent = `Глава ${pageIndex + 1} из ${SPIRIT_BOOK_PAGES.length}`;
+    elements.spiritBookTitle.textContent = page.title;
+    elements.spiritBookText.replaceChildren(
+      ...page.paragraphs.map(function createParagraph(text) {
+        const paragraph = document.createElement("p");
+        paragraph.textContent = text;
+        return paragraph;
+      }),
+    );
+
+    if (elements.spiritBookPrev) {
+      elements.spiritBookPrev.disabled = pageIndex === 0;
+    }
+
+    if (elements.spiritBookNext) {
+      elements.spiritBookNext.disabled = pageIndex === lastPageIndex;
+    }
+
+    renderSpiritBookDots(pageIndex);
+  }
+
+  function renderSpiritBookDots(activeIndex) {
+    if (!elements.spiritBookDots) {
+      return;
+    }
+
+    elements.spiritBookDots.replaceChildren(
+      ...SPIRIT_BOOK_PAGES.map(function createDot(page, index) {
+        const dot = document.createElement("button");
+        dot.className = "spirit-book-dot";
+        dot.type = "button";
+        dot.dataset.action = "spirit-book-page";
+        dot.dataset.page = String(index);
+        dot.setAttribute("aria-label", `Открыть главу ${index + 1}: ${page.title}`);
+        dot.setAttribute("aria-current", index === activeIndex ? "page" : "false");
+        return dot;
+      }),
+    );
   }
 
   function getHistoryView(state) {
@@ -452,6 +772,11 @@ export function createRenderer(elements) {
     const isOnboarding = scene === SCENES.ONBOARDING;
 
     elements.forestSection.hidden = scene !== SCENES.FOREST;
+    elements.settingsSection.hidden = scene !== SCENES.SETTINGS;
+    elements.aboutYouSection.hidden = scene !== SCENES.ABOUT_YOU;
+    elements.remindersSection.hidden = scene !== SCENES.REMINDERS;
+    elements.appInfoSection.hidden = scene !== SCENES.APP_INFO;
+    elements.spiritBookSection.hidden = scene !== SCENES.SPIRIT_BOOK;
     elements.aboutSection.hidden = scene !== SCENES.ABOUT;
     elements.profileSection.hidden = scene !== SCENES.PROFILE;
     elements.onboardingSection.hidden = !isOnboarding;

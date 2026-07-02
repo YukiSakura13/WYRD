@@ -179,13 +179,14 @@
         <div class="forest-bg forest-bg--drift" aria-hidden="true"></div>
         <div class="forest-shell">
           <header class="forest-topbar" aria-label="Главные действия">
-            <button class="forest-avatar-btn" data-action="open-profile" type="button" aria-label="Открыть профиль">
+            <button class="forest-avatar-btn" id="forest-avatar-button" data-action="open-about-you" type="button" aria-label="Профиль">
               <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <circle cx="12" cy="8.4" r="3.5" fill="none" stroke="currentColor" stroke-width="1.1" />
                 <path d="M5 20c0-3.9 3.1-6.4 7-6.4s7 2.5 7 6.4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.1" />
               </svg>
+              <img class="forest-avatar-image" id="forest-avatar-image" alt="" hidden decoding="async" />
             </button>
-            <button class="forest-settings-btn" type="button" aria-label="Настройки">
+            <button class="forest-settings-btn" data-action="open-settings" type="button" aria-label="Настройки">
               <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="1.2" />
                 <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" />
@@ -269,7 +270,7 @@
               </svg>
             </button>
 
-            <button class="forest-tile forest-tile--book" data-action="open-about" type="button">
+            <button class="forest-tile forest-tile--book" data-action="open-spirit-book" type="button">
               <span class="forest-tile-marker" aria-hidden="true"><span></span><span>✦</span><span></span></span>
               <span class="forest-tile-visual" aria-hidden="true">
                 <img src="./assets/images/forest-home/acorn.png" alt="" decoding="async" />
@@ -285,6 +286,256 @@
             </button>
           </div>
         </div>
+      </section>
+
+      <section class="settings-screen" id="settings-screen" hidden aria-labelledby="settings-title">
+        <div class="settings-shell">
+          <button class="btn-back-circle settings-back" data-action="back-to-forest" type="button" aria-label="Вернуться в Лес">←</button>
+          <header class="settings-header">
+            <p class="settings-brand" aria-label="WYRD">WYRD</p>
+            <div class="settings-rule" aria-hidden="true"></div>
+            <p class="settings-kicker">Оракул духов леса</p>
+            <h1 id="settings-title">Настройки</h1>
+          </header>
+
+          <div class="settings-list" aria-label="Параметры WYRD">
+            <button class="settings-row settings-row--entry" data-action="open-about-you" type="button">
+              <span class="settings-row-copy">
+                <span class="settings-row-title">Профиль</span>
+                <span class="settings-row-value" id="settings-profile-summary">Имя, аватар и обращение</span>
+              </span>
+              <span class="settings-row-arrow" aria-hidden="true">›</span>
+            </button>
+
+            <button class="settings-row settings-row--entry" data-action="open-reminders" type="button">
+              <span class="settings-row-copy">
+                <span class="settings-row-title">Уведомления</span>
+                <span class="settings-row-value">Время и дни</span>
+              </span>
+              <span class="settings-row-arrow" aria-hidden="true">›</span>
+            </button>
+
+            <button class="settings-row settings-row--toggle" id="setting-sound-toggle" data-action="toggle-sound" type="button" aria-pressed="true">
+              <span class="settings-row-copy">
+                <span class="settings-row-title">Звук</span>
+                <span class="settings-row-value">Звуки интерфейса</span>
+              </span>
+              <span class="settings-toggle" aria-hidden="true"></span>
+            </button>
+
+            <button class="settings-row settings-row--toggle" id="setting-vibration-toggle" data-action="toggle-vibration" type="button" aria-pressed="true">
+              <span class="settings-row-copy">
+                <span class="settings-row-title">Вибрация</span>
+                <span class="settings-row-value">Отклик при касании</span>
+              </span>
+              <span class="settings-toggle" aria-hidden="true"></span>
+            </button>
+
+            <button class="settings-row settings-row--entry" data-action="open-app-info" type="button">
+              <span class="settings-row-copy">
+                <span class="settings-row-title">О приложении</span>
+                <span class="settings-row-value">Версия, связь и документы</span>
+              </span>
+              <span class="settings-row-arrow" aria-hidden="true">›</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="about-you-screen" id="about-you-screen" hidden aria-labelledby="about-you-title">
+        <div class="settings-shell about-you-shell">
+          <button class="btn-back-circle settings-back" data-action="close-about-you" type="button" aria-label="Назад">←</button>
+          <header class="settings-header about-you-header">
+            <p class="settings-brand" aria-label="WYRD">WYRD</p>
+            <div class="settings-rule" aria-hidden="true"></div>
+            <p class="settings-kicker">Оракул духов леса</p>
+            <h1 id="about-you-title">Профиль</h1>
+          </header>
+
+          <form class="about-form" id="about-you-form">
+            <section class="about-you-section about-avatar-section" aria-label="Выбор аватара">
+              <div class="about-avatar-track" id="about-avatar-track" role="radiogroup" aria-label="Выбор аватара"></div>
+              <input class="sr-only" id="about-avatar-upload" type="file" accept="image/*" />
+            </section>
+
+            <label class="about-field" for="about-name-input">
+              <span class="sr-only">Имя</span>
+              <input
+                id="about-name-input"
+                name="name"
+                type="text"
+                maxlength="36"
+                autocomplete="given-name"
+                placeholder="Имя"
+              />
+            </label>
+
+            <section class="about-you-section" aria-label="Выбор обращения">
+              <div class="about-segmented" id="about-pronoun-group" role="radiogroup" aria-label="Выбор обращения">
+                <button class="about-segment" data-action="select-pronoun" data-pronoun="she" type="button" role="radio" aria-checked="false">она</button>
+                <button class="about-segment" data-action="select-pronoun" data-pronoun="he" type="button" role="radio" aria-checked="false">он</button>
+                <button class="about-segment" data-action="select-pronoun" data-pronoun="neutral" type="button" role="radio" aria-checked="true">без разницы</button>
+              </div>
+            </section>
+
+            <label class="about-select-row" for="about-zodiac-select">
+              <span class="about-select-copy">
+                <span class="about-select-title">Знак</span>
+                <span class="about-select-note">Можно не выбирать</span>
+              </span>
+              <select id="about-zodiac-select" name="zodiac">
+                <option value="">Не выбрано</option>
+                <option value="aries">Овен</option>
+                <option value="taurus">Телец</option>
+                <option value="gemini">Близнецы</option>
+                <option value="cancer">Рак</option>
+                <option value="leo">Лев</option>
+                <option value="virgo">Дева</option>
+                <option value="libra">Весы</option>
+                <option value="scorpio">Скорпион</option>
+                <option value="sagittarius">Стрелец</option>
+                <option value="capricorn">Козерог</option>
+                <option value="aquarius">Водолей</option>
+                <option value="pisces">Рыбы</option>
+              </select>
+            </label>
+
+            <p class="about-save-status sr-only" id="about-save-status" aria-live="polite"></p>
+            <div class="about-actions">
+              <button class="about-save" data-action="save-about-you" type="button">Сохранить</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section class="settings-screen reminders-screen" id="reminders-screen" hidden aria-labelledby="reminders-title">
+        <div class="settings-shell">
+          <button class="btn-back-circle settings-back" data-action="back-to-settings" type="button" aria-label="Вернуться в настройки">←</button>
+          <header class="settings-header">
+            <p class="settings-brand" aria-label="WYRD">WYRD</p>
+            <div class="settings-rule" aria-hidden="true"></div>
+            <p class="settings-kicker">Оракул духов леса</p>
+            <h1 id="reminders-title">Уведомления</h1>
+          </header>
+          <form class="reminders-form" id="reminders-form">
+            <section class="reminders-list" aria-label="Расписание уведомлений">
+              <label class="reminders-row" for="reminders-time-input">
+                <span class="reminders-row-copy">
+                  <span class="reminders-row-title">Время</span>
+                  <span class="reminders-row-value">Когда напоминать</span>
+                </span>
+                <input id="reminders-time-input" name="time" type="text" inputmode="numeric" pattern="[0-9]{2}:[0-9]{2}" maxlength="5" value="07:00" aria-label="Время уведомления" />
+              </label>
+
+              <div class="reminders-row reminders-row--days">
+                <span class="reminders-row-copy">
+                  <span class="reminders-row-title">Дни</span>
+                  <span class="reminders-row-value" id="reminders-days-summary">Не выбрано</span>
+                </span>
+                <button class="reminders-select-all" data-action="toggle-all-reminder-days" type="button">Все</button>
+              </div>
+            </section>
+
+            <section class="reminders-section" aria-label="Дни недели">
+              <div class="reminders-days" id="reminders-days" role="group" aria-label="Дни недели">
+                <button class="reminders-day" data-action="toggle-reminder-day" data-day="mon" type="button" aria-pressed="false">Пн</button>
+                <button class="reminders-day" data-action="toggle-reminder-day" data-day="tue" type="button" aria-pressed="false">Вт</button>
+                <button class="reminders-day" data-action="toggle-reminder-day" data-day="wed" type="button" aria-pressed="false">Ср</button>
+                <button class="reminders-day" data-action="toggle-reminder-day" data-day="thu" type="button" aria-pressed="false">Чт</button>
+                <button class="reminders-day" data-action="toggle-reminder-day" data-day="fri" type="button" aria-pressed="false">Пт</button>
+                <button class="reminders-day" data-action="toggle-reminder-day" data-day="sat" type="button" aria-pressed="false">Сб</button>
+                <button class="reminders-day" data-action="toggle-reminder-day" data-day="sun" type="button" aria-pressed="false">Вс</button>
+              </div>
+            </section>
+
+            <section class="reminders-list" aria-label="Ежемесячные уведомления">
+              <button class="reminders-row reminders-row--toggle" id="reminders-monthly-toggle" data-action="toggle-monthly-reminder" type="button" aria-pressed="false">
+                <span class="reminders-row-copy">
+                  <span class="reminders-row-title">Первое число месяца</span>
+                  <span class="reminders-row-value">Напоминать раз в месяц</span>
+                </span>
+                <span class="settings-toggle" aria-hidden="true"></span>
+              </button>
+            </section>
+
+            <p class="about-save-status sr-only" id="reminders-save-status" aria-live="polite"></p>
+            <div class="about-actions reminders-actions">
+              <button class="about-save" id="reminders-save-button" data-action="save-reminders" type="button">Включить уведомления</button>
+              <button class="reminders-disable" data-action="disable-reminders" type="button">Отключить уведомления</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section class="settings-screen app-info-screen" id="app-info-screen" hidden aria-labelledby="app-info-title">
+        <div class="settings-shell">
+          <button class="btn-back-circle settings-back" data-action="back-to-settings" type="button" aria-label="Вернуться в настройки">←</button>
+          <header class="settings-header">
+            <p class="settings-brand" aria-label="WYRD">WYRD</p>
+            <div class="settings-rule" aria-hidden="true"></div>
+            <p class="settings-kicker">Оракул духов леса</p>
+            <h1 id="app-info-title">О приложении</h1>
+          </header>
+
+          <div class="settings-list app-info-list" aria-label="Информация о приложении">
+            <div class="settings-row app-info-row">
+              <span class="settings-row-copy">
+                <span class="settings-row-title">Версия</span>
+                <span class="settings-row-value">Будет добавлено позже</span>
+              </span>
+            </div>
+            <div class="settings-row app-info-row">
+              <span class="settings-row-copy">
+                <span class="settings-row-title">Связаться с нами</span>
+                <span class="settings-row-value">Почта будет добавлена позже</span>
+              </span>
+            </div>
+            <div class="settings-row app-info-row">
+              <span class="settings-row-copy">
+                <span class="settings-row-title">Сообщить об ошибке</span>
+                <span class="settings-row-value">Контакт будет добавлен позже</span>
+              </span>
+            </div>
+            <div class="settings-row app-info-row">
+              <span class="settings-row-copy">
+                <span class="settings-row-title">Политика конфиденциальности</span>
+                <span class="settings-row-value">Документ будет добавлен позже</span>
+              </span>
+            </div>
+            <div class="settings-row app-info-row">
+              <span class="settings-row-copy">
+                <span class="settings-row-title">Условия использования</span>
+                <span class="settings-row-value">Документ будет добавлен позже</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="spirit-book" id="spirit-book" hidden aria-labelledby="spirit-book-title">
+        <button class="btn-back-circle spirit-book-back" data-action="back-to-forest" type="button" aria-label="Вернуться в Лес">←</button>
+
+        <article class="spirit-book-page" aria-live="polite">
+          <div class="spirit-book-art" id="spirit-book-art">
+            <img id="spirit-book-image" src="./assets/images/spirit-book/spirit-book-01.webp" alt="" loading="lazy" decoding="async" />
+            <span class="spirit-book-mist spirit-book-mist--rear"></span>
+            <span class="spirit-book-mist spirit-book-mist--front"></span>
+            <span class="spirit-book-fern spirit-book-fern--left"></span>
+            <span class="spirit-book-fern spirit-book-fern--right"></span>
+          </div>
+
+          <div class="spirit-book-copy">
+            <p class="spirit-book-kicker" id="spirit-book-counter">Глава 1 из 5</p>
+            <h1 id="spirit-book-title">История духов леса</h1>
+            <div class="spirit-book-text" id="spirit-book-text"></div>
+          </div>
+        </article>
+
+        <nav class="spirit-book-controls" aria-label="Страницы книги">
+          <button class="spirit-book-arrow" data-action="spirit-book-prev" type="button" aria-label="Предыдущая глава">←</button>
+          <div class="spirit-book-dots" id="spirit-book-dots" aria-label="Выбор главы"></div>
+          <button class="spirit-book-arrow" data-action="spirit-book-next" type="button" aria-label="Следующая глава">→</button>
+        </nav>
       </section>
 
       <section class="about-wyrd" id="about-wyrd" hidden aria-labelledby="about-wyrd-title">

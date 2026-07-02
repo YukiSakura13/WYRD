@@ -3,7 +3,13 @@ import { CARDS, COVER_IMAGE } from "./data/cards.js";
 import { registerServiceWorker } from "./pwa.js";
 import { detectQuestionRoute } from "./cards/question-routing.js";
 import { createStateStore } from "./state/storage.js";
-import { createActionHandler, createDeckQuestionGuidance, createInitialUIState, createKeyboardHandler } from "./ui/actions.js";
+import {
+  createActionHandler,
+  createDeckQuestionGuidance,
+  createInitialUIState,
+  createInputChangeHandler,
+  createKeyboardHandler,
+} from "./ui/actions.js";
 import { createAboutNavigation } from "./ui/about-navigation.js";
 import { createCoverCtaAnimation } from "./ui/cover-cta.js";
 import { createRenderer, getElements } from "./ui/render.js";
@@ -120,6 +126,15 @@ document.addEventListener(
   createKeyboardHandler({
     aboutNavigation,
     renderApp,
+    uiState,
+  }),
+);
+
+document.addEventListener(
+  "change",
+  createInputChangeHandler({
+    renderApp,
+    store,
     uiState,
   }),
 );

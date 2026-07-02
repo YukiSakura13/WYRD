@@ -2,6 +2,8 @@
 @import "./base.css";
 @import "./scenes/cover-onboarding.css";
 @import "./scenes/forest.css";
+@import "./scenes/settings.css";
+@import "./scenes/spirit-book.css";
 @import "./scenes/about-wyrd.css";
 @import "./scenes/deck.css";
 @import "./components/reading.css";

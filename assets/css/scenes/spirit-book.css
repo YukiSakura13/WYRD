@@ -1,0 +1,496 @@
+body[data-scene="spirit-book"] {
+  background: #070709;
+}
+
+body[data-scene="spirit-book"] #main {
+  max-width: none;
+  min-height: 100svh;
+  padding: 0;
+  background: #070709;
+}
+
+body[data-scene="spirit-book"] .hdr,
+body[data-scene="spirit-book"] .top-actions,
+body[data-scene="spirit-book"] .ornament,
+body[data-scene="spirit-book"] .footer {
+  display: none;
+}
+
+.spirit-book {
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding:
+    max(26px, calc(env(safe-area-inset-top) + 16px))
+    18px
+    max(28px, calc(env(safe-area-inset-bottom) + 20px));
+  color: rgba(239, 226, 196, 0.94);
+  font-family: "Cormorant Garamond", Georgia, serif;
+}
+
+.spirit-book[hidden] {
+  display: none !important;
+}
+
+.spirit-book::before,
+.spirit-book::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.spirit-book::before {
+  z-index: -2;
+  background:
+    radial-gradient(115% 70% at 50% -8%, rgba(42, 46, 60, 0.32), rgba(7, 7, 9, 0) 55%),
+    linear-gradient(180deg, rgba(7, 7, 9, 0.32) 0%, rgba(7, 7, 9, 0.58) 48%, rgba(4, 4, 6, 0.94) 100%),
+    url("../../images/forest-home/bg.jpg") center top / cover no-repeat;
+}
+
+.spirit-book::after {
+  z-index: -1;
+  background:
+    radial-gradient(90% 48% at 50% 0%, rgba(32, 35, 45, 0.16), transparent 62%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.5));
+}
+
+.spirit-book-back {
+  position: absolute;
+  top: max(1rem, calc(env(safe-area-inset-top) + 0.38rem));
+  left: max(1rem, calc(env(safe-area-inset-left) + 0.38rem));
+  z-index: 3;
+}
+
+.spirit-book-page,
+.spirit-book-controls {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 430px);
+  margin-inline: auto;
+}
+
+.spirit-book-page {
+  display: grid;
+  gap: 16px;
+  padding-top: 48px;
+}
+
+.spirit-book-art {
+  position: relative;
+  min-height: clamp(17rem, 43svh, 24rem);
+  border: 1px solid rgba(201, 161, 74, 0.16);
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(5, 6, 7, 0.82);
+  --book-image-x: 50%;
+  --book-image-y: 50%;
+  --book-image-origin-x: 50%;
+  --book-image-origin-y: 50%;
+  --book-glow-x: 50%;
+  --book-glow-y: 18%;
+  --book-glow-size: 16rem;
+  --book-glow-color: rgba(238, 231, 214, 0.09);
+  --book-glow-opacity: 0.8;
+  --book-glow-min-opacity: 0.58;
+  --book-spark-x: 72%;
+  --book-spark-y: 16%;
+  --book-spark-opacity: 0.34;
+  --book-mist-opacity: 0.34;
+  --book-rear-mist-opacity: 0.18;
+  --book-fern-opacity: 0.16;
+  box-shadow: none;
+}
+
+.spirit-book-art[data-page="1"] {
+  --book-image-x: 46%;
+  --book-image-y: 50%;
+  --book-image-origin-x: 33%;
+  --book-image-origin-y: 30%;
+  --book-glow-x: 32%;
+  --book-glow-y: 30%;
+  --book-glow-size: 13rem;
+  --book-glow-color: rgba(245, 245, 235, 0.12);
+  --book-glow-min-opacity: 0.62;
+  --book-spark-x: 76%;
+  --book-spark-y: 17%;
+}
+
+.spirit-book-art[data-page="2"] {
+  --book-image-x: 47%;
+  --book-image-y: 58%;
+  --book-image-origin-x: 50%;
+  --book-image-origin-y: 58%;
+  --book-glow-x: 52%;
+  --book-glow-y: 62%;
+  --book-glow-size: 17rem;
+  --book-glow-color: rgba(245, 245, 235, 0.1);
+  --book-glow-min-opacity: 0.54;
+  --book-spark-x: 57%;
+  --book-spark-y: 20%;
+}
+
+.spirit-book-art[data-page="3"] {
+  --book-image-x: 52%;
+  --book-image-y: 50%;
+  --book-image-origin-x: 36%;
+  --book-image-origin-y: 78%;
+  --book-glow-x: 36%;
+  --book-glow-y: 78%;
+  --book-glow-size: 12rem;
+  --book-glow-color: rgba(240, 232, 198, 0.1);
+  --book-glow-min-opacity: 0.52;
+  --book-spark-x: 80%;
+  --book-spark-y: 20%;
+}
+
+.spirit-book-art[data-page="4"] {
+  --book-image-x: 50%;
+  --book-image-y: 45%;
+  --book-image-origin-x: 50%;
+  --book-image-origin-y: 43%;
+  --book-glow-x: 50%;
+  --book-glow-y: 44%;
+  --book-glow-size: 12rem;
+  --book-glow-color: rgba(242, 200, 96, 0.13);
+  --book-glow-min-opacity: 0.62;
+  --book-spark-x: 67%;
+  --book-spark-y: 18%;
+}
+
+.spirit-book-art[data-page="5"] {
+  --book-image-x: 48%;
+  --book-image-y: 46%;
+  --book-image-origin-x: 50%;
+  --book-image-origin-y: 32%;
+  --book-glow-x: 48%;
+  --book-glow-y: 32%;
+  --book-glow-size: 14rem;
+  --book-glow-color: rgba(245, 245, 235, 0.08);
+  --book-glow-min-opacity: 0.48;
+  --book-spark-x: 51%;
+  --book-spark-y: 15%;
+  --book-mist-opacity: 0.42;
+  --book-rear-mist-opacity: 0.24;
+}
+
+.spirit-book-art::before,
+.spirit-book-art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.spirit-book-art::before {
+  background:
+    radial-gradient(circle var(--book-glow-size) at var(--book-glow-x) var(--book-glow-y), var(--book-glow-color), transparent 62%),
+    radial-gradient(circle at 50% 18%, rgba(255, 244, 215, 0.045), transparent 24%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.08), transparent 42%, rgba(0, 0, 0, 0.54));
+  opacity: var(--book-glow-opacity);
+  animation: spiritBookAuraPulse 9s ease-in-out infinite alternate;
+}
+
+.spirit-book-art::after {
+  inset: 0.55rem;
+  border: 1px solid rgba(201, 161, 74, 0.13);
+  border-radius: 6px 6px 14px 14px;
+  background:
+    radial-gradient(circle at var(--book-spark-x) var(--book-spark-y), rgba(250, 246, 229, var(--book-spark-opacity)), transparent 0.2rem),
+    radial-gradient(circle at calc(var(--book-spark-x) - 8%) calc(var(--book-spark-y) + 7%), rgba(216, 177, 90, 0.16), transparent 0.16rem),
+    radial-gradient(circle at calc(var(--book-spark-x) + 6%) calc(var(--book-spark-y) + 10%), rgba(250, 246, 229, 0.13), transparent 0.14rem);
+  animation: spiritBookGlintDrift 12s ease-in-out infinite alternate;
+}
+
+.spirit-book-art img {
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  display: block;
+  object-fit: cover;
+  object-position: var(--book-image-x) var(--book-image-y);
+  filter: brightness(0.84) contrast(1.08) saturate(0.88);
+  transform: scale(1.018);
+  transform-origin: var(--book-image-origin-x) var(--book-image-origin-y);
+  animation: spiritBookImageBreath 18s ease-in-out infinite alternate;
+}
+
+.spirit-book-mist,
+.spirit-book-fern {
+  position: absolute;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.spirit-book-mist {
+  left: -18%;
+  right: -18%;
+  height: 42%;
+  bottom: -14%;
+  background:
+    radial-gradient(ellipse at 22% 52%, rgba(215, 215, 205, 0.22), transparent 38%),
+    radial-gradient(ellipse at 64% 45%, rgba(215, 215, 205, 0.16), transparent 44%),
+    radial-gradient(ellipse at 92% 58%, rgba(215, 215, 205, 0.12), transparent 36%);
+  filter: blur(18px);
+  opacity: var(--book-mist-opacity);
+  animation: spiritBookMistDrift 20s ease-in-out infinite alternate;
+}
+
+.spirit-book-mist--rear {
+  bottom: 4%;
+  opacity: var(--book-rear-mist-opacity);
+  animation-duration: 26s;
+  animation-direction: alternate-reverse;
+}
+
+.spirit-book-fern {
+  width: 44%;
+  height: 62%;
+  bottom: -16%;
+  opacity: var(--book-fern-opacity);
+  background: radial-gradient(ellipse at center bottom, rgba(201, 161, 74, 0.08), transparent 68%);
+  mix-blend-mode: screen;
+  filter: grayscale(1) brightness(1.25) contrast(1.15);
+  animation: spiritBookFernSway 16s ease-in-out infinite alternate;
+}
+
+.spirit-book-fern--left {
+  left: -22%;
+  transform-origin: 15% 92%;
+}
+
+.spirit-book-fern--right {
+  right: -22%;
+  transform-origin: 85% 92%;
+  animation-direction: alternate-reverse;
+}
+
+.spirit-book-copy {
+  padding: 24px 22px 26px;
+  border: 1px solid rgba(168, 140, 84, 0.26);
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(216, 177, 90, 0.045), transparent 28%),
+    rgba(9, 10, 14, 0.42);
+  box-shadow: none;
+}
+
+.spirit-book-kicker {
+  margin: 0 0 0.55rem;
+  color: rgba(201, 161, 74, 0.72);
+  font-family: "Forum", Georgia, serif;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.spirit-book-copy h1 {
+  margin: 0;
+  color: rgba(239, 226, 196, 0.94);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(38px, 10vw, 48px);
+  font-weight: 600;
+  line-height: 1.05;
+}
+
+.spirit-book-text {
+  margin-top: 0.9rem;
+  color: rgba(217, 206, 184, 0.78);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 21px;
+  line-height: 1.44;
+}
+
+.spirit-book-text p {
+  margin: 0;
+}
+
+.spirit-book-text p + p {
+  margin-top: 0.72rem;
+}
+
+.spirit-book-controls {
+  margin-top: clamp(1rem, 3.7vh, 1.4rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  padding-bottom: 0.2rem;
+}
+
+.spirit-book-arrow,
+.spirit-book-dot {
+  border: 1px solid rgba(201, 161, 74, 0.22);
+  background: rgba(8, 9, 12, 0.42);
+  color: rgba(238, 222, 178, 0.82);
+  cursor: pointer;
+  transition:
+    border-color var(--dur-medium) var(--ease-out-strong),
+    background-color var(--dur-medium) var(--ease-out-strong),
+    color var(--dur-medium) var(--ease-out-strong),
+    transform var(--dur-fast) var(--ease-out-strong);
+}
+
+.spirit-book-arrow {
+  width: 2.65rem;
+  height: 2.65rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.45rem;
+  line-height: 1;
+}
+
+.spirit-book-dots {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.spirit-book-dot {
+  width: 0.72rem;
+  height: 0.72rem;
+  border-radius: 50%;
+  padding: 0;
+}
+
+.spirit-book-dot[aria-current="page"] {
+  background: rgba(216, 177, 90, 0.78);
+  border-color: rgba(216, 177, 90, 0.92);
+  box-shadow: 0 0 18px rgba(216, 177, 90, 0.28);
+}
+
+.spirit-book-arrow:hover,
+.spirit-book-arrow:focus-visible,
+.spirit-book-dot:hover,
+.spirit-book-dot:focus-visible {
+  border-color: rgba(216, 177, 90, 0.62);
+  background-color: rgba(20, 20, 25, 0.78);
+  color: rgba(246, 237, 214, 0.96);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.spirit-book-arrow:focus-visible,
+.spirit-book-dot:focus-visible,
+.spirit-book-back:focus-visible {
+  box-shadow:
+    0 0 0 3px rgba(201, 161, 74, 0.18),
+    0 0 0 1px rgba(216, 177, 90, 0.8);
+}
+
+.spirit-book-arrow:disabled {
+  opacity: 0.32;
+  cursor: default;
+  transform: none;
+}
+
+@keyframes spiritBookImageBreath {
+  0% {
+    transform: scale(1.018);
+  }
+
+  100% {
+    transform: scale(1.045) translate3d(0.35%, -0.35%, 0);
+  }
+}
+
+@keyframes spiritBookAuraPulse {
+  0% {
+    opacity: var(--book-glow-min-opacity);
+    transform: translate3d(0, 0, 0);
+  }
+
+  100% {
+    opacity: var(--book-glow-opacity);
+    transform: translate3d(0, -1.2%, 0);
+  }
+}
+
+@keyframes spiritBookGlintDrift {
+  0% {
+    opacity: 0.62;
+    transform: translate3d(-0.45%, 0.35%, 0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0.45%, -0.35%, 0);
+  }
+}
+
+@keyframes spiritBookMistDrift {
+  0% {
+    transform: translate3d(-4%, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(4%, -3%, 0);
+  }
+}
+
+@keyframes spiritBookFernSway {
+  0% {
+    transform: rotate(-1deg) translate3d(0, 0, 0);
+  }
+
+  100% {
+    transform: rotate(1.6deg) translate3d(1%, -1%, 0);
+  }
+}
+
+@media (min-width: 780px) {
+  .spirit-book {
+    display: grid;
+    align-content: center;
+    padding-top: max(1.4rem, calc(env(safe-area-inset-top) + 1rem));
+  }
+
+  .spirit-book-page,
+  .spirit-book-controls {
+    width: min(100%, 960px);
+  }
+
+  .spirit-book-page {
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    align-items: stretch;
+    padding-top: 1.7rem;
+  }
+
+  .spirit-book-art {
+    min-height: min(68svh, 37rem);
+    border-radius: 12px;
+  }
+
+  .spirit-book-art::after {
+    border-radius: 9px;
+  }
+
+  .spirit-book-copy {
+    align-self: center;
+    max-height: min(68svh, 37rem);
+    overflow-y: auto;
+    border-radius: 12px;
+  }
+
+  .spirit-book-controls {
+    margin-top: 1.05rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spirit-book-art img,
+  .spirit-book-art::before,
+  .spirit-book-art::after,
+  .spirit-book-mist,
+  .spirit-book-fern {
+    animation: none;
+  }
+}
