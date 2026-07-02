@@ -253,10 +253,47 @@ export function createActionHandler(deps) {
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function openReminders() {
         uiState.remindersDraft = { ...store.getState().reminders };
+        uiState.timePickerOpen = false;
+        uiState.timePickerDraft = null;
         setScene(SCENES.REMINDERS);
         audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.FOREST });
         renderer.scrollTo(SCENES.REMINDERS);
       });
+      return;
+    }
+
+    if (action === "open-time-picker") {
+      audio.playSelect(store.getState().soundEnabled);
+      const draft = readRemindersDraftFromForm(store, uiState);
+      uiState.remindersDraft = draft;
+      uiState.timePickerOpen = true;
+      uiState.timePickerDraft = draft.time || "11:00";
+      renderApp();
+      window.setTimeout(function focusTimePicker() {
+        document.getElementById("reminders-time-hour")?.focus();
+      }, 40);
+      return;
+    }
+
+    if (action === "cancel-time-picker") {
+      audio.playSelect(store.getState().soundEnabled);
+      uiState.timePickerOpen = false;
+      uiState.timePickerDraft = null;
+      renderApp();
+      return;
+    }
+
+    if (action === "confirm-time-picker") {
+      audio.playSelect(store.getState().soundEnabled);
+      const draft = readRemindersDraftFromForm(store, uiState);
+      const timeValue = readTimePickerValue() || uiState.timePickerDraft;
+      uiState.remindersDraft = {
+        ...draft,
+        time: normalizeReminderTime(timeValue, draft.time || "11:00"),
+      };
+      uiState.timePickerOpen = false;
+      uiState.timePickerDraft = null;
+      renderApp();
       return;
     }
 
@@ -302,6 +339,27 @@ export function createActionHandler(deps) {
       return;
     }
 
+    if (action === "toggle-moon-phase-reminder") {
+      audio.playSelect(store.getState().soundEnabled);
+      const phase = trigger.dataset.phase;
+      const draft = readRemindersDraftFromForm(store, uiState);
+      const moonPhases = {
+        newMoon: Boolean(draft.moonPhases?.newMoon),
+        fullMoon: Boolean(draft.moonPhases?.fullMoon),
+      };
+
+      if (phase === "newMoon" || phase === "fullMoon") {
+        moonPhases[phase] = !moonPhases[phase];
+      }
+
+      uiState.remindersDraft = {
+        ...draft,
+        moonPhases,
+      };
+      renderApp();
+      return;
+    }
+
     if (action === "save-reminders") {
       audio.playSelect(store.getState().soundEnabled);
       uiState.remindersDraft = {
@@ -330,6 +388,8 @@ export function createActionHandler(deps) {
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function returnToSettings() {
         uiState.remindersDraft = null;
+        uiState.timePickerOpen = false;
+        uiState.timePickerDraft = null;
         setScene(SCENES.SETTINGS);
         audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.SETTINGS });
         renderer.scrollTo(SCENES.SETTINGS);
@@ -557,15 +617,31 @@ function readAboutDraftFromForm(store, uiState) {
 function readRemindersDraftFromForm(store, uiState) {
   const stateReminders = store.getState().reminders || {};
   const draft = uiState.remindersDraft || stateReminders;
-  const timeInput = document.getElementById("reminders-time-input");
 
   return {
     ...stateReminders,
     ...draft,
-    time: normalizeReminderTime(timeInput?.value, draft.time || "07:00"),
+    time: normalizeReminderTime(draft.time, stateReminders.time || "11:00"),
     days: Array.isArray(draft.days) ? draft.days.filter((day) => REMINDER_DAYS.includes(day)) : [],
     monthlyFirst: Boolean(draft.monthlyFirst),
+    moonPhases: {
+      newMoon: Boolean(draft.moonPhases?.newMoon),
+      fullMoon: Boolean(draft.moonPhases?.fullMoon),
+    },
   };
+}
+
+function readTimePickerValue() {
+  const hourSelect = document.getElementById("reminders-time-hour");
+  const minuteSelect = document.getElementById("reminders-time-minute");
+  const hour = hourSelect?.value;
+  const minute = minuteSelect?.value;
+
+  if (!hour || !minute) {
+    return "";
+  }
+
+  return `${hour}:${minute}`;
 }
 
 function normalizeReminderTime(value, fallback) {
@@ -613,8 +689,8 @@ export function createInputChangeHandler(deps) {
       return;
     }
 
-    if (event.target?.id === "reminders-time-input") {
-      uiState.remindersDraft = readRemindersDraftFromForm(store, uiState);
+    if (event.target?.id === "reminders-time-hour" || event.target?.id === "reminders-time-minute") {
+      uiState.timePickerDraft = normalizeReminderTime(readTimePickerValue(), uiState.timePickerDraft || "11:00");
       renderApp();
     }
   };
@@ -806,6 +882,8 @@ export function createInitialUIState(state) {
     profileReturnScene: getReturnScene(null, state),
     rawQuestion: "",
     remindersDraft: null,
+    timePickerOpen: false,
+    timePickerDraft: null,
     spiritBookPage: 0,
     onboardingReturn: SCENES.COVER,
     activeHistoryTraceId: null,

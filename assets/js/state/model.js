@@ -14,9 +14,13 @@ export const DEFAULT_STATE = Object.freeze({
   },
   reminders: {
     enabled: false,
-    time: "07:00",
+    time: "11:00",
     days: [],
     monthlyFirst: false,
+    moonPhases: {
+      newMoon: false,
+      fullMoon: false,
+    },
   },
   soundEnabled: true,
   vibrationEnabled: true,
@@ -251,12 +255,18 @@ function normalizeUserProfile(value, baseProfile, legacyProfileName) {
 function normalizeReminders(value, baseReminders) {
   const source = value && typeof value === "object" ? value : {};
   const days = Array.isArray(source.days) ? source.days.filter((day) => REMINDER_DAYS.has(day)) : baseReminders.days;
+  const sourceMoonPhases = source.moonPhases && typeof source.moonPhases === "object" ? source.moonPhases : {};
+  const baseMoonPhases = baseReminders.moonPhases || {};
 
   return {
     enabled: Boolean(source.enabled),
     time: typeof source.time === "string" && /^\d{2}:\d{2}$/.test(source.time) ? source.time : baseReminders.time,
     days: Array.from(new Set(days)),
     monthlyFirst: Boolean(source.monthlyFirst),
+    moonPhases: {
+      newMoon: Boolean(sourceMoonPhases.newMoon ?? baseMoonPhases.newMoon),
+      fullMoon: Boolean(sourceMoonPhases.fullMoon ?? baseMoonPhases.fullMoon),
+    },
   };
 }
 

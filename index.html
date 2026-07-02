@@ -419,24 +419,23 @@
           </header>
           <form class="reminders-form" id="reminders-form">
             <section class="reminders-list" aria-label="Расписание уведомлений">
-              <label class="reminders-row" for="reminders-time-input">
+              <button class="reminders-row reminders-row--time" data-action="open-time-picker" type="button" aria-haspopup="dialog" aria-controls="reminders-time-sheet">
                 <span class="reminders-row-copy">
                   <span class="reminders-row-title">Время</span>
                   <span class="reminders-row-value">Когда напоминать</span>
                 </span>
-                <input id="reminders-time-input" name="time" type="text" inputmode="numeric" pattern="[0-9]{2}:[0-9]{2}" maxlength="5" value="07:00" aria-label="Время уведомления" />
-              </label>
-
-              <div class="reminders-row reminders-row--days">
-                <span class="reminders-row-copy">
-                  <span class="reminders-row-title">Дни</span>
-                  <span class="reminders-row-value" id="reminders-days-summary">Не выбрано</span>
-                </span>
-                <button class="reminders-select-all" data-action="toggle-all-reminder-days" type="button">Все</button>
-              </div>
+                <span class="reminders-time-value" id="reminders-time-value">07:00</span>
+              </button>
             </section>
 
-            <section class="reminders-section" aria-label="Дни недели">
+            <section class="reminders-card reminders-card--days" aria-label="Дни недели">
+              <div class="reminders-card-head">
+                <div>
+                  <h2>Дни</h2>
+                  <p id="reminders-days-summary">Не выбрано</p>
+                </div>
+                <button class="reminders-select-all" data-action="toggle-all-reminder-days" type="button">Все</button>
+              </div>
               <div class="reminders-days" id="reminders-days" role="group" aria-label="Дни недели">
                 <button class="reminders-day" data-action="toggle-reminder-day" data-day="mon" type="button" aria-pressed="false">Пн</button>
                 <button class="reminders-day" data-action="toggle-reminder-day" data-day="tue" type="button" aria-pressed="false">Вт</button>
@@ -448,11 +447,31 @@
               </div>
             </section>
 
+            <p class="reminders-section-label">Ежемесячно</p>
             <section class="reminders-list" aria-label="Ежемесячные уведомления">
               <button class="reminders-row reminders-row--toggle" id="reminders-monthly-toggle" data-action="toggle-monthly-reminder" type="button" aria-pressed="false">
                 <span class="reminders-row-copy">
                   <span class="reminders-row-title">Первое число месяца</span>
                   <span class="reminders-row-value">Напоминать раз в месяц</span>
+                </span>
+                <span class="settings-toggle" aria-hidden="true"></span>
+              </button>
+            </section>
+
+            <section class="reminders-list reminders-list--moon" aria-label="Фазы луны">
+              <div class="reminders-section-intro">
+                <h2>Фазы луны</h2>
+                <p>Напоминать в 19:00</p>
+              </div>
+              <button class="reminders-row reminders-row--toggle" id="reminders-new-moon-toggle" data-action="toggle-moon-phase-reminder" data-phase="newMoon" type="button" aria-pressed="false">
+                <span class="reminders-row-copy">
+                  <span class="reminders-row-title">Новолуние</span>
+                </span>
+                <span class="settings-toggle" aria-hidden="true"></span>
+              </button>
+              <button class="reminders-row reminders-row--toggle" id="reminders-full-moon-toggle" data-action="toggle-moon-phase-reminder" data-phase="fullMoon" type="button" aria-pressed="false">
+                <span class="reminders-row-copy">
+                  <span class="reminders-row-title">Полнолуние</span>
                 </span>
                 <span class="settings-toggle" aria-hidden="true"></span>
               </button>
@@ -464,6 +483,27 @@
               <button class="reminders-disable" data-action="disable-reminders" type="button">Отключить уведомления</button>
             </div>
           </form>
+          <div class="reminders-sheet" id="reminders-time-sheet" hidden>
+            <button class="reminders-sheet-backdrop" data-action="cancel-time-picker" type="button" aria-label="Закрыть выбор времени"></button>
+            <section class="reminders-sheet-panel" role="dialog" aria-modal="true" aria-labelledby="reminders-time-sheet-title">
+              <h2 id="reminders-time-sheet-title">Время</h2>
+              <div class="reminders-time-picker" role="group" aria-label="Выбрать время уведомления">
+                <label>
+                  <span class="sr-only">Часы</span>
+                  <select id="reminders-time-hour" name="time-hour" aria-label="Часы"></select>
+                </label>
+                <span class="reminders-time-separator" aria-hidden="true">:</span>
+                <label>
+                  <span class="sr-only">Минуты</span>
+                  <select id="reminders-time-minute" name="time-minute" aria-label="Минуты"></select>
+                </label>
+              </div>
+              <div class="reminders-sheet-actions">
+                <button class="reminders-sheet-secondary" data-action="cancel-time-picker" type="button">Отмена</button>
+                <button class="reminders-sheet-primary" data-action="confirm-time-picker" type="button">Готово</button>
+              </div>
+            </section>
+          </div>
         </div>
       </section>
 

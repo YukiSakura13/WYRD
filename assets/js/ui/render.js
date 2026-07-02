@@ -42,10 +42,15 @@ export function getElements(doc = document) {
     aboutPronounGroup: doc.getElementById("about-pronoun-group"),
     aboutZodiacSelect: doc.getElementById("about-zodiac-select"),
     aboutSaveStatus: doc.getElementById("about-save-status"),
-    remindersTimeInput: doc.getElementById("reminders-time-input"),
+    remindersTimeValue: doc.getElementById("reminders-time-value"),
+    remindersTimeSheet: doc.getElementById("reminders-time-sheet"),
+    remindersTimeHour: doc.getElementById("reminders-time-hour"),
+    remindersTimeMinute: doc.getElementById("reminders-time-minute"),
     remindersDaysSummary: doc.getElementById("reminders-days-summary"),
     remindersDays: doc.getElementById("reminders-days"),
     remindersMonthlyToggle: doc.getElementById("reminders-monthly-toggle"),
+    remindersNewMoonToggle: doc.getElementById("reminders-new-moon-toggle"),
+    remindersFullMoonToggle: doc.getElementById("reminders-full-moon-toggle"),
     remindersSaveButton: doc.getElementById("reminders-save-button"),
     remindersSaveStatus: doc.getElementById("reminders-save-status"),
     aboutSection: doc.getElementById("about-wyrd"),
@@ -295,7 +300,7 @@ export function createRenderer(elements) {
     }
 
     if (days.length === 7) {
-      return "Каждый день";
+      return "Все";
     }
 
     const labels = {
@@ -410,8 +415,27 @@ export function createRenderer(elements) {
     const reminders = uiState.remindersDraft || state.reminders || {};
     const selectedDays = Array.isArray(reminders.days) ? reminders.days : [];
 
-    if (elements.remindersTimeInput && elements.remindersTimeInput.value !== (reminders.time || "07:00")) {
-      elements.remindersTimeInput.value = reminders.time || "07:00";
+    const reminderTime = reminders.time || "11:00";
+
+    if (elements.remindersTimeValue) {
+      elements.remindersTimeValue.textContent = reminderTime;
+    }
+
+    ensureTimeSelectOptions();
+
+    if (elements.remindersTimeHour && elements.remindersTimeMinute) {
+      const pickerTime = uiState.timePickerOpen ? uiState.timePickerDraft || reminderTime : reminderTime;
+      const timeParts = pickerTime.split(":");
+      const hour = timeParts[0] || "11";
+      const minute = timeParts[1] || "00";
+
+      if (elements.remindersTimeHour.value !== hour) {
+        elements.remindersTimeHour.value = hour;
+      }
+
+      if (elements.remindersTimeMinute.value !== minute) {
+        elements.remindersTimeMinute.value = minute;
+      }
     }
 
     if (elements.remindersDaysSummary) {
@@ -427,10 +451,34 @@ export function createRenderer(elements) {
     }
 
     syncSettingsToggle(elements.remindersMonthlyToggle, Boolean(reminders.monthlyFirst), "Первое число месяца");
+    syncSettingsToggle(elements.remindersNewMoonToggle, Boolean(reminders.moonPhases?.newMoon), "Новолуние");
+    syncSettingsToggle(elements.remindersFullMoonToggle, Boolean(reminders.moonPhases?.fullMoon), "Полнолуние");
+
+    if (elements.remindersTimeSheet) {
+      elements.remindersTimeSheet.hidden = !uiState.timePickerOpen;
+    }
 
     if (elements.remindersSaveButton) {
       elements.remindersSaveButton.textContent = reminders.enabled ? "Сохранить" : "Включить уведомления";
     }
+  }
+
+  function ensureTimeSelectOptions() {
+    if (!elements.remindersTimeHour || !elements.remindersTimeMinute || elements.remindersTimeHour.options.length) {
+      return;
+    }
+
+    Array.from({ length: 24 }, function createHour(_, index) {
+      return String(index).padStart(2, "0");
+    }).forEach(function appendHour(hour) {
+      elements.remindersTimeHour.append(new Option(hour, hour));
+    });
+
+    Array.from({ length: 12 }, function createMinute(_, index) {
+      return String(index * 5).padStart(2, "0");
+    }).forEach(function appendMinute(minute) {
+      elements.remindersTimeMinute.append(new Option(minute, minute));
+    });
   }
 
   function renderSpiritBook(uiState) {

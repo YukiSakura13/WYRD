@@ -132,7 +132,8 @@ body[data-scene="app-info"] .footer {
 }
 
 .settings-list,
-.reminders-list {
+.reminders-list,
+.reminders-card {
   border: 1px solid rgba(168, 140, 84, 0.24);
   border-radius: 12px;
   overflow: hidden;
@@ -196,6 +197,21 @@ body[data-scene="app-info"] .footer {
   line-height: 1;
 }
 
+.reminders-time-value {
+  min-width: 92px;
+  min-height: 44px;
+  padding: 9px 16px 8px;
+  border: 1px solid rgba(168, 140, 84, 0.48);
+  border-radius: 9px;
+  background: rgba(7, 7, 9, 0.78);
+  color: rgba(239, 226, 196, 0.92);
+  font-size: 23px;
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
 .settings-toggle {
   position: relative;
   width: 56px;
@@ -249,7 +265,11 @@ body[data-scene="app-info"] .footer {
 .reminders-select-all:hover,
 .reminders-select-all:focus-visible,
 .reminders-disable:hover,
-.reminders-disable:focus-visible {
+.reminders-disable:focus-visible,
+.reminders-sheet-secondary:hover,
+.reminders-sheet-secondary:focus-visible,
+.reminders-sheet-primary:hover,
+.reminders-sheet-primary:focus-visible {
   color: rgba(244, 231, 196, 0.98);
   outline: none;
 }
@@ -272,7 +292,9 @@ body[data-scene="app-info"] .footer {
 .reminders-day:focus-visible,
 .reminders-select-all:focus-visible,
 .reminders-disable:focus-visible,
-.reminders-row input:focus {
+.reminders-sheet-secondary:focus-visible,
+.reminders-sheet-primary:focus-visible,
+.reminders-time-picker:focus-within {
   box-shadow:
     0 0 0 3px rgba(201, 161, 74, 0.18),
     0 0 0 1px rgba(216, 177, 90, 0.72);
@@ -436,8 +458,7 @@ body[data-scene="app-info"] .footer {
   line-height: 1.25;
 }
 
-.about-select-row select,
-.reminders-row input {
+.about-select-row select {
   min-height: 44px;
   border: 1px solid rgba(168, 140, 84, 0.36);
   border-radius: 9px;
@@ -446,11 +467,6 @@ body[data-scene="app-info"] .footer {
   font-family: "Cormorant Garamond", Georgia, serif;
   font-size: 22px;
   padding: 0 10px;
-}
-
-.reminders-row input {
-  width: 96px;
-  text-align: center;
 }
 
 .about-select-row select {
@@ -475,26 +491,63 @@ body[data-scene="app-info"] .footer {
   cursor: pointer;
 }
 
-.reminders-section {
-  padding: 2px 0 0;
+.reminders-section-label {
+  margin: 4px 0 -6px;
+  color: rgba(205, 178, 116, 0.58);
+  font-family: "Forum", "Cormorant Garamond", Georgia, serif;
+  font-size: 13px;
+  letter-spacing: 1.8px;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.reminders-card {
+  padding: 18px 22px 20px;
+}
+
+.reminders-card-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 16px;
+}
+
+.reminders-card h2,
+.reminders-section-intro h2 {
+  margin: 0;
+  color: rgba(239, 226, 196, 0.94);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.08;
+}
+
+.reminders-card p,
+.reminders-section-intro p {
+  margin: 4px 0 0;
+  color: rgba(217, 206, 184, 0.62);
+  font-size: 17px;
+  line-height: 1.28;
 }
 
 .reminders-days {
-  display: flex;
-  gap: 9px;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(34px, 1fr));
+  gap: clamp(5px, 1.6vw, 9px);
+  align-items: center;
+  margin-top: 18px;
 }
 
 .reminders-day {
-  width: 44px;
-  height: 44px;
+  width: clamp(34px, 9.6vw, 44px);
+  height: clamp(34px, 9.6vw, 44px);
   padding: 0;
   border: 1px solid rgba(168, 140, 84, 0.5);
   border-radius: 50%;
   background: rgba(9, 10, 14, 0.34);
   color: rgba(217, 206, 184, 0.76);
   font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: 17px;
+  font-size: clamp(15px, 4.2vw, 17px);
+  justify-self: center;
   cursor: pointer;
 }
 
@@ -516,10 +569,138 @@ body[data-scene="app-info"] .footer {
   cursor: pointer;
 }
 
+.reminders-list--moon {
+  padding-top: 0;
+}
+
+.reminders-section-intro {
+  padding: 18px 22px 14px;
+}
+
 .reminders-disable {
   width: 100%;
   margin-top: 14px;
   font-size: 21px;
+}
+
+.reminders-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  align-items: end;
+}
+
+.reminders-sheet[hidden] {
+  display: none !important;
+}
+
+.reminders-sheet-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(2, 3, 5, 0.62);
+  cursor: pointer;
+}
+
+.reminders-sheet-panel {
+  position: relative;
+  width: min(100%, 430px);
+  margin: 0 auto;
+  padding:
+    24px
+    22px
+    max(22px, calc(env(safe-area-inset-bottom) + 18px));
+  border: 1px solid rgba(168, 140, 84, 0.32);
+  border-radius: 20px 20px 0 0;
+  background:
+    linear-gradient(180deg, rgba(16, 17, 22, 0.96), rgba(7, 7, 9, 0.98)),
+    url("../../images/forest-home/bg.jpg");
+  background-position: center bottom;
+  background-size: cover;
+  box-shadow: 0 -18px 50px rgba(0, 0, 0, 0.36);
+}
+
+.reminders-sheet-panel h2 {
+  margin: 0 0 18px;
+  color: rgba(239, 226, 196, 0.94);
+  font-size: 34px;
+  font-weight: 600;
+  line-height: 1.05;
+  text-align: center;
+}
+
+.reminders-time-picker {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  border: 1px solid rgba(168, 140, 84, 0.42);
+  border-radius: 12px;
+  background: rgba(5, 5, 7, 0.72);
+  padding: 8px 12px;
+}
+
+.reminders-time-picker label {
+  display: block;
+  min-width: 0;
+}
+
+.reminders-time-picker select {
+  width: 100%;
+  min-height: 58px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: rgba(239, 226, 196, 0.95);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 34px;
+  font-weight: 600;
+  text-align: center;
+  text-align-last: center;
+  appearance: none;
+  color-scheme: dark;
+}
+
+.reminders-time-picker select:focus {
+  outline: none;
+}
+
+.reminders-time-separator {
+  color: rgba(239, 226, 196, 0.74);
+  font-size: 34px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.reminders-sheet-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.reminders-sheet-secondary,
+.reminders-sheet-primary {
+  min-height: 52px;
+  border-radius: 8px;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 22px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.reminders-sheet-secondary {
+  border: 1px solid rgba(168, 140, 84, 0.28);
+  background: rgba(7, 7, 9, 0.5);
+  color: rgba(217, 206, 184, 0.76);
+}
+
+.reminders-sheet-primary {
+  border: 1px solid rgba(198, 170, 110, 0.68);
+  background: rgba(168, 140, 84, 0.22);
+  color: rgba(239, 226, 196, 0.96);
 }
 
 .app-info-row {
