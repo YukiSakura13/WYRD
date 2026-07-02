@@ -1,0 +1,679 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WYRD Visual Style Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Forum&family=IM+Fell+English:ital@0;1&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --night-deep: #070709;
+        --night: #101019;
+        --night-panel: rgba(9, 10, 14, 0.42);
+        --gold: #c9a14a;
+        --gold-light: #cdb274;
+        --gold-dark: #8e7240;
+        --gold-line: rgba(168, 140, 84, 0.48);
+        --gold-soft: rgba(168, 140, 84, 0.18);
+        --bone: #f0e8d8;
+        --text: rgba(239, 226, 196, 0.88);
+        --muted: rgba(217, 206, 184, 0.62);
+        --quiet: #8a8070;
+        --page: min(100% - 32px, 1040px);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+          radial-gradient(115% 70% at 50% -8%, rgba(42, 46, 60, 0.34), rgba(7, 7, 9, 0) 55%),
+          linear-gradient(180deg, rgba(7, 7, 9, 0.28), rgba(4, 4, 6, 0.92)),
+          url("../assets/images/forest-home/bg.jpg") center top / cover fixed no-repeat,
+          var(--night-deep);
+        color: var(--text);
+        font-family: "Cormorant Garamond", Georgia, serif;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(90deg, rgba(0, 0, 0, 0.12), transparent 18%, transparent 82%, rgba(0, 0, 0, 0.12));
+      }
+
+      img {
+        max-width: 100%;
+        display: block;
+      }
+
+      .page {
+        position: relative;
+        width: var(--page);
+        margin: 0 auto;
+        padding: 72px 0 96px;
+      }
+
+      .cover {
+        min-height: 72vh;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        border-bottom: 1px solid rgba(168, 140, 84, 0.16);
+      }
+
+      .brand-mark {
+        margin: 0;
+        padding-left: 0.2em;
+        color: rgba(241, 232, 214, 0.72);
+        font-family: "IM Fell English", Georgia, serif;
+        font-size: clamp(52px, 10vw, 96px);
+        font-weight: 400;
+        letter-spacing: 0.2em;
+        line-height: 1;
+      }
+
+      .brand-line {
+        width: 240px;
+        height: 1px;
+        margin: 22px auto 0;
+        background: linear-gradient(90deg, transparent, rgba(201, 161, 74, 0.42), transparent);
+      }
+
+      .brand-subtitle {
+        margin: 18px 0 0;
+        color: rgba(205, 178, 116, 0.58);
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+      }
+
+      .cover-note {
+        max-width: 620px;
+        margin: 34px auto 0;
+        color: var(--muted);
+        font-size: 22px;
+        font-style: italic;
+        line-height: 1.45;
+      }
+
+      .section {
+        padding: 64px 0 0;
+      }
+
+      .eyebrow {
+        margin: 0 0 8px;
+        color: var(--gold);
+        font-family: "Forum", Georgia, serif;
+        font-size: 13px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+      }
+
+      h2 {
+        margin: 0;
+        color: var(--bone);
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: clamp(38px, 6vw, 56px);
+        font-weight: 600;
+        line-height: 1.02;
+      }
+
+      .lead {
+        max-width: 760px;
+        margin: 16px 0 0;
+        color: var(--muted);
+        font-size: 21px;
+        line-height: 1.45;
+      }
+
+      .grid {
+        display: grid;
+        gap: 18px;
+        margin-top: 28px;
+      }
+
+      .grid--3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .grid--2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .panel {
+        border: 1px solid rgba(168, 140, 84, 0.18);
+        border-radius: 12px;
+        background: rgba(9, 10, 14, 0.44);
+        padding: 22px;
+      }
+
+      .sample-title {
+        margin: 0 0 12px;
+        color: var(--gold-light);
+        font-family: "Forum", Georgia, serif;
+        font-size: 14px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .sample-note {
+        margin: 14px 0 0;
+        color: var(--quiet);
+        font-size: 16px;
+        font-style: italic;
+        line-height: 1.35;
+      }
+
+      .swatches {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 28px;
+      }
+
+      .swatch {
+        min-height: 132px;
+        border: 1px solid rgba(168, 140, 84, 0.18);
+        border-radius: 12px;
+        overflow: hidden;
+        background: rgba(9, 10, 14, 0.42);
+      }
+
+      .swatch-chip {
+        height: 74px;
+        border-bottom: 1px solid rgba(168, 140, 84, 0.14);
+      }
+
+      .swatch-meta {
+        padding: 12px 14px 14px;
+      }
+
+      .swatch-name {
+        color: var(--bone);
+        font-family: "Forum", Georgia, serif;
+        font-size: 14px;
+        letter-spacing: 0.08em;
+      }
+
+      .swatch-code {
+        margin-top: 4px;
+        color: var(--gold);
+        font-size: 13px;
+      }
+
+      .type-sample {
+        display: grid;
+        gap: 16px;
+      }
+
+      .type-row {
+        border-top: 1px solid rgba(168, 140, 84, 0.14);
+        padding-top: 16px;
+      }
+
+      .type-row:first-child {
+        border-top: 0;
+        padding-top: 0;
+      }
+
+      .type-label {
+        margin: 0 0 8px;
+        color: var(--gold);
+        font-family: "Forum", Georgia, serif;
+        font-size: 12px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .phone {
+        width: min(100%, 393px);
+        min-height: 680px;
+        margin: 0 auto;
+        border: 1px solid rgba(168, 140, 84, 0.2);
+        border-radius: 28px;
+        overflow: hidden;
+        background:
+          radial-gradient(115% 70% at 50% -8%, rgba(42, 46, 60, 0.34), rgba(7, 7, 9, 0) 55%),
+          linear-gradient(180deg, rgba(7, 7, 9, 0.32), rgba(4, 4, 6, 0.92)),
+          url("../assets/images/forest-home/bg.jpg") center top / cover no-repeat;
+      }
+
+      .phone-inner {
+        padding: 46px 22px 34px;
+      }
+
+      .phone-title {
+        margin: 0;
+        text-align: center;
+        color: var(--bone);
+        font-size: 44px;
+        font-weight: 600;
+        line-height: 1.05;
+      }
+
+      .daily-card {
+        position: relative;
+        width: calc(100% + 34px);
+        aspect-ratio: 1536 / 1024;
+        margin: 36px -17px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 22px;
+        padding: 12% 11%;
+      }
+
+      .daily-card::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 54%;
+        height: 62%;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(184, 154, 94, 0.18), transparent 66%);
+        transform: translate(-50%, -50%);
+      }
+
+      .daily-frame {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: fill;
+      }
+
+      .daily-card img.daily-fern {
+        position: relative;
+        z-index: 1;
+        width: 34%;
+        max-width: 150px;
+      }
+
+      .daily-copy {
+        position: relative;
+        z-index: 1;
+        min-width: 128px;
+      }
+
+      .daily-heading {
+        display: block;
+        font-family: "Forum", Georgia, serif;
+        font-size: 25px;
+        letter-spacing: 0.16em;
+        line-height: 1.12;
+        text-transform: uppercase;
+        background: linear-gradient(110deg, #9d8048, #d4ba78, #9d8048);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .daily-sub {
+        display: block;
+        margin-top: 8px;
+        color: rgba(196, 182, 150, 0.7);
+        font-size: 15px;
+        font-style: italic;
+      }
+
+      .plain-frame {
+        min-height: 190px;
+        border: 1px solid var(--gold-line);
+        border-radius: 11px;
+        background: rgba(9, 10, 14, 0.36);
+        display: grid;
+        place-items: center;
+        padding: 28px;
+        text-align: center;
+      }
+
+      .plain-frame span {
+        color: var(--gold-light);
+        font-family: "Forum", Georgia, serif;
+        font-size: 18px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .wrong-stack {
+        display: grid;
+        gap: 10px;
+      }
+
+      .wrong-box {
+        border: 1px solid rgba(168, 140, 84, 0.5);
+        border-radius: 10px;
+        padding: 18px;
+        color: var(--bone);
+        font-size: 20px;
+      }
+
+      .symbol-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .symbol {
+        min-height: 142px;
+        border: 1px solid rgba(168, 140, 84, 0.28);
+        border-radius: 12px;
+        background: rgba(9, 10, 14, 0.34);
+        display: grid;
+        place-items: center;
+        text-align: center;
+        padding: 14px;
+      }
+
+      .symbol img {
+        height: 66px;
+        width: auto;
+        margin: 0 auto;
+        filter: drop-shadow(0 0 7px rgba(184, 154, 94, 0.22));
+      }
+
+      .symbol span {
+        display: block;
+        margin-top: 12px;
+        color: var(--gold-light);
+        font-family: "Forum", Georgia, serif;
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .button-row,
+      .chip-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .btn {
+        min-height: 54px;
+        border: 1px solid rgba(168, 140, 84, 0.58);
+        border-radius: 8px;
+        background: rgba(9, 10, 14, 0.32);
+        color: var(--bone);
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 22px;
+        padding: 0 28px;
+      }
+
+      .btn--gold {
+        background: linear-gradient(180deg, var(--gold-light), var(--gold-dark));
+        color: #15110b;
+        font-weight: 600;
+      }
+
+      .text-link {
+        min-height: 44px;
+        border: 0;
+        background: transparent;
+        color: rgba(201, 161, 74, 0.84);
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 20px;
+      }
+
+      .chip {
+        width: 48px;
+        height: 48px;
+        border: 1px solid rgba(168, 140, 84, 0.48);
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .chip--selected {
+        border-color: rgba(201, 161, 74, 0.9);
+        background: linear-gradient(180deg, var(--gold-light), var(--gold-dark));
+        color: #15110b;
+        font-weight: 600;
+      }
+
+      .list {
+        border: 1px solid rgba(168, 140, 84, 0.22);
+        border-radius: 12px;
+        overflow: hidden;
+        background: rgba(9, 10, 14, 0.42);
+      }
+
+      .list-row {
+        min-height: 76px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 16px 22px;
+        border-top: 1px solid rgba(168, 140, 84, 0.12);
+      }
+
+      .list-row:first-child {
+        border-top: 0;
+      }
+
+      .list-title {
+        display: block;
+        color: var(--bone);
+        font-size: 24px;
+        font-weight: 600;
+      }
+
+      .list-sub {
+        display: block;
+        margin-top: 3px;
+        color: var(--quiet);
+        font-size: 17px;
+      }
+
+      .chevron {
+        color: rgba(201, 161, 74, 0.78);
+        font-size: 36px;
+        line-height: 1;
+      }
+
+      .toggle {
+        width: 56px;
+        height: 32px;
+        border: 1px solid rgba(168, 140, 84, 0.56);
+        border-radius: 999px;
+        background: linear-gradient(180deg, var(--gold-light), var(--gold-dark));
+        position: relative;
+        flex: 0 0 auto;
+      }
+
+      .toggle::after {
+        content: "";
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: #15110b;
+      }
+
+      @media (max-width: 760px) {
+        .grid--3,
+        .grid--2,
+        .swatches,
+        .symbol-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .page {
+          padding-top: 48px;
+        }
+
+        .cover {
+          min-height: 62vh;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="cover">
+        <div>
+          <h1 class="brand-mark">WYRD</h1>
+          <div class="brand-line"></div>
+          <p class="brand-subtitle">Оракул духов леса</p>
+          <p class="cover-note">Визуальный паспорт: не список задач, а набор видимых правил, по которым собираются экраны WYRD.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <p class="eyebrow">01 — Цвет</p>
+        <h2>Ночь, кость и матовое золото</h2>
+        <p class="lead">Цвета не спорят между собой: ночь держит мир, кость даёт чтение, золото отмечает важное.</p>
+        <div class="swatches">
+          <div class="swatch"><div class="swatch-chip" style="background:#070709"></div><div class="swatch-meta"><div class="swatch-name">Глубина</div><div class="swatch-code">#070709</div></div></div>
+          <div class="swatch"><div class="swatch-chip" style="background:#101019"></div><div class="swatch-meta"><div class="swatch-name">Ночь</div><div class="swatch-code">#101019</div></div></div>
+          <div class="swatch"><div class="swatch-chip" style="background:#f0e8d8"></div><div class="swatch-meta"><div class="swatch-name">Кость</div><div class="swatch-code">#F0E8D8</div></div></div>
+          <div class="swatch"><div class="swatch-chip" style="background:linear-gradient(180deg,#cdb274,#8e7240)"></div><div class="swatch-meta"><div class="swatch-name">Золото</div><div class="swatch-code">#C9A14A</div></div></div>
+        </div>
+      </section>
+
+      <section class="section">
+        <p class="eyebrow">02 — Шрифт</p>
+        <h2>Три голоса</h2>
+        <div class="grid grid--3">
+          <div class="panel type-sample">
+            <div class="type-row">
+              <p class="type-label">Знак</p>
+              <div style="font-family:'IM Fell English';font-size:56px;letter-spacing:.2em;color:rgba(241,232,214,.72);">WYRD</div>
+              <p class="sample-note">Только имя бренда.</p>
+            </div>
+          </div>
+          <div class="panel type-sample">
+            <div class="type-row">
+              <p class="type-label">Заголовок</p>
+              <div style="font-size:42px;font-weight:600;color:#f0e8d8;line-height:1;">Настройки</div>
+              <p class="sample-note">Cormorant Garamond для экранов и текста.</p>
+            </div>
+          </div>
+          <div class="panel type-sample">
+            <div class="type-row">
+              <p class="type-label">Плитка</p>
+              <div style="font-family:'Forum';font-size:22px;letter-spacing:.12em;color:#cdb274;text-transform:uppercase;">Лунный день</div>
+              <p class="sample-note">Forum для коротких декоративных названий.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <p class="eyebrow">03 — Фон</p>
+        <h2>Один ночной лес</h2>
+        <p class="lead">Базовая среда — не чёрная заливка, а ночное небо с папоротниками. Подложка должна занимать весь экран.</p>
+        <div class="grid grid--2">
+          <div class="phone">
+            <div class="phone-inner">
+              <p class="brand-mark" style="font-size:34px;text-align:center;">WYRD</p>
+              <div class="brand-line" style="width:86px;margin-top:10px;"></div>
+              <p class="brand-subtitle" style="font-size:10px;">Оракул духов леса</p>
+              <h3 class="phone-title" style="margin-top:54px;">Профиль</h3>
+            </div>
+          </div>
+          <div class="panel">
+            <p class="sample-title">Что видно</p>
+            <p class="lead" style="font-size:22px;margin-top:0;">Папоротники остаются по краям, центр остаётся тёмным и читаемым, контент не лежит на отдельной светлой панели.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <p class="eyebrow">04 — Рамки</p>
+        <h2>Что такое декоративная рамка</h2>
+        <p class="lead">Это большая предметная карточка, похожая на страницу или знак в старой книге. Её не используют для каждой строки настроек.</p>
+        <div class="grid grid--3">
+          <div class="panel">
+            <p class="sample-title">Декоративная рамка</p>
+            <div class="daily-card">
+              <img class="daily-frame" src="../assets/images/forest-home/f-hero2.png" alt="" />
+              <img class="daily-fern" src="../assets/images/forest-home/fern-hero2.png" alt="" />
+              <div class="daily-copy">
+                <span class="daily-heading">Раскрыть<br />карту</span>
+                <span class="daily-sub">карта дня</span>
+              </div>
+            </div>
+            <p class="sample-note">Углы, центральные насечки, внутренний воздух, предмет внутри.</p>
+          </div>
+          <div class="panel">
+            <p class="sample-title">Базовая рамка</p>
+            <div class="plain-frame">
+              <span>Один спокойный блок</span>
+            </div>
+            <p class="sample-note">Простая рамка без богатого орнамента. Подходит для группы, поля или компактного блока.</p>
+          </div>
+          <div class="panel">
+            <p class="sample-title">Не так</p>
+            <div class="wrong-stack">
+              <div class="wrong-box">Профиль</div>
+              <div class="wrong-box">Уведомления</div>
+              <div class="wrong-box">Звук</div>
+            </div>
+            <p class="sample-note">Когда каждая строка в рамке, экран становится схемой, а не лесной книгой.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <p class="eyebrow">05 — Символы</p>
+        <h2>Тонкий золотой рисунок</h2>
+        <div class="symbol-grid" style="margin-top:28px;">
+          <div class="symbol"><div><img src="../assets/images/forest-home/moon.png" alt="" /><span>Луна</span></div></div>
+          <div class="symbol"><div><img src="../assets/images/forest-home/leaves-fall.png" alt="" /><span>Листья</span></div></div>
+          <div class="symbol"><div><img src="../assets/images/forest-home/moth2.png" alt="" /><span>Мотылёк</span></div></div>
+          <div class="symbol"><div><img src="../assets/images/forest-home/tracks.png" alt="" /><span>Следы</span></div></div>
+          <div class="symbol"><div><img src="../assets/images/forest-home/acorn.png" alt="" /><span>Жёлудь</span></div></div>
+        </div>
+      </section>
+
+      <section class="section">
+        <p class="eyebrow">06 — Контролы</p>
+        <h2>Привычная функция, фирменная кожа</h2>
+        <div class="grid grid--2">
+          <div class="panel">
+            <p class="sample-title">Кнопки</p>
+            <div class="button-row">
+              <button class="btn" type="button">Сохранить</button>
+              <button class="btn btn--gold" type="button">Включить</button>
+              <button class="text-link" type="button">Отключить</button>
+            </div>
+          </div>
+          <div class="panel">
+            <p class="sample-title">Дни</p>
+            <div class="chip-row">
+              <span class="chip">Пн</span>
+              <span class="chip chip--selected">Вт</span>
+              <span class="chip">Ср</span>
+              <span class="chip chip--selected">Чт</span>
+              <span class="chip">Пт</span>
+            </div>
+          </div>
+          <div class="panel" style="grid-column:1/-1;">
+            <p class="sample-title">Список настроек</p>
+            <div class="list">
+              <div class="list-row"><span><span class="list-title">Профиль</span><span class="list-sub">Имя, аватар и обращение</span></span><span class="chevron">›</span></div>
+              <div class="list-row"><span><span class="list-title">Уведомления</span><span class="list-sub">Время и дни напоминаний</span></span><span class="chevron">›</span></div>
+              <div class="list-row"><span><span class="list-title">Звук</span><span class="list-sub">Звуки интерфейса</span></span><span class="toggle"></span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
