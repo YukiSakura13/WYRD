@@ -49,6 +49,21 @@ export function createActionHandler(deps) {
       return;
     }
 
+    if (action === "open-lunar-day") {
+      openForestPlaceholder(SCENES.LUNAR_DAY, { audio, renderer, setScene, store, runTransition });
+      return;
+    }
+
+    if (action === "open-yes-no") {
+      openForestPlaceholder(SCENES.YES_NO, { audio, renderer, setScene, store, runTransition });
+      return;
+    }
+
+    if (action === "open-night-images") {
+      openForestPlaceholder(SCENES.NIGHT_IMAGES, { audio, renderer, setScene, store, runTransition });
+      return;
+    }
+
     if (action === "enter-ritual") {
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function continueToDeck() {
@@ -674,6 +689,17 @@ function normalizeProfileSnapshot(profile = {}) {
     pronoun: profile.pronoun || "neutral",
     zodiac: profile.zodiac || "",
   };
+}
+
+function openForestPlaceholder(scene, deps) {
+  const { audio, renderer, setScene, store, runTransition } = deps;
+
+  audio.playSelect(store.getState().soundEnabled);
+  runTransition(function openPlaceholder() {
+    setScene(scene);
+    audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.FOREST });
+    renderer.scrollTo(scene);
+  });
 }
 
 function closeAboutYouScreen(deps) {

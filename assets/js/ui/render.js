@@ -20,6 +20,10 @@ export function getElements(doc = document) {
     forestSection: doc.getElementById("forest-home"),
     forestAvatarButton: doc.getElementById("forest-avatar-button"),
     forestAvatarImage: doc.getElementById("forest-avatar-image"),
+    forestPlaceholder: doc.getElementById("forest-placeholder"),
+    forestPlaceholderKicker: doc.getElementById("forest-placeholder-kicker"),
+    forestPlaceholderTitle: doc.getElementById("forest-placeholder-title"),
+    forestPlaceholderCopy: doc.getElementById("forest-placeholder-copy"),
     settingsSection: doc.getElementById("settings-screen"),
     remindersSection: doc.getElementById("reminders-screen"),
     appInfoSection: doc.getElementById("app-info-screen"),
@@ -132,10 +136,28 @@ export function createRenderer(elements) {
   let previousScene = null;
   const spreadRenderer = createSpreadRenderer(elements);
   const cardsById = new Map(CARDS.map((card) => [card.id, card]));
+  const forestPlaceholderContent = {
+    [SCENES.LUNAR_DAY]: {
+      kicker: "Лунный день",
+      title: "День глазами духов леса",
+      copy: "Здесь появится полный текст лунного дня и тихий знак текущей Луны.",
+    },
+    [SCENES.YES_NO]: {
+      kicker: "Нет или Да",
+      title: "Короткий ответ духов",
+      copy: "Скоро здесь появится карта рубашкой вверх: коснись её, и духи вернут краткий знак.",
+    },
+    [SCENES.NIGHT_IMAGES]: {
+      kicker: "Образы ночи",
+      title: "То, что пришло во сне",
+      copy: "Здесь можно будет описать образ ночи и получить короткий отклик духов леса.",
+    },
+  };
 
   function render(state, uiState) {
     renderShell(uiState);
     renderForestAvatar(state);
+    renderForestPlaceholder(uiState);
     renderSettings(state);
     renderAboutYou(state, uiState);
     renderReminders(state, uiState);
@@ -157,6 +179,9 @@ export function createRenderer(elements) {
   function scrollTo(name) {
     const targetMap = {
       forest: elements.forestSection,
+      "lunar-day": elements.forestPlaceholder,
+      "yes-no": elements.forestPlaceholder,
+      "night-images": elements.forestPlaceholder,
       settings: elements.settingsSection,
       "about-you": elements.aboutYouSection,
       reminders: elements.remindersSection,
@@ -210,6 +235,21 @@ export function createRenderer(elements) {
       resetCoverBreathAnimations();
     }
     previousScene = uiState.activeScene;
+  }
+
+  function renderForestPlaceholder(uiState) {
+    if (!elements.forestPlaceholderTitle || !elements.forestPlaceholderCopy || !elements.forestPlaceholderKicker) {
+      return;
+    }
+
+    const content = forestPlaceholderContent[uiState.activeScene];
+    if (!content) {
+      return;
+    }
+
+    elements.forestPlaceholderKicker.textContent = content.kicker;
+    elements.forestPlaceholderTitle.textContent = content.title;
+    elements.forestPlaceholderCopy.textContent = content.copy;
   }
 
   function renderProfile(state) {
@@ -855,6 +895,7 @@ export function createRenderer(elements) {
     const isOnboarding = scene === SCENES.ONBOARDING;
 
     elements.forestSection.hidden = scene !== SCENES.FOREST;
+    elements.forestPlaceholder.hidden = ![SCENES.LUNAR_DAY, SCENES.YES_NO, SCENES.NIGHT_IMAGES].includes(scene);
     elements.settingsSection.hidden = scene !== SCENES.SETTINGS;
     elements.aboutYouSection.hidden = scene !== SCENES.ABOUT_YOU;
     elements.remindersSection.hidden = scene !== SCENES.REMINDERS;
