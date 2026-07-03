@@ -43,6 +43,7 @@ export function getElements(doc = document) {
     aboutZodiacSelect: doc.getElementById("about-zodiac-select"),
     aboutSaveButton: doc.getElementById("about-save-button"),
     aboutSaveStatus: doc.getElementById("about-save-status"),
+    aboutUnsavedSheet: doc.getElementById("about-unsaved-sheet"),
     remindersTimeValue: doc.getElementById("reminders-time-value"),
     remindersTimeSheet: doc.getElementById("reminders-time-sheet"),
     remindersTimeHour: doc.getElementById("reminders-time-hour"),
@@ -338,6 +339,10 @@ export function createRenderer(elements) {
       const hasChanges = hasProfileChanges(profile, state.userProfile || {});
       elements.aboutSaveButton.disabled = !hasChanges;
       elements.aboutSaveButton.setAttribute("aria-disabled", String(!hasChanges));
+    }
+
+    if (elements.aboutUnsavedSheet) {
+      elements.aboutUnsavedSheet.hidden = !uiState.aboutUnsavedSheetOpen;
     }
   }
 

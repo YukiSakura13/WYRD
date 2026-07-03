@@ -189,6 +189,7 @@ export function createActionHandler(deps) {
       runTransition(function openAboutYou() {
         uiState.aboutReturnScene = uiState.activeScene === SCENES.SETTINGS ? SCENES.SETTINGS : SCENES.FOREST;
         uiState.aboutDraft = { ...store.getState().userProfile };
+        uiState.aboutUnsavedSheetOpen = false;
         setScene(SCENES.ABOUT_YOU);
         audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.ABOUT_YOU });
         renderer.scrollTo(SCENES.ABOUT_YOU);
@@ -198,13 +199,43 @@ export function createActionHandler(deps) {
 
     if (action === "close-about-you") {
       audio.playSelect(store.getState().soundEnabled);
-      runTransition(function closeAboutYou() {
-        const returnScene = uiState.aboutReturnScene || SCENES.FOREST;
-        uiState.aboutDraft = null;
-        setScene(returnScene);
-        audio.sync({ enabled: store.getState().soundEnabled, scene: getAudioScene(returnScene) });
-        renderer.scrollTo(returnScene);
-      });
+      if (hasAboutChanges(store, uiState)) {
+        uiState.aboutUnsavedSheetOpen = true;
+        renderApp();
+        window.setTimeout(function focusUnsavedPrimary() {
+          document.querySelector("[data-action='save-about-and-close']")?.focus();
+        }, 40);
+        return;
+      }
+
+      closeAboutYouScreen({ audio, renderer, setScene, store, uiState, renderApp, runTransition });
+      return;
+    }
+
+    if (action === "keep-editing-about-you") {
+      audio.playSelect(store.getState().soundEnabled);
+      uiState.aboutUnsavedSheetOpen = false;
+      renderApp();
+      return;
+    }
+
+    if (action === "discard-about-changes") {
+      audio.playSelect(store.getState().soundEnabled);
+      uiState.aboutUnsavedSheetOpen = false;
+      uiState.aboutDraft = null;
+      closeAboutYouScreen({ audio, renderer, setScene, store, uiState, renderApp, runTransition, keepDraft: true });
+      return;
+    }
+
+    if (action === "save-about-and-close") {
+      audio.playSelect(store.getState().soundEnabled);
+      const nextState = store.saveUserProfile(readAboutDraftFromForm(store, uiState));
+      uiState.aboutDraft = { ...nextState.userProfile };
+      uiState.aboutUnsavedSheetOpen = false;
+      updateAboutStatus("Сохранено.");
+      window.setTimeout(function closeAfterSheetSave() {
+        closeAboutYouScreen({ audio, renderer, setScene, store, uiState, renderApp, runTransition });
+      }, 120);
       return;
     }
 
@@ -242,10 +273,12 @@ export function createActionHandler(deps) {
       audio.playSelect(store.getState().soundEnabled);
       const nextState = store.saveUserProfile(readAboutDraftFromForm(store, uiState));
       uiState.aboutDraft = { ...nextState.userProfile };
+      uiState.aboutUnsavedSheetOpen = false;
       updateAboutStatus("Сохранено.");
       window.setTimeout(function returnAfterSave() {
         const returnScene = uiState.aboutReturnScene || SCENES.FOREST;
         uiState.aboutDraft = null;
+        uiState.aboutUnsavedSheetOpen = false;
         setScene(returnScene);
         audio.sync({ enabled: store.getState().soundEnabled, scene: getAudioScene(returnScene) });
         renderer.scrollTo(returnScene);
@@ -618,6 +651,44 @@ function readAboutDraftFromForm(store, uiState) {
   };
 }
 
+function hasAboutChanges(store, uiState) {
+  const stateProfile = store.getState().userProfile || {};
+  const draft = readAboutDraftFromForm(store, uiState);
+  const current = normalizeProfileSnapshot(draft);
+  const saved = normalizeProfileSnapshot(stateProfile);
+
+  return (
+    current.avatarId !== saved.avatarId ||
+    current.customAvatarImage !== saved.customAvatarImage ||
+    current.name !== saved.name ||
+    current.pronoun !== saved.pronoun ||
+    current.zodiac !== saved.zodiac
+  );
+}
+
+function normalizeProfileSnapshot(profile = {}) {
+  return {
+    avatarId: profile.avatarId || "",
+    customAvatarImage: profile.customAvatarImage || "",
+    name: typeof profile.name === "string" ? profile.name.replace(/\s+/g, " ").trim() : "",
+    pronoun: profile.pronoun || "neutral",
+    zodiac: profile.zodiac || "",
+  };
+}
+
+function closeAboutYouScreen(deps) {
+  const { audio, renderer, setScene, store, uiState, runTransition } = deps;
+
+  runTransition(function closeAboutYou() {
+    const returnScene = uiState.aboutReturnScene || SCENES.FOREST;
+    uiState.aboutDraft = null;
+    uiState.aboutUnsavedSheetOpen = false;
+    setScene(returnScene);
+    audio.sync({ enabled: store.getState().soundEnabled, scene: getAudioScene(returnScene) });
+    renderer.scrollTo(returnScene);
+  });
+}
+
 function readRemindersDraftFromForm(store, uiState) {
   const stateReminders = store.getState().reminders || {};
   const draft = uiState.remindersDraft || stateReminders;
@@ -885,6 +956,7 @@ export function createInitialUIState(state) {
     activeScene: SCENES.COVER,
     aboutReturnScene: SCENES.COVER,
     aboutDraft: null,
+    aboutUnsavedSheetOpen: false,
     aboutReturnScrollTop: 0,
     aboutScrollTop: 0,
     continuationOffer: null,
@@ -1042,6 +1114,13 @@ export function createKeyboardHandler(deps) {
   const { aboutNavigation, renderApp, uiState } = deps;
 
   return function onKeyDown(event) {
+    if (event.key === "Escape" && uiState.aboutUnsavedSheetOpen) {
+      event.preventDefault();
+      uiState.aboutUnsavedSheetOpen = false;
+      renderApp();
+      return;
+    }
+
     const trigger = event.target.closest?.("[data-action='open-history-entry']");
     if (trigger && (event.key === "Enter" || event.key === " ")) {
       event.preventDefault();

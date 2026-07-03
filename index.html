@@ -405,6 +405,18 @@
               <button class="about-save" id="about-save-button" data-action="save-about-you" type="button" disabled>Сохранить</button>
             </div>
           </form>
+          <div class="about-unsaved-sheet" id="about-unsaved-sheet" hidden>
+            <button class="about-unsaved-backdrop" data-action="keep-editing-about-you" type="button" aria-label="Остаться в профиле"></button>
+            <section class="about-unsaved-panel" role="dialog" aria-modal="true" aria-labelledby="about-unsaved-title">
+              <h2 id="about-unsaved-title">Сохранить изменения?</h2>
+              <p>Изменения в профиле пока не сохранены.</p>
+              <div class="about-unsaved-actions">
+                <button class="about-unsaved-primary" data-action="save-about-and-close" type="button">Сохранить</button>
+                <button class="about-unsaved-secondary" data-action="discard-about-changes" type="button">Не сохранять</button>
+                <button class="about-unsaved-quiet" data-action="keep-editing-about-you" type="button">Остаться</button>
+              </div>
+            </section>
+          </div>
         </div>
       </section>
 
