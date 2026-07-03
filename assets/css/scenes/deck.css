@@ -60,6 +60,7 @@
 
 .deck-back {
   position: absolute;
+  z-index: 2;
   top: max(0.95rem, calc(env(safe-area-inset-top) + 0.18rem));
   left: max(0.9rem, calc(env(safe-area-inset-left) + 0.08rem));
   width: 34px;
