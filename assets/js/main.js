@@ -139,6 +139,15 @@ document.addEventListener(
   }),
 );
 
+document.addEventListener(
+  "input",
+  createInputChangeHandler({
+    renderApp,
+    store,
+    uiState,
+  }),
+);
+
 aboutNavigation.connect();
 const startedFromAboutLink = aboutNavigation.syncFromLocation({ focus: false });
 

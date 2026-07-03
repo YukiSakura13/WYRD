@@ -41,6 +41,7 @@ export function getElements(doc = document) {
     aboutNameInput: doc.getElementById("about-name-input"),
     aboutPronounGroup: doc.getElementById("about-pronoun-group"),
     aboutZodiacSelect: doc.getElementById("about-zodiac-select"),
+    aboutSaveButton: doc.getElementById("about-save-button"),
     aboutSaveStatus: doc.getElementById("about-save-status"),
     remindersTimeValue: doc.getElementById("reminders-time-value"),
     remindersTimeSheet: doc.getElementById("reminders-time-sheet"),
@@ -332,6 +333,35 @@ export function createRenderer(elements) {
     if (elements.aboutZodiacSelect && elements.aboutZodiacSelect.value !== (profile.zodiac || "")) {
       elements.aboutZodiacSelect.value = profile.zodiac || "";
     }
+
+    if (elements.aboutSaveButton) {
+      const hasChanges = hasProfileChanges(profile, state.userProfile || {});
+      elements.aboutSaveButton.disabled = !hasChanges;
+      elements.aboutSaveButton.setAttribute("aria-disabled", String(!hasChanges));
+    }
+  }
+
+  function hasProfileChanges(profile, savedProfile) {
+    const current = normalizeProfileSnapshot(profile);
+    const saved = normalizeProfileSnapshot(savedProfile);
+
+    return (
+      current.avatarId !== saved.avatarId ||
+      current.customAvatarImage !== saved.customAvatarImage ||
+      current.name !== saved.name ||
+      current.pronoun !== saved.pronoun ||
+      current.zodiac !== saved.zodiac
+    );
+  }
+
+  function normalizeProfileSnapshot(profile = {}) {
+    return {
+      avatarId: profile.avatarId || "",
+      customAvatarImage: profile.customAvatarImage || "",
+      name: typeof profile.name === "string" ? profile.name.replace(/\s+/g, " ").trim() : "",
+      pronoun: profile.pronoun || "neutral",
+      zodiac: profile.zodiac || "",
+    };
   }
 
   function renderAvatarOptions(profile) {

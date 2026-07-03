@@ -491,6 +491,22 @@ body[data-scene="app-info"] .footer {
   cursor: pointer;
 }
 
+.about-save:disabled,
+.about-save[aria-disabled="true"] {
+  border-color: rgba(168, 140, 84, 0.32);
+  background: rgba(9, 10, 14, 0.34);
+  color: rgba(217, 206, 184, 0.52);
+  cursor: default;
+}
+
+.about-save:disabled:hover,
+.about-save:disabled:focus-visible,
+.about-save[aria-disabled="true"]:hover,
+.about-save[aria-disabled="true"]:focus-visible {
+  color: rgba(217, 206, 184, 0.52);
+  box-shadow: none;
+}
+
 .reminders-section-label {
   margin: 4px 0 -6px;
   color: rgba(205, 178, 116, 0.58);

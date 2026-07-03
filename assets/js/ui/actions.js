@@ -235,6 +235,10 @@ export function createActionHandler(deps) {
     }
 
     if (action === "save-about-you") {
+      if (trigger.disabled) {
+        return;
+      }
+
       audio.playSelect(store.getState().soundEnabled);
       const nextState = store.saveUserProfile(readAboutDraftFromForm(store, uiState));
       uiState.aboutDraft = { ...nextState.userProfile };
@@ -684,6 +688,12 @@ export function createInputChangeHandler(deps) {
   const { renderApp, store, uiState } = deps;
 
   return function onInputChange(event) {
+    if (event.target?.id === "about-name-input") {
+      uiState.aboutDraft = readAboutDraftFromForm(store, uiState);
+      renderApp();
+      return;
+    }
+
     if (event.target?.id === "about-avatar-upload") {
       handleAvatarUpload(event.target, store, uiState, renderApp);
       return;
