@@ -92,9 +92,12 @@ def main() -> None:
         require(actual == expected, f"Runtime copy drifted from PUBLIC_LORE_COPY.md: {heading}")
 
     for phrase in (
-        'data-action="open-about"',
-        'class="forest-tile forest-tile--book" data-action="open-about"',
+        'data-action="open-spirit-book"',
+        'class="forest-tile forest-tile--book" data-action="open-spirit-book"',
         'ИСТОРИЯ<br />ДУХОВ ЛЕСА',
+        'id="spirit-book"',
+        'data-action="spirit-book-next"',
+        '>ПЯТЬ ГЛАВ</span>',
         'id="about-wyrd"',
         'aria-labelledby="about-wyrd-title"',
         'id="about-wyrd-title" tabindex="-1">Книга леса</h1>',

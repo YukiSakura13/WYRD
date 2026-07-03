@@ -5,12 +5,34 @@ from __future__ import annotations
 import os
 import re
 import shutil
+import subprocess
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parent.parent
 DIST = ROOT / ".dist-pages"
-BUILD_ID = os.environ.get("GITHUB_SHA", "dev")[:7] or "dev"
+
+
+def get_build_id() -> str:
+    github_sha = os.environ.get("GITHUB_SHA")
+    if github_sha:
+        return github_sha[:7]
+
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "--short=7", "HEAD"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return "dev"
+
+    return result.stdout.strip() or "dev"
+
+
+BUILD_ID = get_build_id()
 SITE_FILES = [
     "index.html",
     "manifest.webmanifest",
