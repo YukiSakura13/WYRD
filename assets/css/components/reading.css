@@ -803,6 +803,14 @@
   #result .btn-share::before {
     transition: none;
   }
+
+  .save-screen-loading span {
+    animation: none;
+  }
+
+  .save-screen-link {
+    transition-duration: 140ms;
+  }
 }
 
 .save-screen-backdrop {

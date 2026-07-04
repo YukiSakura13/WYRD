@@ -76,6 +76,16 @@ body::after {
   z-index: 1000;
 }
 
+.ui-action {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ui-action:disabled,
+.ui-action[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
 .scene-fog,
 .transition-veil {
   position: fixed;
@@ -181,6 +191,23 @@ body::after {
 
   100% {
     opacity: 0.26;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+
+  .scene-fog::before,
+  .scene-fog--front::before {
+    animation: none !important;
+  }
+
+  .transition-veil {
+    transition-duration: 140ms !important;
   }
 }
 

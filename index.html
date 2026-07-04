@@ -146,7 +146,7 @@
         <div class="cover-copy">
           <h1 class="cover-title">WYRD</h1>
           <p class="cover-sub">Оракул духов леса</p>
-          <button class="cover-btn cover-cta-button" data-action="enter" type="button">
+          <button class="cover-btn cover-cta-button ui-action ui-action--primary" data-action="enter" type="button">
             <span class="cover-cta-fill" aria-hidden="true"></span>
             <canvas class="cover-cta-canvas" aria-hidden="true"></canvas>
             <span class="cover-cta-label">Войти в лес</span>
@@ -411,7 +411,7 @@
 
             <p class="about-save-status sr-only" id="about-save-status" aria-live="polite"></p>
             <div class="about-actions">
-              <button class="about-save" id="about-save-button" data-action="save-about-you" type="button" disabled>Сохранить</button>
+              <button class="about-save ui-action ui-action--primary" id="about-save-button" data-action="save-about-you" type="button" disabled>Сохранить</button>
             </div>
           </form>
           <div class="about-unsaved-sheet" id="about-unsaved-sheet" hidden>
@@ -420,9 +420,9 @@
               <h2 id="about-unsaved-title">Сохранить изменения?</h2>
               <p>Изменения в профиле пока не сохранены.</p>
               <div class="about-unsaved-actions">
-                <button class="about-unsaved-primary" data-action="save-about-and-close" type="button">Сохранить</button>
-                <button class="about-unsaved-secondary" data-action="discard-about-changes" type="button">Не сохранять</button>
-                <button class="about-unsaved-quiet" data-action="keep-editing-about-you" type="button">Остаться</button>
+                <button class="about-unsaved-primary ui-action ui-action--primary" data-action="save-about-and-close" type="button">Сохранить</button>
+                <button class="about-unsaved-secondary ui-action ui-action--destructive" data-action="discard-about-changes" type="button">Не сохранять</button>
+                <button class="about-unsaved-quiet ui-action ui-action--quiet" data-action="keep-editing-about-you" type="button">Остаться</button>
               </div>
             </section>
           </div>
@@ -500,8 +500,8 @@
 
             <p class="about-save-status sr-only" id="reminders-save-status" aria-live="polite"></p>
             <div class="about-actions reminders-actions">
-              <button class="about-save" id="reminders-save-button" data-action="save-reminders" type="button">Включить уведомления</button>
-              <button class="reminders-disable" data-action="disable-reminders" type="button">Отключить уведомления</button>
+              <button class="about-save ui-action ui-action--primary" id="reminders-save-button" data-action="save-reminders" type="button">Включить уведомления</button>
+              <button class="reminders-disable ui-action ui-action--destructive" data-action="disable-reminders" type="button">Отключить уведомления</button>
             </div>
           </form>
           <div class="reminders-sheet" id="reminders-time-sheet" hidden>
@@ -520,8 +520,8 @@
                 </label>
               </div>
               <div class="reminders-sheet-actions">
-                <button class="reminders-sheet-secondary" data-action="cancel-time-picker" type="button">Отмена</button>
-                <button class="reminders-sheet-primary" data-action="confirm-time-picker" type="button">Готово</button>
+                <button class="reminders-sheet-secondary ui-action ui-action--secondary" data-action="cancel-time-picker" type="button">Отмена</button>
+                <button class="reminders-sheet-primary ui-action ui-action--primary" data-action="confirm-time-picker" type="button">Готово</button>
               </div>
             </section>
           </div>
@@ -683,7 +683,7 @@
                 <div class="about-copy-body" data-public-lore-copy="Как слушать">
                   <p>Не ищи единственную «правильную» расшифровку. Заметь первый отклик, прочитай Послание и Тень, а затем спроси себя: что уже узнаётся в этом образе и какой шаг возможен сейчас? Можно написать вопрос или оставить его в сердце — WYRD не считывает и не сохраняет невведённые слова. Если захочется снова пройти короткое введение в мир, выбери <strong>«Повторить знакомство»</strong>. Повтор не сбрасывает Следы, историю или прогресс.</p>
                 </div>
-                <button class="about-replay" data-action="replay-onboarding" type="button">Повторить знакомство</button>
+                <button class="about-replay ui-action ui-action--secondary" data-action="replay-onboarding" type="button">Повторить знакомство</button>
               </section>
             </div>
           </div>
@@ -715,7 +715,7 @@
             <p class="ritual-line" style="--ritual-delay: 2940ms">Прочитай ответ духов леса</p>
             <p class="ritual-line" style="--ritual-delay: 3920ms">Захочется спросить снова. Возвращайся</p>
           </div>
-          <button class="ritual-btn" data-action="enter-ritual" type="button">Войти в ритуал</button>
+          <button class="ritual-btn ui-action ui-action--primary" data-action="enter-ritual" type="button">Войти в ритуал</button>
         </div>
         <div class="ritual-ornament" aria-hidden="true">✦ ✦ ✦</div>
         <p class="ritual-whisper">Лес отвечает тем, кто умеет слушать тишину</p>
@@ -758,7 +758,7 @@
             </div>
           </article>
           <div class="result-card-actions" aria-label="Действия с картой">
-            <button class="btn-share" data-action="share-card" type="button">
+            <button class="btn-share ui-action ui-action--secondary" data-action="share-card" type="button">
               <span id="share-button-label">ПОДЕЛИТЬСЯ КАРТОЙ</span>
             </button>
           </div>
@@ -786,7 +786,7 @@
             Духи леса услышали твой вопрос. Три карты покажут то, что скрыто за первым знаком.
           </p>
           <div class="hook-cta-wrap">
-            <button class="cover-btn hook-btn" data-action="hook-open-path" type="button">
+            <button class="cover-btn hook-btn ui-action ui-action--primary" data-action="hook-open-path" type="button">
               ✦ РАСКРЫТЬ ТРИ КАРТЫ ✦
             </button>
           </div>
@@ -826,8 +826,8 @@
         </div>
         <div class="spread-continuation" id="spread-continuation" hidden>
           <p class="spread-continuation-copy">История уже открылась. Следующий слой ждёт твоего шага.</p>
-          <button class="cover-btn spread-continuation-btn" data-action="spread-5" type="button">Продолжить путь</button>
-          <button class="spread-continuation-link" data-action="new-question" type="button">Задать новый вопрос</button>
+          <button class="cover-btn spread-continuation-btn ui-action ui-action--primary" data-action="spread-5" type="button">Продолжить путь</button>
+          <button class="spread-continuation-link ui-action ui-action--quiet" data-action="new-question" type="button">Задать новый вопрос</button>
         </div>
         <div class="spread-card-modal" id="spread-card-modal" hidden>
           <div class="spread-card-modal-backdrop" id="spread-card-modal-backdrop" aria-hidden="true"></div>
@@ -921,7 +921,7 @@
         <div class="history-empty-state" id="history-empty-state" hidden>
           <p>Ты только вступаешь в лес.</p>
           <p>Первый след появится здесь после первого послания.</p>
-          <button class="reset-btn profile-primary-action" data-action="back-to-deck" type="button">
+          <button class="reset-btn profile-primary-action ui-action ui-action--primary" data-action="back-to-deck" type="button">
             Перейти к колоде
           </button>
         </div>
@@ -991,7 +991,7 @@
             </div>
             <img id="save-screen-image" alt="Готовое изображение карты для сохранения" hidden />
           </div>
-          <a class="save-screen-link" id="save-screen-link" href="#" aria-disabled="true">ОТКРЫТЬ КАРТУ</a>
+          <a class="save-screen-link ui-action ui-action--secondary" id="save-screen-link" href="#" aria-disabled="true">ОТКРЫТЬ КАРТУ</a>
           <p class="save-screen-hint">Удержи изображение, чтобы сохранить его в Фото.</p>
         </div>
       </aside>
