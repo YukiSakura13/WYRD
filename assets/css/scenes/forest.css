@@ -214,31 +214,53 @@ body[data-scene="night-images"] #main {
 .forest-tile {
   position: relative;
   border: 1px solid rgba(168, 140, 84, 0.5);
-  background: rgba(9, 10, 14, 0.34);
+  background:
+    linear-gradient(180deg, rgba(255, 238, 186, 0.035), rgba(255, 238, 186, 0)),
+    rgba(9, 10, 14, 0.42);
   color: inherit;
-  box-shadow: none;
+  box-shadow:
+    0 14px 30px rgba(0, 0, 0, 0.26),
+    0 1px 0 rgba(255, 242, 199, 0.08) inset,
+    0 -16px 28px rgba(0, 0, 0, 0.16) inset;
   cursor: pointer;
   transform: none;
   transition:
+    background var(--dur-medium) var(--ease-out-strong),
     border-color var(--dur-medium) var(--ease-out-strong),
-    color var(--dur-medium) var(--ease-out-strong);
+    box-shadow var(--dur-medium) var(--ease-out-strong),
+    color var(--dur-medium) var(--ease-out-strong),
+    filter var(--dur-medium) var(--ease-out-strong),
+    transform var(--dur-medium) var(--ease-out-strong);
 }
 
 .forest-card:hover,
 .forest-card:focus-visible,
 .forest-tile:hover,
 .forest-tile:focus-visible {
-  border-color: rgba(168, 140, 84, 0.78);
-  background: rgba(9, 10, 14, 0.34);
+  border-color: rgba(224, 190, 104, 0.82);
+  background:
+    linear-gradient(180deg, rgba(255, 238, 186, 0.06), rgba(255, 238, 186, 0.012)),
+    rgba(11, 12, 17, 0.52);
   color: rgba(244, 231, 196, 0.98);
-  transform: none;
+  box-shadow:
+    0 18px 38px rgba(0, 0, 0, 0.34),
+    0 0 0 1px rgba(255, 232, 166, 0.08) inset,
+    0 1px 0 rgba(255, 246, 214, 0.14) inset,
+    0 0 24px rgba(212, 178, 93, 0.12);
+  transform: translateY(-1px);
   outline: none;
 }
 
-.forest-card::after,
-.forest-tile::before,
-.forest-tile::after {
-  content: none;
+.forest-card:focus-visible,
+.forest-tile:focus-visible {
+  outline: 2px solid rgba(238, 203, 124, 0.72);
+  outline-offset: 4px;
+}
+
+.forest-card:active,
+.forest-tile:active {
+  transform: translateY(1px) scale(0.996);
+  filter: brightness(0.98);
 }
 
 .forest-card {
@@ -257,6 +279,9 @@ body[data-scene="night-images"] #main {
   gap: 22px;
   text-align: left;
   background: transparent;
+  filter:
+    drop-shadow(0 16px 26px rgba(0, 0, 0, 0.34))
+    drop-shadow(0 0 16px rgba(196, 157, 74, 0.08));
 }
 
 .forest-card::before {
@@ -271,12 +296,42 @@ body[data-scene="night-images"] #main {
   opacity: 0.3;
   pointer-events: none;
   animation: forestClaudeBreathe 6.5s ease-in-out infinite;
+  z-index: 1;
+}
+
+.forest-card::after {
+  content: "";
+  position: absolute;
+  inset: 7% 6.5%;
+  z-index: 0;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 68% 40%, rgba(236, 198, 103, 0.1), transparent 34%),
+    linear-gradient(180deg, rgba(255, 239, 196, 0.055), rgba(255, 239, 196, 0.006) 46%, rgba(0, 0, 0, 0.12));
+  box-shadow:
+    0 0 0 1px rgba(238, 203, 124, 0.09) inset,
+    0 20px 42px rgba(0, 0, 0, 0.22),
+    0 0 42px rgba(207, 171, 86, 0.1);
+  opacity: 0.86;
+  pointer-events: none;
+  transition:
+    opacity var(--dur-medium) var(--ease-out-strong),
+    box-shadow var(--dur-medium) var(--ease-out-strong);
+}
+
+.forest-card:hover::after,
+.forest-card:focus-visible::after {
+  opacity: 1;
+  box-shadow:
+    0 0 0 1px rgba(238, 203, 124, 0.14) inset,
+    0 24px 48px rgba(0, 0, 0, 0.28),
+    0 0 54px rgba(224, 186, 94, 0.18);
 }
 
 .forest-card-frame {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 2;
   width: 100%;
   height: 100%;
   object-fit: fill;
@@ -285,7 +340,7 @@ body[data-scene="night-images"] #main {
 
 .forest-card-art {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   width: auto;
   min-height: 0;
   height: auto;
@@ -309,11 +364,51 @@ body[data-scene="night-images"] #main {
 
 .forest-card-text {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   display: block;
   flex-shrink: 0;
   padding: 0;
   text-align: left;
+}
+
+.forest-card-text::after {
+  content: "›";
+  position: absolute;
+  right: -42px;
+  bottom: 0;
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(224, 190, 104, 0.46);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 235, 178, 0.18), transparent 58%),
+    rgba(17, 15, 11, 0.7);
+  color: rgba(255, 226, 148, 0.92);
+  display: grid;
+  place-items: center;
+  font-family: "Forum", Georgia, serif;
+  font-size: 27px;
+  line-height: 1;
+  box-shadow:
+    0 0 18px rgba(214, 176, 88, 0.18),
+    0 1px 0 rgba(255, 244, 211, 0.12) inset;
+  pointer-events: none;
+  transform: translateX(0);
+  transition:
+    border-color var(--dur-medium) var(--ease-out-strong),
+    box-shadow var(--dur-medium) var(--ease-out-strong),
+    color var(--dur-medium) var(--ease-out-strong),
+    transform var(--dur-medium) var(--ease-out-strong);
+}
+
+.forest-card:hover .forest-card-text::after,
+.forest-card:focus-visible .forest-card-text::after {
+  border-color: rgba(255, 226, 148, 0.72);
+  color: rgba(255, 238, 186, 1);
+  box-shadow:
+    0 0 26px rgba(224, 186, 94, 0.28),
+    0 1px 0 rgba(255, 244, 211, 0.16) inset;
+  transform: translateX(3px);
 }
 
 .forest-card-title {
@@ -367,7 +462,76 @@ body[data-scene="night-images"] #main {
   border-radius: 11px;
   overflow: visible;
   display: flex;
-  box-shadow: none;
+  background:
+    linear-gradient(180deg, rgba(255, 238, 186, 0.04), rgba(255, 238, 186, 0.006)),
+    rgba(9, 10, 14, 0.42);
+  box-shadow:
+    0 12px 24px rgba(0, 0, 0, 0.24),
+    0 1px 0 rgba(255, 242, 199, 0.08) inset,
+    0 -14px 28px rgba(0, 0, 0, 0.14) inset;
+}
+
+.forest-tile::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  z-index: 0;
+  border-radius: 10px;
+  background:
+    linear-gradient(135deg, rgba(255, 239, 196, 0.06), transparent 36%),
+    radial-gradient(circle at 88% 18%, rgba(215, 178, 92, 0.09), transparent 28%);
+  opacity: 0.76;
+  pointer-events: none;
+  transition: opacity var(--dur-medium) var(--ease-out-strong);
+}
+
+.forest-tile::after {
+  content: "›";
+  position: absolute;
+  right: 13px;
+  bottom: 11px;
+  z-index: 3;
+  width: 24px;
+  height: 24px;
+  border: 1px solid rgba(206, 174, 96, 0.36);
+  border-radius: 999px;
+  background: rgba(12, 13, 18, 0.62);
+  color: rgba(225, 195, 118, 0.86);
+  display: grid;
+  place-items: center;
+  font-family: "Forum", Georgia, serif;
+  font-size: 22px;
+  line-height: 1;
+  box-shadow:
+    0 0 14px rgba(205, 169, 86, 0.1),
+    0 1px 0 rgba(255, 244, 211, 0.08) inset;
+  opacity: 0.72;
+  pointer-events: none;
+  transform: translateX(0);
+  transition:
+    background var(--dur-medium) var(--ease-out-strong),
+    border-color var(--dur-medium) var(--ease-out-strong),
+    box-shadow var(--dur-medium) var(--ease-out-strong),
+    color var(--dur-medium) var(--ease-out-strong),
+    opacity var(--dur-medium) var(--ease-out-strong),
+    transform var(--dur-medium) var(--ease-out-strong);
+}
+
+.forest-tile:hover::before,
+.forest-tile:focus-visible::before {
+  opacity: 1;
+}
+
+.forest-tile:hover::after,
+.forest-tile:focus-visible::after {
+  border-color: rgba(238, 203, 124, 0.62);
+  background: rgba(31, 27, 17, 0.8);
+  color: rgba(255, 232, 166, 0.98);
+  box-shadow:
+    0 0 18px rgba(214, 176, 88, 0.22),
+    0 1px 0 rgba(255, 244, 211, 0.14) inset;
+  opacity: 1;
+  transform: translateX(2px);
 }
 
 .forest-tile-marker {
@@ -434,7 +598,6 @@ body[data-scene="night-images"] #main {
   align-items: center;
   gap: 16px;
   text-align: left;
-  background: rgba(9, 10, 14, 0.32);
 }
 
 .forest-tile--book {
@@ -444,7 +607,6 @@ body[data-scene="night-images"] #main {
   align-items: center;
   gap: 18px;
   text-align: left;
-  background: rgba(11, 12, 17, 0.4);
 }
 
 .forest-tile-visual {
@@ -613,24 +775,7 @@ body[data-scene="night-images"] #main {
 }
 
 .forest-tile-arrow {
-  position: relative;
-  right: auto;
-  top: auto;
-  bottom: auto;
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-  align-self: center;
-  color: transparent;
-  stroke: rgba(168, 140, 84, 0.5);
-  stroke-width: 1.2;
-  fill: none;
-  transform: none;
-}
-
-.forest-tile--traces .forest-tile-arrow,
-.forest-tile--book .forest-tile-arrow {
-  transform: none;
+  display: none;
 }
 
 .forest-moon-spark {
