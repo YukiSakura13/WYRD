@@ -30,6 +30,7 @@
 14. [ADR.md](/Users/marinamart/Desktop/Oracle_dev/docs/ADR.md)
 15. [WORKFLOW_WITH_CODEX.md](/Users/marinamart/Desktop/Oracle_dev/docs/WORKFLOW_WITH_CODEX.md)
 16. [WYRD_MASTER_CARD_STYLE.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_MASTER_CARD_STYLE.md)
+17. [WYRD_UI_FOUNDATIONS.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_UI_FOUNDATIONS.md)
 
 ---
 
@@ -47,6 +48,7 @@
 - [FEATURES.md](/Users/marinamart/Desktop/Oracle_dev/docs/FEATURES.md) — список текущих и будущих функций
 - [CONTENT_MODEL.md](/Users/marinamart/Desktop/Oracle_dev/docs/CONTENT_MODEL.md) — модель контента, сущностей и текстов
 - [WYRD_MASTER_CARD_STYLE.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_MASTER_CARD_STYLE.md) — арт-дирекшен, формат и правила обработки изображений карт
+- [WYRD_UI_FOUNDATIONS.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_UI_FOUNDATIONS.md) — системный язык UI-компонентов: 4 рамки, Button & Frame Language, depth, motion, состояния и правила упрощения
 
 ### Техника
 
@@ -70,6 +72,7 @@
 - Если добавляется или меняется сценарий пользователя, обновляем [FEATURES.md](/Users/marinamart/Desktop/Oracle_dev/docs/FEATURES.md).
 - Если меняется контентная сущность, формат карты или расклада, обновляем [CONTENT_MODEL.md](/Users/marinamart/Desktop/Oracle_dev/docs/CONTENT_MODEL.md).
 - Если меняется визуальный стиль, формат генерации, фон или правила обработки изображений карт, обновляем [WYRD_MASTER_CARD_STYLE.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_MASTER_CARD_STYLE.md).
+- Если меняется язык UI-компонентов, рамок, кнопок, состояний или depth-система, обновляем [WYRD_UI_FOUNDATIONS.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_UI_FOUNDATIONS.md).
 - Если принимается важное техническое или продуктовое решение, записываем его в [ADR.md](/Users/marinamart/Desktop/Oracle_dev/docs/ADR.md).
 - Если меняется выпускной процесс, smoke-проверки или deploy-поток, обновляем [RELEASE_CHECKLIST.md](/Users/marinamart/Desktop/Oracle_dev/docs/RELEASE_CHECKLIST.md).
 - Каждая разработка проходит [Definition of Ready & Done](/Users/marinamart/Desktop/Oracle_dev/docs/DEFINITION_OF_READY_DONE.md).
