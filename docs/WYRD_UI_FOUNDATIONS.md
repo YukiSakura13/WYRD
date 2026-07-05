@@ -376,7 +376,7 @@ WYRD should be recognizable without the logo through:
 
 This document is the design-system contract. Next implementation work should:
 
-1. map current classes to the component set;
+1. use `docs/WYRD_UI_COMPONENT_MAPPING.md` to map current classes to the component set;
 2. extract shared tokens instead of tuning per screen;
 3. migrate one family at a time;
 4. verify each migration with visual, keyboard, touch, and reduced-motion checks.
