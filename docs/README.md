@@ -32,6 +32,7 @@
 16. [WYRD_MASTER_CARD_STYLE.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_MASTER_CARD_STYLE.md)
 17. [WYRD_UI_FOUNDATIONS.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_UI_FOUNDATIONS.md)
 18. [WYRD_UI_COMPONENT_MAPPING.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_UI_COMPONENT_MAPPING.md)
+19. [wyrd-ui-kit.html](/Users/marinamart/Desktop/Oracle_dev/docs/wyrd-ui-kit.html)
 
 ---
 
@@ -51,6 +52,7 @@
 - [WYRD_MASTER_CARD_STYLE.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_MASTER_CARD_STYLE.md) — арт-дирекшен, формат и правила обработки изображений карт
 - [WYRD_UI_FOUNDATIONS.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_UI_FOUNDATIONS.md) — системный язык UI-компонентов: 4 рамки, Button & Frame Language, depth, motion, состояния и правила упрощения
 - [WYRD_UI_COMPONENT_MAPPING.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_UI_COMPONENT_MAPPING.md) — сопоставление текущих runtime-классов с компонентами UI Foundations и порядок безопасной миграции
+- [wyrd-ui-kit.html](/Users/marinamart/Desktop/Oracle_dev/docs/wyrd-ui-kit.html) — локальная HTML-доска компонентов UI Kit для просмотра без Figma перед переносом в runtime
 
 ### Техника
 
@@ -76,6 +78,7 @@
 - Если меняется визуальный стиль, формат генерации, фон или правила обработки изображений карт, обновляем [WYRD_MASTER_CARD_STYLE.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_MASTER_CARD_STYLE.md).
 - Если меняется язык UI-компонентов, рамок, кнопок, состояний или depth-система, обновляем [WYRD_UI_FOUNDATIONS.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_UI_FOUNDATIONS.md).
 - Если меняется соответствие текущих CSS/HTML-классов дизайн-системе, обновляем [WYRD_UI_COMPONENT_MAPPING.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_UI_COMPONENT_MAPPING.md).
+- Если меняется визуальный эталон компонентов UI Kit, обновляем [wyrd-ui-kit.html](/Users/marinamart/Desktop/Oracle_dev/docs/wyrd-ui-kit.html) и проверяем его локально на desktop/mobile.
 - Если принимается важное техническое или продуктовое решение, записываем его в [ADR.md](/Users/marinamart/Desktop/Oracle_dev/docs/ADR.md).
 - Если меняется выпускной процесс, smoke-проверки или deploy-поток, обновляем [RELEASE_CHECKLIST.md](/Users/marinamart/Desktop/Oracle_dev/docs/RELEASE_CHECKLIST.md).
 - Каждая разработка проходит [Definition of Ready & Done](/Users/marinamart/Desktop/Oracle_dev/docs/DEFINITION_OF_READY_DONE.md).

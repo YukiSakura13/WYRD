@@ -358,7 +358,10 @@ Remove or merge these patterns over time:
 - Focus states are visible and not color-only.
 - Selected state is not color-only.
 - Text contrast must stay readable on night surfaces.
+- Text should remain readable on mobile and desktop without overlap or tiny labels.
+- Component layouts must be responsive by default.
 - Inputs have real labels or accessible names.
+- Interactive examples must be keyboard-friendly where relevant.
 - Sheets/modals use `role="dialog"`, focus trap/return, and a clear close path.
 - Reduced motion stops decorative loops and keeps functional state visible.
 
@@ -377,8 +380,9 @@ WYRD should be recognizable without the logo through:
 This document is the design-system contract. Next implementation work should:
 
 1. use `docs/WYRD_UI_COMPONENT_MAPPING.md` to map current classes to the component set;
-2. extract shared tokens instead of tuning per screen;
-3. migrate one family at a time;
-4. verify each migration with visual, keyboard, touch, and reduced-motion checks.
+2. use `docs/wyrd-ui-kit.html` as the local review surface before moving a component family into runtime;
+3. extract shared tokens instead of tuning per screen;
+4. migrate one family at a time;
+5. verify each migration with visual, keyboard, touch, responsive, contrast, and reduced-motion checks.
 
 Do not use this document as permission to redesign all screens at once.
