@@ -12,19 +12,15 @@
     />
     <style>
       :root {
-        --depth: #070709;
+        --ink: #070709;
         --night: #101019;
-        --shadow: #0a0b0e;
-        --cold-top: #1f2330;
+        --night-soft: rgba(9, 10, 14, 0.42);
         --gold: #c9a14a;
-        --gold-light: #cdb274;
-        --gold-dark: #8e7240;
-        --bone: #f0e8d8;
-        --quiet: #8a8070;
-        --line: rgba(168, 140, 84, 0.48);
-        --line-soft: rgba(168, 140, 84, 0.2);
-        --panel: rgba(9, 10, 14, 0.42);
-        --panel-strong: rgba(9, 10, 14, 0.66);
+        --gold-quiet: rgba(168, 140, 84, 0.48);
+        --gold-soft: rgba(168, 140, 84, 0.2);
+        --text: rgba(239, 226, 196, 0.92);
+        --text-bright: rgba(241, 232, 214, 0.94);
+        --text-muted: rgba(217, 206, 184, 0.62);
         --focus: rgba(216, 177, 90, 0.72);
         --font-brand: "IM Fell English", Georgia, serif;
         --font-ui: "Cormorant Garamond", Georgia, serif;
@@ -36,19 +32,18 @@
       }
 
       html {
-        background: var(--depth);
+        background: var(--ink);
       }
 
       body {
         min-height: 100vh;
         margin: 0;
-        color: rgba(239, 226, 196, 0.94);
-        font-family: var(--font-ui);
         background:
-          radial-gradient(110% 70% at 50% -10%, rgba(31, 35, 48, 0.5), transparent 58%),
-          linear-gradient(180deg, rgba(7, 7, 9, 0.35), rgba(7, 7, 9, 0.94)),
+          linear-gradient(180deg, rgba(7, 7, 9, 0.12), rgba(7, 7, 9, 0.94)),
           url("../assets/images/forest-home/bg.jpg") center top / cover fixed no-repeat,
-          var(--depth);
+          var(--ink);
+        color: var(--text);
+        font-family: var(--font-ui);
       }
 
       body::after {
@@ -56,13 +51,27 @@
         position: fixed;
         inset: 0;
         pointer-events: none;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
-        opacity: 0.72;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
       }
 
       button,
-      input {
+      input,
+      textarea {
         font: inherit;
+      }
+
+      button {
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      button:focus-visible,
+      input:focus-visible,
+      textarea:focus-visible {
+        outline: none;
+        box-shadow:
+          0 0 0 3px rgba(201, 161, 74, 0.18),
+          0 0 0 1px var(--focus);
       }
 
       .sr-only {
@@ -77,363 +86,404 @@
         border: 0;
       }
 
-      button {
-        cursor: pointer;
-        -webkit-tap-highlight-color: transparent;
-      }
-
-      button:focus-visible,
-      input:focus-visible {
-        outline: none;
-        box-shadow:
-          0 0 0 3px rgba(201, 161, 74, 0.18),
-          0 0 0 1px var(--focus);
-      }
-
       .page {
-        width: min(100%, 1500px);
+        width: min(100%, 1180px);
         margin: 0 auto;
-        padding: 28px 24px 36px;
+        padding: 28px 18px 44px;
       }
 
       .kit-header {
-        display: grid;
-        grid-template-columns: minmax(0, auto) minmax(220px, 1fr);
-        gap: 28px;
-        align-items: end;
-        margin-bottom: 16px;
+        margin: 0 auto 26px;
+        text-align: center;
       }
 
       .brand {
         margin: 0;
-        color: rgba(241, 232, 214, 0.68);
+        padding-left: 0.18em;
+        color: rgba(241, 232, 214, 0.62);
         font-family: var(--font-brand);
-        font-size: clamp(34px, 4vw, 52px);
+        font-size: clamp(30px, 6vw, 46px);
         font-weight: 400;
         letter-spacing: 0.18em;
         line-height: 1;
       }
 
       .subtitle {
-        margin: 8px 0 0;
-        color: rgba(205, 178, 116, 0.72);
-        font-family: var(--font-label);
-        font-size: 17px;
-        letter-spacing: 0.12em;
+        margin: 10px 0 0;
+        color: rgba(205, 178, 116, 0.46);
+        font-family: var(--font-ui);
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.26em;
+        line-height: 1.3;
         text-transform: uppercase;
       }
 
-      .rule {
-        position: relative;
+      .hairline {
+        width: min(120px, 38vw);
         height: 1px;
-        margin-bottom: 14px;
-        background: linear-gradient(90deg, transparent, var(--line), transparent);
-      }
-
-      .rule::before {
-        content: "✦";
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 44px;
-        height: 44px;
-        display: grid;
-        place-items: center;
-        color: var(--gold-light);
-        font-size: 34px;
-        transform: translate(-50%, -50%);
-        text-shadow: 0 0 14px rgba(201, 161, 74, 0.22);
+        margin: 14px auto 0;
+        background: linear-gradient(90deg, transparent, rgba(168, 140, 84, 0.22), transparent);
       }
 
       .kit-board {
-        border: 1px solid rgba(168, 140, 84, 0.28);
-        background: rgba(3, 4, 6, 0.72);
-      }
-
-      .grid {
         display: grid;
-        grid-template-columns: repeat(5, minmax(190px, 1fr));
-      }
-
-      .cell {
-        min-height: 245px;
-        padding: 22px 20px;
-        border-right: 1px solid rgba(168, 140, 84, 0.18);
-        border-bottom: 1px solid rgba(168, 140, 84, 0.18);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 18px;
-        text-align: center;
       }
 
-      .cell:nth-child(5n) {
-        border-right: 0;
+      .sample {
+        min-height: 210px;
+        padding: 22px;
+        border: 1px solid rgba(168, 140, 84, 0.14);
+        background: rgba(3, 4, 6, 0.52);
       }
 
-      .cell-title {
-        margin: 0;
-        color: rgba(205, 178, 116, 0.86);
+      .sample-title {
+        margin: 0 0 18px;
+        color: rgba(205, 178, 116, 0.66);
         font-family: var(--font-label);
-        font-size: 15px;
+        font-size: 13px;
         font-weight: 400;
-        letter-spacing: 0.12em;
+        letter-spacing: 0.14em;
         line-height: 1.25;
         text-transform: uppercase;
       }
 
-      .artifact {
-        position: relative;
-        width: min(100%, 270px);
-        aspect-ratio: 1120 / 747;
-        border: 1px solid rgba(168, 140, 84, 0.36);
-        border-radius: 22px;
-        overflow: hidden;
+      .sample-body {
         display: grid;
-        grid-template-columns: 42% 1fr;
+        justify-items: center;
         align-items: center;
-        gap: 14px;
-        padding: 34px 32px;
-        background:
-          radial-gradient(115% 115% at 50% 4%, rgba(31, 35, 48, 0.72), rgba(16, 16, 25, 0.86) 42%, rgba(7, 7, 9, 0.98) 100%);
-        box-shadow:
-          inset 0 2px 8px rgba(240, 232, 216, 0.12),
-          inset 0 -16px 26px rgba(0, 0, 0, 0.54),
-          0 3px 0 #241a0a,
-          0 14px 28px -12px rgba(0, 0, 0, 0.9);
+        min-height: 144px;
       }
 
-      .artifact-frame {
+      .sample.note {
+        min-height: auto;
+      }
+
+      .sample-note {
+        margin: 0;
+        color: rgba(217, 206, 184, 0.66);
+        font-size: 17px;
+        line-height: 1.45;
+      }
+
+      .hero-card {
+        position: relative;
+        width: min(100%, 430px);
+        aspect-ratio: 1536 / 1024;
+        border: 0;
+        border-radius: 22px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 22px;
+        padding: 12% 11%;
+        background:
+          radial-gradient(120% 112% at 50% 6%, rgba(31, 35, 48, 0.72) 0%, rgba(16, 16, 25, 0.86) 44%, rgba(10, 11, 14, 0.98) 100%);
+        color: inherit;
+        text-align: left;
+        box-shadow:
+          inset 0 2px 8px rgba(240, 232, 216, 0.1),
+          inset 0 -16px 24px rgba(0, 0, 0, 0.5),
+          inset 0 0 0 1px rgba(168, 140, 84, 0.16),
+          0 3px 0 #211706,
+          0 12px 22px -12px rgba(0, 0, 0, 0.86);
+      }
+
+      .hero-card-frame {
         position: absolute;
         inset: 0;
         width: 100%;
         height: 100%;
         object-fit: fill;
-        opacity: 0.92;
+        opacity: 0.88;
         pointer-events: none;
       }
 
-      .artifact img.fern {
+      .hero-card-fern {
         position: relative;
         z-index: 1;
-        width: 100%;
-        max-height: 145px;
+        width: 33%;
+        max-height: 72%;
         object-fit: contain;
-        filter: drop-shadow(0 0 8px rgba(184, 154, 94, 0.2));
+        filter: drop-shadow(0 0 8px rgba(184, 154, 94, 0.16));
       }
 
-      .artifact-copy {
+      .hero-card-copy {
         position: relative;
         z-index: 1;
-        text-align: left;
+        display: grid;
+        gap: 10px;
       }
 
-      .artifact-title,
-      .quiet-title,
-      .btn-label {
+      .hero-card-title,
+      .tile-title,
+      .action-label {
         font-family: var(--font-label);
         font-weight: 400;
         letter-spacing: 0.14em;
+        line-height: 1.18;
         text-transform: uppercase;
       }
 
-      .artifact-title {
-        display: block;
-        color: var(--gold-light);
-        font-size: 21px;
-        line-height: 1.16;
+      .hero-card-title {
+        color: rgba(205, 178, 116, 0.9);
+        font-size: clamp(22px, 4.2vw, 32px);
       }
 
-      .artifact-note,
-      .quiet-note {
-        display: block;
-        margin-top: 8px;
-        color: rgba(196, 182, 150, 0.72);
+      .hero-card-note,
+      .tile-note {
+        color: rgba(217, 206, 184, 0.66);
         font-style: italic;
-        font-size: 15px;
+        font-size: 18px;
+        line-height: 1.25;
       }
 
-      .quiet-card {
-        width: min(100%, 300px);
+      .tile {
+        position: relative;
+        width: min(100%, 310px);
         min-height: 150px;
-        padding: 28px 28px;
-        border: 1px solid var(--line);
-        border-radius: 12px;
+        padding: 26px;
+        border: 1px solid rgba(168, 140, 84, 0.42);
+        border-radius: 16px;
+        background: rgba(9, 10, 14, 0.34);
+        color: var(--text);
         display: grid;
-        grid-template-columns: 88px 1fr;
+        grid-template-columns: 78px 1fr auto;
+        gap: 18px;
         align-items: center;
-        gap: 20px;
-        background: rgba(9, 10, 14, 0.38);
         text-align: left;
       }
 
-      .quiet-card img {
-        width: 82px;
-        height: 120px;
+      .tile img {
+        width: 76px;
+        max-height: 96px;
         object-fit: contain;
-        filter: drop-shadow(0 0 6px rgba(184, 154, 94, 0.18));
+        opacity: 0.82;
+        filter: drop-shadow(0 0 6px rgba(184, 154, 94, 0.12));
       }
 
-      .quiet-title {
-        color: var(--gold-light);
-        font-size: 21px;
-        line-height: 1.18;
+      .tile-title {
+        display: block;
+        color: rgba(205, 178, 116, 0.86);
+        font-size: 22px;
       }
 
-      .action-stack {
-        width: min(100%, 280px);
-        display: grid;
-        gap: 18px;
+      .tile-note {
+        display: block;
+        margin-top: 8px;
       }
 
-      .kit-btn {
-        min-height: 52px;
-        border-radius: 10px;
-        border: 1px solid rgba(168, 140, 84, 0.56);
-        background: rgba(9, 10, 14, 0.46);
-        color: rgba(239, 226, 196, 0.94);
-        transition:
-          transform 160ms ease,
-          border-color 180ms ease,
-          background-color 180ms ease,
-          box-shadow 180ms ease;
-      }
-
-      .kit-btn:hover,
-      .kit-btn:focus-visible {
-        border-color: rgba(205, 178, 116, 0.82);
-        background: rgba(201, 161, 74, 0.075);
-      }
-
-      .kit-btn:active,
-      .kit-btn.is-pressed {
-        transform: translateY(2px);
-      }
-
-      .kit-btn.primary {
-        background: linear-gradient(180deg, rgba(205, 178, 116, 0.9), rgba(142, 114, 64, 0.92));
-        color: #15110b;
-        box-shadow:
-          inset 0 1px 0 rgba(255, 244, 214, 0.22),
-          0 2px 0 #241a0a;
-      }
-
-      .kit-btn.secondary {
-        background: transparent;
-      }
-
-      .kit-btn.quiet {
-        border-color: transparent;
-        background: transparent;
-        color: rgba(201, 161, 74, 0.86);
-      }
-
-      .kit-btn:disabled {
-        border-color: rgba(168, 140, 84, 0.24);
-        color: rgba(217, 206, 184, 0.44);
-        background: rgba(9, 10, 14, 0.24);
-        cursor: not-allowed;
-      }
-
-      .icon-demo {
-        display: grid;
-        gap: 14px;
-        justify-items: center;
-      }
-
-      .icon-btn {
-        width: 72px;
-        height: 72px;
-        border: 1px solid rgba(168, 140, 84, 0.58);
-        border-radius: 50%;
-        background:
-          radial-gradient(circle at 45% 20%, rgba(205, 178, 116, 0.08), transparent 42%),
-          rgba(9, 10, 14, 0.58);
-        color: var(--gold-light);
-        font-size: 36px;
+      .tile-arrow {
+        color: rgba(205, 178, 116, 0.55);
+        font-size: 28px;
         line-height: 1;
       }
 
-      .icon-label {
-        color: rgba(196, 182, 150, 0.76);
-        font-size: 17px;
+      .actions {
+        width: min(100%, 320px);
+        display: grid;
+        gap: 12px;
       }
 
-      .field {
-        position: relative;
-        width: min(100%, 310px);
+      .action {
+        min-height: 54px;
+        border-radius: 8px;
+        border: 1px solid rgba(198, 170, 110, 0.64);
+        background: rgba(9, 10, 14, 0.46);
+        color: var(--text-bright);
+        font-size: 23px;
+        font-weight: 600;
       }
 
-      .field input {
-        width: 100%;
-        min-height: 58px;
-        padding: 0 52px 0 18px;
-        border: 1px solid rgba(168, 140, 84, 0.46);
-        border-radius: 12px;
-        background: rgba(9, 10, 14, 0.52);
-        color: rgba(239, 226, 196, 0.92);
-        font-family: var(--font-ui);
-        font-size: 20px;
+      .action.secondary {
+        border-color: rgba(168, 140, 84, 0.28);
+        background: rgba(7, 7, 9, 0.5);
+        color: rgba(217, 206, 184, 0.76);
       }
 
-      .field input::placeholder {
-        color: rgba(205, 178, 116, 0.5);
+      .action.quiet {
+        min-height: 44px;
+        border-color: transparent;
+        background: transparent;
+        color: rgba(205, 178, 116, 0.7);
+        font-size: 19px;
       }
 
-      .field .field-mark {
-        position: absolute;
-        right: 18px;
-        top: 50%;
-        color: var(--gold);
-        font-size: 24px;
-        transform: translateY(-50%);
-      }
-
-      .toggle-row,
-      .choice-row {
+      .icon-row {
         display: flex;
+        gap: 16px;
         align-items: center;
         justify-content: center;
-        gap: 18px;
-        color: rgba(205, 178, 116, 0.82);
-        font-family: var(--font-label);
-        letter-spacing: 0.1em;
+      }
+
+      .icon-btn,
+      .icon-btn-large {
+        padding: 0;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        color: rgba(201, 161, 74, 0.82);
+        line-height: 1;
+      }
+
+      .icon-btn {
+        width: 36px;
+        height: 36px;
+        border: 1px solid rgba(201, 161, 74, 0.12);
+        font-size: 16px;
+      }
+
+      .icon-btn-large {
+        width: 60px;
+        height: 60px;
+        border: 1px solid rgba(168, 140, 84, 0.45);
+        background: radial-gradient(circle at 50% 40%, rgba(26, 28, 38, 0.7), rgba(9, 10, 14, 0.92));
+      }
+
+      .icon-btn-large svg {
+        width: 30px;
+        height: 30px;
+        stroke-width: 1.7;
+      }
+
+      .question {
+        width: min(100%, 340px);
+      }
+
+      .question-label {
+        display: block;
+        margin: 0 0 9px 16px;
+        color: rgba(216, 177, 90, 0.72);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        line-height: 1.2;
         text-transform: uppercase;
+      }
+
+      .question-shell {
+        position: relative;
+        border: 1px solid rgba(201, 161, 74, 0.28);
+        border-radius: 20px;
+        background:
+          radial-gradient(circle at 50% 0%, rgba(216, 177, 90, 0.04), transparent 46%),
+          rgba(8, 9, 15, 0.4);
+        box-shadow:
+          inset 0 0 0 1px rgba(255, 248, 230, 0.02),
+          0 10px 22px rgba(0, 0, 0, 0.12);
+      }
+
+      .question-shell::before {
+        content: "";
+        position: absolute;
+        inset: 1px;
+        border-radius: 18px;
+        border: 1px solid rgba(240, 232, 216, 0.04);
+        pointer-events: none;
+      }
+
+      .question textarea {
+        width: 100%;
+        min-height: 76px;
+        resize: none;
+        border: 0;
+        background: transparent;
+        color: rgba(236, 222, 188, 0.92);
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 1.5;
+        padding: 14px 16px;
+        outline: none;
+        caret-color: rgba(244, 220, 154, 0.94);
+      }
+
+      .question textarea::placeholder {
+        color: rgba(214, 183, 125, 0.66);
+        font-style: italic;
+      }
+
+      .list-row {
+        width: min(100%, 360px);
+        min-height: 76px;
+        padding: 16px 22px;
+        border: 0;
+        border-top: 1px solid rgba(168, 140, 84, 0.12);
+        background: transparent;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 18px;
+        align-items: center;
+        color: var(--text);
+        text-align: left;
+      }
+
+      .row-title,
+      .row-value {
+        display: block;
+      }
+
+      .row-title {
+        color: var(--text-bright);
+        font-size: 25px;
+        font-weight: 600;
+        line-height: 1.08;
+      }
+
+      .row-value {
+        margin-top: 4px;
+        color: var(--text-muted);
+        font-size: 17px;
+        line-height: 1.3;
+      }
+
+      .row-arrow {
+        color: rgba(205, 178, 116, 0.62);
+        font-size: 34px;
+        line-height: 1;
       }
 
       .toggle {
         position: relative;
-        width: 92px;
-        height: 44px;
-        border: 1px solid rgba(168, 140, 84, 0.58);
+        width: 56px;
+        height: 32px;
+        border: 1px solid rgba(168, 140, 84, 0.5);
         border-radius: 999px;
-        background: rgba(7, 7, 9, 0.75);
+        background: rgba(7, 7, 9, 0.72);
       }
 
       .toggle::after {
-        content: "✧";
+        content: "";
         position: absolute;
         top: 4px;
-        right: 4px;
-        width: 32px;
-        height: 32px;
+        left: 4px;
+        width: 22px;
+        height: 22px;
         border-radius: 50%;
-        display: grid;
-        place-items: center;
-        background: linear-gradient(180deg, var(--gold-light), var(--gold-dark));
-        color: #15110b;
-        box-shadow: 0 0 14px rgba(201, 161, 74, 0.16);
+        background: rgba(142, 126, 86, 0.9);
       }
 
-      .checks {
-        display: grid;
-        gap: 16px;
-        justify-items: start;
+      .toggle.is-on {
+        border-color: rgba(198, 170, 110, 0.76);
+        background: linear-gradient(180deg, #cdb274, #8e7240);
       }
 
-      .check,
-      .radio {
+      .toggle.is-on::after {
+        background: #15110b;
+        transform: translateX(24px);
+      }
+
+      .choices {
+        width: min(100%, 340px);
+        display: grid;
+        gap: 12px;
+      }
+
+      .choice {
         min-height: 44px;
         padding: 0;
         border: 0;
@@ -446,86 +496,64 @@
         text-align: left;
       }
 
-      .box,
-      .dot {
-        width: 32px;
-        height: 32px;
-        border: 1px solid rgba(168, 140, 84, 0.58);
-        flex: 0 0 auto;
+      .choice-mark {
+        width: 28px;
+        height: 28px;
+        border: 1px solid rgba(168, 140, 84, 0.5);
+        border-radius: 50%;
         display: grid;
         place-items: center;
-        color: var(--gold-light);
+        flex: 0 0 auto;
+        color: rgba(205, 178, 116, 0.78);
       }
 
-      .box {
+      .choice-mark.selected::before {
+        content: "";
+        width: 14px;
+        height: 14px;
         border-radius: 50%;
+        background: rgba(205, 178, 116, 0.72);
       }
 
-      .box.selected::before {
+      .choice-mark.check.selected::before {
         content: "✓";
-        font-size: 22px;
-      }
-
-      .dot {
-        border-radius: 50%;
-      }
-
-      .dot.selected::before {
-        content: "";
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
-        background: linear-gradient(180deg, var(--gold-light), var(--gold-dark));
-      }
-
-      .chip {
-        min-height: 44px;
-        min-width: 174px;
-        padding: 0 22px;
-        border: 1px solid rgba(168, 140, 84, 0.54);
-        border-radius: 999px;
-        background: rgba(9, 10, 14, 0.46);
-        color: rgba(239, 226, 196, 0.84);
-        font-family: var(--font-label);
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-      }
-
-      .divider {
-        width: min(100%, 280px);
-        display: grid;
-        grid-template-columns: 1fr auto 1fr;
-        align-items: center;
-        gap: 12px;
-        color: var(--gold-light);
-      }
-
-      .divider::before,
-      .divider::after {
-        content: "";
-        height: 1px;
-        background: linear-gradient(90deg, transparent, var(--line), transparent);
-      }
-
-      .divider span {
-        font-size: 28px;
+        width: auto;
+        height: auto;
+        background: none;
+        font-size: 18px;
         line-height: 1;
       }
 
-      .sheet-preview,
-      .modal-preview,
-      .tooltip {
-        width: min(100%, 340px);
-        border: 1px solid rgba(168, 140, 84, 0.34);
-        background:
-          linear-gradient(180deg, rgba(16, 17, 22, 0.96), rgba(7, 7, 9, 0.98)),
-          url("../assets/images/forest-home/bg.jpg") center bottom / cover;
+      .chip-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
       }
 
-      .sheet-preview {
-        min-height: 150px;
-        padding: 22px;
+      .chip {
+        min-width: 44px;
+        min-height: 44px;
+        padding: 0 14px;
+        border: 1px solid rgba(168, 140, 84, 0.36);
+        border-radius: 9px;
+        background: rgba(7, 7, 9, 0.56);
+        color: rgba(239, 226, 196, 0.84);
+        font-size: 18px;
+      }
+
+      .divider {
+        width: min(220px, 68vw);
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(168, 140, 84, 0.24), transparent);
+      }
+
+      .sheet {
+        width: min(100%, 340px);
+        padding: 24px 22px 22px;
+        border: 1px solid rgba(168, 140, 84, 0.28);
         border-radius: 22px 22px 0 0;
+        background: rgba(9, 10, 14, 0.86);
       }
 
       .sheet-handle {
@@ -533,164 +561,74 @@
         height: 3px;
         margin: 0 auto 18px;
         border-radius: 999px;
-        background: rgba(205, 178, 116, 0.72);
+        background: rgba(205, 178, 116, 0.56);
       }
 
-      .modal-preview {
-        padding: 24px 24px 20px;
-        border-radius: 14px;
-      }
-
-      .modal-preview h3,
-      .sheet-preview h3 {
-        margin: 0;
-        color: rgba(239, 226, 196, 0.94);
+      .sheet h3 {
+        margin: 0 0 18px;
+        color: var(--text-bright);
         font-size: 24px;
         font-weight: 600;
+        text-align: center;
       }
 
-      .modal-actions {
+      .sheet-actions {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 12px;
-        margin-top: 18px;
       }
 
-      .loader {
-        position: relative;
-        width: 96px;
-        height: 96px;
-        border: 1px solid rgba(168, 140, 84, 0.44);
-        border-radius: 50%;
+      .feedback {
+        width: min(100%, 330px);
         display: grid;
-        place-items: center;
-      }
-
-      .loader::before {
-        content: "";
-        position: absolute;
-        inset: 9px;
-        border-radius: 50%;
-        border-top: 1px solid var(--gold-light);
-        border-right: 1px solid transparent;
-        animation: turn 4.8s linear infinite;
-      }
-
-      .loader span {
-        color: var(--gold-light);
-        font-size: 36px;
-      }
-
-      .badge {
-        min-width: 70px;
-        min-height: 56px;
-        padding: 10px 18px;
-        border: 1px solid rgba(168, 140, 84, 0.54);
-        border-radius: 9px;
-        display: grid;
-        place-items: center;
-        color: var(--gold-light);
-        font-size: 30px;
-        font-weight: 600;
-        background: rgba(9, 10, 14, 0.5);
-      }
-
-      .tooltip {
-        position: relative;
-        padding: 18px 20px;
-        border-radius: 10px;
-        color: rgba(217, 206, 184, 0.82);
-        font-size: 18px;
-        line-height: 1.35;
+        gap: 10px;
         text-align: left;
       }
 
-      .tooltip::after {
-        content: "";
-        position: absolute;
-        left: 50%;
-        bottom: -7px;
-        width: 12px;
-        height: 12px;
-        border-right: 1px solid rgba(168, 140, 84, 0.34);
-        border-bottom: 1px solid rgba(168, 140, 84, 0.34);
-        background: #070709;
-        transform: translateX(-50%) rotate(45deg);
+      .feedback-label {
+        color: rgba(205, 178, 116, 0.62);
+        font-family: var(--font-label);
+        font-size: 13px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .feedback-text {
+        margin: 0;
+        color: rgba(217, 206, 184, 0.72);
+        font-size: 18px;
+        line-height: 1.4;
       }
 
       .system-footer {
-        padding: 22px 24px;
-        border-top: 1px solid rgba(168, 140, 84, 0.22);
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
-        color: rgba(196, 182, 150, 0.72);
+        margin-top: 18px;
+        padding: 18px 0 0;
+        border-top: 1px solid rgba(168, 140, 84, 0.12);
+        color: rgba(217, 206, 184, 0.62);
+        font-size: 16px;
+        line-height: 1.45;
       }
 
       .system-footer p {
         margin: 0;
       }
 
-      .system-footer strong {
-        color: var(--gold-light);
-        font-family: var(--font-label);
-        font-weight: 400;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-      }
-
-      @keyframes turn {
-        to {
-          transform: rotate(360deg);
-        }
-      }
-
-      @media (max-width: 1100px) {
-        .grid {
-          grid-template-columns: repeat(3, minmax(190px, 1fr));
-        }
-
-        .cell:nth-child(5n) {
-          border-right: 1px solid rgba(168, 140, 84, 0.18);
-        }
-
-        .cell:nth-child(3n) {
-          border-right: 0;
-        }
-      }
-
-      @media (max-width: 720px) {
+      @media (max-width: 760px) {
         .page {
-          padding: 18px 12px 28px;
+          padding-inline: 12px;
         }
 
-        .kit-header,
-        .system-footer {
+        .kit-board {
           grid-template-columns: 1fr;
+          gap: 12px;
         }
 
-        .grid {
-          grid-template-columns: 1fr;
+        .sample {
+          padding: 18px 14px;
         }
 
-        .cell,
-        .cell:nth-child(3n),
-        .cell:nth-child(5n) {
-          border-right: 0;
-        }
-
-        .artifact {
-          width: 100%;
-          padding: 30px 26px;
-        }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        *,
-        *::before,
-        *::after {
-          animation: none !important;
-          transition-duration: 0.01ms !important;
+        .hero-card {
+          width: min(100%, 350px);
         }
       }
     </style>
@@ -698,143 +636,188 @@
   <body>
     <main class="page">
       <header class="kit-header">
-        <div>
-          <h1 class="brand">WYRD UI KIT</h1>
-          <p class="subtitle">1 элемент из каждой группы</p>
-        </div>
-        <div class="rule" aria-hidden="true"></div>
+        <h1 class="brand">WYRD UI KIT</h1>
+        <p class="subtitle">компоненты из текущего языка приложения</p>
+        <div class="hairline" aria-hidden="true"></div>
       </header>
 
       <section class="kit-board" aria-label="WYRD UI Kit components">
-        <div class="grid">
-          <article class="cell">
-            <h2 class="cell-title">1. Hero Artifact Frame</h2>
-            <button class="artifact" type="button" aria-label="Раскрыть карту">
-              <img class="artifact-frame" src="../assets/images/forest-home/f-hero2.png" alt="" />
-              <img class="fern" src="../assets/images/forest-home/fern-hero2.png" alt="" />
-              <span class="artifact-copy">
-                <span class="artifact-title">Раскрыть<br />карту</span>
-                <span class="artifact-note">карта дня · гадание</span>
+        <article class="sample">
+          <h2 class="sample-title">Hero Artifact</h2>
+          <div class="sample-body">
+            <button class="hero-card" type="button" aria-label="Раскрыть карту">
+              <img class="hero-card-frame" src="../assets/images/forest-home/f-hero2.png" alt="" />
+              <img class="hero-card-fern" src="../assets/images/forest-home/fern-hero2.png" alt="" />
+              <span class="hero-card-copy">
+                <span class="hero-card-title">Раскрыть<br />карту</span>
+                <span class="hero-card-note">карта дня · гадание</span>
               </span>
             </button>
-          </article>
+          </div>
+        </article>
 
-          <article class="cell">
-            <h2 class="cell-title">2. Quiet Frame<br />(Large Card)</h2>
-            <button class="quiet-card" type="button">
+        <article class="sample">
+          <h2 class="sample-title">Quiet Card</h2>
+          <div class="sample-body">
+            <button class="tile" type="button">
               <img src="../assets/images/forest-home/tracks.png" alt="" />
               <span>
-                <span class="quiet-title">Следы<br />в лесу</span>
-                <span class="quiet-note">твоя история<br />и дары</span>
+                <span class="tile-title">Следы<br />в лесу</span>
+                <span class="tile-note">твоя история<br />и дары</span>
               </span>
+              <span class="tile-arrow" aria-hidden="true">›</span>
             </button>
-          </article>
+          </div>
+        </article>
 
-          <article class="cell">
-            <h2 class="cell-title">3. Control Frame<br />(Actions)</h2>
-            <div class="action-stack">
-              <button class="kit-btn primary" type="button"><span class="btn-label">Продолжить</span></button>
-              <button class="kit-btn secondary" type="button"><span class="btn-label">Отмена</span></button>
-              <button class="kit-btn quiet" type="button">Задать новый вопрос</button>
+        <article class="sample">
+          <h2 class="sample-title">Action Buttons</h2>
+          <div class="sample-body">
+            <div class="actions">
+              <button class="action" type="button">Сохранить</button>
+              <button class="action secondary" type="button">Отмена</button>
+              <button class="action quiet" type="button">Остаться</button>
             </div>
-          </article>
+          </div>
+        </article>
 
-          <article class="cell">
-            <h2 class="cell-title">4. Icon Button</h2>
-            <div class="icon-demo">
+        <article class="sample">
+          <h2 class="sample-title">Icon Buttons</h2>
+          <div class="sample-body">
+            <div class="icon-row">
               <button class="icon-btn" type="button" aria-label="Назад">←</button>
-              <span class="icon-label">назад</span>
+              <button class="icon-btn-large" type="button" aria-label="Профиль">
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor">
+                  <path d="M20 21a8 8 0 0 0-16 0" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+              </button>
+              <button class="icon-btn-large" type="button" aria-label="Настройки">
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor">
+                  <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" />
+                  <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.04 1.56V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.04-1.56 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.56-1.04H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.6 8a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 8.96 3a1.7 1.7 0 0 0 1.04-1.56V1a2 2 0 1 1 4 0v.09A1.7 1.7 0 0 0 15.04 3a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 8a1.7 1.7 0 0 0 1.56 1.04H21a2 2 0 1 1 0 4h-.09A1.7 1.7 0 0 0 19.4 15Z" />
+                </svg>
+              </button>
             </div>
-          </article>
+          </div>
+        </article>
 
-          <article class="cell">
-            <h2 class="cell-title">5. Input Field</h2>
-            <label class="field">
-              <span class="sr-only">Вопрос</span>
-              <input type="text" placeholder="Ваш вопрос..." />
-              <span class="field-mark" aria-hidden="true">✧</span>
+        <article class="sample">
+          <h2 class="sample-title">Question Field</h2>
+          <div class="sample-body">
+            <label class="question">
+              <span class="question-label">Твой вопрос</span>
+              <span class="question-shell">
+                <textarea placeholder="Напиши вопрос Лесу"></textarea>
+              </span>
             </label>
-          </article>
+          </div>
+        </article>
 
-          <article class="cell">
-            <h2 class="cell-title">6. Toggle</h2>
-            <div class="toggle-row" aria-label="Toggle example">
-              <span>вкл</span>
-              <button class="toggle" type="button" aria-pressed="true" aria-label="Включено"></button>
-              <span>выкл</span>
+        <article class="sample">
+          <h2 class="sample-title">List Row</h2>
+          <div class="sample-body">
+            <button class="list-row" type="button">
+              <span>
+                <span class="row-title">Уведомления</span>
+                <span class="row-value">Время и дни</span>
+              </span>
+              <span class="row-arrow" aria-hidden="true">›</span>
+            </button>
+          </div>
+        </article>
+
+        <article class="sample">
+          <h2 class="sample-title">Toggle</h2>
+          <div class="sample-body">
+            <button class="list-row" type="button" aria-pressed="true">
+              <span>
+                <span class="row-title">Звук</span>
+                <span class="row-value">Звуки интерфейса</span>
+              </span>
+              <span class="toggle is-on" aria-hidden="true"></span>
+            </button>
+          </div>
+        </article>
+
+        <article class="sample">
+          <h2 class="sample-title">Choice</h2>
+          <div class="sample-body">
+            <div class="choices" role="radiogroup" aria-label="Пример выбора">
+              <button class="choice" type="button" role="radio" aria-checked="true">
+                <span class="choice-mark selected"></span>
+                Лунный день
+              </button>
+              <button class="choice" type="button" role="radio" aria-checked="false">
+                <span class="choice-mark"></span>
+                Нет или да
+              </button>
+              <button class="choice" type="button" aria-pressed="true">
+                <span class="choice-mark check selected"></span>
+                Напомнить о ритуале
+              </button>
             </div>
-          </article>
+          </div>
+        </article>
 
-          <article class="cell">
-            <h2 class="cell-title">7. Checkbox</h2>
-            <div class="checks" aria-label="Checkbox examples">
-              <button class="check" type="button" aria-pressed="true"><span class="box selected"></span>Напомнить о лунном дне</button>
-              <button class="check" type="button" aria-pressed="false"><span class="box"></span>Напомнить о ритуале</button>
+        <article class="sample">
+          <h2 class="sample-title">Day Chips</h2>
+          <div class="sample-body">
+            <div class="chip-row" aria-label="Дни недели">
+              <button class="chip" type="button">Пн</button>
+              <button class="chip" type="button">Вт</button>
+              <button class="chip" type="button">Ср</button>
+              <button class="chip" type="button">Чт</button>
+              <button class="chip" type="button">Пт</button>
             </div>
-          </article>
+          </div>
+        </article>
 
-          <article class="cell">
-            <h2 class="cell-title">8. Radio Button</h2>
-            <div class="checks" aria-label="Radio examples">
-              <button class="radio" type="button" aria-pressed="true"><span class="dot selected"></span>Лунный день</button>
-              <button class="radio" type="button" aria-pressed="false"><span class="dot"></span>Нет или да</button>
-            </div>
-          </article>
+        <article class="sample">
+          <h2 class="sample-title">Divider</h2>
+          <div class="sample-body">
+            <div class="divider" aria-hidden="true"></div>
+          </div>
+        </article>
 
-          <article class="cell">
-            <h2 class="cell-title">9. Chip / Day Button</h2>
-            <button class="chip" type="button">12 июня, чт</button>
-          </article>
-
-          <article class="cell">
-            <h2 class="cell-title">10. Divider</h2>
-            <div class="divider" aria-hidden="true"><span>✦</span></div>
-          </article>
-
-          <article class="cell">
-            <h2 class="cell-title">11. Sheet Frame</h2>
-            <div class="sheet-preview" role="presentation">
+        <article class="sample">
+          <h2 class="sample-title">Sheet</h2>
+          <div class="sample-body">
+            <div class="sheet" role="presentation">
               <div class="sheet-handle" aria-hidden="true"></div>
               <h3>Выберите время</h3>
-              <div class="modal-actions">
-                <button class="kit-btn secondary" type="button">09</button>
-                <button class="kit-btn secondary" type="button">30</button>
+              <div class="sheet-actions">
+                <button class="action secondary" type="button">Отмена</button>
+                <button class="action" type="button">Готово</button>
               </div>
             </div>
-          </article>
+          </div>
+        </article>
 
-          <article class="cell">
-            <h2 class="cell-title">12. Modal Frame</h2>
-            <div class="modal-preview" role="presentation">
-              <h3>Сохранить карту<br />в истории?</h3>
-              <div class="modal-actions">
-                <button class="kit-btn secondary" type="button">Нет</button>
-                <button class="kit-btn primary" type="button">Да</button>
-              </div>
+        <article class="sample">
+          <h2 class="sample-title">Feedback</h2>
+          <div class="sample-body">
+            <div class="feedback" role="status">
+              <span class="feedback-label">Сохранено</span>
+              <p class="feedback-text">Изменения профиля сохранены.</p>
             </div>
-          </article>
+          </div>
+        </article>
 
-          <article class="cell">
-            <h2 class="cell-title">13. Loading</h2>
-            <div class="loader" aria-label="Загрузка"><span>✦</span></div>
-          </article>
+        <article class="sample note">
+          <h2 class="sample-title">Что убрано</h2>
+          <p class="sample-note">Нет огромных ромбов, чужих заливок, декоративной звезды в поле ввода и новых рамок, которых нет в текущем приложении.</p>
+        </article>
 
-          <article class="cell">
-            <h2 class="cell-title">14. Badge</h2>
-            <div class="badge" aria-label="Три">3</div>
-          </article>
-
-          <article class="cell">
-            <h2 class="cell-title">15. Tooltip</h2>
-            <div class="tooltip">Этот знак подскажет, что сейчас важно замедлиться.</div>
-          </article>
-        </div>
-
-        <footer class="system-footer">
-          <p><strong>Правила</strong><br />матовое золото, тонкие линии, ромб или звезда как акцент, радиус 8-12px, touch target 44px.</p>
-          <p><strong>Декоративность</strong><br />Artifact V, Quiet II, Control I-III, Sheet III. Вторичные элементы не спорят с главным артефактом.</p>
-        </footer>
+        <article class="sample note">
+          <h2 class="sample-title">Правило</h2>
+          <p class="sample-note">UI Kit показывает язык компонентов WYRD, а не придумывает новый экран. Любой следующий вариант сверяется с реальными кнопками, полями и строками приложения.</p>
+        </article>
       </section>
+
+      <footer class="system-footer">
+        <p>Локальная доска для проверки компонентов перед переносом в runtime. Сначала форма и поведение, потом декоративность.</p>
+      </footer>
     </main>
   </body>
 </html>
