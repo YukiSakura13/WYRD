@@ -350,15 +350,28 @@
 }
 
 .gift-card {
+  display: block;
   width: clamp(164px, 44vw, 214px);
   aspect-ratio: 3 / 4;
   flex: 0 0 auto;
   border: 0;
+  padding: 0;
   background: transparent;
   color: var(--text-default);
   cursor: pointer;
   perspective: 900px;
   scroll-snap-align: start;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.gift-card:focus {
+  outline: none;
+}
+
+.gift-card:focus-visible {
+  outline: 2px solid rgba(243, 225, 170, 0.84);
+  outline-offset: 4px;
 }
 
 .gift-card-inner {
@@ -392,6 +405,7 @@
     0 0 34px rgba(201, 161, 74, 0.08),
     inset 0 0 0 1px rgba(242, 235, 221, 0.06);
   backface-visibility: hidden;
+  pointer-events: none;
 }
 
 .gift-card-face::before {

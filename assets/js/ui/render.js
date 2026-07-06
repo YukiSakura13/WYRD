@@ -90,6 +90,7 @@ export function getElements(doc = document) {
     giftShelf: doc.getElementById("gift-shelf"),
     giftShelfTrack: doc.getElementById("gift-shelf-track"),
     historyGiftReveal: doc.getElementById("history-gift-reveal"),
+    historyGiftRevealStatus: doc.getElementById("history-gift-reveal-status"),
     historyTrailsHeading: doc.getElementById("history-trails-heading"),
     historyList: doc.getElementById("history-list"),
     historySheetBackdrop: doc.getElementById("history-sheet-backdrop"),
@@ -767,6 +768,7 @@ export function createRenderer(elements) {
 
     if (!pendingGift) {
       elements.giftShelfTrack?.classList.remove("is-making-room");
+      getHistoryGiftRevealStatus()?.replaceChildren();
       return;
     }
 
@@ -796,6 +798,21 @@ export function createRenderer(elements) {
     card.append(cardFrame);
     elements.historyGiftReveal.append(veil, glimmer, star, card, ...createGiftRevealParticles());
     runGiftRevealTimeline(card, pendingGift);
+    getHistoryGiftRevealStatus().textContent = `Лес оставил новый дар: ${giftMeta.title}.`;
+  }
+
+  function getHistoryGiftRevealStatus() {
+    if (elements.historyGiftRevealStatus || !elements.historyGiftReveal) {
+      return elements.historyGiftRevealStatus;
+    }
+
+    const status = document.createElement("p");
+    status.id = "history-gift-reveal-status";
+    status.className = "sr-only";
+    status.setAttribute("aria-live", "polite");
+    elements.historyGiftReveal.insertAdjacentElement("afterend", status);
+    elements.historyGiftRevealStatus = status;
+    return status;
   }
 
   function runGiftRevealTimeline(card, gift) {
@@ -910,27 +927,145 @@ export function createRenderer(elements) {
   function getVisibleGifts(state) {
     const gifts = Array.isArray(state.gifts) ? state.gifts : [];
 
-    if (gifts.length || !hasGiftPreview()) {
+    const previewGiftKeys = getPreviewGiftKeys();
+    if (gifts.length) {
       return gifts;
     }
 
-    return [
-      {
-        id: "gift-moon-preview",
-        receivedAt: new Date(2026, 4, 29, 12, 0, 0).toISOString(),
-        giftKey: "moon",
-        pendingReveal: false,
+    const previewRevealGiftKey = getPreviewGiftRevealKey();
+    if (previewGiftKeys.length === 0 && !previewRevealGiftKey) {
+      return [];
+    }
+
+    const giftKeys = previewRevealGiftKey && !previewGiftKeys.includes(previewRevealGiftKey)
+      ? [previewRevealGiftKey, ...previewGiftKeys]
+      : previewGiftKeys;
+
+    return giftKeys.map(function createPreviewGift(giftKey, index) {
+      return {
+        id: `gift-${giftKey}-preview`,
+        receivedAt: new Date(2026, 4, 29 + index, 12, 0, 0).toISOString(),
+        giftKey,
+        pendingReveal: giftKey === previewRevealGiftKey && !isPreviewGiftRevealShown(giftKey),
         schemaVersion: 1,
-      },
-    ];
+      };
+    });
   }
 
-  function hasGiftPreview() {
+  function getPreviewGiftKeys() {
+    if (!isGiftPreviewEnabled()) {
+      return [];
+    }
+
     try {
-      return new URLSearchParams(window.location.search).get("previewGift") === "moon";
+      const giftParam = new URLSearchParams(window.location.search).get("previewGift");
+      if (!giftParam) {
+        return [];
+      }
+
+      const giftKeys = giftParam
+        .split(",")
+        .map((value) => normalizeGiftKey(value.trim()))
+        .filter(Boolean);
+
+      return Array.from(new Set(giftKeys));
+    } catch (error) {
+      return [];
+    }
+  }
+
+  function getPreviewGiftRevealKey() {
+    if (!isGiftPreviewEnabled()) {
+      return null;
+    }
+
+    try {
+      return normalizeGiftKey(new URLSearchParams(window.location.search).get("previewGiftReveal") || "");
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function getPreviewGiftRevealSessionKey(giftKey) {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      return `wyrd.previewGiftRevealShown:${giftKey}:${params.get("v") || ""}`;
+    } catch (error) {
+      return `wyrd.previewGiftRevealShown:${giftKey}`;
+    }
+  }
+
+  function isPreviewGiftRevealShown(giftKey) {
+    try {
+      return window.sessionStorage.getItem(getPreviewGiftRevealSessionKey(giftKey)) === "1";
     } catch (error) {
       return false;
     }
+  }
+
+  function isGiftPreviewEnabled() {
+    if (window.WYRD_ENABLE_GIFT_PREVIEW === true) {
+      return true;
+    }
+
+    const buildId = document.querySelector('meta[name="wyrd-build"]')?.content || window.WYRD_BUILD_ID || "";
+    if (/^(prod|production)$/i.test(buildId)) {
+      return false;
+    }
+
+    return (
+      window.location.protocol === "file:" ||
+      ["localhost", "127.0.0.1", "::1"].includes(window.location.hostname) ||
+      /^(dev|staging)$/i.test(buildId)
+    );
+  }
+
+  function normalizeGiftKey(value) {
+    const giftAliases = {
+      lunnaya: "moon",
+      moon: "moon",
+      free: "free",
+      volnaya: "free",
+      ammonite: "ammonite",
+      ammonitovaya: "ammonite",
+      resonant: "resonant",
+      zvenyashaya: "resonant",
+      flower: "flower",
+      floral: "flower",
+      tsvetochnaya: "flower",
+      honey: "honey",
+      medovaya: "honey",
+      ancient: "ancient",
+      drevnyaya: "ancient",
+      night: "night",
+      nochnaya: "night",
+      fragile: "fragile",
+      hrupkaya: "fragile",
+      malachite: "malachite",
+      malahitovaya: "malachite",
+      wild: "wild",
+      dikaya: "wild",
+      moss: "moss",
+      mohovaya: "moss",
+      quiet: "quiet",
+      tihaya: "quiet",
+      forest: "forest",
+      lesnaya: "forest",
+      cedar: "cedar",
+      kedrovaya: "cedar",
+      crystal: "crystal",
+      kristalnaya: "crystal",
+      river: "river",
+      rechnaya: "river",
+      transparent: "transparent",
+      prozrachnaya: "transparent",
+      ringing: "ringing",
+      zvonkaya: "ringing",
+      morning: "morning",
+      utrennyaya: "morning",
+    };
+
+    return giftAliases[value.toLowerCase()] || null;
   }
 
   function getStoredMoon(trace, fallbackDate) {

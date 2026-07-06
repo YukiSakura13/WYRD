@@ -640,16 +640,55 @@ export function createActionHandler(deps) {
 }
 
 function revealPendingGiftsAfterAnimation(store, renderApp) {
+  const previewGiftRevealKey = getPreviewGiftRevealKey();
   const hasPendingGift = store.getState().gifts?.some((gift) => gift.pendingReveal);
+  const hasPreviewGiftReveal = Boolean(previewGiftRevealKey && !isPreviewGiftRevealShown(previewGiftRevealKey));
 
-  if (!hasPendingGift) {
+  if (!hasPendingGift && !hasPreviewGiftReveal) {
     return;
   }
 
   window.setTimeout(function clearPendingGiftReveal() {
-    store.revealPendingGifts();
+    if (previewGiftRevealKey) {
+      markPreviewGiftRevealShown(previewGiftRevealKey);
+    } else {
+      store.revealPendingGifts();
+    }
     renderApp();
   }, 5900);
+}
+
+function getPreviewGiftRevealKey() {
+  try {
+    return new URLSearchParams(window.location.search).get("previewGiftReveal") || "";
+  } catch (error) {
+    return "";
+  }
+}
+
+function getPreviewGiftRevealSessionKey(giftKey) {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    return `wyrd.previewGiftRevealShown:${giftKey}:${params.get("v") || ""}`;
+  } catch (error) {
+    return `wyrd.previewGiftRevealShown:${giftKey}`;
+  }
+}
+
+function isPreviewGiftRevealShown(giftKey) {
+  try {
+    return window.sessionStorage.getItem(getPreviewGiftRevealSessionKey(giftKey)) === "1";
+  } catch (error) {
+    return false;
+  }
+}
+
+function markPreviewGiftRevealShown(giftKey) {
+  try {
+    window.sessionStorage.setItem(getPreviewGiftRevealSessionKey(giftKey), "1");
+  } catch (error) {
+    // Preview cleanup should never block the real gift flow.
+  }
 }
 
 function readAboutDraftFromForm(store, uiState) {
