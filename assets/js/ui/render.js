@@ -686,6 +686,10 @@ export function createRenderer(elements) {
     if (elements.historyGiftReveal) {
       elements.historyGiftReveal.hidden = !hasPendingGift;
       elements.historyGiftReveal.classList.toggle("is-active", hasPendingGift);
+      elements.historyGiftReveal.replaceChildren();
+      if (hasPendingGift) {
+        elements.historyGiftReveal.append(...Array.from({ length: 4 }, () => document.createElement("span")));
+      }
     }
 
     gifts.forEach(function renderGift(gift) {
@@ -738,7 +742,7 @@ export function createRenderer(elements) {
       divider.className = "gift-divider";
       const caption = document.createElement("span");
       caption.className = "gift-caption";
-      const captionLines = giftMeta.captionLines || [giftMeta.caption];
+      const captionLines = giftMeta.captionLines || (giftMeta.caption ? [giftMeta.caption] : []);
       captionLines.forEach(function appendCaptionLine(line, index) {
         const lineNode = document.createElement("span");
         lineNode.className = index === captionLines.length - 1 ? "gift-caption-line gift-caption-line--closing" : "gift-caption-line";
@@ -811,6 +815,101 @@ export function createRenderer(elements) {
         image: "./assets/images/gifts/lunnaya.webp",
         caption: "Луна не спешит менять форму. Всему своё время.",
         captionLines: ["Луна не спешит", "менять форму.", "Всему своё время."],
+      },
+      free: {
+        title: "Вольная",
+        symbol: "✦",
+        image: "./assets/images/gifts/volnaya.webp",
+      },
+      ammonite: {
+        title: "Аммонитовая",
+        symbol: "✦",
+        image: "./assets/images/gifts/ammonitovaya.webp",
+      },
+      resonant: {
+        title: "Звенящая",
+        symbol: "✦",
+        image: "./assets/images/gifts/zvenyashaya.webp",
+      },
+      flower: {
+        title: "Цветочная",
+        symbol: "✧",
+        image: "./assets/images/gifts/tsvetochnaya.webp",
+      },
+      honey: {
+        title: "Медовая",
+        symbol: "✦",
+        image: "./assets/images/gifts/medovaya.webp",
+      },
+      ancient: {
+        title: "Древняя",
+        symbol: "✦",
+        image: "./assets/images/gifts/drevnyaya.webp",
+      },
+      night: {
+        title: "Ночная",
+        symbol: "✦",
+        image: "./assets/images/gifts/nochnaya.webp",
+      },
+      fragile: {
+        title: "Хрупкая",
+        symbol: "✦",
+        image: "./assets/images/gifts/hrupkaya.webp",
+      },
+      malachite: {
+        title: "Малахитовая",
+        symbol: "✦",
+        image: "./assets/images/gifts/malahitovaya.webp",
+      },
+      wild: {
+        title: "Дикая",
+        symbol: "✦",
+        image: "./assets/images/gifts/dikaya.webp",
+      },
+      moss: {
+        title: "Моховая",
+        symbol: "✦",
+        image: "./assets/images/gifts/mohovaya.webp",
+      },
+      forest: {
+        title: "Лесная",
+        symbol: "✦",
+        image: "./assets/images/gifts/lesnaya.webp",
+      },
+      cedar: {
+        title: "Кедровая",
+        symbol: "✦",
+        image: "./assets/images/gifts/kedrovaya.webp",
+      },
+      crystal: {
+        title: "Кристальная",
+        symbol: "✦",
+        image: "./assets/images/gifts/kristalnaya.webp",
+      },
+      river: {
+        title: "Речная",
+        symbol: "✦",
+        image: "./assets/images/gifts/rechnaya.webp",
+      },
+      transparent: {
+        title: "Прозрачная",
+        symbol: "✦",
+        image: "./assets/images/gifts/prozrachnaya.webp?v=2",
+      },
+      ringing: {
+        title: "Звонкая",
+        symbol: "✦",
+        image: "./assets/images/gifts/zvonkaya.webp",
+      },
+      quiet: {
+        title: "Тихая",
+        symbol: "✦",
+        image: "./assets/images/gifts/tihaya.webp",
+      },
+      morning: {
+        title: "Утренняя",
+        symbol: "✦",
+        image: "./assets/images/gifts/utrennyaya.webp",
       },
       root: {
         title: "Корневая",

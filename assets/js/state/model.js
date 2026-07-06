@@ -678,7 +678,28 @@ function formatLocalDayKey(date) {
 }
 
 function getGiftKey(index) {
-  const giftKeys = ["moon", "root", "star", "threshold"];
+  const giftKeys = [
+    "moon",
+    "free",
+    "ammonite",
+    "resonant",
+    "flower",
+    "honey",
+    "ancient",
+    "night",
+    "fragile",
+    "malachite",
+    "wild",
+    "moss",
+    "forest",
+    "cedar",
+    "crystal",
+    "river",
+    "transparent",
+    "ringing",
+    "quiet",
+    "morning",
+  ];
 
   return giftKeys[index % giftKeys.length];
 }
