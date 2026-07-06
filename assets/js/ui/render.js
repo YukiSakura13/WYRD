@@ -679,18 +679,10 @@ export function createRenderer(elements) {
     }
 
     elements.giftShelf.hidden = gifts.length === 0;
+    elements.giftShelf.classList.toggle("has-pending-gift", gifts.some((gift) => gift.pendingReveal));
     elements.giftShelfTrack.classList.toggle("has-one-gift", gifts.length === 1);
+    elements.giftShelfTrack.classList.remove("is-making-room");
     elements.giftShelfTrack.replaceChildren();
-
-    const hasPendingGift = gifts.some((gift) => gift.pendingReveal);
-    if (elements.historyGiftReveal) {
-      elements.historyGiftReveal.hidden = !hasPendingGift;
-      elements.historyGiftReveal.classList.toggle("is-active", hasPendingGift);
-      elements.historyGiftReveal.replaceChildren();
-      if (hasPendingGift) {
-        elements.historyGiftReveal.append(...Array.from({ length: 4 }, () => document.createElement("span")));
-      }
-    }
 
     gifts.forEach(function renderGift(gift) {
       const giftMeta = getGiftMeta(gift.giftKey);
@@ -699,6 +691,7 @@ export function createRenderer(elements) {
       card.className = "gift-card";
       card.type = "button";
       card.dataset.action = "flip-gift";
+      card.dataset.giftId = gift.id;
       card.setAttribute("aria-pressed", "false");
       card.setAttribute("aria-label", `Дар ${giftMeta.title}`);
       card.classList.toggle("is-pending-reveal", gift.pendingReveal);
@@ -757,6 +750,160 @@ export function createRenderer(elements) {
       inner.append(front, back);
       card.append(inner);
       elements.giftShelfTrack.appendChild(card);
+    });
+
+    renderGiftRevealRitual(gifts);
+  }
+
+  function renderGiftRevealRitual(gifts) {
+    if (!elements.historyGiftReveal) {
+      return;
+    }
+
+    const pendingGift = gifts.find((gift) => gift.pendingReveal);
+    elements.historyGiftReveal.hidden = !pendingGift;
+    elements.historyGiftReveal.classList.toggle("is-active", Boolean(pendingGift));
+    elements.historyGiftReveal.replaceChildren();
+
+    if (!pendingGift) {
+      elements.giftShelfTrack?.classList.remove("is-making-room");
+      return;
+    }
+
+    const giftMeta = getGiftMeta(pendingGift.giftKey);
+    const veil = document.createElement("span");
+    veil.className = "gift-reveal-veil";
+    const glimmer = document.createElement("span");
+    glimmer.className = "gift-reveal-glimmer";
+    const star = document.createElement("span");
+    star.className = "gift-reveal-star";
+    const card = document.createElement("span");
+    card.className = "gift-reveal-card";
+    const cardFrame = document.createElement("span");
+    cardFrame.className = "gift-reveal-card-frame";
+    const image = giftMeta.image ? document.createElement("img") : document.createElement("span");
+
+    image.className = giftMeta.image ? "gift-reveal-image" : "gift-reveal-symbol";
+    if (giftMeta.image) {
+      image.src = giftMeta.image;
+      image.alt = "";
+      image.decoding = "async";
+    } else {
+      image.textContent = giftMeta.symbol;
+    }
+
+    cardFrame.append(image);
+    card.append(cardFrame);
+    elements.historyGiftReveal.append(veil, glimmer, star, card, ...createGiftRevealParticles());
+    runGiftRevealTimeline(card, pendingGift);
+  }
+
+  function runGiftRevealTimeline(card, gift) {
+    if (!card || !gift) {
+      return;
+    }
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    card.classList.add("is-manifesting");
+
+    if (prefersReducedMotion) {
+      positionGiftRevealCard(card, gift);
+      return;
+    }
+
+    window.setTimeout(function holdManifestedGift() {
+      if (document.contains(card)) {
+        card.classList.add("is-holding");
+      }
+    }, 1800);
+
+    window.setTimeout(function settleManifestedGift() {
+      if (document.contains(card)) {
+        positionGiftRevealCard(card, gift);
+      }
+    }, 2450);
+  }
+
+  function positionGiftRevealCard(card, gift) {
+    if (!card || !gift) {
+      return;
+    }
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    window.setTimeout(function prepareGiftFlight() {
+      const track = elements.giftShelfTrack;
+      const target = elements.giftShelfTrack?.querySelector(`[data-gift-id="${gift.id}"]`);
+      const targetRect = target?.getBoundingClientRect();
+      const cardRect = card.getBoundingClientRect();
+
+      if (!document.contains(card) || !target || !track || !targetRect || !cardRect.width || !cardRect.height) {
+        return;
+      }
+
+      const currentScrollLeft = track.scrollLeft;
+      const maxScrollLeft = Math.max(0, track.scrollWidth - track.clientWidth);
+      const targetCenterOffset = target.offsetLeft + target.offsetWidth / 2;
+      const desiredScrollLeft = Math.max(0, Math.min(maxScrollLeft, targetCenterOffset - track.clientWidth / 2));
+      const scrollDelta = desiredScrollLeft - currentScrollLeft;
+      const targetCenterX = targetRect.left + targetRect.width / 2 - scrollDelta;
+      const targetCenterY = targetRect.top + targetRect.height / 2;
+      const cardCenterX = window.innerWidth / 2;
+      const cardCenterY = window.innerHeight / 2;
+      const finalScale = Math.max(0.24, Math.min(0.58, targetRect.width / cardRect.width));
+
+      track.classList.add("is-making-room");
+      if (typeof track.scrollTo === "function") {
+        track.scrollTo({
+          left: desiredScrollLeft,
+          behavior: prefersReducedMotion ? "auto" : "smooth",
+        });
+      } else {
+        track.scrollLeft = desiredScrollLeft;
+      }
+
+      card.style.setProperty("--gift-reveal-to-x", `${targetCenterX - cardCenterX}px`);
+      card.style.setProperty("--gift-reveal-to-y", `${targetCenterY - cardCenterY}px`);
+      card.style.setProperty("--gift-reveal-mid-x", `${(targetCenterX - cardCenterX) * 0.78}px`);
+      card.style.setProperty("--gift-reveal-mid-y", `${(targetCenterY - cardCenterY) * 0.78}px`);
+      card.style.setProperty("--gift-reveal-mid-scale", (finalScale * 1.18).toFixed(3));
+      card.style.setProperty("--gift-reveal-final-scale", finalScale.toFixed(3));
+
+      window.setTimeout(function startGiftFlight() {
+        if (document.contains(card)) {
+          card.classList.add("is-flying", "is-positioned");
+        }
+      }, prefersReducedMotion ? 0 : 340);
+    }, 0);
+  }
+
+  function createGiftRevealParticles() {
+    return [
+      { x: 43, y: 34, dx: -8, dy: -6, size: 3, delay: 0 },
+      { x: 57, y: 34, dx: 8, dy: -6, size: 4, delay: 180 },
+      { x: 35, y: 48, dx: -12, dy: 0, size: 3, delay: 320 },
+      { x: 65, y: 48, dx: 12, dy: 0, size: 3, delay: 120 },
+      { x: 40, y: 64, dx: -9, dy: 8, size: 5, delay: 420 },
+      { x: 60, y: 64, dx: 9, dy: 8, size: 4, delay: 260 },
+      { x: 50, y: 29, dx: 0, dy: -12, size: 3, delay: 540 },
+      { x: 50, y: 70, dx: 0, dy: 12, size: 3, delay: 700 },
+      { x: 50, y: 50, dx: 0, dy: 0, size: 2, delay: 380 },
+    ].map(function createParticle(point) {
+      const particle = document.createElement("span");
+      particle.className = "gift-reveal-particle";
+      particle.style.setProperty("--x", `${point.x}%`);
+      particle.style.setProperty("--y", `${point.y}%`);
+      particle.style.setProperty("--dx", `${point.dx}px`);
+      particle.style.setProperty("--dy", `${point.dy}px`);
+      particle.style.setProperty("--dx-soft", `${point.dx * 0.65}px`);
+      particle.style.setProperty("--dy-soft", `${point.dy * 0.65}px`);
+      particle.style.setProperty("--dx-wide", `${point.dx * 1.3}px`);
+      particle.style.setProperty("--dy-wide", `${point.dy * 1.3}px`);
+      particle.style.setProperty("--dx-far", `${point.dx * 1.8}px`);
+      particle.style.setProperty("--dy-far", `${point.dy * 1.8}px`);
+      particle.style.setProperty("--size", `${point.size}px`);
+      particle.style.setProperty("--delay", `${point.delay}ms`);
+      return particle;
     });
   }
 

@@ -649,7 +649,7 @@ function revealPendingGiftsAfterAnimation(store, renderApp) {
   window.setTimeout(function clearPendingGiftReveal() {
     store.revealPendingGifts();
     renderApp();
-  }, 1500);
+  }, 5900);
 }
 
 function readAboutDraftFromForm(store, uiState) {
