@@ -29,19 +29,19 @@
 }
 
 .cover-scene::before {
-  top: 10.5%;
+  top: calc(10.5% + min(28vw, 110px));
   left: 50%;
-  width: min(56vw, 220px);
-  height: min(56vw, 220px);
-  transform: translateX(-50%);
+  width: min(76vw, 330px);
+  height: min(76vw, 330px);
+  transform: translate(-50%, -50%);
   transform-origin: center;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(228, 233, 238, 0.18) 0%, rgba(220, 226, 232, 0.08) 40%, transparent 72%);
-  filter: blur(30px);
+  background: radial-gradient(circle, rgba(231, 236, 242, 0.18) 0%, rgba(220, 226, 232, 0.13) 36%, rgba(198, 204, 212, 0.07) 58%, transparent 76%);
+  filter: blur(26px);
   mix-blend-mode: screen;
-  opacity: 0.5;
+  opacity: 0.42;
   z-index: 2;
-  animation: moonPulse 7s ease-in-out infinite;
+  animation: moonHaloPulse 7.4s ease-in-out infinite;
 }
 
 .cover-scene::after {
@@ -53,19 +53,19 @@
 
 .moon-glow {
   position: absolute;
-  top: 10.5%;
+  top: calc(10.5% + min(28vw, 110px));
   left: 50%;
-  width: min(56vw, 220px);
-  height: min(56vw, 220px);
-  transform: translateX(-50%);
+  width: min(64vw, 280px);
+  height: min(64vw, 280px);
+  transform: translate(-50%, -50%);
   transform-origin: center;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(228, 233, 238, 0.18) 0%, rgba(220, 226, 232, 0.08) 40%, transparent 72%);
-  filter: blur(30px);
+  background: radial-gradient(circle, rgba(236, 240, 244, 0.16) 0%, rgba(228, 233, 238, 0.12) 42%, rgba(210, 216, 224, 0.06) 62%, transparent 78%);
+  filter: blur(22px);
   mix-blend-mode: screen;
-  opacity: 0.5;
+  opacity: 0.44;
   pointer-events: none;
-  z-index: 2;
+  z-index: 3;
   animation: moonPulse 7s ease-in-out infinite;
 }
 
@@ -279,15 +279,30 @@
 @keyframes moonPulse {
   0%,
   100% {
-    transform: translateX(-50%) scale(0.98);
-    filter: blur(30px);
-    opacity: 0.48;
+    transform: translate(-50%, -50%) scale(0.96);
+    filter: blur(22px);
+    opacity: 0.42;
   }
 
   50% {
-    transform: translateX(-50%) scale(1.04);
-    filter: blur(46px);
-    opacity: 0.78;
+    transform: translate(-50%, -50%) scale(1.08);
+    filter: blur(36px);
+    opacity: 0.74;
+  }
+}
+
+@keyframes moonHaloPulse {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(0.94);
+    filter: blur(26px);
+    opacity: 0.32;
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(1.12);
+    filter: blur(44px);
+    opacity: 0.68;
   }
 }
 
