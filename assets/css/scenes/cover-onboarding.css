@@ -29,7 +29,16 @@
 }
 
 .cover-scene::before {
-  display: none;
+  inset: -1.5% -5% auto;
+  height: min(49vh, 470px);
+  background: url("../../images/cover/moon-branch-veil.png") center top / cover no-repeat;
+  filter: blur(0.25px);
+  opacity: 0.18;
+  transform: translate3d(-0.8%, 0, 0) scale(1.015);
+  transform-origin: center top;
+  mix-blend-mode: multiply;
+  z-index: 4;
+  animation: branchVeilDrift 34s ease-in-out infinite alternate;
 }
 
 .cover-scene::after {
@@ -40,7 +49,22 @@
 }
 
 .moon-glow {
-  display: none;
+  position: absolute;
+  top: 24.6%;
+  left: 50%;
+  width: clamp(290px, 55vw, 510px);
+  height: clamp(120px, 18vw, 190px);
+  border-radius: 50%;
+  background:
+    linear-gradient(90deg, transparent 0%, rgba(215, 222, 230, 0.05) 24%, rgba(232, 236, 240, 0.11) 48%, rgba(196, 204, 214, 0.06) 66%, transparent 100%),
+    radial-gradient(ellipse at 50% 50%, rgba(222, 228, 236, 0.12), transparent 68%);
+  filter: blur(14px);
+  mix-blend-mode: screen;
+  opacity: 0.62;
+  pointer-events: none;
+  transform: translate3d(-70%, -50%, 0);
+  z-index: 3;
+  animation: moonMistPass 24s ease-in-out infinite;
 }
 
 .cover-art {
@@ -151,47 +175,50 @@
 }
 
 .cover-particles {
-  display: none;
+  display: block;
+  z-index: 4;
+  mix-blend-mode: screen;
 }
 
 .particle {
-  background: rgba(214, 222, 230, 0.62);
+  background: rgba(214, 222, 230, 0.52);
+  box-shadow: 0 0 7px rgba(214, 222, 230, 0.16);
 }
 
 .particle-1 {
-  width: 1px;
-  height: 1px;
-  left: 28%;
-  bottom: 30%;
-  opacity: 0.1;
-  animation: particleDrift 26s ease-in-out infinite 0s;
+  width: 1.5px;
+  height: 1.5px;
+  top: 22.5%;
+  left: 37%;
+  opacity: 0;
+  animation: moonDustFloat 16s ease-in-out infinite 0s;
 }
 
 .particle-2 {
-  width: 1.5px;
-  height: 1.5px;
-  left: 55%;
-  bottom: 25%;
-  opacity: 0.08;
-  animation: particleDrift 31s ease-in-out infinite 6s;
+  width: 2px;
+  height: 2px;
+  top: 27%;
+  left: 53%;
+  opacity: 0;
+  animation: moonDustFloat 19s ease-in-out infinite 5s;
 }
 
 .particle-3 {
   width: 1px;
   height: 1px;
-  left: 72%;
-  bottom: 35%;
-  opacity: 0.12;
-  animation: particleDrift 23s ease-in-out infinite 11s;
+  top: 21%;
+  left: 66%;
+  opacity: 0;
+  animation: moonDustFloat 21s ease-in-out infinite 10s;
 }
 
 .particle-4 {
-  width: 1px;
-  height: 1px;
-  left: 40%;
-  bottom: 20%;
-  opacity: 0.09;
-  animation: particleDrift 28s ease-in-out infinite 18s;
+  width: 1.5px;
+  height: 1.5px;
+  top: 31%;
+  left: 44%;
+  opacity: 0;
+  animation: moonDustFloat 18s ease-in-out infinite 13s;
 }
 
 .cover-overlay {
@@ -295,6 +322,69 @@
 
   50% {
     transform: translateX(11px);
+  }
+}
+
+@keyframes moonMistPass {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate3d(-88%, -50%, 0);
+  }
+
+  18% {
+    opacity: 0.22;
+  }
+
+  48% {
+    opacity: 0.54;
+  }
+
+  74% {
+    opacity: 0.18;
+  }
+
+  100% {
+    transform: translate3d(-18%, -50%, 0);
+  }
+}
+
+@keyframes branchVeilDrift {
+  0% {
+    opacity: 0.14;
+    transform: translate3d(-1.2%, -0.2%, 0) scale(1.016);
+  }
+
+  50% {
+    opacity: 0.2;
+  }
+
+  100% {
+    opacity: 0.16;
+    transform: translate3d(1.1%, 0.25%, 0) scale(1.02);
+  }
+}
+
+@keyframes moonDustFloat {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+
+  18%,
+  68% {
+    opacity: 0.24;
+  }
+
+  45% {
+    opacity: 0.42;
+    transform: translate3d(8px, -7px, 0);
+  }
+
+  82% {
+    opacity: 0;
+    transform: translate3d(14px, -18px, 0);
   }
 }
 
@@ -1128,16 +1218,18 @@ body[data-scene="onboarding"] #profile {
   .cover-cta-frame,
   .cover-icon-svg,
   .cover-icon-visual::before,
+  .cover-scene::before,
   .moon-glow,
   .fog-layer-1,
   .fog-layer-2,
+  .cover-particles,
   .star {
     animation: none;
   }
 
   .moon-glow {
-    filter: blur(45px);
-    opacity: 0.68;
+    opacity: 0.18;
+    transform: translate3d(-50%, -50%, 0);
   }
 
   .star {
