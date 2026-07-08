@@ -29,18 +29,21 @@
 }
 
 .cover-scene::before {
-  top: calc(10.5% + min(28vw, 110px));
+  top: 24.6%;
   left: 50%;
-  width: min(76vw, 330px);
-  height: min(76vw, 330px);
+  width: clamp(220px, 42vw, 380px);
+  height: clamp(220px, 42vw, 380px);
   transform: translate(-50%, -50%);
   transform-origin: center;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(231, 236, 242, 0.18) 0%, rgba(220, 226, 232, 0.13) 36%, rgba(198, 204, 212, 0.07) 58%, transparent 76%);
+  background: radial-gradient(circle, rgba(241, 244, 248, 0.26) 0%, rgba(228, 233, 238, 0.2) 34%, rgba(198, 204, 212, 0.1) 58%, transparent 78%);
   filter: blur(26px);
   mix-blend-mode: screen;
-  opacity: 0.42;
-  z-index: 2;
+  opacity: 0.56;
+  box-shadow:
+    0 0 38px rgba(232, 238, 244, 0.22),
+    0 0 96px rgba(198, 204, 212, 0.18);
+  z-index: 5;
   animation: moonHaloPulse 7.4s ease-in-out infinite;
 }
 
@@ -53,19 +56,22 @@
 
 .moon-glow {
   position: absolute;
-  top: calc(10.5% + min(28vw, 110px));
+  top: 24.6%;
   left: 50%;
-  width: min(64vw, 280px);
-  height: min(64vw, 280px);
+  width: clamp(180px, 34vw, 320px);
+  height: clamp(180px, 34vw, 320px);
   transform: translate(-50%, -50%);
   transform-origin: center;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(236, 240, 244, 0.16) 0%, rgba(228, 233, 238, 0.12) 42%, rgba(210, 216, 224, 0.06) 62%, transparent 78%);
+  background: radial-gradient(circle, rgba(246, 248, 250, 0.24) 0%, rgba(232, 238, 244, 0.18) 42%, rgba(210, 216, 224, 0.08) 62%, transparent 80%);
   filter: blur(22px);
   mix-blend-mode: screen;
-  opacity: 0.44;
+  opacity: 0.58;
+  box-shadow:
+    0 0 26px rgba(238, 243, 248, 0.18),
+    0 0 62px rgba(210, 216, 224, 0.14);
   pointer-events: none;
-  z-index: 3;
+  z-index: 6;
   animation: moonPulse 7s ease-in-out infinite;
 }
 
