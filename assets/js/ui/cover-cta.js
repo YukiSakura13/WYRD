@@ -27,13 +27,13 @@ function drawRoundedClip(ctx, width, height) {
 
 function drawEmberGlow(ctx, width, height, time, hover) {
   const breath = 0.5 + Math.sin((time * Math.PI * 2) / 4.8) * 0.5;
-  const baseAlpha = hover ? 0.12 : 0.075;
-  const glowAlpha = baseAlpha + breath * (hover ? 0.045 : 0.025);
+  const baseAlpha = hover ? 0.08 : 0.042;
+  const glowAlpha = baseAlpha + breath * (hover ? 0.028 : 0.018);
   const glow = ctx.createRadialGradient(width * 0.5, height * 0.86, 2, width * 0.5, height * 0.86, width * 0.52);
 
-  glow.addColorStop(0, `rgba(216,177,90,${glowAlpha})`);
-  glow.addColorStop(0.42, `rgba(201,161,74,${glowAlpha * 0.48})`);
-  glow.addColorStop(1, "rgba(201,161,74,0)");
+  glow.addColorStop(0, `rgba(208,216,226,${glowAlpha})`);
+  glow.addColorStop(0.42, `rgba(198,204,212,${glowAlpha * 0.48})`);
+  glow.addColorStop(1, "rgba(208,216,226,0)");
 
   ctx.save();
   ctx.globalCompositeOperation = "screen";
@@ -53,9 +53,9 @@ function drawPressBloom(ctx, width, height, dt, state) {
   const alpha = (1 - rise * 0.28) * 0.18;
   const glow = ctx.createRadialGradient(width * 0.5, centerY, 2, width * 0.5, centerY, radiusX);
 
-  glow.addColorStop(0, `rgba(238,196,103,${alpha})`);
-  glow.addColorStop(0.36, `rgba(216,177,90,${alpha * 0.55})`);
-  glow.addColorStop(1, "rgba(216,177,90,0)");
+  glow.addColorStop(0, `rgba(232,238,244,${alpha})`);
+  glow.addColorStop(0.36, `rgba(208,216,226,${alpha * 0.55})`);
+  glow.addColorStop(1, "rgba(208,216,226,0)");
 
   ctx.save();
   ctx.globalCompositeOperation = "screen";
@@ -65,8 +65,8 @@ function drawPressBloom(ctx, width, height, dt, state) {
   ctx.fill();
 
   const lowerGlow = ctx.createRadialGradient(width * 0.5, height * 0.92, 1, width * 0.5, height * 0.92, width * 0.45);
-  lowerGlow.addColorStop(0, `rgba(238,196,103,${alpha * 0.34})`);
-  lowerGlow.addColorStop(1, "rgba(216,177,90,0)");
+  lowerGlow.addColorStop(0, `rgba(232,238,244,${alpha * 0.34})`);
+  lowerGlow.addColorStop(1, "rgba(208,216,226,0)");
   ctx.fillStyle = lowerGlow;
   ctx.beginPath();
   ctx.ellipse(width * 0.5, height * 0.92, width * 0.42, height * 0.2, 0, 0, Math.PI * 2);
@@ -166,7 +166,7 @@ export function createCoverCtaAnimation(button) {
       const alpha = p.alpha * fadeIn * fadeOut;
 
       ctx.beginPath();
-      ctx.fillStyle = `rgba(216,177,90,${alpha})`;
+      ctx.fillStyle = `rgba(214,222,230,${alpha})`;
       ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
       ctx.fill();
 
@@ -186,7 +186,7 @@ export function createCoverCtaAnimation(button) {
 
       const alpha = Math.max(0, 1 - p.life / p.maxLife) * 0.74;
       ctx.beginPath();
-      ctx.fillStyle = `rgba(236,196,103,${alpha})`;
+      ctx.fillStyle = `rgba(232,238,244,${alpha})`;
       ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
       ctx.fill();
 
@@ -208,7 +208,7 @@ export function createCoverCtaAnimation(button) {
       const alpha = p.alpha * fadeIn * fadeOut;
 
       ctx.beginPath();
-      ctx.fillStyle = `rgba(238,196,103,${alpha})`;
+      ctx.fillStyle = `rgba(234,239,245,${alpha})`;
       ctx.arc(p.x + Math.sin(p.phase + p.life * 3) * 2.5, p.y, p.size, 0, Math.PI * 2);
       ctx.fill();
 
