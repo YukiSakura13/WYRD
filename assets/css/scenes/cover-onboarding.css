@@ -56,15 +56,15 @@
   height: clamp(120px, 18vw, 190px);
   border-radius: 50%;
   background:
-    linear-gradient(90deg, transparent 0%, rgba(215, 222, 230, 0.05) 24%, rgba(232, 236, 240, 0.11) 48%, rgba(196, 204, 214, 0.06) 66%, transparent 100%),
-    radial-gradient(ellipse at 50% 50%, rgba(222, 228, 236, 0.12), transparent 68%);
+    linear-gradient(90deg, transparent 0%, rgba(215, 222, 230, 0.07) 24%, rgba(232, 236, 240, 0.16) 48%, rgba(196, 204, 214, 0.08) 66%, transparent 100%),
+    radial-gradient(ellipse at 50% 50%, rgba(222, 228, 236, 0.15), transparent 68%);
   filter: blur(14px);
   mix-blend-mode: screen;
   opacity: 0.62;
   pointer-events: none;
   transform: translate3d(-70%, -50%, 0);
   z-index: 3;
-  animation: moonMistPass 24s ease-in-out infinite;
+  animation: moonMistPass 14s ease-in-out infinite;
 }
 
 .cover-art {
@@ -181,8 +181,8 @@
 }
 
 .particle {
-  background: rgba(214, 222, 230, 0.52);
-  box-shadow: 0 0 7px rgba(214, 222, 230, 0.16);
+  background: rgba(220, 226, 234, 0.64);
+  box-shadow: 0 0 8px rgba(214, 222, 230, 0.22);
 }
 
 .particle-1 {
@@ -191,7 +191,7 @@
   top: 22.5%;
   left: 37%;
   opacity: 0;
-  animation: moonDustFloat 16s ease-in-out infinite 0s;
+  animation: moonDustFloat 10s ease-in-out infinite 0s;
 }
 
 .particle-2 {
@@ -200,7 +200,7 @@
   top: 27%;
   left: 53%;
   opacity: 0;
-  animation: moonDustFloat 19s ease-in-out infinite 5s;
+  animation: moonDustFloat 13s ease-in-out infinite 3s;
 }
 
 .particle-3 {
@@ -209,7 +209,7 @@
   top: 21%;
   left: 66%;
   opacity: 0;
-  animation: moonDustFloat 21s ease-in-out infinite 10s;
+  animation: moonDustFloat 14s ease-in-out infinite 7s;
 }
 
 .particle-4 {
@@ -218,7 +218,7 @@
   top: 31%;
   left: 44%;
   opacity: 0;
-  animation: moonDustFloat 18s ease-in-out infinite 13s;
+  animation: moonDustFloat 12s ease-in-out infinite 9s;
 }
 
 .cover-overlay {
@@ -333,15 +333,15 @@
   }
 
   18% {
-    opacity: 0.22;
+    opacity: 0.3;
   }
 
   48% {
-    opacity: 0.54;
+    opacity: 0.72;
   }
 
   74% {
-    opacity: 0.18;
+    opacity: 0.28;
   }
 
   100% {
@@ -374,11 +374,11 @@
 
   18%,
   68% {
-    opacity: 0.24;
+    opacity: 0.34;
   }
 
   45% {
-    opacity: 0.42;
+    opacity: 0.58;
     transform: translate3d(8px, -7px, 0);
   }
 
