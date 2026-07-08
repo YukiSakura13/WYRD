@@ -29,18 +29,7 @@
 }
 
 .cover-scene::before {
-  top: 24.6%;
-  left: 50%;
-  width: clamp(240px, 48vw, 420px);
-  height: clamp(240px, 48vw, 420px);
-  transform: translate(-50%, -50%);
-  transform-origin: center;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(238, 242, 246, 0.2) 0%, rgba(224, 230, 236, 0.13) 34%, rgba(198, 204, 212, 0.08) 56%, transparent 76%);
-  filter: blur(38px);
-  mix-blend-mode: screen;
-  opacity: 0.5;
-  z-index: 3;
+  display: none;
 }
 
 .cover-scene::after {
@@ -51,21 +40,7 @@
 }
 
 .moon-glow {
-  position: absolute;
-  top: 24.6%;
-  left: 50%;
-  width: clamp(220px, 42vw, 380px);
-  height: clamp(220px, 42vw, 380px);
-  transform: translate(-50%, -50%);
-  transform-origin: center;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(248, 250, 252, 0.08) 0%, rgba(236, 240, 244, 0.1) 42%, rgba(222, 228, 234, 0.12) 58%, rgba(198, 204, 212, 0.08) 70%, transparent 82%);
-  filter: blur(40px);
-  mix-blend-mode: screen;
-  opacity: 0.62;
-  pointer-events: none;
-  z-index: 3;
-  animation: moonPulse 7s ease-in-out infinite;
+  display: none;
 }
 
 .cover-art {
