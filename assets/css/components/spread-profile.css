@@ -2374,59 +2374,50 @@ body[data-scene="deck"] .footer {
 
 @media (min-width: 900px) {
   #cover {
-    justify-content: center;
-    align-items: center;
-    padding: 2.25rem;
+    justify-content: flex-end;
+    align-items: stretch;
+    padding: 0;
   }
 
   .cover-bg {
-    display: block;
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(circle at center, rgba(255, 220, 132, 0.08), transparent 26%),
-      linear-gradient(180deg, rgba(8, 7, 10, 0.86), rgba(8, 7, 10, 0.96)),
-      url("../../images/cover/cover-moon-forest.webp") center center / cover no-repeat;
-    filter: blur(28px) brightness(0.38);
-    transform: scale(1.08);
+    display: none;
   }
 
   .cover-scene {
-    width: min(32rem, 36vw);
-    min-height: 92vh;
-    max-height: 58rem;
-    border: 1px solid rgba(210, 176, 90, 0.18);
-    box-shadow:
-      0 42px 72px rgba(0, 0, 0, 0.48),
-      0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+    width: 100%;
+    min-height: 100vh;
+    min-height: var(--layout-viewport-min);
+    max-height: none;
+    border: 0;
+    box-shadow: none;
   }
 
   .cover-art {
     object-position: center center;
-    transform: scale(1.01);
+    transform: none;
   }
 
   .cover-overlay {
     background:
-      linear-gradient(to top, rgba(5, 4, 4, 0.94) 12%, rgba(5, 4, 4, 0.32) 44%, rgba(5, 4, 4, 0.08) 72%, rgba(5, 4, 4, 0.04) 100%),
-      linear-gradient(to right, rgba(5, 4, 4, 0.74) 0%, rgba(5, 4, 4, 0.16) 16%, rgba(5, 4, 4, 0.16) 84%, rgba(5, 4, 4, 0.74) 100%);
+      linear-gradient(to top, rgba(8, 9, 12, 0.72) 0%, rgba(9, 10, 13, 0.4) 16%, rgba(9, 10, 13, 0.08) 48%, transparent 78%),
+      linear-gradient(to right, rgba(3, 4, 6, 0.46) 0%, rgba(3, 4, 6, 0.04) 28%, rgba(3, 4, 6, 0.04) 72%, rgba(3, 4, 6, 0.46) 100%);
   }
 
   .cover-copy {
-    margin: auto auto 7.2rem;
-    width: min(100%, 24rem);
+    margin: auto auto max(4.125rem, calc(env(safe-area-inset-bottom) + 4.125rem));
+    width: min(100%, 430px);
   }
 
   .cover-title {
-    font-size: clamp(3.3rem, 4vw, 4.8rem);
+    font-size: clamp(3.75rem, 8vw, 5.15rem);
   }
 
   .cover-sub {
-    margin-bottom: 1.5rem;
+    margin: 0;
   }
 
   #cover .cover-btn {
-    min-width: 21rem;
+    min-width: 0;
   }
 
   .cover-nav {

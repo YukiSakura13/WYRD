@@ -17,7 +17,7 @@
   align-items: stretch;
   justify-content: center;
   isolation: isolate;
-  background: #0b0c0e url("../../images/cover/cover-final.jpg") center center / cover no-repeat;
+  background: #0b0c0e;
 }
 
 .cover-scene::before,
@@ -40,6 +40,7 @@
   filter: blur(30px);
   mix-blend-mode: screen;
   opacity: 0.5;
+  z-index: 2;
   animation: moonPulse 7s ease-in-out infinite;
 }
 
@@ -64,7 +65,7 @@
   mix-blend-mode: screen;
   opacity: 0.5;
   pointer-events: none;
-  z-index: 0;
+  z-index: 2;
   animation: moonPulse 7s ease-in-out infinite;
 }
 
