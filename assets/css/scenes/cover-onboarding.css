@@ -52,19 +52,19 @@
   position: absolute;
   top: 24.6%;
   left: 50%;
-  width: clamp(250px, 44vw, 410px);
-  height: clamp(160px, 24vw, 230px);
+  width: clamp(270px, 48vw, 430px);
+  height: clamp(170px, 25vw, 240px);
   border-radius: 50%;
   background:
-    linear-gradient(104deg, transparent 0%, transparent 18%, rgba(14, 17, 20, 0.34) 38%, rgba(71, 78, 86, 0.18) 50%, rgba(16, 19, 22, 0.3) 62%, transparent 82%, transparent 100%),
+    linear-gradient(104deg, transparent 0%, transparent 18%, rgba(14, 17, 20, 0.38) 38%, rgba(71, 78, 86, 0.2) 50%, rgba(16, 19, 22, 0.34) 62%, transparent 82%, transparent 100%),
     radial-gradient(ellipse at 50% 50%, rgba(32, 36, 41, 0.18), transparent 72%);
   filter: blur(8px);
   mix-blend-mode: multiply;
   opacity: 0.78;
   pointer-events: none;
-  transform: translate3d(-118%, -50%, 0);
+  transform: translate3d(-72%, -50%, 0);
   z-index: 5;
-  animation: moonMistPass 8.8s ease-in-out infinite;
+  animation: moonMistPass 16s ease-in-out infinite -1.7s;
 }
 
 .cover-art {
@@ -326,26 +326,29 @@
 }
 
 @keyframes moonMistPass {
-  0%,
+  0% {
+    opacity: 0;
+    transform: translate3d(-94%, -50%, 0);
+  }
+
+  8% {
+    opacity: 0.66;
+    transform: translate3d(-72%, -50%, 0);
+  }
+
+  42% {
+    opacity: 0.86;
+    transform: translate3d(-26%, -50%, 0);
+  }
+
+  76% {
+    opacity: 0.64;
+    transform: translate3d(18%, -50%, 0);
+  }
+
   100% {
     opacity: 0;
-    transform: translate3d(-122%, -50%, 0);
-  }
-
-  14% {
-    opacity: 0.7;
-  }
-
-  46% {
-    opacity: 0.9;
-  }
-
-  78% {
-    opacity: 0.64;
-  }
-
-  100% {
-    transform: translate3d(16%, -50%, 0);
+    transform: translate3d(44%, -50%, 0);
   }
 }
 
