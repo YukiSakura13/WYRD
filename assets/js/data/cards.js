@@ -1,7 +1,7 @@
 import { CARD_META } from "../cards/card-meta.js";
 import { CARD_LAYERS } from "../cards/layer-map.js";
 
-export const COVER_IMAGE = "./assets/images/cover/cover-final.jpg";
+export const COVER_IMAGE = "./assets/images/cover/cover-silver-forest.jpg";
 
 // Architecture rule: card.message and card.shadow are author text.
 // They must flow from cards.js to the single-card screen unchanged.

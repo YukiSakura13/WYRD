@@ -55,7 +55,7 @@ async function fetchFresh(request) {
 
 async function staleWhileRevalidate(request) {
   const cache = await caches.open(CACHE_NAME);
-  const cached = await cache.match(request, { ignoreSearch: true });
+  const cached = await cache.match(request);
 
   const networkPromise = fetch(request)
     .then((response) => {
