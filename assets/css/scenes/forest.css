@@ -347,9 +347,7 @@ body[data-scene="night-images"] .footer {
   border-radius: 16px;
 }
 
-.forest-art-card--moon::after,
-.forest-art-card--traces::after,
-.forest-art-card--history::after {
+.forest-art-card--moon::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -368,36 +366,6 @@ body[data-scene="night-images"] .footer {
     radial-gradient(circle at 84% 35%, rgba(236, 234, 226, 0.76) 0 1.15px, transparent 1.9px);
   opacity: 0.9;
   animation: wyrdMoonStars 4.8s ease-in-out infinite;
-}
-
-.forest-art-card--traces::after {
-  inset: -22% -34%;
-  background:
-    linear-gradient(98deg, transparent 0%, rgba(230, 234, 238, 0.28) 36%, rgba(230, 234, 238, 0.12) 48%, transparent 70%),
-    radial-gradient(ellipse at 52% 48%, rgba(230, 234, 238, 0.18), transparent 58%);
-  filter: blur(9px);
-  mix-blend-mode: screen;
-  opacity: 0.5;
-  transform: translateX(-34%);
-  animation: wyrdForestMist 8.8s ease-in-out infinite -1.6s;
-}
-
-.forest-art-card--traces::before {
-  background:
-    radial-gradient(circle at 43.6% 45.2%, rgba(255, 255, 255, 0.92) 0 2px, rgba(255, 255, 255, 0.32) 2.8px, transparent 7px);
-  box-shadow: inset 0 0 60px 12px rgba(6, 7, 10, 0.5);
-  opacity: 0.9;
-  animation: wyrdHareEye 3.4s ease-in-out infinite;
-}
-
-.forest-art-card--history::after {
-  background:
-    linear-gradient(104deg, transparent 0%, rgba(238, 240, 238, 0.18) 42%, transparent 58%),
-    radial-gradient(ellipse at 50% 52%, rgba(255, 255, 255, 0.08), transparent 55%),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.38));
-  opacity: 0.42;
-  transform: translateX(-24%);
-  animation: wyrdPatternBreath 7.2s ease-in-out infinite;
 }
 
 .forest-art-card--small {
@@ -606,53 +574,6 @@ body[data-scene="night-images"] .footer {
   }
 }
 
-@keyframes wyrdForestMist {
-  0%,
-  100% {
-    opacity: 0.32;
-    transform: translateX(-34%);
-  }
-
-  42% {
-    opacity: 0.7;
-  }
-
-  74% {
-    opacity: 0.42;
-    transform: translateX(28%);
-  }
-}
-
-@keyframes wyrdHareEye {
-  0%,
-  100% {
-    opacity: 0.55;
-    filter: blur(0.2px);
-  }
-
-  38% {
-    opacity: 1;
-    filter: blur(0);
-  }
-
-  58% {
-    opacity: 0.72;
-  }
-}
-
-@keyframes wyrdPatternBreath {
-  0%,
-  100% {
-    opacity: 0.34;
-    transform: translateX(-28%);
-  }
-
-  50% {
-    opacity: 0.66;
-    transform: translateX(26%);
-  }
-}
-
 @media (max-width: 374px) {
   .forest-shell {
     padding-inline: 20px;
@@ -676,10 +597,7 @@ body[data-scene="night-images"] .footer {
   .forest-home::before,
   .forest-card-halo,
   .forest-art-card--hero::after,
-  .forest-art-card--traces::before,
   .forest-art-card--moon::after,
-  .forest-art-card--traces::after,
-  .forest-art-card--history::after,
   .forest-art-card--spark::after {
     animation: none;
   }
