@@ -95,20 +95,6 @@ body[data-scene="night-images"] .footer {
   animation: wyrdTw 5s ease-in-out infinite;
 }
 
-.forest-home::after {
-  content: "";
-  position: fixed;
-  inset: 0 auto auto 50%;
-  z-index: 0;
-  width: min(100%, 393px);
-  height: 100svh;
-  border: 1px solid rgba(228, 224, 212, 0.12);
-  border-bottom: 0;
-  border-radius: 44px 44px 0 0;
-  pointer-events: none;
-  transform: translateX(-50%);
-}
-
 .forest-shell {
   position: relative;
   z-index: 1;
