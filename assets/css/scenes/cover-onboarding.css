@@ -31,7 +31,7 @@
 .cover-scene::before {
   inset: -1.5% -5% auto;
   height: min(49vh, 470px);
-  background: url("../../images/cover/moon-branch-veil.png") center top / cover no-repeat;
+  background: url("../../images/cover/moon-branch-veil.png?v=silver-20260710-forest") center top / cover no-repeat;
   filter: blur(0.25px);
   opacity: 0.18;
   transform: translate3d(-0.8%, 0, 0) scale(1.015);
