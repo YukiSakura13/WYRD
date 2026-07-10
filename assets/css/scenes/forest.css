@@ -340,22 +340,34 @@ body[data-scene="night-images"] .footer {
   position: absolute;
   inset: 0;
   z-index: 3;
-  background:
-    radial-gradient(circle at 8% 9%, rgba(226, 222, 210, 0.74) 0 1.2px, transparent 1.8px),
-    radial-gradient(circle at 19% 36%, rgba(226, 222, 210, 0.82) 0 1.4px, transparent 2px),
-    radial-gradient(circle at 28% 15%, rgba(226, 222, 210, 0.7) 0 1px, transparent 1.6px),
-    radial-gradient(circle at 41% 52%, rgba(226, 222, 210, 0.86) 0 1.5px, transparent 2.2px),
-    radial-gradient(circle at 53% 8%, rgba(226, 222, 210, 0.74) 0 1.1px, transparent 1.8px),
-    radial-gradient(circle at 66% 28%, rgba(226, 222, 210, 0.78) 0 1.4px, transparent 2px),
-    radial-gradient(circle at 78% 14%, rgba(226, 222, 210, 0.88) 0 1.5px, transparent 2.1px),
-    radial-gradient(circle at 88% 48%, rgba(226, 222, 210, 0.7) 0 1.1px, transparent 1.8px),
-    radial-gradient(circle at 15% 68%, rgba(226, 222, 210, 0.8) 0 1.3px, transparent 2px),
-    radial-gradient(circle at 34% 74%, rgba(226, 222, 210, 0.72) 0 1px, transparent 1.6px),
-    radial-gradient(circle at 59% 67%, rgba(226, 222, 210, 0.9) 0 1.4px, transparent 2px),
-    radial-gradient(circle at 86% 72%, rgba(226, 222, 210, 0.75) 0 1.2px, transparent 1.9px);
-  opacity: 0.62;
+  opacity: 0.86;
   pointer-events: none;
   animation: wyrdTw 4.2s ease-in-out infinite;
+}
+
+.forest-art-card--poppy::after {
+  background:
+    radial-gradient(circle at 22% 9%, rgba(236, 234, 226, 0.8) 0 1.1px, transparent 1.8px),
+    radial-gradient(circle at 34% 18%, rgba(236, 234, 226, 0.72) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 45% 10%, rgba(236, 234, 226, 0.94) 0 1.45px, transparent 2.2px),
+    radial-gradient(circle at 53% 22%, rgba(236, 234, 226, 0.8) 0 1.15px, transparent 1.9px),
+    radial-gradient(circle at 63% 13%, rgba(236, 234, 226, 0.86) 0 1.3px, transparent 2.1px),
+    radial-gradient(circle at 74% 25%, rgba(236, 234, 226, 0.68) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 39% 31%, rgba(236, 234, 226, 0.78) 0 1.1px, transparent 1.8px),
+    radial-gradient(circle at 66% 34%, rgba(236, 234, 226, 0.82) 0 1.2px, transparent 1.9px);
+}
+
+.forest-art-card--moth::after {
+  background:
+    radial-gradient(circle at 16% 8%, rgba(236, 234, 226, 0.82) 0 1.15px, transparent 1.9px),
+    radial-gradient(circle at 26% 25%, rgba(236, 234, 226, 0.7) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 38% 14%, rgba(236, 234, 226, 0.88) 0 1.35px, transparent 2.1px),
+    radial-gradient(circle at 50% 27%, rgba(236, 234, 226, 0.74) 0 1.05px, transparent 1.8px),
+    radial-gradient(circle at 62% 12%, rgba(236, 234, 226, 0.92) 0 1.4px, transparent 2.2px),
+    radial-gradient(circle at 75% 30%, rgba(236, 234, 226, 0.72) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 86% 17%, rgba(236, 234, 226, 0.84) 0 1.2px, transparent 2px),
+    radial-gradient(circle at 58% 38%, rgba(236, 234, 226, 0.7) 0 1px, transparent 1.7px);
+  animation-duration: 4.8s;
 }
 
 .forest-card-caption {
