@@ -47,7 +47,7 @@ body[data-scene="night-images"] .footer {
   --forest-panel: rgba(7, 8, 11, 0.9);
   --forest-text: #f3ecdd;
   --forest-title: #efeadc;
-  --forest-muted: rgba(210, 212, 210, 0.64);
+  --forest-muted: rgba(210, 212, 210, 0.74);
   --forest-line: rgba(232, 228, 216, 0.5);
   --forest-line-soft: rgba(228, 224, 212, 0.42);
   --forest-line-hot: rgba(244, 238, 224, 0.85);
@@ -458,7 +458,7 @@ body[data-scene="night-images"] .footer {
 }
 
 .forest-path--small .forest-tile-copy {
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .forest-placeholder {

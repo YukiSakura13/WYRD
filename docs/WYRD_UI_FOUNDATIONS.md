@@ -189,11 +189,12 @@ These values come from the current brandbook and runtime tokens.
 | Role | Font |
 | --- | --- |
 | Brand mark `WYRD` | `IM Fell English` only |
-| Interface, body, screen titles | `Cormorant Garamond` |
-| Short caps, tiles, decorative labels | `Forum` |
+| Card titles, short caps, tiles, decorative labels | `Forum` |
+| Interface body, screen titles, captions, literary text | `Cormorant Garamond` |
 
 Rules:
 - do not use `IM Fell English` outside `WYRD`;
+- treat the system as `IM Fell English` for the mark, `Forum` for card headings, and `Cormorant Garamond` for body/captions;
 - do not use wide caps for long body text;
 - avoid text below comfortable mobile size;
 - tile labels remain short and scannable.
