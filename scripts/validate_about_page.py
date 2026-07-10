@@ -93,11 +93,11 @@ def main() -> None:
 
     for phrase in (
         'data-action="open-spirit-book"',
-        'class="forest-tile forest-tile--book" data-action="open-spirit-book"',
-        'ИСТОРИЯ<br />ДУХОВ ЛЕСА',
+        'class="forest-art-card forest-art-card--wide forest-art-card--history" data-action="open-spirit-book"',
+        '<h2 class="forest-tile-title">История духов леса</h2>',
         'id="spirit-book"',
         'data-action="spirit-book-next"',
-        '>ПЯТЬ ГЛАВ</span>',
+        'сказание о мире Wyrd · пять глав',
         'id="about-wyrd"',
         'aria-labelledby="about-wyrd-title"',
         'id="about-wyrd-title" tabindex="-1">Книга леса</h1>',

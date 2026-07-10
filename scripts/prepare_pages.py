@@ -50,10 +50,10 @@ def copy_tree(src: Path, dest: Path) -> None:
 
 def replace_build_markers(path: Path) -> None:
     text = path.read_text(encoding="utf-8")
-    text = text.replace('content="dev"', f'content="{BUILD_ID}"')
-    text = text.replace("manifest.webmanifest?v=dev", f"manifest.webmanifest?v={BUILD_ID}")
-    text = text.replace("styles.css?v=dev", f"styles.css?v={BUILD_ID}")
-    text = text.replace("main.js?v=dev", f"main.js?v={BUILD_ID}")
+    text = re.sub(r'(<meta\s+name="wyrd-build"\s+content=")[^"]+(")', rf"\g<1>{BUILD_ID}\2", text)
+    text = re.sub(r"manifest\.webmanifest(?:\?v=[^\"']+)?", f"manifest.webmanifest?v={BUILD_ID}", text)
+    text = re.sub(r"assets/css/styles\.css(?:\?v=[^\"']+)?", f"assets/css/styles.css?v={BUILD_ID}", text)
+    text = re.sub(r"assets/js/main\.js(?:\?v=[^\"']+)?", f"assets/js/main.js?v={BUILD_ID}", text)
     path.write_text(text, encoding="utf-8")
 
 
