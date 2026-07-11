@@ -1,0 +1,69 @@
+.wyrd-brand {
+  --wyrd-brand-word-size: 3.75rem;
+  --wyrd-brand-word-tracking: 0.22em;
+  --wyrd-brand-sub-gap: 1rem;
+  --wyrd-brand-sub-size: 0.8125rem;
+  --wyrd-brand-sub-tracking: 0.24em;
+  --wyrd-brand-word-color: var(--wyrd-text-brand);
+  --wyrd-brand-sub-color: var(--wyrd-text-quiet);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: max-content;
+  max-width: 100%;
+  margin-inline: auto;
+  text-align: center;
+  color: var(--wyrd-brand-word-color);
+}
+
+.wyrd-brand__word {
+  margin: 0;
+  padding-left: var(--wyrd-brand-word-tracking);
+  color: var(--wyrd-brand-word-color);
+  font-family: "IM Fell English", Georgia, serif;
+  font-size: var(--wyrd-brand-word-size);
+  font-weight: 400;
+  letter-spacing: var(--wyrd-brand-word-tracking);
+  line-height: 0.95;
+  text-shadow:
+    0 0 1rem rgba(228, 233, 238, 0.06),
+    0 0.45rem 1.5rem rgba(0, 0, 0, 0.36);
+}
+
+.wyrd-brand__subtitle {
+  margin: var(--wyrd-brand-sub-gap) 0 0;
+  padding-left: var(--wyrd-brand-sub-tracking);
+  color: var(--wyrd-brand-sub-color);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: var(--wyrd-brand-sub-size);
+  font-weight: 500;
+  letter-spacing: var(--wyrd-brand-sub-tracking);
+  line-height: 1.25;
+  text-transform: uppercase;
+  text-shadow: 0 1px 0.55rem rgba(0, 0, 0, 0.52);
+}
+
+.wyrd-brand--cover {
+  --wyrd-brand-word-size: 3.75rem;
+  --wyrd-brand-sub-gap: 1rem;
+  --wyrd-brand-sub-size: 0.8125rem;
+}
+
+.wyrd-brand--forest {
+  --wyrd-brand-word-size: 2.375rem;
+  --wyrd-brand-sub-gap: 0.75rem;
+  --wyrd-brand-sub-size: 0.75rem;
+}
+
+.wyrd-brand--screen {
+  --wyrd-brand-word-size: 2.125rem;
+  --wyrd-brand-sub-gap: 0.625rem;
+  --wyrd-brand-sub-size: 0.75rem;
+}
+
+.wyrd-brand--compact {
+  --wyrd-brand-word-size: 1.875rem;
+  --wyrd-brand-sub-gap: 0.5625rem;
+  --wyrd-brand-sub-size: 0.75rem;
+}

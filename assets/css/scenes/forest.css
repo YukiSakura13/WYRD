@@ -45,9 +45,9 @@ body[data-scene="night-images"] .footer {
 .forest-placeholder {
   --forest-bg: #08090c;
   --forest-panel: rgba(7, 8, 11, 0.9);
-  --forest-text: #f3ecdd;
-  --forest-title: #efeadc;
-  --forest-muted: rgba(210, 212, 210, 0.74);
+  --forest-text: var(--wyrd-text-brand);
+  --forest-title: var(--wyrd-text-heading);
+  --forest-muted: var(--wyrd-text-secondary);
   --forest-line: rgba(232, 228, 216, 0.5);
   --forest-line-soft: rgba(228, 224, 212, 0.42);
   --forest-line-hot: rgba(244, 238, 224, 0.85);
@@ -177,39 +177,9 @@ body[data-scene="night-images"] .footer {
 }
 
 .forest-brand {
+  min-height: 77px;
   margin: 22px 0 0;
   text-align: center;
-}
-
-.forest-brand-title {
-  margin: 0;
-  padding-left: 0.2em;
-  color: var(--forest-text);
-  font-family: "IM Fell English", Georgia, serif;
-  font-size: 38px;
-  font-weight: 400;
-  letter-spacing: 0.2em;
-  line-height: 1;
-  text-transform: uppercase;
-  text-indent: 0.2em;
-}
-
-.forest-brand-divider {
-  width: 96px;
-  height: 1px;
-  margin: 13px auto 0;
-  background: linear-gradient(90deg, transparent, rgba(238, 232, 220, 0.5), transparent);
-}
-
-.forest-brand-subtitle {
-  margin: 11px 0 0;
-  color: rgba(216, 218, 216, 0.64);
-  font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.32em;
-  line-height: 1.2;
-  text-transform: uppercase;
 }
 
 .forest-hero-card {
@@ -478,7 +448,7 @@ body[data-scene="night-images"] .footer {
 
 .forest-placeholder-kicker {
   margin: 0 0 0.75rem;
-  color: rgba(216, 218, 216, 0.64);
+  color: var(--wyrd-text-quiet);
   font-family: "Forum", Georgia, serif;
   font-size: 0.95rem;
   line-height: 1.2;

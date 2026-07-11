@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WYRD Brand Lockup</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Forum&family=IM+Fell+English:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/css/styles.css?v=brand-lockup-real-sizes" />
+    <style>
+      body {
+        min-height: 100svh;
+        padding: 32px 20px 52px;
+        background:
+          radial-gradient(circle at 50% 0%, rgba(216, 222, 227, 0.08), transparent 34%),
+          linear-gradient(180deg, #15171a 0%, #07080a 100%);
+      }
+
+      .brand-preview {
+        width: min(100%, 760px);
+        margin: 0 auto;
+      }
+
+      .brand-preview__title {
+        margin: 0 0 28px;
+        color: rgba(216, 218, 216, 0.72);
+        font-family: "Forum", Georgia, serif;
+        font-size: 16px;
+        font-weight: 400;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .brand-preview__grid {
+        display: grid;
+        gap: 18px;
+      }
+
+      .brand-preview__panel {
+        display: grid;
+        min-height: 190px;
+        place-items: center;
+        padding: 28px 18px;
+        border: 1px solid rgba(216, 222, 227, 0.12);
+        border-radius: 18px;
+        background:
+          radial-gradient(circle at 50% 48%, rgba(216, 222, 227, 0.055), transparent 48%),
+          linear-gradient(180deg, rgba(16, 18, 22, 0.92), rgba(6, 7, 9, 0.96));
+        box-shadow: 0 24px 42px rgba(0, 0, 0, 0.36);
+      }
+
+      .brand-preview__label {
+        margin: 0 0 18px;
+        color: rgba(216, 218, 216, 0.52);
+        font-family: "Forum", Georgia, serif;
+        font-size: 13px;
+        letter-spacing: 0.16em;
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      @media (min-width: 720px) {
+        body {
+          padding-top: 48px;
+        }
+
+        .brand-preview__grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+      }
+    </style>
+  </head>
+  <body>
+    <main class="brand-preview">
+      <h1 class="brand-preview__title">Единый фирменный знак WYRD · без линии</h1>
+
+      <div class="brand-preview__grid">
+        <section class="brand-preview__panel" aria-labelledby="brand-cover">
+          <div>
+            <p class="brand-preview__label" id="brand-cover">Первый экран · основной масштаб</p>
+            <div class="wyrd-brand wyrd-brand--cover" aria-label="WYRD — Оракул духов леса">
+              <p class="wyrd-brand__word">WYRD</p>
+              <p class="wyrd-brand__subtitle">Оракул духов леса</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="brand-preview__panel" aria-labelledby="brand-forest">
+          <div>
+            <p class="brand-preview__label" id="brand-forest">Лес · уменьшенный блок</p>
+            <div class="wyrd-brand wyrd-brand--forest" aria-label="WYRD — Оракул духов леса">
+              <p class="wyrd-brand__word">WYRD</p>
+              <p class="wyrd-brand__subtitle">Оракул духов леса</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="brand-preview__panel" aria-labelledby="brand-screen">
+          <div>
+            <p class="brand-preview__label" id="brand-screen">Внутренние экраны · обычный блок</p>
+            <div class="wyrd-brand wyrd-brand--screen" aria-label="WYRD — Оракул духов леса">
+              <p class="wyrd-brand__word">WYRD</p>
+              <p class="wyrd-brand__subtitle">Оракул духов леса</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="brand-preview__panel" aria-labelledby="brand-compact">
+          <div>
+            <p class="brand-preview__label" id="brand-compact">Настройки · компактный внутренний блок</p>
+            <div class="wyrd-brand wyrd-brand--compact" aria-label="WYRD — Оракул духов леса">
+              <p class="wyrd-brand__word">WYRD</p>
+              <p class="wyrd-brand__subtitle">Оракул духов леса</p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </body>
+</html>

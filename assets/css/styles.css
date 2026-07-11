@@ -1,5 +1,6 @@
 @import "./tokens.css";
 @import "./base.css";
+@import "./components/brand-lockup.css";
 @import "./scenes/cover-onboarding.css";
 @import "./scenes/forest.css";
 @import "./scenes/settings.css";

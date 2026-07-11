@@ -1,5 +1,5 @@
 const PARTICLE_TARGET_IDLE = 8;
-const PARTICLE_TARGET_HOVER = 20;
+const PARTICLE_TARGET_HOVER = 30;
 
 function rand(min, max) {
   return min + Math.random() * (max - min);
@@ -25,10 +25,10 @@ function drawRoundedClip(ctx, width, height) {
   ctx.clip();
 }
 
-function drawEmberGlow(ctx, width, height, time, hover) {
+function drawEmberGlow(ctx, width, height, time, activeLevel) {
   const breath = 0.5 + Math.sin((time * Math.PI * 2) / 4.8) * 0.5;
-  const baseAlpha = hover ? 0.08 : 0.042;
-  const glowAlpha = baseAlpha + breath * (hover ? 0.028 : 0.018);
+  const baseAlpha = 0.042 + activeLevel * 0.06;
+  const glowAlpha = baseAlpha + breath * (0.018 + activeLevel * 0.026);
   const glow = ctx.createRadialGradient(width * 0.5, height * 0.86, 2, width * 0.5, height * 0.86, width * 0.52);
 
   glow.addColorStop(0, `rgba(208,216,226,${glowAlpha})`);
@@ -42,6 +42,26 @@ function drawEmberGlow(ctx, width, height, time, hover) {
   ctx.restore();
 }
 
+function drawActiveVeil(ctx, width, height, time, activeLevel) {
+  if (activeLevel <= 0.01) return;
+
+  const sweep = 0.5 + Math.sin((time * Math.PI * 2) / 3.8) * 0.5;
+  const centerY = height * (0.76 - sweep * 0.34);
+  const veilAlpha = 0.034 * activeLevel;
+  const veil = ctx.createLinearGradient(0, centerY - height * 0.18, 0, centerY + height * 0.18);
+
+  veil.addColorStop(0, "rgba(224,231,238,0)");
+  veil.addColorStop(0.42, `rgba(224,231,238,${veilAlpha * 0.72})`);
+  veil.addColorStop(0.58, `rgba(224,231,238,${veilAlpha})`);
+  veil.addColorStop(1, "rgba(224,231,238,0)");
+
+  ctx.save();
+  ctx.globalCompositeOperation = "screen";
+  ctx.fillStyle = veil;
+  ctx.fillRect(width * 0.1, centerY - height * 0.22, width * 0.8, height * 0.44);
+  ctx.restore();
+}
+
 function drawPressBloom(ctx, width, height, dt, state) {
   if (state.pressBloom <= 0) return;
 
@@ -50,7 +70,7 @@ function drawPressBloom(ctx, width, height, dt, state) {
   const centerY = height * (0.9 - easedRise * 0.46);
   const radiusY = height * (0.12 + easedRise * 0.5);
   const radiusX = width * (0.26 + easedRise * 0.34);
-  const alpha = (1 - rise * 0.28) * 0.18;
+  const alpha = (1 - rise * 0.28) * 0.24;
   const glow = ctx.createRadialGradient(width * 0.5, centerY, 2, width * 0.5, centerY, radiusX);
 
   glow.addColorStop(0, `rgba(232,238,244,${alpha})`);
@@ -73,7 +93,7 @@ function drawPressBloom(ctx, width, height, dt, state) {
   ctx.fill();
   ctx.restore();
 
-  state.pressBloom = Math.max(0, state.pressBloom - dt / 0.9);
+  state.pressBloom = Math.max(0, state.pressBloom - dt / 0.72);
 }
 
 export function createCoverCtaAnimation(button) {
@@ -90,6 +110,7 @@ export function createCoverCtaAnimation(button) {
     bursts: [],
     ornamentSparks: [],
     hover: false,
+    activeLevel: 0,
     pressBloom: 0,
     last: performance.now(),
     emberClock: 0,
@@ -112,13 +133,13 @@ export function createCoverCtaAnimation(button) {
       x: rand(rect.width * 0.13, rect.width * 0.87),
       y: rect.height - rand(18, 34),
       baseX: 0,
-      size: rand(1.5, state.hover ? 3.6 : 2.8),
-      speed: rand(8, state.hover ? 28 : 17),
-      drift: rand(5, state.hover ? 18 : 11),
+      size: rand(1.2, state.hover ? 3.2 : 2.4),
+      speed: rand(8, state.hover ? 34 : 17),
+      drift: rand(5, state.hover ? 20 : 11),
       phase: rand(0, Math.PI * 2),
       life: 0,
-      maxLife: rand(2.8, state.hover ? 4.2 : 5.4),
-      alpha: rand(0.24, state.hover ? 0.58 : 0.42),
+      maxLife: rand(2.8, state.hover ? 3.9 : 5.4),
+      alpha: rand(0.24, state.hover ? 0.7 : 0.42),
     };
     particle.baseX = particle.x;
     state.particles.push(particle);
@@ -128,12 +149,12 @@ export function createCoverCtaAnimation(button) {
     state.ornamentSparks.push({
       x: width * 0.5 + rand(-36, 36),
       y: height * 0.18 + rand(-7, 8),
-      size: rand(1.2, 2.4),
+      size: rand(1.2, state.hover ? 2.8 : 2.4),
       life: 0,
       maxLife: rand(1.3, 2.1),
       drift: rand(-4, 4),
       phase: rand(0, Math.PI * 2),
-      alpha: rand(0.22, 0.4),
+      alpha: rand(0.22, state.hover ? 0.56 : 0.4),
     });
   }
 
@@ -141,15 +162,15 @@ export function createCoverCtaAnimation(button) {
     const rect = canvas.getBoundingClientRect();
     state.pressBloom = 1;
 
-    for (let i = 0; i < 12; i += 1) {
+    for (let i = 0; i < 16; i += 1) {
       state.bursts.push({
         x: rect.width / 2 + rand(-18, 18),
-        y: rect.height * 0.58 + rand(-6, 8),
-        vx: rand(-42, 42),
-        vy: rand(-118, -48),
-        size: rand(1.8, 4.2),
+        y: rect.height * 0.7 + rand(-6, 8),
+        vx: rand(-38, 38),
+        vy: rand(-142, -64),
+        size: rand(1.4, 3.8),
         life: 0,
-        maxLife: rand(0.55, 0.95),
+        maxLife: rand(0.6, 1.05),
       });
     }
   }
@@ -166,7 +187,7 @@ export function createCoverCtaAnimation(button) {
       const alpha = p.alpha * fadeIn * fadeOut;
 
       ctx.beginPath();
-      ctx.fillStyle = `rgba(214,222,230,${alpha})`;
+      ctx.fillStyle = `rgba(224,231,238,${alpha})`;
       ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
       ctx.fill();
 
@@ -184,7 +205,7 @@ export function createCoverCtaAnimation(button) {
       p.y += p.vy * dt;
       p.vy += 72 * dt;
 
-      const alpha = Math.max(0, 1 - p.life / p.maxLife) * 0.74;
+      const alpha = Math.max(0, 1 - p.life / p.maxLife) * 0.82;
       ctx.beginPath();
       ctx.fillStyle = `rgba(232,238,244,${alpha})`;
       ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
@@ -225,18 +246,22 @@ export function createCoverCtaAnimation(button) {
     const dt = Math.min(0.05, (now - state.last) / 1000);
     state.last = now;
     state.emberClock += dt;
+    const targetActive = state.hover ? 1 : 0;
+    const activeSpeed = targetActive > state.activeLevel ? 5.5 : 3.2;
+    state.activeLevel += (targetActive - state.activeLevel) * Math.min(1, dt * activeSpeed);
 
     ctx.clearRect(0, 0, width, height);
     ctx.save();
     drawRoundedClip(ctx, width, height);
-    drawEmberGlow(ctx, width, height, state.emberClock, state.hover);
+    drawEmberGlow(ctx, width, height, state.emberClock, state.activeLevel);
+    drawActiveVeil(ctx, width, height, state.emberClock, state.activeLevel);
 
-    const spawnCount = state.hover ? 3 : 1;
+    const spawnCount = state.hover ? 4 : 1;
     for (let i = 0; i < spawnCount; i += 1) {
-      if (Math.random() < (state.hover ? 0.24 : 0.08)) spawnParticle();
+      if (Math.random() < (state.hover ? 0.34 : 0.08)) spawnParticle();
     }
 
-    if (state.ornamentSparks.length < 2 && Math.random() < (state.hover ? 0.012 : 0.005)) {
+    if (state.ornamentSparks.length < (state.hover ? 4 : 2) && Math.random() < (state.hover ? 0.028 : 0.005)) {
       spawnOrnamentSpark(width, height);
     }
 
@@ -251,10 +276,19 @@ export function createCoverCtaAnimation(button) {
 
   button.addEventListener("pointerenter", function handlePointerEnter() {
     state.hover = true;
-    for (let i = 0; i < 10; i += 1) spawnParticle(true);
+    for (let i = 0; i < 14; i += 1) spawnParticle(true);
   });
 
   button.addEventListener("pointerleave", function handlePointerLeave() {
+    state.hover = false;
+  });
+
+  button.addEventListener("focus", function handleFocus() {
+    state.hover = true;
+    for (let i = 0; i < 10; i += 1) spawnParticle(true);
+  });
+
+  button.addEventListener("blur", function handleBlur() {
     state.hover = false;
   });
 

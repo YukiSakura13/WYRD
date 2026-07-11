@@ -14,6 +14,14 @@
   --color-accent: #c9a14a;
   --color-accent-strong: #d8b15a;
 
+  /* Canonical folklore-silver text roles, approved from Cover and Forest. */
+  --wyrd-text-brand: #f3ecdd;
+  --wyrd-text-heading: #efeadc;
+  --wyrd-text-action: #e7e4db;
+  --wyrd-text-action-active: #f0eee7;
+  --wyrd-text-secondary: rgba(210, 212, 210, 0.74);
+  --wyrd-text-quiet: rgba(216, 218, 216, 0.64);
+
   /* Accent alpha scale */
   --accent-00: rgba(201, 161, 74, 0);
   --accent-04: rgba(201, 161, 74, 0.04);

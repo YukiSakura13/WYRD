@@ -2408,14 +2408,6 @@ body[data-scene="deck"] .footer {
     width: min(100%, 430px);
   }
 
-  .cover-title {
-    font-size: clamp(3.75rem, 8vw, 5.15rem);
-  }
-
-  .cover-sub {
-    margin: 0;
-  }
-
   #cover .cover-btn {
     min-width: 0;
   }
