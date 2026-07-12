@@ -29,7 +29,7 @@ WYRD создаёт короткий, атмосферный и понятный
 
 Уже реализованы cover, ритуальное знакомство, вопрос в свободной форме, runtime-набор 74 карт, чтения 1/3/5, локальный Голос Оракула, Следы/Дары, история, share, звук, PWA и базовые smoke/accessibility-проверки.
 
-Главные незавершённые зоны MVP: канонизация контента, first-run/onboarding и «О WYRD», полная responsive/platform QA, versioned state/offline recovery, Telegram adapter/backend, безопасный AI endpoint с fallback, privacy/analytics и release gates.
+Главные незавершённые зоны MVP: канонизация контента, одноразовый first-run onboarding, полная responsive/platform QA, versioned state/offline recovery, Telegram adapter/backend, безопасный AI endpoint с fallback, privacy/analytics и release gates.
 
 ## Продуктовые границы
 

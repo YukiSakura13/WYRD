@@ -59,7 +59,6 @@ export function getElements(doc = document) {
     remindersFullMoonToggle: doc.getElementById("reminders-full-moon-toggle"),
     remindersSaveButton: doc.getElementById("reminders-save-button"),
     remindersSaveStatus: doc.getElementById("reminders-save-status"),
-    aboutSection: doc.getElementById("about-wyrd"),
     onboardingSection: doc.getElementById("ritual-onboarding"),
     deckWrap: doc.getElementById("deck-wrap"),
     resultQuestion: doc.getElementById("result-question"),
@@ -188,7 +187,6 @@ export function createRenderer(elements) {
       reminders: elements.remindersSection,
       "app-info": elements.appInfoSection,
       "spirit-book": elements.spiritBookSection,
-      about: elements.aboutSection,
       deck: elements.deckWrap,
       profile: elements.profileSection,
       onboarding: elements.onboardingSection,
@@ -1282,7 +1280,6 @@ export function createRenderer(elements) {
     elements.remindersSection.hidden = scene !== SCENES.REMINDERS;
     elements.appInfoSection.hidden = scene !== SCENES.APP_INFO;
     elements.spiritBookSection.hidden = scene !== SCENES.SPIRIT_BOOK;
-    elements.aboutSection.hidden = scene !== SCENES.ABOUT;
     elements.profileSection.hidden = scene !== SCENES.PROFILE;
     elements.onboardingSection.hidden = !isOnboarding;
     elements.onboardingSection.classList.toggle("is-visible", isOnboarding);

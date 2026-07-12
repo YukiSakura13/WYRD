@@ -15,8 +15,8 @@ Scope определяет [TELEGRAM_BETA_SCOPE.md](TELEGRAM_BETA_SCOPE.md), а 
 
 - `live` Cover «Войти в лес» и существующее ритуальное знакомство.
 - `live` Вопрос в свободной форме или «в сердце».
-- `live` Постоянная адаптивная страница «О WYRD» с утверждённым публичным лором и replay entry.
-- `mvp` Настоящий versioned first-run и полный state contract безопасного повтора знакомства.
+- `live` Иллюстрированная «История духов леса» из пяти глав.
+- `mvp` Настоящий одноразовый first-run и его state contract.
 
 ### Карты и чтение
 
@@ -65,9 +65,10 @@ Scope определяет [TELEGRAM_BETA_SCOPE.md](TELEGRAM_BETA_SCOPE.md), а 
 
 ## Change Log
 
-### 2026-06-23
+### 2026-07-12
 
-- страница «О WYRD» переведена в production baseline; versioned first-run остаётся MVP-задачей YUK-48.
+- устаревшая текстовая страница `О WYRD / Книга леса` перенесена в архив;
+- first-run остаётся MVP-задачей YUK-48 и не имеет replay entry.
 
 ### 2026-06-22
 

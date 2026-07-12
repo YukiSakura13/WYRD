@@ -31,8 +31,6 @@ flowchart LR
 flowchart TD
     Cover["Cover / Войти в лес<br/>LIVE"] --> Onboarding["First-run onboarding<br/>P0"]
     Onboarding --> Deck["Deck / вопрос<br/>LIVE"]
-    Cover --> About["О WYRD<br/>LIVE"]
-    About --> Onboarding
     Deck --> Single["1 карта<br/>LIVE"]
     Single --> Spread3["3 карты<br/>LIVE"]
     Spread3 --> Spread5["5 карт<br/>LIVE"]
@@ -66,9 +64,11 @@ flowchart LR
 
 ## Change Log
 
-### 2026-06-23
+### 2026-07-12
 
-- постоянная страница «О WYRD» переведена в LIVE; first-run onboarding остаётся P0.
+- устаревшая текстовая страница `О WYRD / Книга леса` удалена из active app и перенесена в архив;
+- каноническая история мира — иллюстрированная «История духов леса» из пяти глав;
+- first-run onboarding остаётся P0 и показывается один раз после первого входа.
 
 ### 2026-06-22
 

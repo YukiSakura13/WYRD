@@ -9,7 +9,6 @@ export const SCENES = Object.freeze({
   YES_NO: "yes-no",
   NIGHT_IMAGES: "night-images",
   SPIRIT_BOOK: "spirit-book",
-  ABOUT: "about",
   ONBOARDING: "onboarding",
   DECK: "deck",
   RESULT: "result",

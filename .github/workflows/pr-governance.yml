@@ -23,16 +23,8 @@ jobs:
       - name: Validate lore canon
         run: python3 scripts/validate_lore_canon.py
 
-      - name: Validate public lore
-        run: python3 scripts/validate_public_lore.py
-
       - name: Validate responsive strategy
         run: python3 scripts/validate_responsive_strategy.py
-
-      - name: Validate about page
-        run: |
-          python3 scripts/validate_about_page.py
-          node scripts/smoke-about.mjs
 
       - name: Validate PR body
         run: python3 scripts/validate_pr_body.py --event-file "$GITHUB_EVENT_PATH"

@@ -101,6 +101,5 @@
 
 ## Downstream contract
 
-- YUK-129 применяет эти правила в утверждённой [публичной копии страницы «О WYRD»](PUBLIC_LORE_COPY.md) и не публикует внутреннюю Библию целиком.
 - YUK-25 использует роли, voice hierarchy, privacy и safety как обязательные prompt constraints.
 - Карточный content contract хранит `presence`, Послание, Тень, нрав и способ проявления духа без выдумывания новых ролей.

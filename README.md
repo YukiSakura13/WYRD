@@ -12,7 +12,6 @@
 - `docs/DEFINITION_OF_READY_DONE.md` — обязательный цикл Linear → PR → deploy → evidence
 - `docs/TELEGRAM_BETA_SCOPE.md` — утверждённое позиционирование и границы первой беты
 - `docs/LORE_CANON_RULES.md` — non-spoiler правила утверждённой Lore Bible v1.1
-- `docs/PUBLIC_LORE_COPY.md` — утверждённая публичная копия для страницы «О WYRD»
 - `docs/RESPONSIVE_STRATEGY.md` — общие breakpoints, layout tokens, safe areas и scroll policy
 - `docs/README.md` — индекс всей документации
 - `docs/PROJECT_BRIEF.md` — краткое описание продукта
@@ -40,7 +39,6 @@
 - `assets/js/cards/question-routing/` — config, scoring и group-weighting для question routing
 - `assets/js/ui/render.js` — единый рендер UI-секций
 - `assets/js/ui/actions.js` — маршрутизация действий пользователя
-- `assets/js/ui/about-navigation.js` — deep link, back, focus и scroll для страницы «О WYRD»
 - `assets/js/ui/render-spread.js`, `assets/js/ui/render-helpers.js` — вспомогательные UI-модули рендера
 - `assets/js/ui/share.js`, `assets/js/ui/flow.js`, `assets/js/ui/scenes.js` — UI-хелперы и канонические состояния сцен
 - `assets/js/audio.js`, `assets/js/ritual.js`, `assets/js/pwa.js` — побочные эффекты и инфраструктура
@@ -50,7 +48,6 @@
 - `scripts/validate_pages_artifact.py` — проверка versioning и состава `.dist-pages` перед деплоем
 - `scripts/smoke-domain.mjs` — smoke-проверка доменной маршрутизации перед её рефакторингом
 - `scripts/smoke-state.mjs` — smoke-проверка state-инвариантов и persistent store
-- `scripts/smoke-about.mjs` — smoke-проверка about route и канонической scene
 
 ## Как смотреть локально
 
@@ -69,14 +66,11 @@
 
 1. `node scripts/smoke-domain.mjs`
 2. `node scripts/smoke-state.mjs`
-3. `node scripts/smoke-about.mjs`
-4. `python3 scripts/validate_product_scope.py`
-5. `python3 scripts/validate_lore_canon.py`
-6. `python3 scripts/validate_public_lore.py`
-7. `python3 scripts/validate_responsive_strategy.py`
-8. `python3 scripts/validate_about_page.py`
-9. `python3 scripts/prepare_pages.py`
-10. `python3 scripts/validate_pages_artifact.py`
+3. `python3 scripts/validate_product_scope.py`
+4. `python3 scripts/validate_lore_canon.py`
+5. `python3 scripts/validate_responsive_strategy.py`
+6. `python3 scripts/prepare_pages.py`
+7. `python3 scripts/validate_pages_artifact.py`
 
 Pull requests дополнительно проходят workflow `PR Governance`: он проверяет ссылку на Linear, acceptance evidence, self-review, deploy plan и follow-ups.
 
@@ -85,7 +79,7 @@ Pull requests дополнительно проходят workflow `PR Governanc
 ## Что реализовано
 
 - loading / wake screen
-- адаптивная страница «О WYRD» с deep link и повтором знакомства
+- иллюстрированная «История духов леса» из пяти глав
 - deck screen
 - reveal screen
 - 1 бесплатная карта в день

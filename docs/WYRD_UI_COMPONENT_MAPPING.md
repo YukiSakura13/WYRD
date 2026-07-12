@@ -16,10 +16,10 @@ This document maps current runtime selectors to the component families defined i
 
 | Foundation Component | Current Selector Families | Frame/Material | Notes |
 | --- | --- | --- | --- |
-| Scene Shell | `#cover`, `.forest-home`, `.forest-placeholder`, `.settings-screen`, `.about-you-screen`, `.reminders-screen`, `.app-info-screen`, `.spirit-book`, `.about-wyrd`, `.ritual-onboarding`, `.deck-scene`, `#result`, `#spread-result`, `#profile` | background/world | One scene shell contract should own forest background, safe areas, max width, scroll behavior, and hidden state. |
-| App Header | `.hdr`, `.forest-brand`, `.settings-header`, `.deck-header`, `.screen-nav`, `.about-wyrd-nav`, `.about-hero`, `.ritual-content` brand group | divider + typography | These are visually related but implemented per screen. Consolidate conceptually before touching CSS. |
-| Icon Button | `.btn-back-circle`, `.deck-back`, `.about-back`, `.forest-avatar-btn`, `.forest-settings-btn`, `.spirit-book-arrow`, `.spread-card-modal-close`, `.save-screen-close`, `.history-sheet-close` | Control | Back, close, profile, settings, and chapter arrows should share sizing, focus, and state rules. Icons can differ. |
-| Action Button | `.ui-action`, `.cover-btn`, `.cover-cta-button`, `.ritual-btn`, `.about-save`, `.btn-share`, `.hook-btn`, `.spread-continuation-btn`, `.spread-continuation-link`, `.profile-primary-action`, `.about-unsaved-primary`, `.about-unsaved-secondary`, `.about-unsaved-quiet`, `.reminders-sheet-primary`, `.reminders-sheet-secondary`, `.reminders-disable`, `.about-replay`, `.save-screen-link` | Control | Use one action system with variants: primary, secondary, quiet, destructive. Current classes can stay as screen aliases. |
+| Scene Shell | `#cover`, `.forest-home`, `.forest-placeholder`, `.settings-screen`, `.about-you-screen`, `.reminders-screen`, `.app-info-screen`, `.spirit-book`, `.ritual-onboarding`, `.deck-scene`, `#result`, `#spread-result`, `#profile` | background/world | One scene shell contract should own forest background, safe areas, max width, scroll behavior, and hidden state. |
+| App Header | `.hdr`, `.forest-brand`, `.settings-header`, `.deck-header`, `.screen-nav`, `.ritual-content` brand group | divider + typography | These are visually related but implemented per screen. Consolidate conceptually before touching CSS. |
+| Icon Button | `.btn-back-circle`, `.deck-back`, `.forest-avatar-btn`, `.forest-settings-btn`, `.spirit-book-arrow`, `.spread-card-modal-close`, `.save-screen-close`, `.history-sheet-close` | Control | Back, close, profile, settings, and chapter arrows should share sizing, focus, and state rules. Icons can differ. |
+| Action Button | `.ui-action`, `.cover-btn`, `.cover-cta-button`, `.ritual-btn`, `.about-save`, `.btn-share`, `.hook-btn`, `.spread-continuation-btn`, `.spread-continuation-link`, `.profile-primary-action`, `.about-unsaved-primary`, `.about-unsaved-secondary`, `.about-unsaved-quiet`, `.reminders-sheet-primary`, `.reminders-sheet-secondary`, `.reminders-disable`, `.save-screen-link` | Control | Use one action system with variants: primary, secondary, quiet, destructive. Current classes can stay as screen aliases. |
 | Hero Artifact | `.forest-card`, `.forest-card--daily`, `.deck-card`, `.share-card.card-box`, `.card-box`, `.save-screen-art` | Artifact | Main ritual objects. This family may carry the richest frame and depth, but only where hierarchy demands it. |
 | Card Tile | `.forest-tile`, `.forest-tile--lunar`, `.forest-tile--yes-no`, `.forest-tile--night`, `.forest-tile--traces`, `.forest-tile--book`, `.gift-card`, `.history-item`, `.profile-today-card` | Quiet | Secondary signs and traces. They must stay quieter than Hero Artifact. |
 | List Row | `.settings-row`, `.reminders-row`, `.about-select-row`, `.app-info-row` | Quiet + Control | Settings, reminders, and select rows are one row component with variants: entry, toggle, time, static. |
@@ -78,16 +78,13 @@ This document maps current runtime selectors to the component families defined i
 | `.spread-card` | Media Frame / Card Tile | Spread cards with anchor variant. |
 | `.spread-card-modal` | Sheet / Modal | Focused card inspection. |
 
-### Spirit Book / About WYRD / History
+### Spirit Book / History
 
 | Current | Foundation Component | Notes |
 | --- | --- | --- |
 | `.spirit-book` | Scene Shell | Story scene shell. |
 | `.spirit-book-art` | Media Frame | Rich media frame, not general card style. |
 | `.spirit-book-controls`, `.spirit-book-arrow`, `.spirit-book-dot` | Indicator + Icon Button + Choice | Dots are indicators/choice, arrows are icon buttons. |
-| `.about-wyrd` | Scene Shell | Long reading surface. |
-| `.about-toc-link` | Text Action / List Row | Navigation links, not decorative cards. |
-| `.about-section` | Quiet content section | Should avoid card-in-card. |
 | `.history-item` | Card Tile / Trace | Opens a stored trace. |
 | `.history-sheet` | Sheet / Modal | Detail layer. |
 | `.gift-card` | Card Tile / Trace Artifact | Small collectible object; should not overtake main artifact. |

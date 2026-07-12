@@ -29,7 +29,6 @@ jobs:
         run: |
           node scripts/smoke-domain.mjs
           node scripts/smoke-state.mjs
-          node scripts/smoke-about.mjs
 
       - name: Validate product scope
         run: python3 scripts/validate_product_scope.py
@@ -37,14 +36,8 @@ jobs:
       - name: Validate lore canon
         run: python3 scripts/validate_lore_canon.py
 
-      - name: Validate public lore
-        run: python3 scripts/validate_public_lore.py
-
       - name: Validate responsive strategy
         run: python3 scripts/validate_responsive_strategy.py
-
-      - name: Validate about page
-        run: python3 scripts/validate_about_page.py
 
       - name: Prepare Pages Artifact
         run: python3 scripts/prepare_pages.py
