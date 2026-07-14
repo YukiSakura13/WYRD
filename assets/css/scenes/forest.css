@@ -384,6 +384,10 @@ body[data-scene="forest"] .forest-atmosphere {
   border-radius: 16px;
 }
 
+.forest-art-card--small::before {
+  box-shadow: none;
+}
+
 .forest-art-card--spark::after {
   content: "";
   position: absolute;
