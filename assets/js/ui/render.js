@@ -195,6 +195,9 @@ export function createRenderer(elements) {
     };
 
     const target = targetMap[name];
+    if (name === SCENES.FOREST && elements.forestSection) {
+      elements.forestSection.scrollTo({ top: 0, behavior: "auto" });
+    }
     if (target) {
       target.scrollIntoView({ behavior: "smooth", block: "start" });
     }
