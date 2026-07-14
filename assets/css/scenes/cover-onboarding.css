@@ -533,7 +533,7 @@
   transition:
     transform 150ms ease,
     filter 220ms ease;
-  box-shadow: 0 18px 18px -20px rgba(0, 0, 0, 0.82);
+  box-shadow: none;
   animation: none;
 }
 
@@ -706,7 +706,7 @@
 
 #cover .cover-btn:active {
   transform: translateY(1px);
-  box-shadow: 0 15px 14px -19px rgba(0, 0, 0, 0.86);
+  box-shadow: none;
 }
 
 #cover .cover-btn:active::before {
