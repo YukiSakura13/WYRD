@@ -1,0 +1,142 @@
+# WYRD Product Readiness Plan
+
+Статус: каноническая репозиторная карта продуктовой готовности после аудита 13 июля 2026 года.
+
+Linear остаётся источником статусов, приоритетов и зависимостей. Этот документ не создаёт второй roadmap: он связывает сквозные продуктовые обязательства с конкретными Linear-задачами и не даёт им потеряться между визуальной миграцией, backend и выпуском.
+
+## Граница этапов
+
+1. Завершить текущий surface audit и silver migration.
+2. Закрыть readiness-контракты бесплатной Telegram-беты.
+3. Провести ограниченную бесплатную бету и собрать evidence.
+4. Только после beta evidence принимать решение о монетизации и запускать небольшой Stars-пилот.
+
+Silver migration и `YUK-135` сохраняют собственную очередь. Эта карта не расширяет текущую бету paywall, магазином или новой экономикой.
+
+## 1. Контракт возвращения
+
+Владелец: `YUK-69`.
+
+Нужно определить, что пользователь получает:
+
+- при следующем открытии приложения;
+- на следующий день и через семь дней;
+- после нескольких чтений и сохранённых Следов;
+- при возвращении к Дарам;
+- при включённых и выключенных уведомлениях.
+
+«Лунный день» может быть ежедневной причиной вернуться. Следы и Дары должны показывать накопленный личный узор, а не только хранить объекты. Retention не должен использовать наказание за пропуск, energy, искусственный дефицит или другие dark patterns.
+
+Обязательные метрики бесплатной беты: activation, завершение `1→3→5`, чтение Голоса Оракула, сохранение и повторное открытие Следа, D1/D7 return, opt-in уведомлений и privacy-safe share.
+
+## 2. Monetization brief
+
+Владелец: `YUK-35`, только после beta evidence.
+
+До реализации оплаты нужно зафиксировать:
+
+- платную единицу ценности и бесплатный allowance;
+- стоимость AI-вызова, лимиты, rate limits и целевую маржинальность;
+- Stars pricing, entitlement model и восстановление покупки;
+- идемпотентную выдачу, payment ledger, возвраты и поддержку `/paysupport`;
+- правила trial, подписки или пакетов, если они будут выбраны;
+- продуктовые и safety-границы paywall.
+
+Нельзя продавать «более благоприятное предсказание», безопасность, export/delete или доступ к обязательным системным функциям. Решение о платности глубины `1→3→5` нельзя принимать до проверки бесплатной воронки. Предпочтительный первый кандидат для теста — дополнительная глубина AI-синтеза, а не блокировка базового чтения.
+
+## 3. Публичный trust-пакет
+
+Владельцы: `YUK-111`, `YUK-108`, `YUK-115`, `YUK-123`.
+
+До Telegram-беты должны быть доступны:
+
+- Privacy Policy с перечнем данных, целями, retention и контактами;
+- Terms of Use;
+- ясное описание символической природы WYRD;
+- уведомление, что Голос Оракула создаётся с помощью AI и может ошибаться;
+- age policy и crisis/high-risk сценарии;
+- export/delete route и управление согласиями;
+- контакты поддержки и способ сообщить об ошибке;
+- реестр лицензий на изображения, шрифты, звук и сторонние библиотеки;
+- платёжные условия и purchase support до коммерческого запуска.
+
+Вопрос пользователя по умолчанию не сохраняется на сервере без отдельной необходимости и явного согласия. Перед коммерческим запуском документы проверяет специалист для выбранных стран распространения.
+
+## 4. Telegram launch package
+
+Владельцы: `YUK-19`, `YUK-39`, `YUK-57`, `YUK-104`, `YUK-107`, `YUK-121`, `YUK-124`.
+
+Пакет включает:
+
+- отдельные test и production bots, секреты и recovery ownership;
+- Main Mini App, menu button, bot commands и support/privacy links;
+- BotFather profile, silver icon, preview-video и локализованные screenshots;
+- `startapp` deep links и attribution без лишних персональных данных;
+- осознанный request write access и правила уведомлений;
+- server-side validation сырого `initData` и проверку `auth_date`;
+- Telegram safe areas, BackButton, lifecycle и web fallback;
+- поведение при заблокированном боте, устаревшем клиенте и недоступной capability.
+
+GitHub Pages остаётся frontend-хостингом прототипа. AI keys, Telegram auth/session, синхронизация, payment ledger и entitlements должны находиться на backend.
+
+## 5. Аварийное управление
+
+Владелец: `YUK-153`.
+
+До беты нужны независимо управляемые feature flags и kill switches для:
+
+- AI endpoint и отдельных AI-механик;
+- уведомлений;
+- экспериментальных экранов;
+- синхронизации, если она угрожает данным;
+- платежей и выдачи entitlements до монетизированного пилота.
+
+Отключение функции не должно требовать нового client deploy. Пользователь получает ясный fallback, а причина и время переключения попадают в incident log.
+
+## 6. Content operations
+
+Владельцы: `YUK-154` для content governance и `YUK-155` для IP/license register. Технические части уже покрывают `YUK-93`, `YUK-114`, `YUK-122` и `YUK-126`.
+
+Для 74 карт, Послания и Тени, prompt, schema и текстов новых механик нужны:
+
+- стабильный ID, версия и статус `draft/review/approved/retired`;
+- владелец утверждения и дата решения;
+- change log и связь контента с версией приложения;
+- regression fixtures и quality gate;
+- rollback без восстановления устаревшего UI или gold-ассетов;
+- реестр происхождения, лицензии и разрешённого использования каждого asset/font/audio source.
+
+## 7. Accessibility gate
+
+Владельцы: `YUK-33`, `YUK-53`, `YUK-92`.
+
+Автоматические проверки дополняются ручным проходом:
+
+- keyboard-only и видимый focus;
+- VoiceOver/NVDA и корректные accessible names;
+- modal focus trap/return и предсказуемый Back;
+- zoom 200%, reflow и отсутствие горизонтального обрезания;
+- contrast, readable text и touch targets не меньше принятого минимума;
+- reduced motion, отсутствие опасного мерцания и low-performance режим;
+- отсутствие смысла, переданного только цветом, звуком или анимацией.
+
+## Release-ready последовательность
+
+1. Surface audit, silver migration и first-run onboarding.
+2. Return contract и analytics event plan.
+3. Trust/legal/support, privacy и AI disclosure.
+4. Backend, Telegram identity, security и launch package.
+5. Content operations, licenses, feature flags и incident controls.
+6. Полный accessibility/platform QA и release candidate.
+7. Ограниченная бесплатная Telegram-бета.
+8. Анализ activation, completion, AI usage, D1/D7, Следов, уведомлений и share.
+9. Решение по `YUK-35` и небольшой Stars-пилот только при подтверждённой ценности.
+
+## Официальные ориентиры
+
+- [Telegram Mini Apps](https://core.telegram.org/bots/webapps)
+- [Telegram Bot Platform Developer Terms](https://telegram.org/tos/bot-developers?setln=en)
+- [Telegram Stars payments](https://core.telegram.org/bots/payments-stars)
+- [WCAG 2.2](https://www.w3.org/TR/WCAG22/)
+- [European Commission: data minimisation and purpose limitation](https://commission.europa.eu/law/law-topic/data-protection/rules-business-and-organisations/principles-gdpr/overview-principles/what-data-can-we-process-and-under-which-conditions_en)
+- [European Commission: AI transparency](https://digital-strategy.ec.europa.eu/en/faqs/guidelines-and-code-practice-transparent-ai-systems)

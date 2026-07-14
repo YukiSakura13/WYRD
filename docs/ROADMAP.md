@@ -8,6 +8,8 @@
 
 Продуктовая граница: [TELEGRAM_BETA_SCOPE.md](TELEGRAM_BETA_SCOPE.md).
 
+Сквозные требования к retention, trust/legal, Telegram launch, аварийному управлению, content operations, accessibility и будущей монетизации: [PRODUCT_READINESS_PLAN.md](PRODUCT_READINESS_PLAN.md).
+
 ## Критический путь
 
 1. Утвердить позиционирование, scope, Lore Bible, safety и Definition of MVP.
@@ -23,6 +25,7 @@
 7. Пройти automated и manual QA по полной platform matrix.
 8. Собрать release candidate, провести staging soak и go/no-go.
 9. Запустить ограниченную бесплатную Telegram-бету и собрать evidence.
+10. После beta evidence принять отдельное решение о Telegram Stars и небольшом монетизационном пилоте.
 
 ## Потоки MVP
 
@@ -71,3 +74,8 @@ TTS, платежи/Stars, новые карты/ритуалы, сложная 
 ### 2026-06-22
 
 - roadmap синхронизирован с YUK-14 и Linear MVP Delivery Plan v2.
+
+### 2026-07-14
+
+- добавлена каноническая карта Product Readiness после продуктового, Telegram, security и monetization-аудита;
+- будущая монетизация закреплена после ограниченной бесплатной беты и измерения retention/value evidence.

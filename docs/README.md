@@ -17,22 +17,23 @@
 1. [TELEGRAM_BETA_SCOPE.md](/Users/marinamart/Desktop/Oracle_dev/docs/TELEGRAM_BETA_SCOPE.md)
 2. [LORE_CANON_RULES.md](/Users/marinamart/Desktop/Oracle_dev/docs/LORE_CANON_RULES.md)
 3. [PRODUCT_SURFACE_MAP.md](/Users/marinamart/Desktop/Oracle_dev/docs/PRODUCT_SURFACE_MAP.md)
-4. [RESPONSIVE_STRATEGY.md](/Users/marinamart/Desktop/Oracle_dev/docs/RESPONSIVE_STRATEGY.md)
-5. [PROJECT_BRIEF.md](/Users/marinamart/Desktop/Oracle_dev/docs/PROJECT_BRIEF.md)
-6. [ROADMAP_VISUAL.md](/Users/marinamart/Desktop/Oracle_dev/docs/ROADMAP_VISUAL.md)
-7. [ROADMAP.md](/Users/marinamart/Desktop/Oracle_dev/docs/ROADMAP.md)
-8. [FEATURES.md](/Users/marinamart/Desktop/Oracle_dev/docs/FEATURES.md)
-9. [REFINEMENT_BASELINE.md](/Users/marinamart/Desktop/Oracle_dev/docs/REFINEMENT_BASELINE.md)
-10. [RELEASE_CHECKLIST.md](/Users/marinamart/Desktop/Oracle_dev/docs/RELEASE_CHECKLIST.md)
-11. [DEFINITION_OF_READY_DONE.md](/Users/marinamart/Desktop/Oracle_dev/docs/DEFINITION_OF_READY_DONE.md)
-12. [../ARCHITECTURE.md](/Users/marinamart/Desktop/Oracle_dev/ARCHITECTURE.md)
-13. [CONTENT_MODEL.md](/Users/marinamart/Desktop/Oracle_dev/docs/CONTENT_MODEL.md)
-14. [ADR.md](/Users/marinamart/Desktop/Oracle_dev/docs/ADR.md)
-15. [WORKFLOW_WITH_CODEX.md](/Users/marinamart/Desktop/Oracle_dev/docs/WORKFLOW_WITH_CODEX.md)
-16. [WYRD_MASTER_CARD_STYLE.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_MASTER_CARD_STYLE.md)
-17. [WYRD_UI_FOUNDATIONS.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_UI_FOUNDATIONS.md)
-18. [WYRD_UI_COMPONENT_MAPPING.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_UI_COMPONENT_MAPPING.md)
-19. [wyrd-ui-kit.html](/Users/marinamart/Desktop/Oracle_dev/docs/wyrd-ui-kit.html)
+4. [PRODUCT_READINESS_PLAN.md](/Users/marinamart/Desktop/Oracle_dev/docs/PRODUCT_READINESS_PLAN.md)
+5. [RESPONSIVE_STRATEGY.md](/Users/marinamart/Desktop/Oracle_dev/docs/RESPONSIVE_STRATEGY.md)
+6. [PROJECT_BRIEF.md](/Users/marinamart/Desktop/Oracle_dev/docs/PROJECT_BRIEF.md)
+7. [ROADMAP_VISUAL.md](/Users/marinamart/Desktop/Oracle_dev/docs/ROADMAP_VISUAL.md)
+8. [ROADMAP.md](/Users/marinamart/Desktop/Oracle_dev/docs/ROADMAP.md)
+9. [FEATURES.md](/Users/marinamart/Desktop/Oracle_dev/docs/FEATURES.md)
+10. [REFINEMENT_BASELINE.md](/Users/marinamart/Desktop/Oracle_dev/docs/REFINEMENT_BASELINE.md)
+11. [RELEASE_CHECKLIST.md](/Users/marinamart/Desktop/Oracle_dev/docs/RELEASE_CHECKLIST.md)
+12. [DEFINITION_OF_READY_DONE.md](/Users/marinamart/Desktop/Oracle_dev/docs/DEFINITION_OF_READY_DONE.md)
+13. [../ARCHITECTURE.md](/Users/marinamart/Desktop/Oracle_dev/ARCHITECTURE.md)
+14. [CONTENT_MODEL.md](/Users/marinamart/Desktop/Oracle_dev/docs/CONTENT_MODEL.md)
+15. [ADR.md](/Users/marinamart/Desktop/Oracle_dev/docs/ADR.md)
+16. [WORKFLOW_WITH_CODEX.md](/Users/marinamart/Desktop/Oracle_dev/docs/WORKFLOW_WITH_CODEX.md)
+17. [WYRD_MASTER_CARD_STYLE.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_MASTER_CARD_STYLE.md)
+18. [WYRD_UI_FOUNDATIONS.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_UI_FOUNDATIONS.md)
+19. [WYRD_UI_COMPONENT_MAPPING.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_UI_COMPONENT_MAPPING.md)
+20. [wyrd-ui-kit.html](/Users/marinamart/Desktop/Oracle_dev/docs/wyrd-ui-kit.html)
 
 ---
 
@@ -43,6 +44,7 @@
 - [TELEGRAM_BETA_SCOPE.md](/Users/marinamart/Desktop/Oracle_dev/docs/TELEGRAM_BETA_SCOPE.md) — утверждённое позиционирование, in-scope/out-of-scope и safety-границы первой беты
 - [LORE_CANON_RULES.md](/Users/marinamart/Desktop/Oracle_dev/docs/LORE_CANON_RULES.md) — роли Леса, духов, Оракула, Совы/Ворона и implementable safety-границы Lore Bible v1.1
 - [PRODUCT_SURFACE_MAP.md](/Users/marinamart/Desktop/Oracle_dev/docs/PRODUCT_SURFACE_MAP.md) — утверждённая карта активных экранов, технических ID, маршрутов, статусов и очереди silver-миграции
+- [PRODUCT_READINESS_PLAN.md](/Users/marinamart/Desktop/Oracle_dev/docs/PRODUCT_READINESS_PLAN.md) — сквозные release-ready контракты retention, trust/legal, Telegram launch, operations, content governance, accessibility и будущей монетизации
 - [RESPONSIVE_STRATEGY.md](/Users/marinamart/Desktop/Oracle_dev/docs/RESPONSIVE_STRATEGY.md) — width/height breakpoints, container widths, spacing, safe areas, scroll ownership и desktop composition
 - [PROJECT_BRIEF.md](/Users/marinamart/Desktop/Oracle_dev/docs/PROJECT_BRIEF.md) — краткое описание проекта, целей и продукта
 - [ROADMAP_VISUAL.md](/Users/marinamart/Desktop/Oracle_dev/docs/ROADMAP_VISUAL.md) — визуальная карта страниц и пользовательского сценария
@@ -73,6 +75,7 @@
 
 - Если меняется структура файлов или модулей, обновляем [../ARCHITECTURE.md](/Users/marinamart/Desktop/Oracle_dev/ARCHITECTURE.md).
 - Если меняется продуктовый приоритет, обновляем [ROADMAP.md](/Users/marinamart/Desktop/Oracle_dev/docs/ROADMAP.md).
+- Если меняются release-ready контракты, Telegram launch, trust/legal, retention или границы монетизации, обновляем [PRODUCT_READINESS_PLAN.md](/Users/marinamart/Desktop/Oracle_dev/docs/PRODUCT_READINESS_PLAN.md).
 - Если добавляется, переименовывается или архивируется экран либо меняется его маршрут, обновляем [PRODUCT_SURFACE_MAP.md](/Users/marinamart/Desktop/Oracle_dev/docs/PRODUCT_SURFACE_MAP.md).
 - Если добавляется или меняется сценарий пользователя, обновляем [FEATURES.md](/Users/marinamart/Desktop/Oracle_dev/docs/FEATURES.md).
 - Если меняется контентная сущность, формат карты или расклада, обновляем [CONTENT_MODEL.md](/Users/marinamart/Desktop/Oracle_dev/docs/CONTENT_MODEL.md).
@@ -102,6 +105,10 @@
 ---
 
 ## Change Log
+
+### 2026-07-14
+
+- в индекс добавлена каноническая карта Product Readiness и правило её актуализации
 
 ### 2026-04-05
 
