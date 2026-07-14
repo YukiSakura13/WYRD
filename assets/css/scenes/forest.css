@@ -77,13 +77,13 @@ body[data-scene="night-images"] .footer {
 }
 
 .forest-home {
+  z-index: 1;
   height: 100%;
   min-height: 0;
   overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
   background: transparent;
-  isolation: isolate;
 }
 
 .forest-home::-webkit-scrollbar,
@@ -93,20 +93,23 @@ body[data-scene="night-images"] .footer {
 }
 
 .forest-atmosphere {
+  display: none;
   position: fixed;
-  inset-block: 0;
-  left: 50%;
+  inset: 0;
   z-index: 0;
-  width: min(100%, 393px);
+  width: 100vw;
   height: 100vh;
   height: var(--layout-viewport-dynamic);
   overflow: hidden;
   pointer-events: none;
-  transform: translateX(-50%);
   background:
     radial-gradient(110% 55% at 50% -8%, rgba(31, 35, 47, 0.46), transparent 60%),
     radial-gradient(92% 58% at 50% 48%, rgba(16, 18, 26, 0.36), transparent 74%),
     linear-gradient(180deg, #0c0d11 0%, #08090c 72%, #07080a 100%);
+}
+
+body[data-scene="forest"] .forest-atmosphere {
+  display: block;
 }
 
 .forest-atmosphere__stars {
