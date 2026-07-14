@@ -569,7 +569,7 @@
 
 .cover-cta-fill {
   z-index: 1;
-  inset: 22px 38px 25px;
+  inset: 22px 18px 25px;
   border-radius: 18px;
   background:
     radial-gradient(ellipse at 50% 16%, rgba(226, 232, 238, 0.1), transparent 42%),
