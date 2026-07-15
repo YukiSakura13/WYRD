@@ -62,40 +62,6 @@ function drawActiveVeil(ctx, width, height, time, activeLevel) {
   ctx.restore();
 }
 
-function drawPressBloom(ctx, width, height, dt, state) {
-  if (state.pressBloom <= 0) return;
-
-  const rise = 1 - state.pressBloom;
-  const easedRise = 1 - Math.pow(1 - rise, 2.5);
-  const centerY = height * (0.9 - easedRise * 0.46);
-  const radiusY = height * (0.12 + easedRise * 0.5);
-  const radiusX = width * (0.26 + easedRise * 0.34);
-  const alpha = (1 - rise * 0.28) * 0.24;
-  const glow = ctx.createRadialGradient(width * 0.5, centerY, 2, width * 0.5, centerY, radiusX);
-
-  glow.addColorStop(0, `rgba(232,238,244,${alpha})`);
-  glow.addColorStop(0.36, `rgba(208,216,226,${alpha * 0.55})`);
-  glow.addColorStop(1, "rgba(208,216,226,0)");
-
-  ctx.save();
-  ctx.globalCompositeOperation = "screen";
-  ctx.fillStyle = glow;
-  ctx.beginPath();
-  ctx.ellipse(width * 0.5, centerY, radiusX, radiusY, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  const lowerGlow = ctx.createRadialGradient(width * 0.5, height * 0.92, 1, width * 0.5, height * 0.92, width * 0.45);
-  lowerGlow.addColorStop(0, `rgba(232,238,244,${alpha * 0.34})`);
-  lowerGlow.addColorStop(1, "rgba(208,216,226,0)");
-  ctx.fillStyle = lowerGlow;
-  ctx.beginPath();
-  ctx.ellipse(width * 0.5, height * 0.92, width * 0.42, height * 0.2, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
-
-  state.pressBloom = Math.max(0, state.pressBloom - dt / 0.72);
-}
-
 export function createCoverCtaAnimation(button) {
   const canvas = button?.querySelector(".cover-cta-canvas");
   const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -107,11 +73,11 @@ export function createCoverCtaAnimation(button) {
   const ctx = canvas.getContext("2d");
   const state = {
     particles: [],
-    bursts: [],
     ornamentSparks: [],
     hover: false,
+    exiting: false,
+    exitElapsed: 0,
     activeLevel: 0,
-    pressBloom: 0,
     last: performance.now(),
     emberClock: 0,
   };
@@ -158,28 +124,13 @@ export function createCoverCtaAnimation(button) {
     });
   }
 
-  function burst() {
-    const rect = canvas.getBoundingClientRect();
-    state.pressBloom = 1;
-
-    for (let i = 0; i < 16; i += 1) {
-      state.bursts.push({
-        x: rect.width / 2 + rand(-18, 18),
-        y: rect.height * 0.7 + rand(-6, 8),
-        vx: rand(-38, 38),
-        vy: rand(-142, -64),
-        size: rand(1.4, 3.8),
-        life: 0,
-        maxLife: rand(0.6, 1.05),
-      });
-    }
-  }
-
   function drawParticles(width, height, dt) {
+    const exitLift = state.exiting ? Math.min(1, state.exitElapsed / 0.24) : 0;
+
     for (let i = state.particles.length - 1; i >= 0; i -= 1) {
       const p = state.particles[i];
       p.life += dt;
-      p.y -= p.speed * dt;
+      p.y -= p.speed * (1 + exitLift * 0.18) * dt;
       p.x = p.baseX + Math.sin(p.phase + p.life * 2.2) * p.drift;
 
       const fadeIn = Math.min(1, p.life / 0.6);
@@ -193,26 +144,6 @@ export function createCoverCtaAnimation(button) {
 
       if (p.life > p.maxLife || p.y < 14) {
         state.particles.splice(i, 1);
-      }
-    }
-  }
-
-  function drawBursts(dt) {
-    for (let i = state.bursts.length - 1; i >= 0; i -= 1) {
-      const p = state.bursts[i];
-      p.life += dt;
-      p.x += p.vx * dt;
-      p.y += p.vy * dt;
-      p.vy += 72 * dt;
-
-      const alpha = Math.max(0, 1 - p.life / p.maxLife) * 0.82;
-      ctx.beginPath();
-      ctx.fillStyle = `rgba(232,238,244,${alpha})`;
-      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      ctx.fill();
-
-      if (p.life > p.maxLife) {
-        state.bursts.splice(i, 1);
       }
     }
   }
@@ -246,6 +177,8 @@ export function createCoverCtaAnimation(button) {
     const dt = Math.min(0.05, (now - state.last) / 1000);
     state.last = now;
     state.emberClock += dt;
+    if (state.exiting) state.exitElapsed += dt;
+
     const targetActive = state.hover ? 1 : 0;
     const activeSpeed = targetActive > state.activeLevel ? 5.5 : 3.2;
     state.activeLevel += (targetActive - state.activeLevel) * Math.min(1, dt * activeSpeed);
@@ -256,9 +189,11 @@ export function createCoverCtaAnimation(button) {
     drawEmberGlow(ctx, width, height, state.emberClock, state.activeLevel);
     drawActiveVeil(ctx, width, height, state.emberClock, state.activeLevel);
 
-    const spawnCount = state.hover ? 4 : 1;
-    for (let i = 0; i < spawnCount; i += 1) {
-      if (Math.random() < (state.hover ? 0.34 : 0.08)) spawnParticle();
+    if (!state.exiting) {
+      const spawnCount = state.hover ? 4 : 1;
+      for (let i = 0; i < spawnCount; i += 1) {
+        if (Math.random() < (state.hover ? 0.34 : 0.08)) spawnParticle();
+      }
     }
 
     if (state.ornamentSparks.length < (state.hover ? 4 : 2) && Math.random() < (state.hover ? 0.028 : 0.005)) {
@@ -266,9 +201,7 @@ export function createCoverCtaAnimation(button) {
     }
 
     drawParticles(width, height, dt);
-    drawBursts(dt);
     drawOrnamentSparks(dt);
-    drawPressBloom(ctx, width, height, dt, state);
     ctx.restore();
 
     requestAnimationFrame(frame);
@@ -292,11 +225,10 @@ export function createCoverCtaAnimation(button) {
     state.hover = false;
   });
 
-  button.addEventListener("pointerdown", burst);
-  button.addEventListener("keydown", function handleKeydown(event) {
-    if (event.key === "Enter" || event.key === " ") {
-      burst();
-    }
+  button.addEventListener("click", function handleActivation() {
+    state.exiting = true;
+    state.exitElapsed = 0;
+    state.hover = false;
   });
 
   resize();

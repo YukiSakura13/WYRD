@@ -21,8 +21,16 @@ export function createActionHandler(deps) {
     const action = trigger.dataset.action;
 
     if (action === "enter") {
+      if (trigger.classList.contains("is-activating")) {
+        return;
+      }
+
+      trigger.classList.add("is-activating");
+      trigger.setAttribute("aria-disabled", "true");
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function enterForest() {
+        trigger.classList.remove("is-activating");
+        trigger.removeAttribute("aria-disabled");
         setScene(SCENES.FOREST);
         audio.sync({
           allowInit: true,
@@ -32,6 +40,8 @@ export function createActionHandler(deps) {
         window.setTimeout(function scrollAfterEntry() {
           renderer.scrollTo(SCENES.FOREST);
         }, 80);
+      }, {
+        leadIn: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 240,
       });
       return;
     }

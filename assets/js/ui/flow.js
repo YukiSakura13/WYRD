@@ -51,15 +51,26 @@ export function playSpreadSequence(audio, enabled, count) {
 }
 
 export function createTransitionRunner(renderApp, uiState) {
-  return function runTransition(callback) {
-    uiState.transitioning = true;
-    renderApp();
-    window.setTimeout(function finishTransition() {
-      callback();
-      window.setTimeout(function clearTransition() {
-        uiState.transitioning = false;
-        renderApp();
-      }, 280);
-    }, 360);
+  return function runTransition(callback, options = {}) {
+    const leadIn = options.leadIn ?? 0;
+
+    function beginTransition() {
+      uiState.transitioning = true;
+      renderApp();
+      window.setTimeout(function finishTransition() {
+        callback();
+        window.setTimeout(function clearTransition() {
+          uiState.transitioning = false;
+          renderApp();
+        }, 280);
+      }, 360);
+    }
+
+    if (leadIn > 0) {
+      window.setTimeout(beginTransition, leadIn);
+      return;
+    }
+
+    beginTransition();
   };
 }
