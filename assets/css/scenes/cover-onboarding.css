@@ -230,7 +230,9 @@
   position: absolute;
   inset: 0;
   z-index: 4;
-  background: linear-gradient(to right, rgba(3, 4, 6, 0.38) 0%, rgba(3, 4, 6, 0.03) 28%, rgba(3, 4, 6, 0.03) 72%, rgba(3, 4, 6, 0.38) 100%);
+  background:
+    radial-gradient(ellipse 88% 30% at 50% 82%, rgba(1, 2, 4, 0.24) 0%, rgba(1, 2, 4, 0.14) 46%, transparent 78%),
+    linear-gradient(to right, rgba(3, 4, 6, 0.38) 0%, rgba(3, 4, 6, 0.03) 28%, rgba(3, 4, 6, 0.03) 72%, rgba(3, 4, 6, 0.38) 100%);
 }
 
 .cover-copy {
