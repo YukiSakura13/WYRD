@@ -1,4 +1,4 @@
-const PARTICLE_TARGET_IDLE = 8;
+const PARTICLE_TARGET_IDLE = 18;
 const PARTICLE_TARGET_HOVER = 30;
 
 function rand(min, max) {
@@ -6,11 +6,11 @@ function rand(min, max) {
 }
 
 function drawRoundedClip(ctx, width, height) {
-  const x = 12;
-  const y = 12;
-  const w = width - 24;
-  const h = height - 26;
-  const r = 28;
+  const x = 18;
+  const y = 22;
+  const w = width - 36;
+  const h = height - 47;
+  const r = 18;
 
   ctx.beginPath();
   ctx.moveTo(x + r, y);
@@ -27,38 +27,18 @@ function drawRoundedClip(ctx, width, height) {
 
 function drawEmberGlow(ctx, width, height, time, activeLevel) {
   const breath = 0.5 + Math.sin((time * Math.PI * 2) / 4.8) * 0.5;
-  const baseAlpha = 0.042 + activeLevel * 0.06;
-  const glowAlpha = baseAlpha + breath * (0.018 + activeLevel * 0.026);
-  const glow = ctx.createRadialGradient(width * 0.5, height * 0.86, 2, width * 0.5, height * 0.86, width * 0.52);
+  const baseAlpha = 0.024 + activeLevel * 0.026;
+  const glowAlpha = baseAlpha + breath * (0.014 + activeLevel * 0.012);
+  const glow = ctx.createRadialGradient(width * 0.5, height * 0.56, 2, width * 0.5, height * 0.56, width * 0.48);
 
-  glow.addColorStop(0, `rgba(208,216,226,${glowAlpha})`);
-  glow.addColorStop(0.42, `rgba(198,204,212,${glowAlpha * 0.48})`);
+  glow.addColorStop(0, `rgba(206,218,230,${glowAlpha})`);
+  glow.addColorStop(0.46, `rgba(176,190,204,${glowAlpha * 0.42})`);
   glow.addColorStop(1, "rgba(208,216,226,0)");
 
   ctx.save();
   ctx.globalCompositeOperation = "screen";
   ctx.fillStyle = glow;
-  ctx.fillRect(12, 12, width - 24, height - 26);
-  ctx.restore();
-}
-
-function drawActiveVeil(ctx, width, height, time, activeLevel) {
-  if (activeLevel <= 0.01) return;
-
-  const sweep = 0.5 + Math.sin((time * Math.PI * 2) / 3.8) * 0.5;
-  const centerY = height * (0.76 - sweep * 0.34);
-  const veilAlpha = 0.034 * activeLevel;
-  const veil = ctx.createLinearGradient(0, centerY - height * 0.18, 0, centerY + height * 0.18);
-
-  veil.addColorStop(0, "rgba(224,231,238,0)");
-  veil.addColorStop(0.42, `rgba(224,231,238,${veilAlpha * 0.72})`);
-  veil.addColorStop(0.58, `rgba(224,231,238,${veilAlpha})`);
-  veil.addColorStop(1, "rgba(224,231,238,0)");
-
-  ctx.save();
-  ctx.globalCompositeOperation = "screen";
-  ctx.fillStyle = veil;
-  ctx.fillRect(width * 0.1, centerY - height * 0.22, width * 0.8, height * 0.44);
+  ctx.fillRect(18, 22, width - 36, height - 47);
   ctx.restore();
 }
 
@@ -95,57 +75,124 @@ export function createCoverCtaAnimation(button) {
     const target = state.hover ? PARTICLE_TARGET_HOVER : PARTICLE_TARGET_IDLE;
     if (!force && state.particles.length >= target) return;
 
+    const kindRoll = Math.random();
+    const kind = kindRoll < 0.11 ? "star" : kindRoll < 0.82 ? "spark" : "dust";
+    const leftStream = Math.random() < 0.5;
+    const x = leftStream
+      ? rand(rect.width * 0.12, rect.width * 0.36)
+      : rand(rect.width * 0.64, rect.width * 0.88);
+    const hoverBoost = state.hover ? 1.12 : 1;
+
+    const style = kind === "star"
+      ? {
+          alpha: rand(0.76, 0.94),
+          halo: rand(8, 12),
+          maxLife: rand(3.4, 4.6),
+          size: rand(1.7, 2.6),
+          speed: rand(10, 17),
+        }
+      : kind === "spark"
+        ? {
+            alpha: rand(0.5, 0.76),
+            halo: rand(5, 8),
+            maxLife: rand(3.2, 5),
+            size: rand(1.4, 2.5),
+            speed: rand(10, state.hover ? 28 : 20),
+          }
+        : {
+            alpha: rand(0.2, 0.36),
+            halo: rand(2.5, 4),
+            maxLife: rand(4.2, 6.2),
+            size: rand(0.65, 1.2),
+            speed: rand(5, 11),
+          };
+
     const particle = {
-      x: rand(rect.width * 0.13, rect.width * 0.87),
+      x,
       y: rect.height - rand(18, 34),
-      baseX: 0,
-      size: rand(1.2, state.hover ? 3.2 : 2.4),
-      speed: rand(8, state.hover ? 34 : 17),
-      drift: rand(5, state.hover ? 20 : 11),
+      baseX: x,
+      targetX: rect.width * 0.5 + rand(-26, 26),
+      kind,
+      size: style.size * hoverBoost,
+      halo: style.halo * hoverBoost,
+      speed: style.speed * hoverBoost,
+      drift: rand(3, state.hover ? 14 : 9),
       phase: rand(0, Math.PI * 2),
       life: 0,
-      maxLife: rand(2.8, state.hover ? 3.9 : 5.4),
-      alpha: rand(0.24, state.hover ? 0.7 : 0.42),
+      maxLife: style.maxLife,
+      alpha: Math.min(0.94, style.alpha * hoverBoost),
     };
-    particle.baseX = particle.x;
     state.particles.push(particle);
   }
 
   function spawnOrnamentSpark(width, height) {
     state.ornamentSparks.push({
-      x: width * 0.5 + rand(-36, 36),
-      y: height * 0.18 + rand(-7, 8),
-      size: rand(1.2, state.hover ? 2.8 : 2.4),
+      x: width * 0.5 + rand(-9, 9),
+      y: height * 0.18 + rand(-2, 3),
+      size: rand(0.9, state.hover ? 1.8 : 1.5),
       life: 0,
-      maxLife: rand(1.3, 2.1),
-      drift: rand(-4, 4),
+      maxLife: rand(0.9, 1.4),
+      drift: rand(-1.5, 1.5),
       phase: rand(0, Math.PI * 2),
-      alpha: rand(0.22, state.hover ? 0.56 : 0.4),
+      alpha: rand(0.34, state.hover ? 0.68 : 0.54),
     });
   }
 
   function drawParticles(width, height, dt) {
     const exitLift = state.exiting ? Math.min(1, state.exitElapsed / 0.24) : 0;
 
+    ctx.save();
+    ctx.globalCompositeOperation = "screen";
+
     for (let i = state.particles.length - 1; i >= 0; i -= 1) {
       const p = state.particles[i];
       p.life += dt;
       p.y -= p.speed * (1 + exitLift * 0.18) * dt;
+      const steerRate = state.exiting ? 1.8 : p.y < height * 0.4 ? 0.58 : 0.07;
+      p.baseX += (p.targetX - p.baseX) * Math.min(1, dt * steerRate);
       p.x = p.baseX + Math.sin(p.phase + p.life * 2.2) * p.drift;
 
-      const fadeIn = Math.min(1, p.life / 0.6);
-      const fadeOut = Math.max(0, 1 - p.life / p.maxLife);
-      const alpha = p.alpha * fadeIn * fadeOut;
+      const fadeIn = Math.min(1, p.life / 0.35);
+      const fadeOut = Math.min(1, Math.max(0, (p.maxLife - p.life) / 0.8));
+      const exitBrightness = state.exiting ? 1.12 : 1;
+      const twinkle = p.kind === "star" ? 0.76 + Math.sin(p.phase + p.life * 4.2) * 0.24 : 1;
+      const topEdgeFade = Math.min(1, Math.max(0, (p.y - 22) / 10));
+      const alpha = Math.min(1, p.alpha * fadeIn * fadeOut * exitBrightness * twinkle * topEdgeFade);
+
+      const halo = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.halo);
+      halo.addColorStop(0, `rgba(236,242,247,${alpha * 0.5})`);
+      halo.addColorStop(0.32, `rgba(190,205,219,${alpha * 0.24})`);
+      halo.addColorStop(1, "rgba(160,178,196,0)");
+      ctx.beginPath();
+      ctx.fillStyle = halo;
+      ctx.arc(p.x, p.y, p.halo, 0, Math.PI * 2);
+      ctx.fill();
 
       ctx.beginPath();
-      ctx.fillStyle = `rgba(224,231,238,${alpha})`;
+      ctx.fillStyle = p.kind === "dust"
+        ? `rgba(205,216,226,${alpha})`
+        : `rgba(242,246,249,${alpha})`;
       ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
       ctx.fill();
 
-      if (p.life > p.maxLife || p.y < 14) {
+      if (p.kind === "star" && alpha > 0.18) {
+        const ray = p.halo * (0.38 + twinkle * 0.18);
+        ctx.strokeStyle = `rgba(237,243,248,${alpha * 0.62})`;
+        ctx.lineWidth = 0.7;
+        ctx.beginPath();
+        ctx.moveTo(p.x - ray, p.y);
+        ctx.lineTo(p.x + ray, p.y);
+        ctx.moveTo(p.x, p.y - ray);
+        ctx.lineTo(p.x, p.y + ray);
+        ctx.stroke();
+      }
+
+      if (p.life > p.maxLife || p.y < 20) {
         state.particles.splice(i, 1);
       }
     }
+
+    ctx.restore();
   }
 
   function drawOrnamentSparks(dt) {
@@ -184,10 +231,6 @@ export function createCoverCtaAnimation(button) {
     state.activeLevel += (targetActive - state.activeLevel) * Math.min(1, dt * activeSpeed);
 
     ctx.clearRect(0, 0, width, height);
-    ctx.save();
-    drawRoundedClip(ctx, width, height);
-    drawEmberGlow(ctx, width, height, state.emberClock, state.activeLevel);
-    drawActiveVeil(ctx, width, height, state.emberClock, state.activeLevel);
 
     if (!state.exiting) {
       const spawnCount = state.hover ? 4 : 1;
@@ -196,13 +239,17 @@ export function createCoverCtaAnimation(button) {
       }
     }
 
-    if (state.ornamentSparks.length < (state.hover ? 4 : 2) && Math.random() < (state.hover ? 0.028 : 0.005)) {
+    if (state.ornamentSparks.length < 1 && Math.random() < (state.hover ? 0.012 : 0.004)) {
       spawnOrnamentSpark(width, height);
     }
 
+    ctx.save();
+    drawRoundedClip(ctx, width, height);
+    drawEmberGlow(ctx, width, height, state.emberClock, state.activeLevel);
     drawParticles(width, height, dt);
-    drawOrnamentSparks(dt);
     ctx.restore();
+
+    drawOrnamentSparks(dt);
 
     requestAnimationFrame(frame);
   }
