@@ -38,7 +38,7 @@
       rel="stylesheet"
     />
     <link rel="manifest" href="./manifest.webmanifest?v=silver-20260710-forest" />
-    <link rel="stylesheet" href="./assets/css/styles.css?v=silver-20260714-cover-fill-fit" />
+    <link rel="stylesheet" href="./assets/css/styles.css?v=silver-20260716-small-stars" />
   </head>
   <body>
     <div class="scene-fog scene-fog--back" aria-hidden="true"></div>
@@ -179,6 +179,9 @@
       <div class="forest-atmosphere" aria-hidden="true">
         <span class="forest-atmosphere__stars forest-atmosphere__stars--near"></span>
         <span class="forest-atmosphere__stars forest-atmosphere__stars--far"></span>
+        <span class="forest-atmosphere__glints">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </span>
       </div>
 
       <section class="forest-home" id="forest-home" hidden aria-labelledby="forest-title">
@@ -210,6 +213,7 @@
             <button class="forest-art-card forest-art-card--hero" data-action="open-daily-card" type="button" aria-label="Раскрыть карту">
               <span class="forest-card-halo" aria-hidden="true"></span>
               <img src="./assets/images/forest-home/silver/raven-arch.jpg" alt="" decoding="async" fetchpriority="high" />
+              <span class="forest-card-particles" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
             </button>
             <div class="forest-card-caption">
               <h1 class="forest-card-title" id="forest-title">Раскрыть карту</h1>
@@ -221,6 +225,7 @@
             <article class="forest-path forest-path--wide">
               <button class="forest-art-card forest-art-card--wide forest-art-card--moon" data-action="open-lunar-day" type="button" aria-label="Лунный день">
                 <img src="./assets/images/forest-home/silver/moon-phases-dotwork.jpg" alt="" loading="lazy" decoding="async" />
+                <span class="forest-card-particles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
               </button>
               <div class="forest-card-caption">
                 <h2 class="forest-tile-title">Лунный день</h2>
@@ -230,8 +235,8 @@
 
             <div class="forest-pair">
               <article class="forest-path forest-path--small">
-                <button class="forest-art-card forest-art-card--small forest-art-card--spark forest-art-card--poppy" data-action="open-yes-no" type="button" aria-label="Нет или да">
-                  <img src="./assets/images/forest-home/silver/poppy-frame.png" alt="" loading="lazy" decoding="async" />
+                <button class="forest-art-card forest-art-card--small forest-art-card--twinkle forest-art-card--poppy" data-action="open-yes-no" type="button" aria-label="Нет или да">
+                  <img src="./assets/images/forest-home/silver/poppy-frame.png?v=clean-hires" alt="" loading="lazy" decoding="async" />
                 </button>
                 <div class="forest-card-caption">
                   <h2 class="forest-tile-title">Нет или да</h2>
@@ -240,8 +245,8 @@
               </article>
 
               <article class="forest-path forest-path--small">
-                <button class="forest-art-card forest-art-card--small forest-art-card--spark forest-art-card--moth" data-action="open-night-images" type="button" aria-label="Образы ночи">
-                  <img src="./assets/images/forest-home/silver/moth-frame.png" alt="" loading="lazy" decoding="async" />
+                <button class="forest-art-card forest-art-card--small forest-art-card--twinkle forest-art-card--moth" data-action="open-night-images" type="button" aria-label="Образы ночи">
+                  <img src="./assets/images/forest-home/silver/moth-frame.jpg?v=clean-source-20260716" alt="" loading="lazy" decoding="async" />
                 </button>
                 <div class="forest-card-caption">
                   <h2 class="forest-tile-title">Образы ночи</h2>
@@ -903,6 +908,6 @@
       window.WYRD_BUILD_ID =
         document.querySelector('meta[name="wyrd-build"]')?.content || "dev";
     </script>
-    <script type="module" src="./assets/js/main.js?v=silver-20260710-forest"></script>
+    <script type="module" src="./assets/js/main.js?v=silver-20260715-small-cards-restored"></script>
   </body>
 </html>

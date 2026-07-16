@@ -11,6 +11,7 @@ import {
   createKeyboardHandler,
 } from "./ui/actions.js";
 import { createCoverCtaAnimation } from "./ui/cover-cta.js";
+import { createForestMotion } from "./ui/forest-motion.js";
 import { createRenderer, getElements } from "./ui/render.js";
 import { SCENES, isKnownScene } from "./ui/scenes.js";
 
@@ -58,6 +59,7 @@ if (elements.coverArt) {
 }
 
 createCoverCtaAnimation(document.querySelector(".cover-cta-button"));
+createForestMotion(document);
 
 function renderApp() {
   const state = store.syncDayBoundary();

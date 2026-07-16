@@ -103,8 +103,9 @@ body[data-scene="night-images"] .footer {
   overflow: hidden;
   pointer-events: none;
   background:
-    radial-gradient(105% 42% at 50% -12%, rgba(18, 21, 29, 0.3), transparent 66%),
-    linear-gradient(180deg, #050608 0%, #030405 62%, #020304 100%);
+    radial-gradient(90% 54% at 50% 34%, rgba(20, 24, 34, 0.24), transparent 72%),
+    radial-gradient(82% 44% at 50% 104%, rgba(12, 16, 24, 0.18), transparent 76%),
+    linear-gradient(180deg, #050608 0%, #030407 58%, #020305 100%);
 }
 
 body[data-scene="forest"] .forest-atmosphere {
@@ -131,8 +132,8 @@ body[data-scene="forest"] .forest-atmosphere {
     radial-gradient(circle at 76% 67%, rgba(236, 234, 226, 0.44) 0 0.9px, transparent 1.6px),
     radial-gradient(circle at 16% 87%, rgba(236, 234, 226, 0.36) 0 0.75px, transparent 1.4px),
     radial-gradient(circle at 61% 91%, rgba(236, 234, 226, 0.4) 0 0.8px, transparent 1.5px);
-  opacity: 0.72;
-  animation: wyrdForestStarsNear 6.8s ease-in-out infinite;
+  opacity: 0.8;
+  animation: wyrdForestStarsNear 7.4s ease-in-out infinite;
 }
 
 .forest-atmosphere__stars--far {
@@ -146,9 +147,41 @@ body[data-scene="forest"] .forest-atmosphere {
     radial-gradient(circle at 35% 76%, rgba(222, 224, 228, 0.28) 0 0.55px, transparent 1.15px),
     radial-gradient(circle at 89% 82%, rgba(222, 224, 228, 0.36) 0 0.65px, transparent 1.3px),
     radial-gradient(circle at 44% 96%, rgba(222, 224, 228, 0.3) 0 0.55px, transparent 1.15px);
-  opacity: 0.46;
-  animation: wyrdForestStarsFar 9.2s ease-in-out infinite -2.4s;
+  opacity: 0.54;
+  animation: wyrdForestStarsFar 10.8s ease-in-out infinite -2.4s;
 }
+
+.forest-atmosphere__glints {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.forest-atmosphere__glints i {
+  --star-size: 2px;
+  --star-alpha: 0.72;
+  position: absolute;
+  width: var(--star-size);
+  height: var(--star-size);
+  border-radius: 50%;
+  background: rgba(232, 234, 236, var(--star-alpha));
+  box-shadow:
+    0 0 4px rgba(226, 230, 236, 0.48),
+    0 0 9px rgba(190, 200, 216, 0.2);
+  opacity: 0.16;
+  animation: wyrdIndependentStar var(--star-duration, 7s) ease-in-out infinite var(--star-delay, 0s);
+}
+
+.forest-atmosphere__glints i:nth-child(1) { left: 6%; top: 18%; --star-size: 1.5px; --star-duration: 8.6s; --star-delay: -3.1s; }
+.forest-atmosphere__glints i:nth-child(2) { left: 94%; top: 27%; --star-size: 2.1px; --star-duration: 6.8s; --star-delay: -1.4s; }
+.forest-atmosphere__glints i:nth-child(3) { left: 11%; top: 44%; --star-size: 1.7px; --star-duration: 9.4s; --star-delay: -5.6s; }
+.forest-atmosphere__glints i:nth-child(4) { left: 87%; top: 53%; --star-size: 1.4px; --star-duration: 7.8s; --star-delay: -4.2s; }
+.forest-atmosphere__glints i:nth-child(5) { left: 4%; top: 69%; --star-size: 2.2px; --star-duration: 10.2s; --star-delay: -2.6s; }
+.forest-atmosphere__glints i:nth-child(6) { left: 96%; top: 76%; --star-size: 1.6px; --star-duration: 7.2s; --star-delay: -6.3s; }
+.forest-atmosphere__glints i:nth-child(7) { left: 17%; top: 91%; --star-size: 1.5px; --star-duration: 8.9s; --star-delay: -1.8s; }
+.forest-atmosphere__glints i:nth-child(8) { left: 81%; top: 94%; --star-size: 2px; --star-duration: 11.4s; --star-delay: -7.1s; }
+.forest-atmosphere__glints i:nth-child(9) { left: 68%; top: 14%; --star-size: 1.4px; --star-duration: 7.6s; --star-delay: -3.8s; }
+.forest-atmosphere__glints i:nth-child(10) { left: 32%; top: 82%; --star-size: 1.8px; --star-duration: 9.8s; --star-delay: -5.1s; }
 
 .forest-shell {
   position: relative;
@@ -271,7 +304,9 @@ body[data-scene="forest"] .forest-atmosphere {
   background: #000;
   color: inherit;
   cursor: pointer;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+  box-shadow:
+    0 16px 38px rgba(0, 0, 0, 0.66),
+    0 0 30px rgba(132, 144, 164, 0.075);
   transition:
     border-color 250ms ease,
     box-shadow 250ms ease,
@@ -294,48 +329,38 @@ body[data-scene="forest"] .forest-atmosphere {
   position: absolute;
   inset: 0;
   z-index: 2;
-  box-shadow: inset 0 0 60px 12px rgba(6, 7, 10, 0.5);
+  box-shadow:
+    inset 0 0 0 1px rgba(232, 234, 238, 0.045),
+    inset 0 0 60px 12px rgba(6, 7, 10, 0.42);
   pointer-events: none;
 }
 
 .forest-art-card:hover,
 .forest-art-card:focus-visible {
   border-color: var(--forest-line-hot);
-  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.6);
-  filter: brightness(1.03);
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.7),
+    0 0 34px rgba(158, 170, 190, 0.12);
 }
 
 .forest-art-card:active {
   transform: translateY(1px);
-  filter: brightness(0.96);
+  border-color: rgba(244, 240, 232, 0.9);
 }
 
 .forest-art-card--hero {
   aspect-ratio: 3 / 4;
   border-radius: 18px;
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.6);
+  box-shadow:
+    0 22px 52px rgba(0, 0, 0, 0.72),
+    0 0 36px rgba(136, 148, 168, 0.09);
 }
 
 .forest-art-card--hero:hover,
 .forest-art-card--hero:focus-visible {
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.64);
-}
-
-.forest-art-card--hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  border-radius: inherit;
-  background:
-    radial-gradient(circle at 65% 18%, rgba(244, 240, 230, 0.88) 0 1.15px, transparent 1.9px),
-    radial-gradient(circle at 73% 25%, rgba(244, 240, 230, 0.6) 0 0.95px, transparent 1.7px),
-    radial-gradient(circle at 57% 33%, rgba(244, 240, 230, 0.72) 0 1px, transparent 1.8px),
-    radial-gradient(circle at 81% 38%, rgba(244, 240, 230, 0.76) 0 1.1px, transparent 1.9px),
-    radial-gradient(circle at 69% 46%, rgba(244, 240, 230, 0.46) 0 0.85px, transparent 1.6px);
-  opacity: 0.72;
-  pointer-events: none;
-  animation: wyrdHeroStars 5.6s ease-in-out infinite -1s;
+  box-shadow:
+    0 24px 56px rgba(0, 0, 0, 0.74),
+    0 0 40px rgba(158, 170, 190, 0.14);
 }
 
 .forest-card-halo {
@@ -347,10 +372,10 @@ body[data-scene="forest"] .forest-atmosphere {
   height: 66%;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(224, 228, 236, 0.16), transparent 66%);
-  opacity: 0.5;
+  opacity: 0;
   pointer-events: none;
   transform: translate(-50%, -50%) scale(1);
-  animation: wyrdHalo 7s ease-in-out infinite;
+  animation: none;
 }
 
 .forest-art-card--wide {
@@ -358,69 +383,125 @@ body[data-scene="forest"] .forest-atmosphere {
   border-radius: 16px;
 }
 
-.forest-art-card--moon::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  pointer-events: none;
-}
-
-.forest-art-card--moon::after {
-  background:
-    radial-gradient(circle at 18% 29%, rgba(236, 234, 226, 0.78) 0 1.2px, transparent 2px),
-    radial-gradient(circle at 26% 18%, rgba(236, 234, 226, 0.9) 0 1.45px, transparent 2.3px),
-    radial-gradient(circle at 41% 26%, rgba(236, 234, 226, 0.82) 0 1.25px, transparent 2px),
-    radial-gradient(circle at 53% 16%, rgba(236, 234, 226, 0.96) 0 1.55px, transparent 2.4px),
-    radial-gradient(circle at 66% 28%, rgba(236, 234, 226, 0.84) 0 1.25px, transparent 2px),
-    radial-gradient(circle at 77% 18%, rgba(236, 234, 226, 0.94) 0 1.5px, transparent 2.3px),
-    radial-gradient(circle at 84% 35%, rgba(236, 234, 226, 0.76) 0 1.15px, transparent 1.9px);
-  opacity: 0.9;
-  animation: wyrdMoonStars 4.8s ease-in-out infinite;
-}
-
 .forest-art-card--small {
   aspect-ratio: 3 / 4;
   border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+}
+
+.forest-art-card--small:hover,
+.forest-art-card--small:focus-visible {
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.6);
 }
 
 .forest-art-card--small::before {
   box-shadow: none;
 }
 
-.forest-art-card--spark::after {
+.forest-art-card--moth img {
+  filter: contrast(1.26);
+}
+
+.forest-art-card--twinkle::after {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: 8% 12% 49%;
   z-index: 3;
-  opacity: 0.86;
   pointer-events: none;
-  animation: wyrdTw 4.2s ease-in-out infinite;
+  opacity: 0.52;
+  animation: wyrdSmallCardTwinkle 4.8s ease-in-out infinite;
 }
 
 .forest-art-card--poppy::after {
   background:
-    radial-gradient(circle at 22% 9%, rgba(236, 234, 226, 0.8) 0 1.1px, transparent 1.8px),
-    radial-gradient(circle at 34% 18%, rgba(236, 234, 226, 0.72) 0 1px, transparent 1.7px),
-    radial-gradient(circle at 45% 10%, rgba(236, 234, 226, 0.94) 0 1.45px, transparent 2.2px),
-    radial-gradient(circle at 53% 22%, rgba(236, 234, 226, 0.8) 0 1.15px, transparent 1.9px),
-    radial-gradient(circle at 63% 13%, rgba(236, 234, 226, 0.86) 0 1.3px, transparent 2.1px),
-    radial-gradient(circle at 74% 25%, rgba(236, 234, 226, 0.68) 0 1px, transparent 1.7px),
-    radial-gradient(circle at 39% 31%, rgba(236, 234, 226, 0.78) 0 1.1px, transparent 1.8px),
-    radial-gradient(circle at 66% 34%, rgba(236, 234, 226, 0.82) 0 1.2px, transparent 1.9px);
+    radial-gradient(circle at 24% 22%, rgba(240, 240, 236, 0.88) 0 1px, rgba(220, 224, 230, 0.24) 1.4px, transparent 3px),
+    radial-gradient(circle at 48% 12%, rgba(246, 245, 240, 0.96) 0 1.25px, rgba(220, 224, 230, 0.28) 1.8px, transparent 3.5px),
+    radial-gradient(circle at 68% 31%, rgba(236, 237, 234, 0.82) 0 0.9px, rgba(210, 216, 226, 0.2) 1.35px, transparent 2.8px),
+    radial-gradient(circle at 82% 16%, rgba(244, 243, 238, 0.9) 0 1.05px, rgba(218, 222, 230, 0.22) 1.5px, transparent 3px);
 }
 
 .forest-art-card--moth::after {
   background:
-    radial-gradient(circle at 16% 8%, rgba(236, 234, 226, 0.82) 0 1.15px, transparent 1.9px),
-    radial-gradient(circle at 26% 25%, rgba(236, 234, 226, 0.7) 0 1px, transparent 1.7px),
-    radial-gradient(circle at 38% 14%, rgba(236, 234, 226, 0.88) 0 1.35px, transparent 2.1px),
-    radial-gradient(circle at 50% 27%, rgba(236, 234, 226, 0.74) 0 1.05px, transparent 1.8px),
-    radial-gradient(circle at 62% 12%, rgba(236, 234, 226, 0.92) 0 1.4px, transparent 2.2px),
-    radial-gradient(circle at 75% 30%, rgba(236, 234, 226, 0.72) 0 1px, transparent 1.8px),
-    radial-gradient(circle at 86% 17%, rgba(236, 234, 226, 0.84) 0 1.2px, transparent 2px),
-    radial-gradient(circle at 58% 38%, rgba(236, 234, 226, 0.7) 0 1px, transparent 1.7px);
-  animation-duration: 4.8s;
+    radial-gradient(circle at 22% 20%, rgba(240, 240, 236, 0.86) 0 0.95px, rgba(216, 222, 230, 0.22) 1.4px, transparent 3px),
+    radial-gradient(circle at 42% 34%, rgba(246, 245, 240, 0.94) 0 1.2px, rgba(220, 224, 232, 0.26) 1.75px, transparent 3.4px),
+    radial-gradient(circle at 64% 14%, rgba(238, 239, 236, 0.84) 0 0.9px, rgba(212, 218, 228, 0.2) 1.35px, transparent 2.8px),
+    radial-gradient(circle at 80% 29%, rgba(244, 243, 238, 0.92) 0 1.05px, rgba(218, 222, 230, 0.24) 1.55px, transparent 3.1px);
+  animation-delay: -2.2s;
+}
+
+.forest-card-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.forest-card-particles i {
+  --particle-size: 2px;
+  position: absolute;
+  width: var(--particle-size);
+  height: var(--particle-size);
+  border-radius: 50%;
+  background: rgba(242, 241, 236, 0.92);
+  box-shadow:
+    0 0 4px rgba(238, 238, 236, 0.72),
+    0 0 9px rgba(196, 204, 218, 0.32);
+  opacity: 0.2;
+  animation: wyrdCardParticle var(--particle-duration, 6.8s) ease-in-out infinite var(--particle-delay, 0s);
+  animation-play-state: paused;
+}
+
+.forest-art-card.is-in-view .forest-card-particles i {
+  animation-play-state: running;
+}
+
+.forest-art-card:active .forest-card-particles i {
+  background: rgba(250, 250, 247, 0.98);
+  box-shadow:
+    0 0 5px rgba(246, 246, 242, 0.86),
+    0 0 12px rgba(210, 218, 232, 0.46);
+}
+
+.forest-art-card--hero .forest-card-particles i:nth-child(1) { left: 62%; top: 13%; --particle-size: 2.2px; --particle-duration: 7.8s; --particle-delay: -2.3s; }
+.forest-art-card--hero .forest-card-particles i:nth-child(2) { left: 74%; top: 22%; --particle-size: 1.5px; --particle-duration: 9.2s; --particle-delay: -6.1s; }
+.forest-art-card--hero .forest-card-particles i:nth-child(3) { left: 82%; top: 34%; --particle-size: 2px; --particle-duration: 6.6s; --particle-delay: -4.2s; }
+.forest-art-card--hero .forest-card-particles i:nth-child(4) { left: 69%; top: 42%; --particle-size: 1.4px; --particle-duration: 10.4s; --particle-delay: -1.7s; }
+
+.forest-art-card--moon .forest-card-particles i:nth-child(1) { left: 16%; top: 23%; --particle-size: 1.7px; --particle-duration: 8.4s; --particle-delay: -4.7s; }
+.forest-art-card--moon .forest-card-particles i:nth-child(2) { left: 29%; top: 14%; --particle-size: 2.1px; --particle-duration: 10.2s; --particle-delay: -1.8s; }
+.forest-art-card--moon .forest-card-particles i:nth-child(3) { left: 46%; top: 30%; --particle-size: 1.4px; --particle-duration: 7.6s; --particle-delay: -5.5s; }
+.forest-art-card--moon .forest-card-particles i:nth-child(4) { left: 72%; top: 16%; --particle-size: 1.9px; --particle-duration: 9.6s; --particle-delay: -3.2s; }
+.forest-art-card--moon .forest-card-particles i:nth-child(5) { left: 86%; top: 31%; --particle-size: 1.5px; --particle-duration: 8.8s; --particle-delay: -6.8s; }
+
+.forest-art-card--moon .forest-card-particles i {
+  animation-name: wyrdCardParticleDrift;
+}
+
+.forest-art-card--history::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  background: url("../../images/forest-home/silver/history-pattern.jpg") center / cover no-repeat;
+  mix-blend-mode: screen;
+  -webkit-mask-image: linear-gradient(106deg, transparent 30%, #000 45%, #000 52%, transparent 67%);
+  mask-image: linear-gradient(106deg, transparent 30%, #000 45%, #000 52%, transparent 67%);
+  -webkit-mask-size: 240% 100%;
+  mask-size: 240% 100%;
+  -webkit-mask-position: 145% 0;
+  mask-position: 145% 0;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  opacity: 0;
+  filter: brightness(1.32) drop-shadow(0 0 2px rgba(210, 218, 230, 0.24));
+  animation: wyrdOrnamentWave 12.8s ease-in-out infinite -6.8s;
+  animation-play-state: paused;
+  pointer-events: none;
+}
+
+.forest-art-card--history.is-in-view::after {
+  animation-play-state: running;
 }
 
 .forest-card-caption {
@@ -531,30 +612,6 @@ body[data-scene="forest"] .forest-atmosphere {
   line-height: 1.35;
 }
 
-@keyframes wyrdHalo {
-  0%,
-  100% {
-    opacity: 0.5;
-    transform: translate(-50%, -50%) scale(1);
-  }
-
-  50% {
-    opacity: 0.92;
-    transform: translate(-50%, -50%) scale(1.05);
-  }
-}
-
-@keyframes wyrdTw {
-  0%,
-  100% {
-    opacity: 0.4;
-  }
-
-  50% {
-    opacity: 1;
-  }
-}
-
 @keyframes wyrdForestStarsNear {
   0%,
   100% {
@@ -585,37 +642,103 @@ body[data-scene="forest"] .forest-atmosphere {
   }
 }
 
-@keyframes wyrdHeroStars {
+@keyframes wyrdIndependentStar {
   0%,
   100% {
-    opacity: 0.34;
-    filter: blur(0);
+    opacity: 0.12;
+    transform: scale(0.78);
   }
 
-  42% {
-    opacity: 0.92;
-    filter: blur(0.1px);
+  36% {
+    opacity: 0.38;
   }
 
-  68% {
-    opacity: 0.54;
+  58% {
+    opacity: 0.96;
+    transform: scale(1.18);
+  }
+
+  76% {
+    opacity: 0.28;
   }
 }
 
-@keyframes wyrdMoonStars {
+@keyframes wyrdCardParticle {
   0%,
   100% {
-    opacity: 0.42;
-    filter: blur(0);
+    opacity: 0.16;
+    transform: scale(0.76);
   }
 
-  45% {
+  44% {
+    opacity: 0.34;
+  }
+
+  61% {
     opacity: 1;
-    filter: blur(0.1px);
+    transform: scale(1.18);
   }
 
-  72% {
-    opacity: 0.62;
+  78% {
+    opacity: 0.26;
+  }
+}
+
+@keyframes wyrdCardParticleDrift {
+  0%,
+  100% {
+    opacity: 0.14;
+    transform: translate3d(-1px, 2px, 0) scale(0.78);
+  }
+
+  48% {
+    opacity: 0.42;
+  }
+
+  66% {
+    opacity: 0.96;
+    transform: translate3d(2px, -2px, 0) scale(1.14);
+  }
+
+  82% {
+    opacity: 0.24;
+  }
+}
+
+@keyframes wyrdSmallCardTwinkle {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 0.92;
+  }
+}
+
+@keyframes wyrdOrnamentWave {
+  0%,
+  54%,
+  100% {
+    -webkit-mask-position: 145% 0;
+    mask-position: 145% 0;
+    opacity: 0;
+  }
+
+  61% {
+    opacity: 0.22;
+  }
+
+  76% {
+    -webkit-mask-position: -45% 0;
+    mask-position: -45% 0;
+    opacity: 0.52;
+  }
+
+  84% {
+    -webkit-mask-position: -65% 0;
+    mask-position: -65% 0;
+    opacity: 0;
   }
 }
 
@@ -640,10 +763,19 @@ body[data-scene="forest"] .forest-atmosphere {
 
 @media (prefers-reduced-motion: reduce) {
   .forest-atmosphere__stars,
-  .forest-card-halo,
-  .forest-art-card--hero::after,
-  .forest-art-card--moon::after,
-  .forest-art-card--spark::after {
+  .forest-atmosphere__glints i,
+  .forest-card-particles i,
+  .forest-art-card--twinkle::after,
+  .forest-art-card--history::after {
     animation: none;
+  }
+
+  .forest-art-card--twinkle::after {
+    opacity: 0.58;
+  }
+
+  .forest-card-particles i,
+  .forest-art-card--history::after {
+    opacity: 0;
   }
 }
