@@ -306,6 +306,19 @@ body[data-scene="forest"] .forest-atmosphere {
   min-width: 0;
 }
 
+.forest-path-action {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
 .forest-art-card {
   position: relative;
   display: block;
@@ -359,6 +372,35 @@ body[data-scene="forest"] .forest-atmosphere {
 .forest-art-card:active {
   transform: translateY(1px);
   border-color: rgba(244, 240, 232, 0.9);
+}
+
+.forest-path-action:hover .forest-art-card,
+.forest-path-action:focus-visible .forest-art-card {
+  border-color: var(--forest-line-hot);
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.7),
+    0 0 34px rgba(158, 170, 190, 0.12);
+}
+
+.forest-path-action:focus-visible {
+  outline: none;
+}
+
+.forest-path-action:focus-visible .forest-art-card {
+  outline: 2px solid rgba(244, 238, 224, 0.86);
+  outline-offset: 4px;
+}
+
+.forest-path-action:active .forest-art-card {
+  transform: translateY(1px);
+  border-color: rgba(244, 240, 232, 0.9);
+}
+
+.forest-path-action:active .forest-card-particles i {
+  background: rgba(250, 250, 247, 0.98);
+  box-shadow:
+    0 0 5px rgba(246, 246, 242, 0.86),
+    0 0 12px rgba(210, 218, 232, 0.46);
 }
 
 .forest-art-card--hero {
@@ -445,7 +487,9 @@ body[data-scene="forest"] .forest-atmosphere {
 }
 
 .forest-art-card--small:hover,
-.forest-art-card--small:focus-visible {
+.forest-art-card--small:focus-visible,
+.forest-path-action:hover .forest-art-card--small,
+.forest-path-action:focus-visible .forest-art-card--small {
   box-shadow: 0 12px 34px rgba(0, 0, 0, 0.6);
 }
 
@@ -572,6 +616,7 @@ body[data-scene="forest"] .forest-atmosphere {
 
 .forest-card-title,
 .forest-tile-title {
+  display: block;
   margin: 0;
   color: var(--forest-title);
   font-family: "Forum", Georgia, serif;
@@ -598,6 +643,7 @@ body[data-scene="forest"] .forest-atmosphere {
 
 .forest-card-copy,
 .forest-tile-copy {
+  display: block;
   margin: 7px 0 0;
   color: var(--forest-muted);
   font-family: "Cormorant Garamond", Georgia, serif;
@@ -616,6 +662,21 @@ body[data-scene="forest"] .forest-atmosphere {
 
 .forest-path--small .forest-tile-copy {
   font-size: 14px;
+}
+
+.forest-path-action .forest-tile-title,
+.forest-path-action .forest-tile-copy {
+  transition: color 180ms ease;
+}
+
+.forest-path-action:hover .forest-tile-title,
+.forest-path-action:focus-visible .forest-tile-title {
+  color: rgba(244, 240, 232, 0.94);
+}
+
+.forest-path-action:hover .forest-tile-copy,
+.forest-path-action:focus-visible .forest-tile-copy {
+  color: rgba(218, 220, 218, 0.82);
 }
 
 .forest-placeholder {

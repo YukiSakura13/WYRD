@@ -225,57 +225,77 @@
           </div>
 
           <div class="forest-grid" aria-label="Пути леса">
-            <article class="forest-path forest-path--wide">
-              <button class="forest-art-card forest-art-card--wide forest-art-card--moon" data-action="open-lunar-day" type="button" aria-label="Лунный день">
-                <img src="./assets/images/forest-home/silver/moon-phases-dotwork.jpg" alt="" loading="lazy" decoding="async" />
-                <span class="forest-card-particles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+            <article class="forest-path forest-path--wide" aria-labelledby="forest-lunar-title">
+              <h2 class="sr-only" id="forest-lunar-title">Лунный день</h2>
+              <p class="sr-only" id="forest-lunar-copy">оракул по фазе луны</p>
+              <button class="forest-path-action" data-action="open-lunar-day" type="button" aria-labelledby="forest-lunar-title" aria-describedby="forest-lunar-copy">
+                <span class="forest-art-card forest-art-card--wide forest-art-card--moon">
+                  <img src="./assets/images/forest-home/silver/moon-phases-dotwork.jpg" alt="" loading="lazy" decoding="async" />
+                  <span class="forest-card-particles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+                </span>
+                <span class="forest-card-caption" aria-hidden="true">
+                  <span class="forest-tile-title">Лунный день</span>
+                  <span class="forest-tile-copy">оракул по фазе луны</span>
+                </span>
               </button>
-              <div class="forest-card-caption">
-                <h2 class="forest-tile-title">Лунный день</h2>
-                <p class="forest-tile-copy">оракул по фазе луны</p>
-              </div>
             </article>
 
             <div class="forest-pair">
-              <article class="forest-path forest-path--small">
-                <button class="forest-art-card forest-art-card--small forest-art-card--twinkle forest-art-card--poppy" data-action="open-yes-no" type="button" aria-label="Нет или да">
-                  <img src="./assets/images/forest-home/silver/poppy-frame.png?v=forest-art-eager-20260716" alt="" loading="eager" />
+              <article class="forest-path forest-path--small" aria-labelledby="forest-yes-no-title">
+                <h2 class="sr-only" id="forest-yes-no-title">Нет или да</h2>
+                <p class="sr-only" id="forest-yes-no-copy">короткий знак</p>
+                <button class="forest-path-action" data-action="open-yes-no" type="button" aria-labelledby="forest-yes-no-title" aria-describedby="forest-yes-no-copy">
+                  <span class="forest-art-card forest-art-card--small forest-art-card--twinkle forest-art-card--poppy">
+                    <img src="./assets/images/forest-home/silver/poppy-frame.png?v=forest-art-eager-20260716" alt="" loading="eager" />
+                  </span>
+                  <span class="forest-card-caption" aria-hidden="true">
+                    <span class="forest-tile-title">Нет или да</span>
+                    <span class="forest-tile-copy">короткий знак</span>
+                  </span>
                 </button>
-                <div class="forest-card-caption">
-                  <h2 class="forest-tile-title">Нет или да</h2>
-                  <p class="forest-tile-copy">короткий знак</p>
-                </div>
               </article>
 
-              <article class="forest-path forest-path--small">
-                <button class="forest-art-card forest-art-card--small forest-art-card--twinkle forest-art-card--moth" data-action="open-night-images" type="button" aria-label="Образы ночи">
-                  <img src="./assets/images/forest-home/silver/moth-frame.jpg?v=forest-art-eager-20260716" alt="" loading="eager" />
+              <article class="forest-path forest-path--small" aria-labelledby="forest-night-images-title">
+                <h2 class="sr-only" id="forest-night-images-title">Образы ночи</h2>
+                <p class="sr-only" id="forest-night-images-copy">сонник</p>
+                <button class="forest-path-action" data-action="open-night-images" type="button" aria-labelledby="forest-night-images-title" aria-describedby="forest-night-images-copy">
+                  <span class="forest-art-card forest-art-card--small forest-art-card--twinkle forest-art-card--moth">
+                    <img src="./assets/images/forest-home/silver/moth-frame.jpg?v=forest-art-eager-20260716" alt="" loading="eager" />
+                  </span>
+                  <span class="forest-card-caption" aria-hidden="true">
+                    <span class="forest-tile-title">Образы ночи</span>
+                    <span class="forest-tile-copy">сонник</span>
+                  </span>
                 </button>
-                <div class="forest-card-caption">
-                  <h2 class="forest-tile-title">Образы ночи</h2>
-                  <p class="forest-tile-copy">сонник</p>
-                </div>
               </article>
             </div>
 
-            <article class="forest-path forest-path--wide">
-              <button class="forest-art-card forest-art-card--wide forest-art-card--traces" data-action="open-profile" type="button" aria-label="Следы в лесу">
-                <img src="./assets/images/forest-home/silver/hare-forest.jpg" alt="" loading="lazy" decoding="async" />
+            <article class="forest-path forest-path--wide" aria-labelledby="forest-traces-title">
+              <h2 class="sr-only" id="forest-traces-title">Следы в лесу</h2>
+              <p class="sr-only" id="forest-traces-copy">твоя история и дары</p>
+              <button class="forest-path-action" data-action="open-profile" type="button" aria-labelledby="forest-traces-title" aria-describedby="forest-traces-copy">
+                <span class="forest-art-card forest-art-card--wide forest-art-card--traces">
+                  <img src="./assets/images/forest-home/silver/hare-forest.jpg" alt="" loading="lazy" decoding="async" />
+                </span>
+                <span class="forest-card-caption" aria-hidden="true">
+                  <span class="forest-tile-title">Следы в лесу</span>
+                  <span class="forest-tile-copy">твоя история и дары</span>
+                </span>
               </button>
-              <div class="forest-card-caption">
-                <h2 class="forest-tile-title">Следы в лесу</h2>
-                <p class="forest-tile-copy">твоя история и дары</p>
-              </div>
             </article>
 
-            <article class="forest-path forest-path--wide">
-              <button class="forest-art-card forest-art-card--wide forest-art-card--history" data-action="open-spirit-book" type="button" aria-label="История духов леса">
-                <img src="./assets/images/forest-home/silver/history-pattern.jpg" alt="" loading="lazy" decoding="async" />
+            <article class="forest-path forest-path--wide" aria-labelledby="forest-spirit-book-title">
+              <h2 class="sr-only" id="forest-spirit-book-title">История духов леса</h2>
+              <p class="sr-only" id="forest-spirit-book-copy">сказание о мире Wyrd · пять глав</p>
+              <button class="forest-path-action" data-action="open-spirit-book" type="button" aria-labelledby="forest-spirit-book-title" aria-describedby="forest-spirit-book-copy">
+                <span class="forest-art-card forest-art-card--wide forest-art-card--history">
+                  <img src="./assets/images/forest-home/silver/history-pattern.jpg" alt="" loading="lazy" decoding="async" />
+                </span>
+                <span class="forest-card-caption" aria-hidden="true">
+                  <span class="forest-tile-title">История духов леса</span>
+                  <span class="forest-tile-copy">сказание о мире Wyrd · пять глав</span>
+                </span>
               </button>
-              <div class="forest-card-caption">
-                <h2 class="forest-tile-title">История духов леса</h2>
-                <p class="forest-tile-copy">сказание о мире Wyrd · пять глав</p>
-              </div>
             </article>
           </div>
         </div>
