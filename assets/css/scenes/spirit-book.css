@@ -324,11 +324,10 @@ body[data-scene="spirit-book"] .footer {
 }
 
 .spirit-book-arrow,
-.spirit-book-dot {
+.spirit-book-dot::before {
   border: 1px solid rgba(201, 161, 74, 0.22);
   background: rgba(8, 9, 12, 0.42);
   color: rgba(238, 222, 178, 0.82);
-  cursor: pointer;
   transition:
     border-color var(--dur-medium) var(--ease-out-strong),
     background-color var(--dur-medium) var(--ease-out-strong),
@@ -345,6 +344,7 @@ body[data-scene="spirit-book"] .footer {
   justify-content: center;
   font-size: 1.45rem;
   line-height: 1;
+  cursor: pointer;
 }
 
 .spirit-book-dots {
@@ -355,22 +355,31 @@ body[data-scene="spirit-book"] .footer {
 }
 
 .spirit-book-dot {
+  width: var(--control-choice-hit-size);
+  height: var(--control-choice-hit-size);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  display: inline-grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.spirit-book-dot::before {
+  content: "";
   width: 0.72rem;
   height: 0.72rem;
   border-radius: 50%;
-  padding: 0;
 }
 
-.spirit-book-dot[aria-current="page"] {
+.spirit-book-dot[aria-current="page"]::before {
   background: rgba(216, 177, 90, 0.78);
   border-color: rgba(216, 177, 90, 0.92);
   box-shadow: 0 0 18px rgba(216, 177, 90, 0.28);
 }
 
 .spirit-book-arrow:hover,
-.spirit-book-arrow:focus-visible,
-.spirit-book-dot:hover,
-.spirit-book-dot:focus-visible {
+.spirit-book-arrow:focus-visible {
   border-color: rgba(216, 177, 90, 0.62);
   background-color: rgba(20, 20, 25, 0.78);
   color: rgba(246, 237, 214, 0.96);
@@ -378,12 +387,24 @@ body[data-scene="spirit-book"] .footer {
   outline: none;
 }
 
+.spirit-book-dot:hover::before,
+.spirit-book-dot:focus-visible::before {
+  border-color: rgba(216, 177, 90, 0.62);
+  background-color: rgba(20, 20, 25, 0.78);
+  color: rgba(246, 237, 214, 0.96);
+  transform: translateY(-1px);
+}
+
 .spirit-book-arrow:focus-visible,
-.spirit-book-dot:focus-visible,
 .spirit-book-back:focus-visible {
   box-shadow:
     0 0 0 3px rgba(201, 161, 74, 0.18),
     0 0 0 1px rgba(216, 177, 90, 0.8);
+}
+
+.spirit-book-dot:focus-visible {
+  outline: 2px solid rgba(216, 177, 90, 0.8);
+  outline-offset: -7px;
 }
 
 .spirit-book-arrow:disabled {

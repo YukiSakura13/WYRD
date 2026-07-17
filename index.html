@@ -187,14 +187,14 @@
       <section class="forest-home" id="forest-home" hidden aria-labelledby="forest-title">
         <div class="forest-shell">
           <header class="forest-topbar" aria-label="Главные действия">
-            <button class="forest-avatar-btn" id="forest-avatar-button" data-action="open-about-you" type="button" aria-label="Профиль">
+            <button class="forest-avatar-btn ui-choice" id="forest-avatar-button" data-action="open-about-you" type="button" aria-label="Профиль">
               <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <circle cx="12" cy="8.4" r="3.5" fill="none" stroke="currentColor" stroke-width="1.1" />
                 <path d="M5 20c0-3.9 3.1-6.4 7-6.4s7 2.5 7 6.4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.1" />
               </svg>
               <img class="forest-avatar-image" id="forest-avatar-image" alt="" hidden decoding="async" />
             </button>
-            <button class="forest-settings-btn" data-action="open-settings" type="button" aria-label="Настройки">
+            <button class="forest-settings-btn ui-choice" data-action="open-settings" type="button" aria-label="Настройки">
               <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="1.2" />
                 <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" />
@@ -211,7 +211,7 @@
 
           <div class="forest-hero-card">
             <h1 class="sr-only" id="forest-title">Раскрыть карту</h1>
-            <button class="forest-hero-action" data-action="open-daily-card" type="button" aria-label="Раскрыть карту — карта дня, гадание">
+            <button class="forest-hero-action ui-card-action" data-action="open-daily-card" type="button" aria-label="Раскрыть карту — карта дня, гадание">
               <span class="forest-art-card forest-art-card--hero">
                 <span class="forest-card-halo" aria-hidden="true"></span>
                 <img src="./assets/images/forest-home/silver/raven-arch.jpg" alt="" decoding="async" fetchpriority="high" />
@@ -228,7 +228,7 @@
             <article class="forest-path forest-path--wide" aria-labelledby="forest-lunar-title">
               <h2 class="sr-only" id="forest-lunar-title">Лунный день</h2>
               <p class="sr-only" id="forest-lunar-copy">оракул по фазе луны</p>
-              <button class="forest-path-action" data-action="open-lunar-day" type="button" aria-labelledby="forest-lunar-title" aria-describedby="forest-lunar-copy">
+              <button class="forest-path-action ui-card-action" data-action="open-lunar-day" type="button" aria-labelledby="forest-lunar-title" aria-describedby="forest-lunar-copy">
                 <span class="forest-art-card forest-art-card--wide forest-art-card--moon">
                   <img src="./assets/images/forest-home/silver/moon-phases-dotwork.jpg" alt="" loading="lazy" decoding="async" />
                   <span class="forest-card-particles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
@@ -244,7 +244,7 @@
               <article class="forest-path forest-path--small" aria-labelledby="forest-yes-no-title">
                 <h2 class="sr-only" id="forest-yes-no-title">Нет или да</h2>
                 <p class="sr-only" id="forest-yes-no-copy">короткий знак</p>
-                <button class="forest-path-action" data-action="open-yes-no" type="button" aria-labelledby="forest-yes-no-title" aria-describedby="forest-yes-no-copy">
+                <button class="forest-path-action ui-card-action" data-action="open-yes-no" type="button" aria-labelledby="forest-yes-no-title" aria-describedby="forest-yes-no-copy">
                   <span class="forest-art-card forest-art-card--small forest-art-card--twinkle forest-art-card--poppy">
                     <img src="./assets/images/forest-home/silver/poppy-frame.png?v=forest-art-eager-20260716" alt="" loading="eager" />
                   </span>
@@ -258,7 +258,7 @@
               <article class="forest-path forest-path--small" aria-labelledby="forest-night-images-title">
                 <h2 class="sr-only" id="forest-night-images-title">Образы ночи</h2>
                 <p class="sr-only" id="forest-night-images-copy">сонник</p>
-                <button class="forest-path-action" data-action="open-night-images" type="button" aria-labelledby="forest-night-images-title" aria-describedby="forest-night-images-copy">
+                <button class="forest-path-action ui-card-action" data-action="open-night-images" type="button" aria-labelledby="forest-night-images-title" aria-describedby="forest-night-images-copy">
                   <span class="forest-art-card forest-art-card--small forest-art-card--twinkle forest-art-card--moth">
                     <img src="./assets/images/forest-home/silver/moth-frame.jpg?v=forest-art-eager-20260716" alt="" loading="eager" />
                   </span>
@@ -273,7 +273,7 @@
             <article class="forest-path forest-path--wide" aria-labelledby="forest-traces-title">
               <h2 class="sr-only" id="forest-traces-title">Следы в лесу</h2>
               <p class="sr-only" id="forest-traces-copy">твоя история и дары</p>
-              <button class="forest-path-action" data-action="open-profile" type="button" aria-labelledby="forest-traces-title" aria-describedby="forest-traces-copy">
+              <button class="forest-path-action ui-card-action" data-action="open-profile" type="button" aria-labelledby="forest-traces-title" aria-describedby="forest-traces-copy">
                 <span class="forest-art-card forest-art-card--wide forest-art-card--traces">
                   <img src="./assets/images/forest-home/silver/hare-forest.jpg" alt="" loading="lazy" decoding="async" />
                 </span>
@@ -287,7 +287,7 @@
             <article class="forest-path forest-path--wide" aria-labelledby="forest-spirit-book-title">
               <h2 class="sr-only" id="forest-spirit-book-title">История духов леса</h2>
               <p class="sr-only" id="forest-spirit-book-copy">сказание о мире Wyrd · пять глав</p>
-              <button class="forest-path-action" data-action="open-spirit-book" type="button" aria-labelledby="forest-spirit-book-title" aria-describedby="forest-spirit-book-copy">
+              <button class="forest-path-action ui-card-action" data-action="open-spirit-book" type="button" aria-labelledby="forest-spirit-book-title" aria-describedby="forest-spirit-book-copy">
                 <span class="forest-art-card forest-art-card--wide forest-art-card--history">
                   <img src="./assets/images/forest-home/silver/history-pattern.jpg" alt="" loading="lazy" decoding="async" />
                 </span>
@@ -326,7 +326,7 @@
           </header>
 
           <div class="settings-list" aria-label="Параметры WYRD">
-            <button class="settings-row settings-row--entry" data-action="open-about-you" type="button">
+            <button class="settings-row settings-row--entry ui-row-action" data-action="open-about-you" type="button">
               <span class="settings-row-copy">
                 <span class="settings-row-title">Профиль</span>
                 <span class="settings-row-value" id="settings-profile-summary">Имя, аватар и обращение</span>
@@ -334,7 +334,7 @@
               <span class="settings-row-arrow" aria-hidden="true">›</span>
             </button>
 
-            <button class="settings-row settings-row--entry" data-action="open-reminders" type="button">
+            <button class="settings-row settings-row--entry ui-row-action" data-action="open-reminders" type="button">
               <span class="settings-row-copy">
                 <span class="settings-row-title">Уведомления</span>
                 <span class="settings-row-value">Время и дни</span>
@@ -342,7 +342,7 @@
               <span class="settings-row-arrow" aria-hidden="true">›</span>
             </button>
 
-            <button class="settings-row settings-row--toggle" id="setting-sound-toggle" data-action="toggle-sound" type="button" aria-pressed="true">
+            <button class="settings-row settings-row--toggle ui-row-action ui-choice" id="setting-sound-toggle" data-action="toggle-sound" type="button" aria-pressed="true">
               <span class="settings-row-copy">
                 <span class="settings-row-title">Звук</span>
                 <span class="settings-row-value">Звуки интерфейса</span>
@@ -350,7 +350,7 @@
               <span class="settings-toggle" aria-hidden="true"></span>
             </button>
 
-            <button class="settings-row settings-row--toggle" id="setting-vibration-toggle" data-action="toggle-vibration" type="button" aria-pressed="true">
+            <button class="settings-row settings-row--toggle ui-row-action ui-choice" id="setting-vibration-toggle" data-action="toggle-vibration" type="button" aria-pressed="true">
               <span class="settings-row-copy">
                 <span class="settings-row-title">Вибрация</span>
                 <span class="settings-row-value">Отклик при касании</span>
@@ -358,7 +358,7 @@
               <span class="settings-toggle" aria-hidden="true"></span>
             </button>
 
-            <button class="settings-row settings-row--entry" data-action="open-app-info" type="button">
+            <button class="settings-row settings-row--entry ui-row-action" data-action="open-app-info" type="button">
               <span class="settings-row-copy">
                 <span class="settings-row-title">О приложении</span>
                 <span class="settings-row-value">Версия, связь и документы</span>
@@ -402,9 +402,9 @@
 
             <section class="about-you-section" aria-label="Выбор обращения">
               <div class="about-segmented" id="about-pronoun-group" role="radiogroup" aria-label="Выбор обращения">
-                <button class="about-segment" data-action="select-pronoun" data-pronoun="she" type="button" role="radio" aria-checked="false">она</button>
-                <button class="about-segment" data-action="select-pronoun" data-pronoun="he" type="button" role="radio" aria-checked="false">он</button>
-                <button class="about-segment" data-action="select-pronoun" data-pronoun="neutral" type="button" role="radio" aria-checked="true">без разницы</button>
+                <button class="about-segment ui-choice" data-action="select-pronoun" data-pronoun="she" type="button" role="radio" aria-checked="false">она</button>
+                <button class="about-segment ui-choice" data-action="select-pronoun" data-pronoun="he" type="button" role="radio" aria-checked="false">он</button>
+                <button class="about-segment ui-choice" data-action="select-pronoun" data-pronoun="neutral" type="button" role="radio" aria-checked="true">без разницы</button>
               </div>
             </section>
 
@@ -464,7 +464,7 @@
           </header>
           <form class="reminders-form" id="reminders-form">
             <section class="reminders-list" aria-label="Расписание уведомлений">
-              <button class="reminders-row reminders-row--time" data-action="open-time-picker" type="button" aria-haspopup="dialog" aria-controls="reminders-time-sheet">
+              <button class="reminders-row reminders-row--time ui-row-action" data-action="open-time-picker" type="button" aria-haspopup="dialog" aria-controls="reminders-time-sheet">
                 <span class="reminders-row-copy">
                   <span class="reminders-row-title">Время</span>
                   <span class="reminders-row-value">Когда напоминать</span>
@@ -479,22 +479,22 @@
                   <h2>Дни</h2>
                   <p id="reminders-days-summary">Не выбрано</p>
                 </div>
-                <button class="reminders-select-all" data-action="toggle-all-reminder-days" type="button">Все</button>
+                <button class="reminders-select-all ui-action ui-action--quiet" data-action="toggle-all-reminder-days" type="button">Все</button>
               </div>
               <div class="reminders-days" id="reminders-days" role="group" aria-label="Дни недели">
-                <button class="reminders-day" data-action="toggle-reminder-day" data-day="mon" type="button" aria-pressed="false">Пн</button>
-                <button class="reminders-day" data-action="toggle-reminder-day" data-day="tue" type="button" aria-pressed="false">Вт</button>
-                <button class="reminders-day" data-action="toggle-reminder-day" data-day="wed" type="button" aria-pressed="false">Ср</button>
-                <button class="reminders-day" data-action="toggle-reminder-day" data-day="thu" type="button" aria-pressed="false">Чт</button>
-                <button class="reminders-day" data-action="toggle-reminder-day" data-day="fri" type="button" aria-pressed="false">Пт</button>
-                <button class="reminders-day" data-action="toggle-reminder-day" data-day="sat" type="button" aria-pressed="false">Сб</button>
-                <button class="reminders-day" data-action="toggle-reminder-day" data-day="sun" type="button" aria-pressed="false">Вс</button>
+                <button class="reminders-day ui-choice" data-action="toggle-reminder-day" data-day="mon" type="button" aria-pressed="false">Пн</button>
+                <button class="reminders-day ui-choice" data-action="toggle-reminder-day" data-day="tue" type="button" aria-pressed="false">Вт</button>
+                <button class="reminders-day ui-choice" data-action="toggle-reminder-day" data-day="wed" type="button" aria-pressed="false">Ср</button>
+                <button class="reminders-day ui-choice" data-action="toggle-reminder-day" data-day="thu" type="button" aria-pressed="false">Чт</button>
+                <button class="reminders-day ui-choice" data-action="toggle-reminder-day" data-day="fri" type="button" aria-pressed="false">Пт</button>
+                <button class="reminders-day ui-choice" data-action="toggle-reminder-day" data-day="sat" type="button" aria-pressed="false">Сб</button>
+                <button class="reminders-day ui-choice" data-action="toggle-reminder-day" data-day="sun" type="button" aria-pressed="false">Вс</button>
               </div>
             </section>
 
             <p class="reminders-section-label">Ежемесячно</p>
             <section class="reminders-list" aria-label="Ежемесячные уведомления">
-              <button class="reminders-row reminders-row--toggle" id="reminders-monthly-toggle" data-action="toggle-monthly-reminder" type="button" aria-pressed="false">
+              <button class="reminders-row reminders-row--toggle ui-row-action ui-choice" id="reminders-monthly-toggle" data-action="toggle-monthly-reminder" type="button" aria-pressed="false">
                 <span class="reminders-row-copy">
                   <span class="reminders-row-title">Первое число месяца</span>
                   <span class="reminders-row-value">Напоминать раз в месяц</span>
@@ -508,13 +508,13 @@
                 <h2>Фазы луны</h2>
                 <p>Напоминать в 19:00</p>
               </div>
-              <button class="reminders-row reminders-row--toggle" id="reminders-new-moon-toggle" data-action="toggle-moon-phase-reminder" data-phase="newMoon" type="button" aria-pressed="false">
+              <button class="reminders-row reminders-row--toggle ui-row-action ui-choice" id="reminders-new-moon-toggle" data-action="toggle-moon-phase-reminder" data-phase="newMoon" type="button" aria-pressed="false">
                 <span class="reminders-row-copy">
                   <span class="reminders-row-title">Новолуние</span>
                 </span>
                 <span class="settings-toggle" aria-hidden="true"></span>
               </button>
-              <button class="reminders-row reminders-row--toggle" id="reminders-full-moon-toggle" data-action="toggle-moon-phase-reminder" data-phase="fullMoon" type="button" aria-pressed="false">
+              <button class="reminders-row reminders-row--toggle ui-row-action ui-choice" id="reminders-full-moon-toggle" data-action="toggle-moon-phase-reminder" data-phase="fullMoon" type="button" aria-pressed="false">
                 <span class="reminders-row-copy">
                   <span class="reminders-row-title">Полнолуние</span>
                 </span>
@@ -623,9 +623,13 @@
         </article>
 
         <nav class="spirit-book-controls" aria-label="Страницы книги">
-          <button class="spirit-book-arrow" data-action="spirit-book-prev" type="button" aria-label="Предыдущая глава">←</button>
+          <button class="spirit-book-arrow ui-pager-button" data-action="spirit-book-prev" type="button" aria-label="Предыдущая глава">
+            <svg class="ui-pager-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7" /></svg>
+          </button>
           <div class="spirit-book-dots" id="spirit-book-dots" aria-label="Выбор главы"></div>
-          <button class="spirit-book-arrow" data-action="spirit-book-next" type="button" aria-label="Следующая глава">→</button>
+          <button class="spirit-book-arrow ui-pager-button" data-action="spirit-book-next" type="button" aria-label="Следующая глава">
+            <svg class="ui-pager-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7" /></svg>
+          </button>
         </nav>
       </section>
 
@@ -836,7 +840,7 @@
         </section>
 
         <section class="deck-card-zone" aria-label="Колода">
-          <button class="deck-card" data-action="draw" type="button" aria-label="Коснуться колоды">
+          <button class="deck-card ui-card-action" data-action="draw" type="button" aria-label="Коснуться колоды">
             <span class="deck-card-stack deck-card-stack--left" aria-hidden="true"></span>
             <span class="deck-card-stack deck-card-stack--mid" aria-hidden="true"></span>
             <span class="deck-card-face" aria-hidden="true"></span>

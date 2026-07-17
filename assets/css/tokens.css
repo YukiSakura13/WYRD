@@ -23,8 +23,17 @@
   --wyrd-text-quiet: rgba(216, 218, 216, 0.64);
 
   /* Shared silver control roles. */
+  --control-touch-min: 44px;
   --control-icon-hit-size: 48px;
   --control-icon-glyph-size: 20px;
+  --control-pager-hit-size: 48px;
+  --control-pager-glyph-size: 22px;
+  --control-action-min-height: 52px;
+  --control-row-min-height: 68px;
+  --control-choice-hit-size: 44px;
+  --control-gap: 12px;
+  --control-disabled-opacity: 0.38;
+  --control-pressed-offset: 1px;
   --control-nav-inset: 18px;
   --layout-oracle-shell: 30rem;
   --layout-oracle-content: 25rem;

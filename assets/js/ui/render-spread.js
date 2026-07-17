@@ -35,7 +35,7 @@ export function createSpreadRenderer(elements) {
     lastSpread.forEach(function renderSpreadCard(card) {
       const item = document.createElement("button");
       item.type = "button";
-      item.className = "spread-card";
+      item.className = "spread-card ui-card-action";
       item.dataset.slot = String(card.slot || "");
       item.dataset.layer = card.layer || "";
       item.dataset.anchor = String(Number(card.slot) === 1);
@@ -246,12 +246,11 @@ export function createSpreadRenderer(elements) {
     }
 
     history.forEach(function renderHistoryItem(trace) {
-      const item = document.createElement("article");
-      item.className = "history-item";
+      const item = document.createElement("button");
+      item.className = "history-item ui-card-action";
+      item.type = "button";
       item.dataset.action = "open-history-entry";
       item.dataset.traceId = trace.id;
-      item.setAttribute("role", "button");
-      item.setAttribute("tabindex", "0");
       item.setAttribute("aria-label", `Открыть след ${trace.snapshot.cardTitle}`);
       item.dataset.tone = trace.card.tone || "neutral";
 

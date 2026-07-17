@@ -421,7 +421,7 @@ export function createRenderer(elements) {
       ...AVATAR_OPTIONS.map(function createAvatarButton(option) {
         const isSelected = activeAvatar === option.id;
         const button = document.createElement("button");
-        button.className = "about-avatar";
+        button.className = "about-avatar ui-choice";
         button.type = "button";
         button.dataset.action = "select-avatar";
         button.dataset.avatarId = option.id;
@@ -447,7 +447,7 @@ export function createRenderer(elements) {
     const hasCustomImage = Boolean(profile.customAvatarImage);
     const isSelected = profile.avatarId === "custom" && hasCustomImage;
     const button = document.createElement("button");
-    button.className = "about-upload-avatar";
+    button.className = "about-upload-avatar ui-choice";
     button.type = "button";
     button.dataset.action = "upload-avatar";
     button.setAttribute("role", "radio");
@@ -611,7 +611,7 @@ export function createRenderer(elements) {
     elements.spiritBookDots.replaceChildren(
       ...SPIRIT_BOOK_PAGES.map(function createDot(page, index) {
         const dot = document.createElement("button");
-        dot.className = "spirit-book-dot";
+        dot.className = "spirit-book-dot ui-page-choice";
         dot.type = "button";
         dot.dataset.action = "spirit-book-page";
         dot.dataset.page = String(index);
@@ -690,7 +690,7 @@ export function createRenderer(elements) {
       const giftMeta = getGiftMeta(gift.giftKey);
       const receivedAt = new Date(gift.receivedAt);
       const card = document.createElement("button");
-      card.className = "gift-card";
+      card.className = "gift-card ui-card-action";
       card.type = "button";
       card.dataset.action = "flip-gift";
       card.dataset.giftId = gift.id;

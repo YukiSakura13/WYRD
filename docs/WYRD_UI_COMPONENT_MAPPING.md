@@ -19,19 +19,35 @@ This document maps current runtime selectors to the component families defined i
 | Scene Shell | `#cover`, `.forest-home`, `.forest-placeholder`, `.settings-screen`, `.about-you-screen`, `.reminders-screen`, `.app-info-screen`, `.spirit-book`, `.ritual-onboarding`, `.deck-scene`, `#result`, `#spread-result`, `#profile` | background/world | Canonical runtime classes start with `.ui-scene-shell`; the reading cluster uses one `30rem` shell and a separate `25rem` content measure. |
 | App Header | `.hdr`, `.forest-brand`, `.settings-header`, `.deck-header`, `.screen-nav`, `.ritual-content` brand group | divider + typography | Canonical runtime classes start with `.ui-app-header`; the header owns the Back axis and centered identity. Deck, result and spread are the first proof cluster. |
 | Navigation Icon Button | `.ui-icon-button`, with `.btn-back-circle`, `.deck-back`, `.spread-card-modal-close`, `.save-screen-close`, `.history-sheet-close` retained as screen aliases | Control | Canonical runtime family: 48px hit area, 28px long-arrow Back glyph, shared silver material and state behavior. App Header owns placement; screen aliases own routing only. |
-| Pager Icon Button | `.spirit-book-arrow` | Control | Next family to normalize. It inherits ergonomics and icon DNA from Navigation Icon Button but keeps the pager role visually distinct. |
+| Pager Icon Button | `.ui-pager-button` with `.spirit-book-arrow` retained as a screen alias | Control | Implemented: 48px target, short SVG chevron, shared focus/pressed/disabled behavior. |
 | Utility Icon Button | `.forest-avatar-btn`, `.forest-settings-btn` | Control | Existing approved Forest controls. Normalize against shared ergonomics without replacing their semantic icons. |
-| Action Button | `.ui-action`, `.cover-btn`, `.cover-cta-button`, `.ritual-btn`, `.about-save`, `.btn-share`, `.hook-btn`, `.spread-continuation-btn`, `.spread-continuation-link`, `.profile-primary-action`, `.about-unsaved-primary`, `.about-unsaved-secondary`, `.about-unsaved-quiet`, `.reminders-sheet-primary`, `.reminders-sheet-secondary`, `.reminders-disable`, `.save-screen-link` | Control | Use one action system with variants: primary, secondary, quiet, destructive. Current classes can stay as screen aliases. |
+| Action Button | `.ui-action`, `.cover-btn`, `.cover-cta-button`, `.ritual-btn`, `.about-save`, `.btn-share`, `.hook-btn`, `.spread-continuation-btn`, `.spread-continuation-link`, `.profile-primary-action`, `.about-unsaved-primary`, `.about-unsaved-secondary`, `.about-unsaved-quiet`, `.reminders-sheet-primary`, `.reminders-sheet-secondary`, `.reminders-disable`, `.save-screen-link` | Control | Implemented interaction contract with primary, secondary, quiet and destructive roles. Current classes stay as visual aliases until each screen migrates. |
 | Hero Artifact | `.forest-card`, `.forest-card--daily`, `.deck-card`, `.share-card.card-box`, `.card-box`, `.save-screen-art` | Artifact | Main ritual objects. This family may carry the richest frame and depth, but only where hierarchy demands it. |
 | Card Tile | `.forest-tile`, `.forest-tile--lunar`, `.forest-tile--yes-no`, `.forest-tile--night`, `.forest-tile--traces`, `.forest-tile--book`, `.gift-card`, `.history-item`, `.profile-today-card` | Quiet | Secondary signs and traces. They must stay quieter than Hero Artifact. |
-| List Row | `.settings-row`, `.reminders-row`, `.about-select-row`, `.app-info-row` | Quiet + Control | Settings, reminders, and select rows are one row component with variants: entry, toggle, time, static. |
+| List Row | `.ui-row-action`, `.settings-row`, `.reminders-row`, `.about-select-row`, `.app-info-row` | Quiet + Control | Interactive settings/reminders rows use one runtime contract. Static rows keep the same layout without action semantics. |
 | Field | `.deck-question-shell`, `.deck-question-input`, `.about-field input`, `.about-select-row select`, `.reminders-time-picker select` | Control | Textarea, text input, select, and time picker need one field contract for focus, disabled, validation, and labels. |
-| Choice | `.about-segmented`, `.about-segment`, `.reminders-days`, `.reminders-day`, `.spirit-book-dot` | Control | Segments, chips, day buttons, and dots use selected-state rules. Not every choice needs a visible frame. |
+| Choice | `.ui-choice`, `.ui-page-choice`, `.about-segmented`, `.about-segment`, `.reminders-days`, `.reminders-day`, `.spirit-book-dot` | Control | Implemented 44px target and selected-state rules. Not every choice needs a visible frame. |
 | Toggle | `.settings-toggle` inside `.settings-row--toggle` / `.reminders-row--toggle` | Control | Toggle is one control reused in settings and notifications. State must be visible by knob position and color. |
 | Divider | `.hdr-line`, `.forest-brand-divider`, `.settings-rule`, `.deck-brand-line`, `.screen-brand-line`, `.card-divider`, `.hook-divider`, `.ritual-divider`, `.history-sheet-divider`, `.about-title-rule`, `.gift-divider` | Divider | Standardize into one line/sign/line language with quieter and richer variants. |
 | Sheet / Modal | `.about-unsaved-sheet`, `.about-unsaved-panel`, `.reminders-sheet`, `.reminders-sheet-panel`, `.spread-card-modal`, `.spread-card-modal-panel`, `.history-sheet`, `.history-sheet-inner`, `.save-screen`, `.save-screen-inner` | Sheet | All temporary overlays should share backdrop, layer, focus, close, and action placement rules. |
 | Feedback / Status | `.share-feedback`, `.about-save-status`, `.deck-question-status`, `.save-screen-loading`, `.history-empty-state`, `.forest-placeholder-panel`, `.oracle-voice`, `.result-question` | Quiet / state | Feedback should be explicit, readable, and calm. Avoid making every status a decorative card. |
 | Media Frame | `.spirit-book-art`, `.share-card-media`, `.history-sheet-card`, `.spread-detail-card`, `.spread-card-modal-image`, `.gift-card-face` | Artifact or Quiet | Media frames depend on importance. Result card and book art are richer; history/list media stays quieter. |
+
+## Runtime Status — Control Language v2
+
+| Foundation Component | Canonical runtime class | Current aliases | Status |
+| --- | --- | --- | --- |
+| Navigation Icon Button | `.ui-icon-button` | Back/Close aliases | implemented |
+| Pager Icon Button | `.ui-pager-button` | `.spirit-book-arrow` | implemented |
+| Page Choice | `.ui-page-choice` | `.spirit-book-dot` | implemented |
+| Action Button | `.ui-action` | screen-specific action classes | interaction contract implemented; visual aliases migrate by screen |
+| Row Action | `.ui-row-action` | `.settings-row`, `.reminders-row` | interaction contract implemented; visual aliases migrate by screen |
+| Choice Control | `.ui-choice` | avatar, segment, day and toggle aliases | implemented |
+| Card Action | `.ui-card-action` | Forest, deck, spread, history and gift aliases | implemented |
+
+See `docs/WYRD_CONTROL_INVENTORY.md` for routes, state ownership and deferred visual work.
+
+This table records architecture only. The generic runtime families intentionally define no surface, frame, shadow, ornament or component radius; those properties belong to a later approved WYRD theme layer.
 
 ## Screen-by-Screen Mapping
 

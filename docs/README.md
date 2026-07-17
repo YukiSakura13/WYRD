@@ -54,7 +54,8 @@
 - [WYRD_MASTER_CARD_STYLE.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_MASTER_CARD_STYLE.md) — арт-дирекшен, формат и правила обработки изображений карт
 - [WYRD_UI_FOUNDATIONS.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_UI_FOUNDATIONS.md) — системный язык UI-компонентов: 4 рамки, Button & Frame Language, depth, motion, состояния и правила упрощения
 - [WYRD_UI_COMPONENT_MAPPING.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_UI_COMPONENT_MAPPING.md) — сопоставление текущих runtime-классов с компонентами UI Foundations и порядок безопасной миграции
-- [wyrd-ui-kit.html](/Users/marinamart/Desktop/Oracle_dev/docs/wyrd-ui-kit.html) — локальная HTML-доска компонентов UI Kit для просмотра без Figma перед переносом в runtime
+- [WYRD_CONTROL_INVENTORY.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_CONTROL_INVENTORY.md) — канонические семейства интерактивных контролов, их маршруты, состояния и владельцы
+- [wyrd-ui-kit.html](/Users/marinamart/Desktop/Oracle_dev/docs/wyrd-ui-kit.html) — legacy HTML-доска; не является активным silver-каноном до отдельного визуального прохода
 
 ### Техника
 

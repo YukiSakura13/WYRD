@@ -1,7 +1,97 @@
 /*
- * WYRD control language: shared navigation and close icon buttons.
- * Screen-specific classes keep ownership of placement and behavior only.
+ * WYRD control architecture: geometry, semantics and interaction only.
+ * Visual material stays owned by approved screen aliases until the theme pass.
  */
+
+:where(.ui-action, .ui-row-action, .ui-choice, .ui-card-action, .ui-pager-button, .ui-page-choice) {
+  box-sizing: border-box;
+  font: inherit;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+:where(.ui-action, .ui-row-action, .ui-choice, .ui-card-action, .ui-pager-button, .ui-page-choice):focus-visible {
+  outline: 2px solid var(--control-focus-ring);
+  outline-offset: 3px;
+}
+
+:where(.ui-action, .ui-row-action, .ui-choice, .ui-card-action, .ui-pager-button, .ui-page-choice):disabled,
+:where(.ui-action, .ui-row-action, .ui-choice, .ui-card-action, .ui-pager-button, .ui-page-choice)[aria-disabled="true"] {
+  opacity: var(--control-disabled-opacity);
+  cursor: default;
+  pointer-events: none;
+}
+
+.ui-action {
+  min-width: var(--control-touch-min);
+  min-height: var(--control-action-min-height);
+  cursor: pointer;
+}
+
+.ui-row-action {
+  width: 100%;
+  min-height: var(--control-row-min-height);
+  cursor: pointer;
+}
+
+.ui-choice {
+  min-width: var(--control-choice-hit-size);
+  min-height: var(--control-choice-hit-size);
+  cursor: pointer;
+}
+
+.ui-row-action.ui-choice {
+  min-height: var(--control-row-min-height);
+}
+
+.ui-card-action {
+  min-width: var(--control-touch-min);
+  min-height: var(--control-touch-min);
+  cursor: pointer;
+}
+
+.ui-pager-button {
+  width: var(--control-pager-hit-size);
+  height: var(--control-pager-hit-size);
+  min-width: var(--control-pager-hit-size);
+  min-height: var(--control-pager-hit-size);
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  appearance: none;
+  cursor: pointer;
+}
+
+.ui-pager-button__icon {
+  width: var(--control-pager-glyph-size);
+  height: var(--control-pager-glyph-size);
+  display: block;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.65;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.ui-page-choice {
+  width: var(--control-choice-hit-size);
+  height: var(--control-choice-hit-size);
+  min-width: var(--control-choice-hit-size);
+  min-height: var(--control-choice-hit-size);
+  padding: 0;
+  display: inline-grid;
+  place-items: center;
+  appearance: none;
+  cursor: pointer;
+}
+
+.ui-action:active,
+.ui-row-action:active,
+.ui-choice:active,
+.ui-pager-button:active {
+  transform: translateY(var(--control-pressed-offset));
+}
 
 .ui-icon-button {
   width: var(--control-icon-hit-size);
@@ -127,11 +217,21 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ui-icon-button {
+  .ui-icon-button,
+  .ui-action,
+  .ui-row-action,
+  .ui-choice,
+  .ui-card-action,
+  .ui-pager-button,
+  .ui-page-choice {
     transition: none;
   }
 
-  .ui-icon-button:active {
+  .ui-icon-button:active,
+  .ui-action:active,
+  .ui-row-action:active,
+  .ui-choice:active,
+  .ui-pager-button:active {
     transform: none;
   }
 }

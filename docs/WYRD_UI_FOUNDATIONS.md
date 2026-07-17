@@ -109,6 +109,24 @@ Contract:
 
 Apple Human Interface Guidelines are the ergonomic baseline for hit areas, feedback, layout, and icon consistency. They do not define WYRD's visual style.
 
+### Control Language v2: Runtime Families
+
+The shared interaction contract is implemented in `assets/css/components/control-language.css`. Runtime screens keep their existing aliases so visual migration can proceed one screen at a time without changing routes.
+
+| Family | Canonical class | Geometry |
+| --- | --- | --- |
+| Navigation Icon Button | `.ui-icon-button` | `48px` circle; long-arrow Back or x-mark Close |
+| Pager Icon Button | `.ui-pager-button` | `48px` circle; short SVG chevron |
+| Page Choice | `.ui-page-choice` | `44px` hit area around a quiet dot |
+| Action Button | `.ui-action` | `52px` minimum height; role modifiers |
+| Row Action | `.ui-row-action` | full-width action; `68px` minimum height |
+| Choice Control | `.ui-choice` | `44px` minimum target; selected state is not color-only |
+| Card Action | `.ui-card-action` | full semantic card action; art remains unfiltered |
+
+Action role modifiers are `.ui-action--primary`, `.ui-action--secondary`, `.ui-action--quiet`, and `.ui-action--destructive`. At this stage they describe semantic priority only. Surface, frame, shadow, ornament and color remain outside the architecture contract until the WYRD silver theme is visually approved.
+
+The complete route and owner map lives in `docs/WYRD_CONTROL_INVENTORY.md`.
+
 ### Sheet Frame
 
 Sheet Frame is for temporary layers above the world.
@@ -170,6 +188,19 @@ These traits make a component recognizably WYRD.
 ## Tokens
 
 These values come from the current brandbook and runtime tokens.
+
+### Control Geometry
+
+| Token | Value | Role |
+| --- | --- | --- |
+| `--control-touch-min` | `44px` | minimum interactive target |
+| `--control-icon-hit-size` | `48px` | Back and Close |
+| `--control-pager-hit-size` | `48px` | previous/next page |
+| `--control-action-min-height` | `52px` | action buttons |
+| `--control-row-min-height` | `68px` | list/setting actions |
+| `--control-choice-hit-size` | `44px` | chips, days, radio choices |
+| `--control-pressed-offset` | `1px` | maximum pressed displacement |
+| `--control-disabled-opacity` | `0.38` | disabled material |
 
 ### Color Roles
 
