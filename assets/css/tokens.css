@@ -22,6 +22,22 @@
   --wyrd-text-secondary: rgba(210, 212, 210, 0.74);
   --wyrd-text-quiet: rgba(216, 218, 216, 0.64);
 
+  /* Shared silver control roles. */
+  --control-icon-hit-size: 48px;
+  --control-icon-glyph-size: 20px;
+  --control-nav-inset: 18px;
+  --layout-oracle-shell: 30rem;
+  --layout-oracle-content: 25rem;
+  --layout-app-header-min-height: 7.25rem;
+  --layout-app-header-padding-inline: 1.25rem;
+  --control-silver-line: rgba(205, 209, 207, 0.42);
+  --control-silver-line-active: rgba(225, 228, 225, 0.68);
+  --control-silver-icon: rgba(225, 228, 225, 0.78);
+  --control-silver-icon-active: rgba(242, 244, 241, 0.94);
+  --control-focus-ring: rgba(220, 225, 223, 0.76);
+  --control-surface-top: rgba(22, 24, 29, 0.84);
+  --control-surface-bottom: rgba(8, 9, 13, 0.92);
+
   /* Accent alpha scale */
   --accent-00: rgba(201, 161, 74, 0);
   --accent-04: rgba(201, 161, 74, 0.04);

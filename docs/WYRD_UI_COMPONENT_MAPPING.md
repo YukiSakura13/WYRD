@@ -16,9 +16,11 @@ This document maps current runtime selectors to the component families defined i
 
 | Foundation Component | Current Selector Families | Frame/Material | Notes |
 | --- | --- | --- | --- |
-| Scene Shell | `#cover`, `.forest-home`, `.forest-placeholder`, `.settings-screen`, `.about-you-screen`, `.reminders-screen`, `.app-info-screen`, `.spirit-book`, `.ritual-onboarding`, `.deck-scene`, `#result`, `#spread-result`, `#profile` | background/world | One scene shell contract should own forest background, safe areas, max width, scroll behavior, and hidden state. |
-| App Header | `.hdr`, `.forest-brand`, `.settings-header`, `.deck-header`, `.screen-nav`, `.ritual-content` brand group | divider + typography | These are visually related but implemented per screen. Consolidate conceptually before touching CSS. |
-| Icon Button | `.btn-back-circle`, `.deck-back`, `.forest-avatar-btn`, `.forest-settings-btn`, `.spirit-book-arrow`, `.spread-card-modal-close`, `.save-screen-close`, `.history-sheet-close` | Control | Back, close, profile, settings, and chapter arrows should share sizing, focus, and state rules. Icons can differ. |
+| Scene Shell | `#cover`, `.forest-home`, `.forest-placeholder`, `.settings-screen`, `.about-you-screen`, `.reminders-screen`, `.app-info-screen`, `.spirit-book`, `.ritual-onboarding`, `.deck-scene`, `#result`, `#spread-result`, `#profile` | background/world | Canonical runtime classes start with `.ui-scene-shell`; the reading cluster uses one `30rem` shell and a separate `25rem` content measure. |
+| App Header | `.hdr`, `.forest-brand`, `.settings-header`, `.deck-header`, `.screen-nav`, `.ritual-content` brand group | divider + typography | Canonical runtime classes start with `.ui-app-header`; the header owns the Back axis and centered identity. Deck, result and spread are the first proof cluster. |
+| Navigation Icon Button | `.ui-icon-button`, with `.btn-back-circle`, `.deck-back`, `.spread-card-modal-close`, `.save-screen-close`, `.history-sheet-close` retained as screen aliases | Control | Canonical runtime family: 48px hit area, 28px long-arrow Back glyph, shared silver material and state behavior. App Header owns placement; screen aliases own routing only. |
+| Pager Icon Button | `.spirit-book-arrow` | Control | Next family to normalize. It inherits ergonomics and icon DNA from Navigation Icon Button but keeps the pager role visually distinct. |
+| Utility Icon Button | `.forest-avatar-btn`, `.forest-settings-btn` | Control | Existing approved Forest controls. Normalize against shared ergonomics without replacing their semantic icons. |
 | Action Button | `.ui-action`, `.cover-btn`, `.cover-cta-button`, `.ritual-btn`, `.about-save`, `.btn-share`, `.hook-btn`, `.spread-continuation-btn`, `.spread-continuation-link`, `.profile-primary-action`, `.about-unsaved-primary`, `.about-unsaved-secondary`, `.about-unsaved-quiet`, `.reminders-sheet-primary`, `.reminders-sheet-secondary`, `.reminders-disable`, `.save-screen-link` | Control | Use one action system with variants: primary, secondary, quiet, destructive. Current classes can stay as screen aliases. |
 | Hero Artifact | `.forest-card`, `.forest-card--daily`, `.deck-card`, `.share-card.card-box`, `.card-box`, `.save-screen-art` | Artifact | Main ritual objects. This family may carry the richest frame and depth, but only where hierarchy demands it. |
 | Card Tile | `.forest-tile`, `.forest-tile--lunar`, `.forest-tile--yes-no`, `.forest-tile--night`, `.forest-tile--traces`, `.forest-tile--book`, `.gift-card`, `.history-item`, `.profile-today-card` | Quiet | Secondary signs and traces. They must stay quieter than Hero Artifact. |
@@ -65,9 +67,9 @@ This document maps current runtime selectors to the component families defined i
 
 | Current | Foundation Component | Notes |
 | --- | --- | --- |
-| `.deck-scene` | Scene Shell | Ritual environment. |
-| `.deck-header`, `.screen-nav` | App Header | Same brand/header language. |
-| `.deck-back`, `.btn-back-circle` | Icon Button | Merge behavior and focus. |
+| `.deck-scene`, `#result`, `#spread-result` + `.ui-scene-shell--oracle` | Scene Shell | One shell width and safe-area axis for the complete reading flow. |
+| `.deck-header`, `.screen-nav` + `.ui-app-header` | App Header | One Back position and centered identity across deck, result and spread. |
+| `.deck-back`, `.btn-back-circle` | Icon Button | Shared behavior and focus; placement is delegated to App Header. |
 | `.deck-question-shell`, `.deck-question-input` | Field | Question field; animation is state, not a separate component. |
 | `.deck-card` | Hero Artifact | Main ritual object. |
 | `.deck-touch-copy` | Text/Ghost Action | Secondary draw affordance. |

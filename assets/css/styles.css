@@ -8,3 +8,5 @@
 @import "./scenes/deck.css";
 @import "./components/reading.css";
 @import "./components/spread-profile.css";
+@import "./components/control-language.css";
+@import "./components/layout-language.css";

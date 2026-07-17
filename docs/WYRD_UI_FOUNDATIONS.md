@@ -2,7 +2,7 @@
 
 Issue: YUK-135
 
-This document defines the component language for WYRD. It does not redraw screens and does not introduce a new visual direction. It turns the existing brandbook, current screens, and recent button/frame discussions into a small system that can scale to many screens without inventing new frames or buttons.
+This document defines the component language for the silver WYRD migration. It does not redraw screens. It turns the approved Cover and Forest direction into a small system that can scale to many screens without inventing new frames or controls.
 
 ## Purpose
 
@@ -33,11 +33,11 @@ WYRD has four frame/material families. Components are functional blocks built fr
 
 ### Artifact Frame
 
-Artifact Frame is for objects the user touches as part of the ritual. It can feel physical.
+Artifact Frame is for objects the user touches as part of the core oracle mechanic. It can feel physical.
 
 Rules:
 - use sparingly;
-- may use ornamental corners, central diamond/star, and a richer golden line;
+- may use ornamental corners, central diamond/star, and a richer silver line;
 - may have object depth, contact shadow, and a pressed state;
 - should still feel engraved and matte, not plastic or neon;
 - text and symbol layout must keep generous air.
@@ -90,6 +90,25 @@ Current relatives:
 - Day Chip;
 - Icon Button.
 
+### Control Language v1: Back and Close
+
+The first canonical runtime family is `Navigation Icon Button`. It is implemented by `.ui-icon-button` in `assets/css/components/control-language.css`; old screen classes keep routing only, while App Header owns placement.
+
+Contract:
+- one `48px` circular hit area for Back and Close;
+- one `20px` SVG box for close/utility glyphs and one optical `28px` long-arrow Back glyph with the same stroke language;
+- Back preserves WYRD's long arrow with a horizontal shaft, rendered as one optically aligned SVG rather than a font glyph;
+- Close uses an x-mark and never substitutes for Back;
+- the default material is dark enamel with a quiet cold-silver line;
+- hover and focus clarify the same material instead of introducing a new color;
+- pressed moves down by at most `1px` and shortens the contact shadow;
+- focus is visible through an outline and material change, not color alone;
+- decoration and SVG paths never intercept pointer input;
+- `prefers-reduced-motion: reduce` removes movement while preserving state clarity;
+- screen placement observes safe areas and a shared `18px` visual inset.
+
+Apple Human Interface Guidelines are the ergonomic baseline for hit areas, feedback, layout, and icon consistency. They do not define WYRD's visual style.
+
 ### Sheet Frame
 
 Sheet Frame is for temporary layers above the world.
@@ -97,7 +116,7 @@ Sheet Frame is for temporary layers above the world.
 Rules:
 - backdrop dims the forest;
 - panel uses a dark forest/night material;
-- border is quiet gold, usually `rgba(168, 140, 84, 0.28-0.36)`;
+- border is quiet oxidized silver, validated against the active scene surface;
 - bottom sheets use top radius `18-22px`;
 - sheets contain Control Frame actions, not new button styles.
 
@@ -114,9 +133,9 @@ Buttons in WYRD do not shout "click me". They invite touch through role, materia
 
 | Meaning | UI Role | Example |
 | --- | --- | --- |
-| Artifact | starts or advances ritual mechanics | Reveal card, deck |
+| Artifact | starts or advances an oracle mechanic | Reveal card, deck |
 | Forest Sign | navigates to a section | Forest tiles |
-| Seal | confirms an important choice | Save, Done, Enter ritual |
+| Seal | confirms an important choice | Save, Done, Continue |
 | Quiet Line | secondary navigation or cancel | Cancel, Stay, New question |
 | Trace | opens history or a stored state | History entries, gifts |
 
@@ -124,18 +143,20 @@ Buttons in WYRD do not shout "click me". They invite touch through role, materia
 
 | Family | Frame | Purpose | Must Feel Like |
 | --- | --- | --- | --- |
-| Hero Button | Artifact | primary ritual entry | touchable magical object |
+| Hero Button | Artifact | primary oracle entry | touchable magical object |
 | Card Button | Quiet | navigation to a feature | quiet forest sign |
 | Primary CTA | Control | commit/continue | seal of action |
 | Secondary Button | Control | alternative action | framed choice |
-| Ghost/Text Button | Control | low-priority action | quiet gold text |
-| Icon Button | Control | back, settings, profile, close | small clear tool |
+| Ghost/Text Button | Control | low-priority action | quiet silver text |
+| Navigation Icon Button | Control | back and close | one predictable circular tool |
+| Pager Icon Button | Control | previous/next chapter or page | related navigation tool |
+| Utility Icon Button | Control | settings and profile | quiet global tool |
 
 ## Visual DNA
 
 These traits make a component recognizably WYRD.
 
-- Matte gold, never bright yellow.
+- Cold folklore silver is the active migration material; gold is legacy and must not return to migrated controls.
 - Dark night surface, not flat black emptiness.
 - Thin engraved line, usually `1px`.
 - Radius is restrained: `8-12px` for cards/controls, `18-22px` only for sheets or large artifacts.
@@ -158,21 +179,23 @@ These values come from the current brandbook and runtime tokens.
 | Night | `#101019` | base night surface |
 | Shadow | `#0A0B0E` | cards, dim interiors |
 | Cold Top | `#1F2330` | subtle lifted top light |
-| Gold | `#C9A14A` | main accent |
-| Light Gold | `#CDB274` | active detail, top of gold gradient |
-| Dark Gold | `#8E7240` | muted lower gold |
-| Bone | `#F0E8D8` | primary light text |
-| Quiet Text | `#8A8070` | low-priority text |
+| Brand text | `#F3ECDD` | `WYRD` only |
+| Heading text | `#EFEADC` | screen and card headings |
+| Action text | `#E7E4DB` | interactive labels |
+| Secondary text | `rgba(210, 212, 210, 0.74)` | explanatory text |
+| Quiet text | `rgba(216, 218, 216, 0.64)` | low-priority captions |
+| Control silver | `rgba(205, 209, 207, 0.42)` | default icon-control edge |
+| Active silver | `rgba(225, 228, 225, 0.68)` | hover, focus, pressed edge |
 
 ### Borders
 
 | Role | Value |
 | --- | --- |
 | Hairline | `1px` |
-| Subtle divider | `rgba(168, 140, 84, 0.12-0.22)` |
-| Quiet frame | `rgba(168, 140, 84, 0.28-0.46)` |
-| Clear frame | `rgba(168, 140, 84, 0.45-0.55)` |
-| Active/focus gold | `rgba(201, 161, 74, 0.58-0.72)` |
+| Subtle divider | quiet neutral silver, validated per migrated surface |
+| Quiet frame | cold silver below primary-control contrast |
+| Clear frame | cold silver with readable edge contrast |
+| Active/focus silver | same material at higher clarity, never neon |
 
 ### Radius
 
@@ -209,7 +232,7 @@ Depth is a hierarchy of attention. Higher depth means closer to the user, not "m
 | 1 | Dividers and quiet symbols | separates, does not invite touch |
 | 2 | Quiet panels and lists | readable grouped content |
 | 3 | Navigation cards | touchable signs, still secondary |
-| 4 | Artifacts and primary ritual objects | physical object, can have press depth |
+| 4 | Artifacts and primary oracle objects | physical object, can have press depth |
 | 5 | Sheets/modals | temporary layer above the world |
 
 Rule: a Level 3 element must not visually compete with Level 4. This protects the Forest screen hierarchy.
@@ -231,12 +254,12 @@ Every interactive component must define these states before implementation.
 | State | WYRD Behavior |
 | --- | --- |
 | Default | quiet, readable, role clear |
-| Hover | gold warms slightly, border clarity increases; no new color |
+| Hover | silver becomes clearer; no new hue or layout shift |
 | Pressed | object sinks or compresses; shadow shortens; no bounce |
-| Focus | visible gold focus ring/outline, keyboard-friendly |
+| Focus | visible silver focus ring/outline, keyboard-friendly |
 | Selected | shape, position, or fill changes; not color alone |
-| Disabled | gold fades to ash, contrast stays readable, pointer affordance removed |
-| Loading | soft breath or small ritual mark; avoid generic spinner when possible |
+| Disabled | material fades to ash, shape remains understandable, pointer affordance removed |
+| Loading | soft breath or small WYRD mark; avoid generic spinner when possible |
 | Success | brief warm reveal of line/sign, then calm |
 | Error | muted warning with clear text; avoid theatrical red unless risk requires it |
 
@@ -247,7 +270,7 @@ WYRD motion is slow, quiet, and physical.
 Rules:
 - default UI transitions: `160-260ms`;
 - atmospheric loops: `4-20s`;
-- pressed state: `translateY(2-5px)` depending on depth;
+- pressed state: up to `1px` for navigation controls and up to `2px` for deep artifacts;
 - no jumpy bounce;
 - no attention-grabbing neon glow;
 - all decorative motion must stop under `prefers-reduced-motion: reduce`;
@@ -259,7 +282,7 @@ WYRD controls are made from:
 - dark wood;
 - blackened enamel;
 - deep resin;
-- old matte gold or brass;
+- oxidized folklore silver;
 - bone-colored light for text.
 
 WYRD controls are not:
@@ -276,7 +299,7 @@ Light has one logic.
 
 - Primary source: top-left or top-center, very soft.
 - Lifted surfaces are slightly lighter than the background and have a fine upper edge.
-- Gold can warm on focus/hover.
+- Silver can become clearer on focus/hover without changing hue.
 - Artifacts can have a contact shadow.
 - Secondary cards use less light than the hero artifact.
 - The center should not glow like a casino button.
@@ -306,7 +329,7 @@ Avoid:
 | Diamond/star | divider, central frame sign, step indicator | long text, noisy labels |
 | Fern/moon/moth/tracks/acorn | semantic feature symbols | generic decoration |
 | Thin divider | section rhythm | every small item |
-| No ornament | destructive, quiet, text actions | when hierarchy needs ritual emphasis |
+| No ornament | destructive, quiet, text actions | when hierarchy needs stronger emphasis |
 
 ## Spacing Rules
 
@@ -319,6 +342,30 @@ Avoid:
 - Do not nest cards inside cards.
 - Do not make all blocks equal weight; use depth levels.
 
+## Layout Language
+
+Layout is a shared component contract, not a per-screen decoration.
+
+### Scene Shell
+
+- owns safe-area, page width, background layer and scroll ownership;
+- uses a named width variant instead of a new max-width on every screen;
+- keeps the reading flow inside one `30rem` shell;
+- lets long content grow vertically and never clips primary navigation;
+- screen content can use a quieter inner measure without moving the header.
+
+### App Header
+
+- owns Back/Close placement and the centered screen identity;
+- Back is anchored to the shell leading inset, never to an arbitrary child card;
+- the identity remains optically centered independently of the navigation control;
+- related screens use the same shell and header geometry;
+- Cover, Forest, Inner and Modal are semantic variants, not separate inventions.
+
+The first runtime proof is the reading cluster: deck, single-card result and
+three/five-card spread. Their content may differ, but the Back axis and header
+identity must not move between steps.
+
 ## Minimal Component Set
 
 These components should be sufficient for future screens.
@@ -329,7 +376,7 @@ These components should be sufficient for future screens.
 | App Header | brand, title, back action | screen identity |
 | Icon Button | Control | back, close, settings, profile |
 | Action Button | Control | primary, secondary, quiet, destructive |
-| Hero Artifact | Artifact | main ritual action |
+| Hero Artifact | Artifact | main oracle action |
 | Card Tile | Quiet | feature navigation |
 | List Row | Quiet + Control | settings, reminders, select rows |
 | Field | Control | text input, textarea, select |
@@ -370,7 +417,7 @@ Remove or merge these patterns over time:
 
 WYRD should be recognizable without the logo through:
 
-1. Thin matte-gold line.
+1. Thin oxidized-silver line.
 2. Central diamond/star.
 3. Night surface with cold upper light.
 4. Engraved forest symbols.

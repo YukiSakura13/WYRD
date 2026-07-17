@@ -1,0 +1,70 @@
+/*
+ * WYRD layout language: shared scene shell and app header geometry.
+ * Screen-specific selectors keep visual styling and routes, not placement.
+ */
+
+.ui-scene-shell {
+  position: relative;
+  width: 100%;
+  margin-inline: auto;
+}
+
+#deck-wrap.ui-scene-shell--oracle,
+#result.ui-scene-shell--oracle,
+#spread-result.ui-scene-shell--oracle {
+  width: min(100%, var(--layout-oracle-shell));
+  max-width: var(--layout-oracle-shell);
+  margin-inline: auto;
+}
+
+.ui-scene-content--oracle {
+  width: min(100%, var(--layout-oracle-content));
+  margin-inline: auto;
+}
+
+.ui-app-header {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  min-height: var(--layout-app-header-min-height);
+  margin: 0;
+  padding: 0 var(--layout-app-header-padding-inline) 1.125rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: center;
+}
+
+.ui-app-header__identity {
+  width: min(100%, 22rem);
+  min-width: 0;
+  text-align: center;
+}
+
+.ui-app-header__balance {
+  display: none;
+}
+
+.ui-app-header .ui-icon-button {
+  position: absolute;
+  top: 0;
+  left: max(
+    var(--control-nav-inset),
+    calc(var(--layout-safe-inline-start) + 12px)
+  );
+  z-index: 2;
+}
+
+#deck-wrap.ui-scene-shell--oracle {
+  padding-inline: 0;
+}
+
+#deck-wrap .deck-whisper-zone {
+  width: min(calc(100% - 3rem), 23rem);
+}
+
+@media (max-width: 359px) {
+  .ui-app-header {
+    padding-inline: 1rem;
+  }
+}

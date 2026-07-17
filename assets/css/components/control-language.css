@@ -1,0 +1,137 @@
+/*
+ * WYRD control language: shared navigation and close icon buttons.
+ * Screen-specific classes keep ownership of placement and behavior only.
+ */
+
+.ui-icon-button {
+  width: var(--control-icon-hit-size);
+  height: var(--control-icon-hit-size);
+  min-width: var(--control-icon-hit-size);
+  min-height: var(--control-icon-hit-size);
+  flex: 0 0 var(--control-icon-hit-size);
+  padding: 0;
+  border: 1px solid var(--control-silver-line);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(229, 233, 230, 0.05), transparent 48%),
+    linear-gradient(180deg, var(--control-surface-top), var(--control-surface-bottom));
+  color: var(--control-silver-icon);
+  box-shadow:
+    inset 0 1px 0 rgba(242, 244, 241, 0.035),
+    inset 0 -5px 12px rgba(0, 0, 0, 0.18),
+    0 7px 18px rgba(0, 0, 0, 0.28);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  cursor: pointer;
+  transition:
+    color var(--dur-fast) var(--ease-out-strong),
+    border-color var(--dur-fast) var(--ease-out-strong),
+    background-color var(--dur-fast) var(--ease-out-strong),
+    box-shadow var(--dur-medium) var(--ease-out-strong),
+    transform var(--dur-fast) var(--ease-out-strong);
+}
+
+.ui-icon-button__icon {
+  width: var(--control-icon-glyph-size);
+  height: var(--control-icon-glyph-size);
+  display: block;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.65;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.ui-icon-button--back .ui-icon-button__icon {
+  width: 28px;
+  height: 28px;
+  transform: translateX(0.75px);
+}
+
+.ui-icon-button:focus-visible {
+  outline: 2px solid var(--control-focus-ring);
+  outline-offset: 3px;
+  color: var(--control-silver-icon-active);
+  border-color: var(--control-silver-line-active);
+  box-shadow:
+    inset 0 1px 0 rgba(242, 244, 241, 0.07),
+    inset 0 -5px 12px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(5, 6, 9, 0.9),
+    0 0 16px rgba(213, 219, 216, 0.12),
+    0 7px 18px rgba(0, 0, 0, 0.3);
+}
+
+.ui-icon-button:active {
+  color: var(--control-silver-icon-active);
+  border-color: var(--control-silver-line-active);
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 2px 8px rgba(0, 0, 0, 0.36),
+    inset 0 0 0 1px rgba(232, 235, 233, 0.04),
+    0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+.ui-icon-button:disabled,
+.ui-icon-button[aria-disabled="true"] {
+  opacity: 0.38;
+  cursor: default;
+  pointer-events: none;
+}
+
+.screen-nav-spacer {
+  width: var(--control-icon-hit-size);
+  height: var(--control-icon-hit-size);
+  flex: 0 0 var(--control-icon-hit-size);
+}
+
+.settings-back,
+.spirit-book-back,
+.ritual-back,
+.deck-back,
+.forest-placeholder-back {
+  position: absolute;
+  top: max(
+    var(--control-nav-inset),
+    calc(var(--layout-safe-top) + 12px)
+  );
+  left: max(
+    var(--control-nav-inset),
+    calc(var(--layout-safe-inline-start) + 12px)
+  );
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ui-icon-button:hover {
+    color: var(--control-silver-icon-active);
+    border-color: var(--control-silver-line-active);
+    background:
+      radial-gradient(circle at 50% 22%, rgba(229, 233, 230, 0.08), transparent 50%),
+      linear-gradient(180deg, rgba(27, 29, 34, 0.88), rgba(10, 11, 15, 0.94));
+    box-shadow:
+      inset 0 1px 0 rgba(242, 244, 241, 0.06),
+      inset 0 -5px 12px rgba(0, 0, 0, 0.2),
+      0 0 14px rgba(213, 219, 216, 0.08),
+      0 8px 20px rgba(0, 0, 0, 0.3);
+    transform: none;
+  }
+
+  .ui-icon-button:hover:active {
+    transform: translateY(1px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-icon-button {
+    transition: none;
+  }
+
+  .ui-icon-button:active {
+    transform: none;
+  }
+}
