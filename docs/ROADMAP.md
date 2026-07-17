@@ -8,7 +8,7 @@
 
 Продуктовая граница: [TELEGRAM_BETA_SCOPE.md](TELEGRAM_BETA_SCOPE.md).
 
-Сквозные требования к retention, trust/legal, Telegram launch, аварийному управлению, content operations, accessibility и будущей монетизации: [PRODUCT_READINESS_PLAN.md](PRODUCT_READINESS_PLAN.md).
+Сквозные требования к behaviour/motion language, ethical retention, AI trust, trust/legal, Telegram launch, аварийному управлению, content operations, accessibility и будущей монетизации: [PRODUCT_READINESS_PLAN.md](PRODUCT_READINESS_PLAN.md).
 
 ## Критический путь
 
@@ -37,6 +37,7 @@
 - Engineering quality, security и QA.
 - PWA, backend и Telegram.
 - Текстовый Голос Оракула.
+- Behaviour, Motion & AI Trust Language.
 - Release, analytics, support и beta operations.
 
 ## Release gates
@@ -79,3 +80,8 @@ TTS, платежи/Stars, новые карты/ритуалы, сложная 
 
 - добавлена каноническая карта Product Readiness после продуктового, Telegram, security и monetization-аудита;
 - будущая монетизация закреплена после ограниченной бесплатной беты и измерения retention/value evidence.
+
+### 2026-07-17
+
+- выводы аудита Nudges.fyi и философии Эмиля Ковальски переведены в требования к ethical retention, motion judgement и AI trust;
+- `YUK-135`, `YUK-53`, `YUK-69`, `YUK-115`, `YUK-118` и `YUK-85` закреплены как владельцы реализации и проверок.
