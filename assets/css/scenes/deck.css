@@ -415,7 +415,6 @@
   transform: translate(-50%, -50%) scale(0.72);
 }
 
-.deck-card:hover,
 .deck-card:focus-visible {
   filter: brightness(1.08);
   transform: translateY(-0.45rem);
@@ -487,12 +486,19 @@
   border-radius: 999px;
 }
 
-.deck-touch-copy:hover {
-  color: rgba(226, 190, 105, 0.82);
-}
-
 .deck-touch-copy:active {
   transform: translateY(1px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .deck-card:hover {
+    filter: brightness(1.08);
+    transform: translateY(-0.45rem);
+  }
+
+  .deck-touch-copy:hover {
+    color: rgba(226, 190, 105, 0.82);
+  }
 }
 
 .deck-touch-copy small {

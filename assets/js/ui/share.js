@@ -1,11 +1,13 @@
 import { getCardImage } from "./render-helpers.js";
 import { formatTraceDate, getMoonPhase } from "./moon.js";
+import { getDialogController } from "./dialog-controller.js";
 
 let isShareInProgress = false;
 let isSaveInProgress = false;
 let cachedShareKey = null;
 let cachedShareBlobPromise = null;
 let frameImagePromise = null;
+let saveScreenCleanupTimer = 0;
 
 const SHARE_WIDTH = 1024;
 const SHARE_HEIGHT = 1536;
@@ -14,7 +16,7 @@ const STORY_HEIGHT = 1920;
 const CANVAS_TIMEOUT_MS = 8000;
 const ASSET_TIMEOUT_MS = 3500;
 const DEFAULT_RESULT_ILLUSTRATION_FADE_HEIGHT = 0.42;
-const FRAME_SRC = new URL("../../images/card-frame-dark-hero.png", import.meta.url).href;
+const FRAME_SRC = new URL("../../ui/card-frames/approved/wyrd-card-frame-artifact.svg", import.meta.url).href;
 
 export function primeShareCard(reading) {
   const normalizedReading = normalizeReading(reading);
@@ -179,40 +181,17 @@ export function saveCurrentCard(store) {
 
 export function closeSaveScreen() {
   const saveScreen = getSaveScreenElements();
-  if (saveScreen.objectUrl) {
-    URL.revokeObjectURL(saveScreen.objectUrl);
-  }
-
-  if (saveScreen.backdrop) {
-    saveScreen.backdrop.hidden = true;
-  }
-
-  if (saveScreen.panel) {
-    saveScreen.panel.hidden = true;
-    delete saveScreen.panel.dataset.objectUrl;
-  }
-
-  if (saveScreen.image) {
-    saveScreen.image.hidden = true;
-    saveScreen.image.removeAttribute("src");
-  }
-
-  if (saveScreen.link) {
-    saveScreen.link.href = "#";
-    saveScreen.link.setAttribute("aria-disabled", "true");
-    saveScreen.link.removeAttribute("download");
-  }
-
-  if (saveScreen.loading) {
-    saveScreen.loading.hidden = false;
-  }
+  getDialogController().sync(saveScreen.layer, false);
+  window.clearTimeout(saveScreenCleanupTimer);
+  const delay = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 240;
+  saveScreenCleanupTimer = window.setTimeout(() => resetSaveScreenContent(saveScreen), delay);
 }
 
 function getSaveScreenElements() {
   const panel = document.getElementById("save-screen");
   return {
+    layer: document.getElementById("save-screen-layer"),
     panel,
-    backdrop: document.getElementById("save-screen-backdrop"),
     copy: document.getElementById("save-screen-copy"),
     loading: document.getElementById("save-screen-loading"),
     image: document.getElementById("save-screen-image"),
@@ -222,25 +201,31 @@ function getSaveScreenElements() {
 }
 
 function openSaveScreen(saveScreen) {
-  if (saveScreen.objectUrl) {
-    URL.revokeObjectURL(saveScreen.objectUrl);
-  }
-
-  if (saveScreen.backdrop) {
-    saveScreen.backdrop.hidden = false;
-  }
-
-  if (saveScreen.panel) {
-    saveScreen.panel.hidden = false;
-    delete saveScreen.panel.dataset.objectUrl;
-  }
+  window.clearTimeout(saveScreenCleanupTimer);
+  resetSaveScreenContent(saveScreen);
 
   if (saveScreen.copy) {
     saveScreen.copy.textContent = "Готовим карту...";
   }
 
-  if (saveScreen.loading) {
-    saveScreen.loading.hidden = false;
+  getDialogController().sync(saveScreen.layer, true, {
+    initialFocus: "[data-action='close-save-screen']",
+  });
+}
+
+function resetSaveScreenContent(saveScreen) {
+  if (saveScreen.objectUrl) {
+    URL.revokeObjectURL(saveScreen.objectUrl);
+  }
+
+  if (saveScreen.panel) {
+    delete saveScreen.panel.dataset.objectUrl;
+  }
+
+  if (saveScreen.link) {
+    saveScreen.link.href = "#";
+    saveScreen.link.setAttribute("aria-disabled", "true");
+    saveScreen.link.removeAttribute("download");
   }
 
   if (saveScreen.image) {
@@ -248,10 +233,8 @@ function openSaveScreen(saveScreen) {
     saveScreen.image.removeAttribute("src");
   }
 
-  if (saveScreen.link) {
-    saveScreen.link.href = "#";
-    saveScreen.link.setAttribute("aria-disabled", "true");
-    saveScreen.link.removeAttribute("download");
+  if (saveScreen.loading) {
+    saveScreen.loading.hidden = false;
   }
 }
 
@@ -1160,7 +1143,7 @@ function setShareButtonState({ button, buttonLabel, feedback, isLoading, message
   }
 
   if (buttonLabel) {
-    buttonLabel.textContent = isLoading ? "ПОДГОТАВЛИВАЕМ..." : "ПОДЕЛИТЬСЯ КАРТОЙ";
+    buttonLabel.textContent = isLoading ? "Подготавливаем…" : "Поделиться картой";
   }
 
   if (feedback) {

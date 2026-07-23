@@ -5,6 +5,7 @@ import { ARCHETYPE_POSITIONS, detectArchetype, detectQuestionRoute } from "../ca
 import { createTransitionRunner, getAudioScene, getReturnScene, playSpreadSequence, resetViewport } from "./flow.js";
 import { SCENES } from "./scenes.js";
 import { closeSaveScreen, saveCurrentCard, shareCurrentCard } from "./share.js";
+import { notify } from "./notification-center.js";
 
 const REMINDER_DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 
@@ -202,9 +203,6 @@ export function createActionHandler(deps) {
       if (hasAboutChanges(store, uiState)) {
         uiState.aboutUnsavedSheetOpen = true;
         renderApp();
-        window.setTimeout(function focusUnsavedPrimary() {
-          document.querySelector("[data-action='save-about-and-close']")?.focus();
-        }, 40);
         return;
       }
 
@@ -233,6 +231,7 @@ export function createActionHandler(deps) {
       uiState.aboutDraft = { ...nextState.userProfile };
       uiState.aboutUnsavedSheetOpen = false;
       updateAboutStatus("Сохранено.");
+      notify({ id: "profile-saved", kind: "success", message: "Профиль сохранён." });
       window.setTimeout(function closeAfterSheetSave() {
         closeAboutYouScreen({ audio, renderer, setScene, store, uiState, renderApp, runTransition });
       }, 120);
@@ -275,6 +274,7 @@ export function createActionHandler(deps) {
       uiState.aboutDraft = { ...nextState.userProfile };
       uiState.aboutUnsavedSheetOpen = false;
       updateAboutStatus("Сохранено.");
+      notify({ id: "profile-saved", kind: "success", message: "Профиль сохранён." });
       window.setTimeout(function returnAfterSave() {
         const returnScene = uiState.aboutReturnScene || SCENES.FOREST;
         uiState.aboutDraft = null;
@@ -306,9 +306,6 @@ export function createActionHandler(deps) {
       uiState.timePickerOpen = true;
       uiState.timePickerDraft = draft.time || "11:00";
       renderApp();
-      window.setTimeout(function focusTimePicker() {
-        document.getElementById("reminders-time-hour")?.focus();
-      }, 40);
       return;
     }
 
@@ -405,6 +402,7 @@ export function createActionHandler(deps) {
       };
       store.saveReminders(uiState.remindersDraft);
       updateRemindersStatus("Уведомления сохранены.");
+      notify({ id: "reminders-status", kind: "success", message: "Уведомления сохранены." });
       renderApp();
       return;
     }
@@ -417,6 +415,7 @@ export function createActionHandler(deps) {
       };
       store.saveReminders(uiState.remindersDraft);
       updateRemindersStatus("Уведомления отключены.");
+      notify({ id: "reminders-status", kind: "info", message: "Уведомления отключены." });
       renderApp();
       return;
     }
@@ -451,7 +450,6 @@ export function createActionHandler(deps) {
       }
       audio.playSelect(store.getState().soundEnabled);
       uiState.activeHistoryTraceId = traceId;
-      uiState.historyReturnTraceId = traceId;
       renderApp();
       return;
     }
@@ -1002,7 +1000,6 @@ export function createInitialUIState(state) {
     spiritBookPage: 0,
     onboardingReturn: SCENES.COVER,
     activeHistoryTraceId: null,
-    historyReturnTraceId: null,
     pinCurrentReadingForSpread: false,
     recentCardNames: [],
     transitioning: false,
@@ -1143,33 +1140,6 @@ function syncQuestionFromInput(uiState) {
   uiState.currentQuestion = uiState.rawQuestion;
 }
 
-export function createKeyboardHandler(deps) {
-  const { renderApp, uiState } = deps;
-
-  return function onKeyDown(event) {
-    if (event.key === "Escape" && uiState.aboutUnsavedSheetOpen) {
-      event.preventDefault();
-      uiState.aboutUnsavedSheetOpen = false;
-      renderApp();
-      return;
-    }
-
-    const trigger = event.target.closest?.("[data-action='open-history-entry']");
-    if (trigger && (event.key === "Enter" || event.key === " ")) {
-      event.preventDefault();
-      trigger.click();
-      return;
-    }
-
-    if (event.key === "Escape" && uiState.activeHistoryTraceId) {
-      event.preventDefault();
-      closeHistoryEntry(uiState, renderApp);
-      return;
-    }
-
-  };
-}
-
 function getArchetypePositions(archetype, cardCount) {
   const spreadSize = cardCount === 3 ? "spread3" : cardCount === 5 ? "spread5" : null;
 
@@ -1214,15 +1184,6 @@ function getPreviousTraceReading(state, cards) {
 }
 
 function closeHistoryEntry(uiState, renderApp) {
-  const returnTraceId = uiState.historyReturnTraceId;
   uiState.activeHistoryTraceId = null;
   renderApp();
-
-  if (!returnTraceId) {
-    return;
-  }
-
-  window.requestAnimationFrame(function restoreHistoryFocus() {
-    document.querySelector(`[data-trace-id="${returnTraceId}"]`)?.focus();
-  });
 }

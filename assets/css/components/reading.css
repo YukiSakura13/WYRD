@@ -595,7 +595,6 @@
   pointer-events: none;
 }
 
-#result .btn-share:hover,
 #result .btn-share:focus-visible {
   border-color: rgba(201, 161, 74, 0.68);
   color: rgba(240, 232, 216, 0.94);
@@ -605,7 +604,6 @@
     0 0 28px rgba(201, 161, 74, 0.12);
 }
 
-#result .btn-share:hover::before,
 #result .btn-share:focus-visible::before {
   opacity: 1;
   transform: scaleX(1);
@@ -813,25 +811,28 @@
   }
 }
 
-.save-screen-backdrop {
+.save-screen-layer {
   position: fixed;
   inset: 0;
   z-index: 70;
+}
+
+.save-screen-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  padding: 0;
+  border: 0;
   background:
     radial-gradient(circle at 50% 24%, rgba(201, 161, 74, 0.12), transparent 38%),
     rgba(5, 6, 10, 0.78);
   backdrop-filter: blur(14px);
 }
 
-.save-screen-backdrop[hidden],
-.save-screen[hidden] {
-  display: none;
-}
-
 .save-screen {
   position: fixed;
   inset: 0;
-  z-index: 71;
+  z-index: 1;
   display: grid;
   place-items: center;
   padding: 18px;
@@ -859,8 +860,8 @@
   position: absolute;
   top: 10px;
   right: 12px;
-  width: 34px;
-  height: 34px;
+  width: 44px;
+  height: 44px;
   border: 1px solid rgba(201, 161, 74, 0.22);
   border-radius: 999px;
   background: rgba(16, 16, 25, 0.62);
@@ -966,7 +967,7 @@
     rgba(16, 16, 25, 0.52);
   color: rgba(240, 232, 216, 0.94);
   font-family: var(--ui-font);
-  font-size: 9px;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.18em;
   text-decoration: none;
@@ -980,12 +981,20 @@
     transform 180ms ease;
 }
 
-.save-screen-link:hover,
 .save-screen-link:focus-visible {
   border-color: rgba(240, 232, 216, 0.78);
   box-shadow:
     0 0 0 1px rgba(240, 232, 216, 0.14),
     0 0 30px rgba(201, 161, 74, 0.16);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .save-screen-link:hover {
+    border-color: rgba(240, 232, 216, 0.78);
+    box-shadow:
+      0 0 0 1px rgba(240, 232, 216, 0.14),
+      0 0 30px rgba(201, 161, 74, 0.16);
+  }
 }
 
 .save-screen-link:active {
@@ -1000,7 +1009,7 @@
 .save-screen-hint {
   margin: 10px auto 0;
   max-width: 250px;
-  font-size: 11px;
+  font-size: 0.8125rem;
   opacity: 0.72;
 }
 

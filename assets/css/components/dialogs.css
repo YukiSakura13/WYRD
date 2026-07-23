@@ -1,0 +1,45 @@
+body.has-open-dialog {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+[data-dialog-layer] {
+  --dialog-duration: var(--dur-medium);
+}
+
+[data-dialog-layer][hidden] {
+  display: none !important;
+}
+
+[data-dialog-layer] [data-dialog-backdrop] {
+  opacity: 0;
+  transition: opacity var(--dialog-duration) var(--ease-out-strong);
+}
+
+[data-dialog-layer].is-dialog-visible [data-dialog-backdrop] {
+  opacity: 1;
+}
+
+[data-dialog-layer] [data-dialog-panel]:not([data-dialog-motion="sheet"]) {
+  opacity: 0;
+  transform: var(--dialog-closed-transform, translateY(18px) scale(0.98));
+  transition:
+    opacity var(--dialog-duration) var(--ease-out-strong),
+    transform var(--dialog-duration) var(--ease-out-strong);
+}
+
+[data-dialog-layer].is-dialog-visible [data-dialog-panel]:not([data-dialog-motion="sheet"]) {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-dialog-layer] [data-dialog-backdrop],
+  [data-dialog-layer] [data-dialog-panel] {
+    transition-duration: 1ms !important;
+  }
+
+  [data-dialog-layer] [data-dialog-panel]:not([data-dialog-motion="sheet"]) {
+    transform: none;
+  }
+}

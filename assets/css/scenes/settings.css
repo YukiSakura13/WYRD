@@ -246,43 +246,52 @@ body[data-scene="app-info"] .footer {
   transform: translateX(24px);
 }
 
-.settings-row:hover,
 .settings-row:focus-visible,
-.reminders-row:hover,
 .reminders-row:focus-visible,
-.about-avatar:hover,
 .about-avatar:focus-visible,
-.about-upload-avatar:hover,
 .about-upload-avatar:focus-visible,
-.about-segment:hover,
 .about-segment:focus-visible,
-.about-save:hover,
 .about-save:focus-visible,
-.reminders-day:hover,
 .reminders-day:focus-visible,
-.reminders-select-all:hover,
 .reminders-select-all:focus-visible,
-.reminders-disable:hover,
 .reminders-disable:focus-visible,
-.about-unsaved-primary:hover,
 .about-unsaved-primary:focus-visible,
-.about-unsaved-secondary:hover,
 .about-unsaved-secondary:focus-visible,
-.about-unsaved-quiet:hover,
 .about-unsaved-quiet:focus-visible,
-.reminders-sheet-secondary:hover,
 .reminders-sheet-secondary:focus-visible,
-.reminders-sheet-primary:hover,
 .reminders-sheet-primary:focus-visible {
   color: rgba(244, 231, 196, 0.98);
   outline: none;
 }
 
-.settings-row:hover,
 .settings-row:focus-visible,
-.reminders-row:hover,
 .reminders-row:focus-visible {
   background: rgba(201, 161, 74, 0.045);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .settings-row:hover,
+  .reminders-row:hover,
+  .about-avatar:hover,
+  .about-upload-avatar:hover,
+  .about-segment:hover,
+  .about-save:hover,
+  .reminders-day:hover,
+  .reminders-select-all:hover,
+  .reminders-disable:hover,
+  .about-unsaved-primary:hover,
+  .about-unsaved-secondary:hover,
+  .about-unsaved-quiet:hover,
+  .reminders-sheet-secondary:hover,
+  .reminders-sheet-primary:hover {
+    color: rgba(244, 231, 196, 0.98);
+    outline: none;
+  }
+
+  .settings-row:hover,
+  .reminders-row:hover {
+    background: rgba(201, 161, 74, 0.045);
+  }
 }
 
 .settings-row:focus-visible,
@@ -506,12 +515,18 @@ body[data-scene="app-info"] .footer {
   cursor: default;
 }
 
-.about-save:disabled:hover,
 .about-save:disabled:focus-visible,
-.about-save[aria-disabled="true"]:hover,
 .about-save[aria-disabled="true"]:focus-visible {
   color: rgba(217, 206, 184, 0.52);
   box-shadow: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .about-save:disabled:hover,
+  .about-save[aria-disabled="true"]:hover {
+    color: rgba(217, 206, 184, 0.52);
+    box-shadow: none;
+  }
 }
 
 .about-unsaved-sheet {

@@ -378,7 +378,6 @@ body[data-scene="spirit-book"] .footer {
   box-shadow: 0 0 18px rgba(216, 177, 90, 0.28);
 }
 
-.spirit-book-arrow:hover,
 .spirit-book-arrow:focus-visible {
   border-color: rgba(216, 177, 90, 0.62);
   background-color: rgba(20, 20, 25, 0.78);
@@ -387,12 +386,28 @@ body[data-scene="spirit-book"] .footer {
   outline: none;
 }
 
-.spirit-book-dot:hover::before,
 .spirit-book-dot:focus-visible::before {
   border-color: rgba(216, 177, 90, 0.62);
   background-color: rgba(20, 20, 25, 0.78);
   color: rgba(246, 237, 214, 0.96);
   transform: translateY(-1px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .spirit-book-arrow:hover {
+    border-color: rgba(216, 177, 90, 0.62);
+    background-color: rgba(20, 20, 25, 0.78);
+    color: rgba(246, 237, 214, 0.96);
+    transform: translateY(-1px);
+    outline: none;
+  }
+
+  .spirit-book-dot:hover::before {
+    border-color: rgba(216, 177, 90, 0.62);
+    background-color: rgba(20, 20, 25, 0.78);
+    color: rgba(246, 237, 214, 0.96);
+    transform: translateY(-1px);
+  }
 }
 
 .spirit-book-arrow:focus-visible,

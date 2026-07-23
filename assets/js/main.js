@@ -8,10 +8,10 @@ import {
   createDeckQuestionGuidance,
   createInitialUIState,
   createInputChangeHandler,
-  createKeyboardHandler,
 } from "./ui/actions.js";
 import { createCoverCtaAnimation } from "./ui/cover-cta.js";
 import { createForestMotion } from "./ui/forest-motion.js";
+import { createHistorySheetDrag } from "./ui/history-sheet-drag.js";
 import { createRenderer, getElements } from "./ui/render.js";
 import { SCENES, isKnownScene } from "./ui/scenes.js";
 
@@ -60,6 +60,7 @@ if (elements.coverArt) {
 
 createCoverCtaAnimation(document.querySelector(".cover-cta-button"));
 createForestMotion(document);
+createHistorySheetDrag(document).connect();
 
 function renderApp() {
   const state = store.syncDayBoundary();
@@ -112,14 +113,6 @@ document.addEventListener(
     renderer,
     setScene,
     store,
-    uiState,
-  }),
-);
-
-document.addEventListener(
-  "keydown",
-  createKeyboardHandler({
-    renderApp,
     uiState,
   }),
 );

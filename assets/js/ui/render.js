@@ -6,6 +6,7 @@ import { createSpreadRenderer } from "./render-spread.js";
 import { getCardImage } from "./render-helpers.js";
 import { createMoonIcon, formatTraceDate, getMoonPhase } from "./moon.js";
 import { primeShareCard } from "./share.js";
+import { getDialogController } from "./dialog-controller.js";
 
 export function getElements(doc = document) {
   return {
@@ -92,9 +93,8 @@ export function getElements(doc = document) {
     historyGiftRevealStatus: doc.getElementById("history-gift-reveal-status"),
     historyTrailsHeading: doc.getElementById("history-trails-heading"),
     historyList: doc.getElementById("history-list"),
-    historySheetBackdrop: doc.getElementById("history-sheet-backdrop"),
+    historySheetLayer: doc.getElementById("history-sheet-layer"),
     historySheet: doc.getElementById("history-sheet"),
-    historySheetClose: doc.querySelector("#history-sheet [data-action='close-history-entry']"),
     historySheetQuestion: doc.getElementById("history-sheet-question"),
     historySheetQuestionText: doc.getElementById("history-sheet-question-text"),
     historySheetImage: doc.getElementById("history-sheet-image"),
@@ -124,6 +124,7 @@ export function getElements(doc = document) {
     spreadModalName: doc.getElementById("spread-modal-name"),
     spreadModalMessage: doc.getElementById("spread-modal-message"),
     spreadModalShadow: doc.getElementById("spread-modal-shadow"),
+    saveScreenLayer: doc.getElementById("save-screen-layer"),
     spreadContinuation: doc.getElementById("spread-continuation"),
     oracleVoice: doc.getElementById("oracle-voice"),
     oracleVoiceMessage: doc.getElementById("oracle-voice-message"),
@@ -134,6 +135,7 @@ export function createRenderer(elements) {
   let readingRevealTimers = [];
   let lastReadingId = null;
   let previousScene = null;
+  const dialogs = getDialogController();
   const spreadRenderer = createSpreadRenderer(elements);
   const cardsById = new Map(CARDS.map((card) => [card.id, card]));
   const forestPlaceholderContent = {
@@ -384,7 +386,9 @@ export function createRenderer(elements) {
     }
 
     if (elements.aboutUnsavedSheet) {
-      elements.aboutUnsavedSheet.hidden = !uiState.aboutUnsavedSheetOpen;
+      dialogs.sync(elements.aboutUnsavedSheet, uiState.aboutUnsavedSheetOpen, {
+        initialFocus: "[data-action='save-about-and-close']",
+      });
     }
   }
 
@@ -532,7 +536,9 @@ export function createRenderer(elements) {
     syncSettingsToggle(elements.remindersFullMoonToggle, Boolean(reminders.moonPhases?.fullMoon), "Полнолуние");
 
     if (elements.remindersTimeSheet) {
-      elements.remindersTimeSheet.hidden = !uiState.timePickerOpen;
+      dialogs.sync(elements.remindersTimeSheet, uiState.timePickerOpen, {
+        initialFocus: "#reminders-time-hour",
+      });
     }
 
     if (elements.remindersSaveButton) {
@@ -646,12 +652,8 @@ export function createRenderer(elements) {
     const trace = state.history.map(hydrateTrace).find((entry) => entry.id === uiState.activeHistoryTraceId) || null;
     const isOpen = Boolean(trace);
 
-    elements.historySheet.hidden = !isOpen;
-    elements.historySheetBackdrop.hidden = !isOpen;
-    elements.historySheet.classList.toggle("is-open", isOpen);
-    elements.historySheetBackdrop.classList.toggle("is-open", isOpen);
-
     if (!isOpen) {
+      dialogs.sync(elements.historySheetLayer, false);
       return;
     }
 
@@ -669,9 +671,12 @@ export function createRenderer(elements) {
     elements.historySheetShadowText.textContent = trace.snapshot.shadowMessage || "";
     elements.historySheetFooter.replaceChildren();
     elements.historySheetFooter.append(createMoonIcon(moon.type), document.createTextNode(`${formatTraceDate(date)} · ${moon.name}`));
-
-    window.requestAnimationFrame(function focusSheetClose() {
-      elements.historySheetClose?.focus();
+    dialogs.sync(elements.historySheetLayer, true, {
+      initialFocus: "[data-action='close-history-entry']",
+      returnFocus: () =>
+        Array.from(document.querySelectorAll("[data-trace-id]")).find(
+          (button) => button.dataset.traceId === trace.id,
+        ) || null,
     });
   }
 
@@ -1392,7 +1397,6 @@ export function createRenderer(elements) {
     }
 
     const saveScreen = document.getElementById("save-screen");
-    const saveScreenBackdrop = document.getElementById("save-screen-backdrop");
     const saveScreenImage = document.getElementById("save-screen-image");
     const saveScreenLink = document.getElementById("save-screen-link");
     const saveScreenLoading = document.getElementById("save-screen-loading");
@@ -1402,11 +1406,8 @@ export function createRenderer(elements) {
         URL.revokeObjectURL(saveScreen.dataset.objectUrl);
         delete saveScreen.dataset.objectUrl;
       }
-      saveScreen.hidden = true;
     }
-    if (saveScreenBackdrop) {
-      saveScreenBackdrop.hidden = true;
-    }
+    dialogs.sync(elements.saveScreenLayer, false, { restoreFocus: false });
     if (saveScreenImage) {
       saveScreenImage.hidden = true;
       saveScreenImage.removeAttribute("src");
@@ -1428,7 +1429,7 @@ export function createRenderer(elements) {
     }
 
     if (elements.shareButtonLabel) {
-      elements.shareButtonLabel.textContent = "ПОДЕЛИТЬСЯ";
+      elements.shareButtonLabel.textContent = "Поделиться картой";
     }
 
     if (elements.saveButton) {

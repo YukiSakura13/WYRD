@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">WYRD diamond mark</title>
+  <desc id="desc">The approved large diamond with the smallest center gem; the intermediate diamond is intentionally omitted.</desc>
+  <defs>
+    <linearGradient id="metal" x1="0" y1="0" x2="0" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#E1E4E1"/>
+      <stop offset=".52" stop-color="#CDD1CF"/>
+      <stop offset="1" stop-color="#858B8B"/>
+    </linearGradient>
+  </defs>
+  <path d="M24 3 45 24 24 45 3 24Z" stroke="#181C20" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M24 3 45 24 24 45 3 24Z" stroke="url(#metal)" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="m24 19 5 5-5 5-5-5Z" fill="#CDD1CF" stroke="#F3ECDD" stroke-width=".7"/>
+</svg>

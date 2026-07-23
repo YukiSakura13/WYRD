@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1014 142" width="1014" height="142" fill="none" role="img" aria-labelledby="wyrd-action-secondary-title wyrd-action-secondary-desc" style="color:#cdd1cf;--frame-highlight:#f3ecdd;--frame-bright:#e1e4e1;--frame-lowlight:#62686b;--frame-edge:#30353a;--frame-glow:#cbd4dc;--frame-gem-highlight:#fffdf4;--frame-gem-bright:#dfe4e2;--frame-gem:#aeb6b7;--frame-gem-lowlight:#596064;--frame-gem-edge:#f3ecdd;--frame-surface-top:#1f2330;--frame-surface-mid:#101019;--frame-surface-bottom:#070709">
+  <title id="wyrd-action-secondary-title">WYRD Secondary action button frame</title>
+  <desc id="wyrd-action-secondary-desc">Continuous silver frame with one additional outer diamond around the Compact ornament.</desc>
+  <defs>
+    <linearGradient id="wyrd-action-secondary-metal" x1="0" y1="0" x2="0" y2="142" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="var(--frame-highlight, #f3ecdd)"/>
+      <stop offset=".18" stop-color="var(--frame-bright, #e1e4e1)"/>
+      <stop offset=".52" stop-color="currentColor"/>
+      <stop offset=".78" stop-color="currentColor" stop-opacity=".9"/>
+      <stop offset="1" stop-color="var(--frame-lowlight, #62686b)"/>
+    </linearGradient>
+    <linearGradient id="wyrd-action-secondary-surface" x1="0" y1="0" x2="0" y2="142" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="var(--frame-surface-top, #1f2330)" stop-opacity=".86"/>
+      <stop offset=".42" stop-color="var(--frame-surface-mid, #101019)" stop-opacity=".84"/>
+      <stop offset="1" stop-color="var(--frame-surface-bottom, #070709)" stop-opacity=".96"/>
+    </linearGradient>
+    <linearGradient id="wyrd-action-secondary-gem" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="var(--frame-gem-highlight, #fffdf4)"/>
+      <stop offset=".28" stop-color="var(--frame-gem-bright, #dfe4e2)"/>
+      <stop offset=".7" stop-color="var(--frame-gem, #aeb6b7)"/>
+      <stop offset="1" stop-color="var(--frame-gem-lowlight, #596064)"/>
+    </linearGradient>
+    <filter id="wyrd-action-secondary-halo" x="-18%" y="-80%" width="136%" height="260%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="7"/>
+    </filter>
+    <filter id="wyrd-action-secondary-bloom" x="-14%" y="-50%" width="128%" height="200%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="2.15"/>
+    </filter>
+    <g id="wyrd-action-secondary-terminal">
+      <path d="M 84 24 H 51 L 4 67 Q 0 71 4 75 L 51 118 H 84"/>
+      <path d="M 112 27 H 88 V 34 H 110"/>
+      <g transform="translate(0 142) scale(1 -1)">
+        <path d="M 112 27 H 88 V 34 H 110"/>
+      </g>
+
+      <path d="M 83 32 H 76 L 64 44"/>
+      <g transform="translate(0 142) scale(1 -1)">
+        <path d="M 83 32 H 76 L 64 44"/>
+      </g>
+      <path d="M 1 71 H 19"/>
+      <path d="M 77 71 H 101"/>
+      <path d="M 48 42 L 77 71 L 48 100 L 19 71 Z"/>
+      <path d="M 48 52 L 67 71 L 48 90 L 29 71 Z"/>
+      <path d="M 48 62 L 57 71 L 48 80 L 39 71 Z"/>
+    </g>
+    <g id="wyrd-action-secondary-geometry">
+      <path d="M 108 27 V 20 Q 108 2 126 2 H 888 Q 906 2 906 20 V 27"/>
+      <path d="M 118 27 V 26 Q 118 14 131 14 H 883 Q 896 14 896 26 V 27"/>
+      <path d="M 108 115 V 122 Q 108 140 126 140 H 888 Q 906 140 906 122 V 115"/>
+      <path d="M 118 115 V 116 Q 118 128 131 128 H 883 Q 896 128 896 116 V 115"/>
+      <use href="#wyrd-action-secondary-terminal"/>
+      <g transform="translate(1014 0) scale(-1 1)">
+        <use href="#wyrd-action-secondary-terminal"/>
+      </g>
+    </g>
+    <path id="wyrd-action-secondary-gem-shape" d="M 48 67 L 52 71 L 48 75 L 44 71 Z"/>
+  </defs>
+
+  <g class="game-frame-art">
+    <g fill="url(#wyrd-action-secondary-surface)" opacity=".78">
+      <path d="M 120 12 Q 108 12 108 25 V 117 Q 108 130 120 130 H 894 Q 906 130 906 117 V 25 Q 906 12 894 12 Z"/>
+      <path d="M 2 71 L 49 26 H 84 L 108 48 V 94 L 84 116 H 49 Z"/>
+      <g transform="translate(1014 0) scale(-1 1)">
+        <path d="M 2 71 L 49 26 H 84 L 108 48 V 94 L 84 116 H 49 Z"/>
+      </g>
+    </g>
+    <g fill="none" stroke="var(--frame-glow, #cbd4dc)" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" opacity=".12" filter="url(#wyrd-action-secondary-halo)"><use href="#wyrd-action-secondary-geometry"/></g>
+    <g fill="none" stroke="var(--frame-glow, #cbd4dc)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" opacity=".22" filter="url(#wyrd-action-secondary-bloom)"><use href="#wyrd-action-secondary-geometry"/></g>
+    <g fill="none" stroke="var(--frame-edge, #30353a)" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" opacity=".94"><use href="#wyrd-action-secondary-geometry"/></g>
+    <g fill="none" stroke="url(#wyrd-action-secondary-metal)" stroke-width="1.72" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"><use href="#wyrd-action-secondary-geometry"/></g>
+    <g fill="none" stroke="var(--frame-highlight, #f3ecdd)" stroke-width=".5" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" opacity=".42"><use href="#wyrd-action-secondary-geometry"/></g>
+    <g fill="var(--frame-glow, #cbd4dc)" opacity=".2" filter="url(#wyrd-action-secondary-bloom)">
+      <use href="#wyrd-action-secondary-gem-shape"/>
+      <use href="#wyrd-action-secondary-gem-shape" transform="translate(1014 0) scale(-1 1)"/>
+    </g>
+    <g fill="url(#wyrd-action-secondary-gem)" stroke="var(--frame-gem-edge, #f3ecdd)" stroke-width=".65" vector-effect="non-scaling-stroke">
+      <use href="#wyrd-action-secondary-gem-shape"/>
+      <use href="#wyrd-action-secondary-gem-shape" transform="translate(1014 0) scale(-1 1)"/>
+    </g>
+  </g>
+</svg>

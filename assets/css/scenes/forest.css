@@ -241,9 +241,7 @@ body[data-scene="forest"] .forest-atmosphere {
   display: none;
 }
 
-.forest-avatar-btn:hover,
 .forest-avatar-btn:focus-visible,
-.forest-settings-btn:hover,
 .forest-settings-btn:focus-visible {
   border-color: var(--forest-line-hot);
   color: rgba(244, 238, 224, 0.9);
@@ -361,7 +359,6 @@ body[data-scene="forest"] .forest-atmosphere {
   pointer-events: none;
 }
 
-.forest-art-card:hover,
 .forest-art-card:focus-visible {
   border-color: var(--forest-line-hot);
   box-shadow:
@@ -374,7 +371,6 @@ body[data-scene="forest"] .forest-atmosphere {
   border-color: rgba(244, 240, 232, 0.9);
 }
 
-.forest-path-action:hover .forest-art-card,
 .forest-path-action:focus-visible .forest-art-card {
   border-color: var(--forest-line-hot);
   box-shadow:
@@ -419,7 +415,6 @@ body[data-scene="forest"] .forest-atmosphere {
     inset 0 0 60px 12px rgba(6, 7, 10, 0.42);
 }
 
-.forest-hero-action:hover .forest-art-card--hero,
 .forest-hero-action:focus-visible .forest-art-card--hero {
   border-color: var(--forest-line-hot);
   box-shadow:
@@ -486,9 +481,7 @@ body[data-scene="forest"] .forest-atmosphere {
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
 }
 
-.forest-art-card--small:hover,
 .forest-art-card--small:focus-visible,
-.forest-path-action:hover .forest-art-card--small,
 .forest-path-action:focus-visible .forest-art-card--small {
   box-shadow: 0 12px 34px rgba(0, 0, 0, 0.6);
 }
@@ -669,14 +662,51 @@ body[data-scene="forest"] .forest-atmosphere {
   transition: color 180ms ease;
 }
 
-.forest-path-action:hover .forest-tile-title,
 .forest-path-action:focus-visible .forest-tile-title {
   color: rgba(244, 240, 232, 0.94);
 }
 
-.forest-path-action:hover .forest-tile-copy,
 .forest-path-action:focus-visible .forest-tile-copy {
   color: rgba(218, 220, 218, 0.82);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .forest-avatar-btn:hover,
+  .forest-settings-btn:hover {
+    border-color: var(--forest-line-hot);
+    color: rgba(244, 238, 224, 0.9);
+    background: rgba(16, 18, 23, 0.66);
+    outline: none;
+  }
+
+  .forest-art-card:hover,
+  .forest-path-action:hover .forest-art-card {
+    border-color: var(--forest-line-hot);
+    box-shadow:
+      0 18px 42px rgba(0, 0, 0, 0.7),
+      0 0 34px rgba(158, 170, 190, 0.12);
+  }
+
+  .forest-hero-action:hover .forest-art-card--hero {
+    border-color: var(--forest-line-hot);
+    box-shadow:
+      0 28px 62px rgba(0, 0, 0, 0.84),
+      0 3px 0 -1px rgba(224, 230, 238, 0.28),
+      0 0 40px rgba(158, 170, 190, 0.14);
+  }
+
+  .forest-art-card--small:hover,
+  .forest-path-action:hover .forest-art-card--small {
+    box-shadow: 0 12px 34px rgba(0, 0, 0, 0.6);
+  }
+
+  .forest-path-action:hover .forest-tile-title {
+    color: rgba(244, 240, 232, 0.94);
+  }
+
+  .forest-path-action:hover .forest-tile-copy {
+    color: rgba(218, 220, 218, 0.82);
+  }
 }
 
 .forest-placeholder {

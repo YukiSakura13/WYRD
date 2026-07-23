@@ -1,0 +1,196 @@
+/*
+ * Approved folklore-silver Action Button family.
+ *
+ * The oracle proof cluster opts in explicitly so existing routes and controls
+ * keep their behavior while the visual family is verified in runtime.
+ */
+
+:is(#result, #spread-result) .wyrd-action-frame {
+  --wyrd-action-frame-image: none;
+  --wyrd-action-frame-opacity: 0.92;
+  --wyrd-action-frame-width: 100%;
+  --wyrd-action-frame-max: 35rem;
+  --wyrd-action-state-light: rgba(225, 228, 225, 0.16);
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  width: min(var(--wyrd-action-frame-width), var(--wyrd-action-frame-max));
+  min-width: var(--control-touch-min);
+  min-height: var(--control-action-min-height);
+  margin-inline: auto;
+  padding: 0 clamp(32px, 11%, 66px);
+  place-items: center;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  appearance: none;
+  background: transparent;
+  color: var(--wyrd-text-action);
+  box-shadow: none;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 19px;
+  font-weight: 500;
+  letter-spacing: 0.015em;
+  line-height: 1;
+  text-align: center;
+  text-decoration: none;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
+  text-transform: none;
+  white-space: nowrap;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    color var(--dur-fast) var(--ease-out-strong),
+    opacity var(--dur-fast) var(--ease-out-strong),
+    text-shadow var(--dur-fast) var(--ease-out-strong),
+    transform var(--dur-fast) var(--ease-out-strong);
+}
+
+:is(#result, #spread-result) .wyrd-action-frame::before,
+:is(#result, #spread-result) .wyrd-action-frame::after {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image: var(--wyrd-action-frame-image);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  content: "";
+  opacity: var(--wyrd-action-frame-opacity);
+  pointer-events: none;
+  transition: opacity var(--dur-fast) var(--ease-out-strong);
+}
+
+:is(#result, #spread-result) .wyrd-action-frame::after {
+  z-index: -1;
+  background-image:
+    radial-gradient(ellipse at center, var(--wyrd-action-state-light) 0%, transparent 66%),
+    var(--wyrd-action-frame-image);
+  background-size: 72% 56%, contain;
+  mix-blend-mode: screen;
+  opacity: 0;
+}
+
+:is(#result, #spread-result) .wyrd-action-frame--hero {
+  --wyrd-action-frame-image: url("../../ui/action-buttons/continuous/wyrd-action-hero.svg");
+  --wyrd-action-frame-width: 100%;
+  --wyrd-action-frame-max: 35rem;
+  font-size: clamp(17px, 4.6vw, 20px);
+}
+
+:is(#result, #spread-result) .wyrd-action-frame--secondary {
+  --wyrd-action-frame-image: url("../../ui/action-buttons/continuous/wyrd-action-secondary.svg");
+  --wyrd-action-frame-width: 91%;
+  --wyrd-action-frame-max: 31.8125rem;
+  font-size: clamp(18px, 4.4vw, 20px);
+}
+
+:is(#result, #spread-result) .wyrd-action-frame--compact {
+  --wyrd-action-frame-image: url("../../ui/action-buttons/continuous/wyrd-action-compact.svg");
+  --wyrd-action-frame-width: 83%;
+  --wyrd-action-frame-max: 28.9375rem;
+  padding-inline: 32px;
+  font-size: clamp(17px, 4.2vw, 19px);
+}
+
+:is(#result, #spread-result) .wyrd-action-frame--quiet {
+  --wyrd-action-frame-image: url("../../ui/action-buttons/continuous/wyrd-action-quiet.svg");
+  --wyrd-action-frame-width: 74%;
+  --wyrd-action-frame-max: 25.75rem;
+  padding-inline: 30px;
+  color: rgba(225, 225, 218, 0.82);
+  font-size: clamp(16px, 4vw, 18px);
+}
+
+#result .result-card-actions {
+  width: min(100%, 25rem);
+}
+
+:is(#result, #spread-result) .wyrd-action-frame:hover:not(:disabled),
+:is(#result, #spread-result) .wyrd-action-frame.is-demo-hover {
+  --wyrd-action-frame-opacity: 1;
+  --wyrd-action-state-light: rgba(225, 228, 225, 0.16);
+  color: var(--wyrd-text-action-active);
+  text-shadow:
+    0 1px 8px rgba(0, 0, 0, 0.9),
+    0 0 10px rgba(225, 228, 225, 0.18);
+}
+
+:is(#result, #spread-result) .wyrd-action-frame:hover:not(:disabled)::after,
+:is(#result, #spread-result) .wyrd-action-frame.is-demo-hover::after {
+  opacity: 0.32;
+}
+
+:is(#result, #spread-result) .wyrd-action-frame:focus-visible,
+:is(#result, #spread-result) .wyrd-action-frame.is-demo-focus {
+  --wyrd-action-frame-opacity: 1;
+  --wyrd-action-state-light: rgba(225, 228, 225, 0.22);
+  outline: none;
+  box-shadow: none;
+  color: var(--wyrd-text-action-active);
+  text-shadow:
+    0 1px 8px rgba(0, 0, 0, 0.9),
+    0 0 12px rgba(226, 231, 228, 0.34);
+}
+
+:is(#result, #spread-result) .wyrd-action-frame:focus-visible::after,
+:is(#result, #spread-result) .wyrd-action-frame.is-demo-focus::after {
+  opacity: 0.58;
+}
+
+:is(#result, #spread-result) .wyrd-action-frame:active:not(:disabled),
+:is(#result, #spread-result) .wyrd-action-frame.is-demo-pressed {
+  --wyrd-action-frame-opacity: 1;
+  --wyrd-action-state-light: rgba(225, 228, 225, 0.2);
+  color: var(--wyrd-text-action-active);
+  text-shadow:
+    0 1px 8px rgba(0, 0, 0, 0.9),
+    0 0 8px rgba(225, 228, 225, 0.26);
+  transform: translateY(var(--control-pressed-offset));
+}
+
+:is(#result, #spread-result) .wyrd-action-frame:active:not(:disabled)::after,
+:is(#result, #spread-result) .wyrd-action-frame.is-demo-pressed::after {
+  opacity: 0.46;
+}
+
+:is(#result, #spread-result) .wyrd-action-frame:disabled,
+:is(#result, #spread-result) .wyrd-action-frame[aria-disabled="true"] {
+  --wyrd-action-frame-opacity: 0.34;
+  --wyrd-action-state-light: transparent;
+  color: rgba(225, 225, 218, 0.42);
+  opacity: 1;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.72);
+  cursor: default;
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  :is(#result, #spread-result) .wyrd-action-frame:hover:not(:disabled) {
+    transform: none;
+  }
+
+  :is(#result, #spread-result) .wyrd-action-frame:hover:active:not(:disabled) {
+    transform: translateY(var(--control-pressed-offset));
+  }
+}
+
+@media (forced-colors: active) {
+  :is(#result, #spread-result) .wyrd-action-frame:focus-visible {
+    outline: 2px solid ButtonText;
+    outline-offset: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :is(#result, #spread-result) .wyrd-action-frame,
+  :is(#result, #spread-result) .wyrd-action-frame::before,
+  :is(#result, #spread-result) .wyrd-action-frame::after {
+    transition: none;
+  }
+
+  :is(#result, #spread-result) .wyrd-action-frame:active:not(:disabled),
+  :is(#result, #spread-result) .wyrd-action-frame:hover:active:not(:disabled) {
+    transform: none;
+  }
+}

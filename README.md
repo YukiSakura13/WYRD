@@ -48,6 +48,7 @@
 - `scripts/validate_pages_artifact.py` — проверка versioning и состава `.dist-pages` перед деплоем
 - `scripts/smoke-domain.mjs` — smoke-проверка доменной маршрутизации перед её рефакторингом
 - `scripts/smoke-state.mjs` — smoke-проверка state-инвариантов и persistent store
+- `scripts/smoke-ui-interactions.mjs` — smoke-проверка порогов и инвариантов UI-взаимодействий
 
 ## Как смотреть локально
 
@@ -66,11 +67,13 @@
 
 1. `node scripts/smoke-domain.mjs`
 2. `node scripts/smoke-state.mjs`
-3. `python3 scripts/validate_product_scope.py`
-4. `python3 scripts/validate_lore_canon.py`
-5. `python3 scripts/validate_responsive_strategy.py`
-6. `python3 scripts/prepare_pages.py`
-7. `python3 scripts/validate_pages_artifact.py`
+3. `node scripts/smoke-ui-interactions.mjs`
+4. `python3 scripts/validate_control_language.py`
+5. `python3 scripts/validate_product_scope.py`
+6. `python3 scripts/validate_lore_canon.py`
+7. `python3 scripts/validate_responsive_strategy.py`
+8. `python3 scripts/prepare_pages.py`
+9. `python3 scripts/validate_pages_artifact.py`
 
 Pull requests дополнительно проходят workflow `PR Governance`: он проверяет ссылку на Linear, acceptance evidence, self-review, deploy plan и follow-ups.
 

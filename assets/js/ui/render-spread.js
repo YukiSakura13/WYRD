@@ -1,10 +1,11 @@
 import { SCENES } from "./scenes.js";
 import { createMoonIcon, formatTraceDate, getMoonPhase } from "./moon.js";
 import { getCardImage, getSpreadDelay, layerLabel } from "./render-helpers.js";
+import { getDialogController } from "./dialog-controller.js";
 
 export function createSpreadRenderer(elements) {
   let openSpreadCardId = null;
-  let lastModalTrigger = null;
+  const dialogs = getDialogController();
 
   return {
     renderHistory,
@@ -45,7 +46,6 @@ export function createSpreadRenderer(elements) {
       item.style.setProperty("--spread-delay", getSpreadDelay(card, lastSpread.length));
       item.addEventListener("click", function handleSelect() {
         openSpreadCardId = card.id;
-        lastModalTrigger = item;
         renderSpreadModal(card);
       });
 
@@ -92,13 +92,10 @@ export function createSpreadRenderer(elements) {
     }
 
     if (!card) {
-      elements.spreadModal.hidden = true;
-      elements.body?.classList.remove("spread-modal-open");
+      dialogs.sync(elements.spreadModal, false);
       return;
     }
 
-    elements.spreadModal.hidden = false;
-    elements.body?.classList.add("spread-modal-open");
     elements.spreadModalImage.src = getCardImage(card);
     elements.spreadModalImage.alt = card.name;
     elements.spreadModalRole.textContent = `✦ ${card.spreadLabel || layerLabel(card.layer)} ✦`;
@@ -109,19 +106,14 @@ export function createSpreadRenderer(elements) {
     elements.spreadModal.scrollTop = 0;
     elements.spreadModalPanel.scrollTop = 0;
     bindSpreadModalEvents();
-
-    window.setTimeout(function focusModalClose() {
-      elements.spreadModalClose?.focus();
-    }, 0);
+    dialogs.sync(elements.spreadModal, true, {
+      initialFocus: "#spread-card-modal-close",
+    });
   }
 
   function closeSpreadModal() {
     openSpreadCardId = null;
     renderSpreadModal(null);
-
-    if (lastModalTrigger && typeof lastModalTrigger.focus === "function") {
-      lastModalTrigger.focus();
-    }
   }
 
   function bindSpreadModalEvents() {
@@ -132,11 +124,6 @@ export function createSpreadRenderer(elements) {
     elements.spreadModal.dataset.bound = "true";
     elements.spreadModalClose?.addEventListener("click", closeSpreadModal);
     elements.spreadModalBackdrop?.addEventListener("click", closeSpreadModal);
-    document.addEventListener("keydown", function handleModalEscape(event) {
-      if (event.key === "Escape" && !elements.spreadModal.hidden) {
-        closeSpreadModal();
-      }
-    });
   }
 
   function renderSpreadContinuation(lastSpread, uiState) {
@@ -163,7 +150,9 @@ export function createSpreadRenderer(elements) {
 
       if (button) {
         button.dataset.action = "new-question";
-        button.textContent = "ЗАДАТЬ НОВЫЙ ВОПРОС";
+        button.textContent = "Новый вопрос";
+        button.classList.remove("ui-action--primary", "wyrd-action-frame--secondary");
+        button.classList.add("ui-action--quiet", "wyrd-action-frame--quiet");
       }
 
       if (link) {
@@ -178,7 +167,9 @@ export function createSpreadRenderer(elements) {
 
     if (button) {
       button.dataset.action = "spread-5";
-      button.textContent = "✦ РАСКРЫТЬ ПЯТЬ КАРТ ✦";
+      button.textContent = "Раскрыть пять карт";
+      button.classList.remove("ui-action--quiet", "wyrd-action-frame--quiet");
+      button.classList.add("ui-action--primary", "wyrd-action-frame--secondary");
     }
 
     if (link) {

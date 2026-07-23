@@ -22,6 +22,27 @@
   --wyrd-text-secondary: rgba(210, 212, 210, 0.74);
   --wyrd-text-quiet: rgba(216, 218, 216, 0.64);
 
+  /* Canonical Silver UI Kit color roles. Silver belongs to interface chrome.
+     Card artwork keeps its authored paper color; Bone card surface is only a
+     neutral fallback beneath transparent or temporarily missing artwork. */
+  --wyrd-depth: #070709;
+  --wyrd-night: #101019;
+  --wyrd-night-lifted: #171923;
+  --wyrd-shadow: #0a0b0e;
+  --wyrd-silver: #cdd1cf;
+  --wyrd-silver-bright: #e1e4e1;
+  --wyrd-silver-lowlight: #858b8b;
+  --wyrd-silver-edge: #181c20;
+  --wyrd-silver-muted: rgba(205, 209, 207, 0.46);
+  --wyrd-silver-active: rgba(225, 228, 225, 0.82);
+  --wyrd-bone-text: #f3ecdd;
+  --wyrd-bone-card-surface: #eee5d4;
+  --wyrd-bone-card-surface-deep: #e4d7c2;
+  --wyrd-bone-muted: rgba(232, 222, 203, 0.68);
+  --wyrd-artifact-surface: #0b0d12;
+  --wyrd-control-surface: rgba(12, 14, 20, 0.86);
+  --wyrd-sheet-surface: rgba(10, 12, 17, 0.96);
+
   /* Shared silver control roles. */
   --control-touch-min: 44px;
   --control-icon-hit-size: 48px;
@@ -39,13 +60,18 @@
   --layout-oracle-content: 25rem;
   --layout-app-header-min-height: 7.25rem;
   --layout-app-header-padding-inline: 1.25rem;
-  --control-silver-line: rgba(205, 209, 207, 0.42);
-  --control-silver-line-active: rgba(225, 228, 225, 0.68);
+  --control-silver-line: rgba(205, 209, 207, 0.46);
+  --control-silver-line-active: rgba(225, 228, 225, 0.82);
   --control-silver-icon: rgba(225, 228, 225, 0.78);
   --control-silver-icon-active: rgba(242, 244, 241, 0.94);
-  --control-focus-ring: rgba(220, 225, 223, 0.76);
+  --control-focus-ring: rgba(225, 228, 225, 0.86);
   --control-surface-top: rgba(22, 24, 29, 0.84);
   --control-surface-bottom: rgba(8, 9, 13, 0.92);
+  --radius-circle: 999px;
+  --radius-small: 8px;
+  --radius-medium: 10px;
+  --radius-card: 12px;
+  --radius-sheet: 20px;
 
   /* Accent alpha scale */
   --accent-00: rgba(201, 161, 74, 0);

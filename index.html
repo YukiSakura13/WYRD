@@ -29,7 +29,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <meta name="wyrd-build" content="silver-20260714-cover-fill-fit" />
+    <meta name="wyrd-build" content="silver-20260722-action-family" />
     <title>WYRD — Оракул духов леса</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -38,7 +38,7 @@
       rel="stylesheet"
     />
     <link rel="manifest" href="./manifest.webmanifest?v=silver-20260710-forest" />
-    <link rel="stylesheet" href="./assets/css/styles.css?v=silver-20260716-small-stars" />
+    <link rel="stylesheet" href="./assets/css/styles.css?v=silver-20260722-action-family" />
   </head>
   <body>
     <div class="scene-fog scene-fog--back" aria-hidden="true"></div>
@@ -435,15 +435,15 @@
               <button class="about-save ui-action ui-action--primary" id="about-save-button" data-action="save-about-you" type="button" disabled>Сохранить</button>
             </div>
           </form>
-          <div class="about-unsaved-sheet" id="about-unsaved-sheet" hidden>
-            <button class="about-unsaved-backdrop" data-action="keep-editing-about-you" type="button" aria-label="Остаться в профиле"></button>
-            <section class="about-unsaved-panel" role="dialog" aria-modal="true" aria-labelledby="about-unsaved-title">
+          <div class="about-unsaved-sheet" id="about-unsaved-sheet" data-dialog-layer hidden>
+            <div class="about-unsaved-backdrop" data-action="keep-editing-about-you" data-dialog-backdrop aria-hidden="true"></div>
+            <section class="about-unsaved-panel" data-dialog-panel role="dialog" aria-modal="true" aria-labelledby="about-unsaved-title">
               <h2 id="about-unsaved-title">Сохранить изменения?</h2>
               <p>Изменения в профиле пока не сохранены.</p>
               <div class="about-unsaved-actions">
                 <button class="about-unsaved-primary ui-action ui-action--primary" data-action="save-about-and-close" type="button">Сохранить</button>
                 <button class="about-unsaved-secondary ui-action ui-action--destructive" data-action="discard-about-changes" type="button">Не сохранять</button>
-                <button class="about-unsaved-quiet ui-action ui-action--quiet" data-action="keep-editing-about-you" type="button">Остаться</button>
+                <button class="about-unsaved-quiet ui-action ui-action--quiet" data-action="keep-editing-about-you" data-dialog-dismiss-primary type="button">Остаться</button>
               </div>
             </section>
           </div>
@@ -528,9 +528,9 @@
               <button class="reminders-disable ui-action ui-action--destructive" data-action="disable-reminders" type="button">Отключить уведомления</button>
             </div>
           </form>
-          <div class="reminders-sheet" id="reminders-time-sheet" hidden>
-            <button class="reminders-sheet-backdrop" data-action="cancel-time-picker" type="button" aria-label="Закрыть выбор времени"></button>
-            <section class="reminders-sheet-panel" role="dialog" aria-modal="true" aria-labelledby="reminders-time-sheet-title">
+          <div class="reminders-sheet" id="reminders-time-sheet" data-dialog-layer hidden>
+            <div class="reminders-sheet-backdrop" data-action="cancel-time-picker" data-dialog-backdrop aria-hidden="true"></div>
+            <section class="reminders-sheet-panel" data-dialog-panel role="dialog" aria-modal="true" aria-labelledby="reminders-time-sheet-title">
               <h2 id="reminders-time-sheet-title">Время</h2>
               <div class="reminders-time-picker" role="group" aria-label="Выбрать время уведомления">
                 <label>
@@ -544,7 +544,7 @@
                 </label>
               </div>
               <div class="reminders-sheet-actions">
-                <button class="reminders-sheet-secondary ui-action ui-action--secondary" data-action="cancel-time-picker" type="button">Отмена</button>
+                <button class="reminders-sheet-secondary ui-action ui-action--secondary" data-action="cancel-time-picker" data-dialog-dismiss-primary type="button">Отмена</button>
                 <button class="reminders-sheet-primary ui-action ui-action--primary" data-action="confirm-time-picker" type="button">Готово</button>
               </div>
             </section>
@@ -671,10 +671,9 @@
           <button class="ui-icon-button ui-icon-button--back btn-back-circle" data-action="new-question" type="button" aria-label="Вернуться к колоде">
             <svg class="ui-icon-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12H2M10 4l-8 8 8 8" /></svg>
           </button>
-          <div class="screen-nav-title ui-app-header__identity" aria-label="WYRD">
-            <p class="screen-brand-word">WYRD</p>
-            <div class="screen-brand-line" aria-hidden="true"></div>
-            <p class="screen-brand-subtitle">Оракул духов леса</p>
+          <div class="screen-nav-title ui-app-header__identity wyrd-brand wyrd-brand--screen" aria-label="WYRD. Оракул духов леса">
+            <p class="wyrd-brand__word">WYRD</p>
+            <p class="wyrd-brand__subtitle">Оракул духов леса</p>
           </div>
           <div class="screen-nav-spacer ui-app-header__balance" aria-hidden="true"></div>
         </div>
@@ -687,7 +686,7 @@
           <article class="share-card card-box" id="share-card" aria-labelledby="card-name">
             <img
               class="card-frame"
-              src="./assets/images/card-frame-dark-hero.png"
+              src="./assets/ui/card-frames/approved/wyrd-card-frame-artifact.svg"
               alt=""
               aria-hidden="true"
               decoding="async"
@@ -706,8 +705,14 @@
             </div>
           </article>
           <div class="result-card-actions" aria-label="Действия с картой">
-            <button class="btn-share ui-action ui-action--secondary" data-action="share-card" type="button">
-              <span id="share-button-label">ПОДЕЛИТЬСЯ КАРТОЙ</span>
+            <button class="wyrd-utility-action" data-action="share-card" type="button">
+              <img
+                class="wyrd-utility-action__icon"
+                src="./assets/ui/icons/tabler-share-2.svg"
+                alt=""
+                aria-hidden="true"
+              />
+              <span id="share-button-label">Поделиться картой</span>
             </button>
           </div>
           <p class="share-feedback" id="share-feedback" hidden aria-live="polite"></p>
@@ -734,8 +739,8 @@
             Духи леса услышали твой вопрос. Три карты покажут то, что скрыто за первым знаком.
           </p>
           <div class="hook-cta-wrap">
-            <button class="cover-btn hook-btn ui-action ui-action--primary" data-action="hook-open-path" type="button">
-              ✦ РАСКРЫТЬ ТРИ КАРТЫ ✦
+            <button class="cover-btn hook-btn ui-action ui-action--primary wyrd-action-frame wyrd-action-frame--hero" data-action="hook-open-path" type="button">
+              Раскрыть три карты
             </button>
           </div>
         </div>
@@ -747,10 +752,9 @@
           <button class="ui-icon-button ui-icon-button--back btn-back-circle" data-action="ritual-back" type="button" aria-label="Вернуться на предыдущий слой">
             <svg class="ui-icon-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12H2M10 4l-8 8 8 8" /></svg>
           </button>
-          <div class="screen-nav-title ui-app-header__identity" aria-label="WYRD">
-            <p class="screen-brand-word">WYRD</p>
-            <div class="screen-brand-line" aria-hidden="true"></div>
-            <p class="screen-brand-subtitle">Оракул духов леса</p>
+          <div class="screen-nav-title ui-app-header__identity wyrd-brand wyrd-brand--screen" aria-label="WYRD. Оракул духов леса">
+            <p class="wyrd-brand__word">WYRD</p>
+            <p class="wyrd-brand__subtitle">Оракул духов леса</p>
           </div>
           <div class="screen-nav-spacer ui-app-header__balance" aria-hidden="true"></div>
         </div>
@@ -778,19 +782,20 @@
         </div>
         <div class="spread-continuation" id="spread-continuation" hidden>
           <p class="spread-continuation-copy">История уже открылась. Следующий слой ждёт твоего шага.</p>
-          <button class="cover-btn spread-continuation-btn ui-action ui-action--primary" data-action="spread-5" type="button">Продолжить путь</button>
-          <button class="spread-continuation-link ui-action ui-action--quiet" data-action="new-question" type="button">Задать новый вопрос</button>
+          <button class="cover-btn spread-continuation-btn ui-action ui-action--primary wyrd-action-frame wyrd-action-frame--secondary" data-action="spread-5" type="button">Продолжить путь</button>
+          <button class="spread-continuation-link ui-action ui-action--quiet wyrd-action-frame wyrd-action-frame--quiet" data-action="new-question" type="button">Новый вопрос</button>
         </div>
-        <div class="spread-card-modal" id="spread-card-modal" hidden>
-          <div class="spread-card-modal-backdrop" id="spread-card-modal-backdrop" aria-hidden="true"></div>
+        <div class="spread-card-modal" id="spread-card-modal" data-dialog-layer hidden>
+          <div class="spread-card-modal-backdrop" id="spread-card-modal-backdrop" data-dialog-backdrop aria-hidden="true"></div>
           <article
             class="spread-card-modal-panel"
             id="spread-card-modal-panel"
+            data-dialog-panel
             aria-labelledby="spread-modal-name"
             aria-modal="true"
             role="dialog"
           >
-            <button class="ui-icon-button ui-icon-button--close spread-card-modal-close" id="spread-card-modal-close" type="button" aria-label="Закрыть карту">
+            <button class="ui-icon-button ui-icon-button--close spread-card-modal-close" id="spread-card-modal-close" data-dialog-dismiss-primary type="button" aria-label="Закрыть карту">
               <svg class="ui-icon-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17" /></svg>
             </button>
             <img class="spread-card-modal-image" id="spread-modal-image" alt="" />
@@ -813,21 +818,20 @@
           <button class="ui-icon-button ui-icon-button--back deck-back" data-action="back-to-forest" type="button" aria-label="Вернуться в Лес">
             <svg class="ui-icon-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12H2M10 4l-8 8 8 8" /></svg>
           </button>
-          <div class="ui-app-header__identity" aria-label="WYRD">
-            <h2 class="deck-brand">WYRD</h2>
-            <div class="deck-brand-line" aria-hidden="true"></div>
-            <p class="deck-subtitle">Оракул духов леса</p>
+          <div class="ui-app-header__identity wyrd-brand wyrd-brand--screen" aria-label="WYRD. Оракул духов леса">
+            <h2 class="wyrd-brand__word">WYRD</h2>
+            <p class="wyrd-brand__subtitle">Оракул духов леса</p>
           </div>
           <div class="screen-nav-spacer ui-app-header__balance" aria-hidden="true"></div>
         </header>
 
         <section class="deck-question-zone" aria-label="Поле вопроса">
-          <label class="deck-question-label" for="question-input">Твой вопрос</label>
-          <div class="deck-question-shell">
+          <label class="deck-question-label wyrd-question-field__label" for="question-input">Твой вопрос</label>
+          <div class="deck-question-shell wyrd-question-field__shell" data-question-shell>
             <span class="deck-question-orbit" aria-hidden="true"></span>
             <textarea
               id="question-input"
-              class="deck-question-input"
+              class="deck-question-input wyrd-question-field__input"
               rows="2"
               maxlength="280"
               aria-describedby="deck-question-status"
@@ -902,68 +906,83 @@
         </div>
         <div class="history-list" id="history-list" aria-live="polite"></div>
 
-        <div class="history-sheet-backdrop" id="history-sheet-backdrop" data-action="close-history-entry" hidden></div>
-        <aside
-          class="history-sheet"
-          id="history-sheet"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="history-sheet-title"
-          hidden
-        >
-          <div class="history-sheet-inner">
-            <div class="history-sheet-handle" aria-hidden="true"></div>
-            <div class="history-sheet-close-row">
-              <button class="ui-icon-button ui-icon-button--close btn-back-circle history-sheet-close" data-action="close-history-entry" type="button" aria-label="Закрыть">
-                <svg class="ui-icon-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17" /></svg>
-              </button>
+        <div class="history-sheet-layer" id="history-sheet-layer" data-dialog-layer hidden>
+          <div class="history-sheet-backdrop" id="history-sheet-backdrop" data-action="close-history-entry" data-dialog-backdrop aria-hidden="true"></div>
+          <aside
+            class="history-sheet"
+            id="history-sheet"
+            data-dialog-panel
+            data-dialog-motion="sheet"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="history-sheet-title"
+          >
+            <div class="history-sheet-inner">
+              <div class="history-sheet-handle-target" data-history-sheet-handle aria-hidden="true">
+                <span class="history-sheet-handle"></span>
+              </div>
+              <div class="history-sheet-close-row">
+                <button class="ui-icon-button ui-icon-button--close btn-back-circle history-sheet-close" data-action="close-history-entry" data-dialog-dismiss-primary type="button" aria-label="Закрыть">
+                  <svg class="ui-icon-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17" /></svg>
+                </button>
+              </div>
+              <div class="history-sheet-question" id="history-sheet-question">
+                <p>ТВОЙ ВОПРОС</p>
+                <blockquote id="history-sheet-question-text"></blockquote>
+              </div>
+              <div class="history-sheet-card">
+                <img id="history-sheet-image" src="" alt="" loading="lazy" decoding="async" />
+              </div>
+              <h2 id="history-sheet-title"></h2>
+              <div class="history-sheet-divider" aria-hidden="true">
+                <span></span>
+                <p>ПОСЛАНИЕ</p>
+                <span></span>
+              </div>
+              <p class="history-sheet-message" id="history-sheet-message"></p>
+              <div class="history-sheet-shadow" id="history-sheet-shadow">
+                <p>ТЕНЬ</p>
+                <blockquote id="history-sheet-shadow-text"></blockquote>
+              </div>
+              <div class="history-sheet-footer" id="history-sheet-footer"></div>
             </div>
-            <div class="history-sheet-question" id="history-sheet-question">
-              <p>ТВОЙ ВОПРОС</p>
-              <blockquote id="history-sheet-question-text"></blockquote>
-            </div>
-            <div class="history-sheet-card">
-              <img id="history-sheet-image" src="" alt="" loading="lazy" decoding="async" />
-            </div>
-            <h2 id="history-sheet-title"></h2>
-            <div class="history-sheet-divider" aria-hidden="true">
-              <span></span>
-              <p>ПОСЛАНИЕ</p>
-              <span></span>
-            </div>
-            <p class="history-sheet-message" id="history-sheet-message"></p>
-            <div class="history-sheet-shadow" id="history-sheet-shadow">
-              <p>ТЕНЬ</p>
-              <blockquote id="history-sheet-shadow-text"></blockquote>
-            </div>
-            <div class="history-sheet-footer" id="history-sheet-footer"></div>
-          </div>
-        </aside>
+          </aside>
+        </div>
       </section>
 
-      <div class="save-screen-backdrop" id="save-screen-backdrop" data-action="close-save-screen" hidden></div>
-      <aside class="save-screen" id="save-screen" role="dialog" aria-modal="true" aria-labelledby="save-screen-title" hidden>
-        <div class="save-screen-inner">
-          <button class="ui-icon-button ui-icon-button--close save-screen-close" data-action="close-save-screen" type="button" aria-label="Закрыть сохранение">
-            <svg class="ui-icon-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17" /></svg>
-          </button>
-          <p class="save-screen-kicker">WYRD ARCHIVE</p>
-          <h2 id="save-screen-title">Сохранить карту</h2>
-          <p class="save-screen-copy" id="save-screen-copy">Готовим карту...</p>
-          <div class="save-screen-art" id="save-screen-art">
-            <div class="save-screen-loading" id="save-screen-loading" aria-hidden="true">
-              <span></span>
+      <div class="save-screen-layer" id="save-screen-layer" data-dialog-layer hidden>
+        <div class="save-screen-backdrop" id="save-screen-backdrop" data-action="close-save-screen" data-dialog-backdrop aria-hidden="true"></div>
+        <aside class="save-screen" id="save-screen" role="dialog" aria-modal="true" aria-labelledby="save-screen-title">
+          <div class="save-screen-inner" data-dialog-panel>
+            <button class="ui-icon-button ui-icon-button--close save-screen-close" data-action="close-save-screen" data-dialog-dismiss-primary type="button" aria-label="Закрыть сохранение">
+              <svg class="ui-icon-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17" /></svg>
+            </button>
+            <p class="save-screen-kicker">WYRD ARCHIVE</p>
+            <h2 id="save-screen-title">Сохранить карту</h2>
+            <p class="save-screen-copy" id="save-screen-copy">Готовим карту...</p>
+            <div class="save-screen-art" id="save-screen-art">
+              <div class="save-screen-loading" id="save-screen-loading" aria-hidden="true">
+                <span></span>
+              </div>
+              <img id="save-screen-image" alt="Готовое изображение карты для сохранения" hidden />
             </div>
-            <img id="save-screen-image" alt="Готовое изображение карты для сохранения" hidden />
+            <a class="save-screen-link ui-action ui-action--secondary" id="save-screen-link" href="#" aria-disabled="true">ОТКРЫТЬ КАРТУ</a>
+            <p class="save-screen-hint">Удержи изображение, чтобы сохранить его в Фото.</p>
           </div>
-          <a class="save-screen-link ui-action ui-action--secondary" id="save-screen-link" href="#" aria-disabled="true">ОТКРЫТЬ КАРТУ</a>
-          <p class="save-screen-hint">Удержи изображение, чтобы сохранить его в Фото.</p>
-        </div>
-      </aside>
+        </aside>
+      </div>
 
       <div class="ornament">✦ ✦ ✦</div>
       <footer class="footer">Лес отвечает тем, кто умеет слушать тишину.</footer>
     </main>
+
+    <section
+      class="wyrd-notifications"
+      id="wyrd-notifications"
+      aria-label="Уведомления"
+      aria-live="polite"
+      aria-relevant="additions text"
+    ></section>
 
     <script>
       window.WYRD_BUILD_ID =

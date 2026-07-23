@@ -76,6 +76,9 @@
         │   └── reading.js        # бизнес-логика чтения/раскладов
         └── ui/
             ├── actions.js        # обработка пользовательских действий
+            ├── dialog-controller.js # общий accessible modal/sheet controller
+            ├── history-sheet-drag.js # drag-to-dismiss листа истории
+            ├── notification-center.js # краткие системные подтверждения
             ├── render.js         # рендеринг DOM
             └── scenes.js         # канонический список сцен приложения
 ├── docs/
@@ -118,6 +121,9 @@
 - `assets/js/ui/share.js`
 - `assets/js/ui/flow.js`
 - `assets/js/ui/scenes.js`
+- `assets/js/ui/dialog-controller.js`
+- `assets/js/ui/history-sheet-drag.js`
+- `assets/js/ui/notification-center.js`
 
 Ответственность:
 
@@ -125,6 +131,8 @@
 - маршрутизировать пользовательские действия
 - переключать активную сцену приложения
 - запускать сценарии чтения и раскладов
+- обеспечивать единый modal/sheet lifecycle: `inert`, focus trap, Escape, scroll lock и возврат фокуса
+- поддерживать явный drag-to-dismiss и централизованные краткие подтверждения
 
 ### 4.3. Domain Layer
 
@@ -166,6 +174,7 @@
 - `manifest.webmanifest`
 - `scripts/prepare_pages.py`
 - `scripts/validate_pages_artifact.py`
+- `scripts/smoke-ui-interactions.mjs`
 - `.github/workflows/deploy.yml`
 
 Ответственность:
@@ -199,7 +208,7 @@
 Роль:
 
 - собирает приложение из модулей
-- инициализирует store, ui state, renderer, audio
+- инициализирует store, ui state, renderer, audio и gesture controller листа истории
 - навешивает глобальный click handler
 - запускает первый render
 - регистрирует service worker

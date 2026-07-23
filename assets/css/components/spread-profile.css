@@ -1470,10 +1470,6 @@
   overscroll-behavior: contain;
 }
 
-body.spread-modal-open {
-  overflow: hidden;
-}
-
 .spread-card-modal[hidden] {
   display: none !important;
 }
@@ -1501,7 +1497,6 @@ body.spread-modal-open {
     0 0 36px var(--accent-08);
   overflow-y: auto;
   overscroll-behavior: contain;
-  animation: spreadModalExpand 320ms var(--ease-out-strong) both;
 }
 
 .spread-card-modal-close {
@@ -1543,7 +1538,7 @@ body.spread-modal-open {
 .spread-card-modal-keyword {
   color: var(--text-accent);
   font-family: var(--ui-font);
-  font-size: 0.5rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.18em;
   line-height: var(--leading-normal);
@@ -1577,7 +1572,7 @@ body.spread-modal-open {
   margin: 0.95rem 28px 0.55rem;
   color: var(--text-accent);
   font-family: var(--ui-font);
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
@@ -1607,18 +1602,6 @@ body.spread-modal-open {
   font-size: 0.82rem;
   font-style: italic;
   padding: 0 32px;
-}
-
-@keyframes spreadModalExpand {
-  from {
-    opacity: 0;
-    transform: translateY(18px) scale(0.96);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
 }
 
 .spread-detail-role {
@@ -1860,18 +1843,30 @@ body.spread-modal-open {
   padding: 1rem 0;
 }
 
-.history-sheet-backdrop {
+.history-sheet-layer {
+  --dialog-duration: 320ms;
   position: fixed;
   inset: 0;
   z-index: 70;
-  background: transparent;
-  pointer-events: none;
-  transition: background 0.3s ease;
 }
 
-.history-sheet-backdrop.is-open {
+.history-sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  padding: 0;
+  border: 0;
   background: rgba(0, 0, 0, 0.65);
+  pointer-events: none;
+}
+
+.history-sheet-layer.is-dialog-visible .history-sheet-backdrop {
   pointer-events: auto;
+  opacity: calc(1 - var(--history-drag-progress, 0));
+}
+
+.history-sheet-layer.is-dragging .history-sheet-backdrop {
+  transition: none;
 }
 
 .history-sheet {
@@ -1879,7 +1874,7 @@ body.spread-modal-open {
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 80;
+  z-index: 1;
   height: min(92svh, 720px);
   overflow-y: auto;
   border-top: 1px solid var(--accent-18);
@@ -1887,16 +1882,21 @@ body.spread-modal-open {
   background: rgba(18, 18, 28, 0.98);
   box-shadow: 0 -24px 80px rgba(0, 0, 0, 0.48);
   scrollbar-width: none;
-  transform: translateY(100%);
-  transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+  transform: translateY(calc(100% + var(--history-drag-y, 0px)));
+  transition: transform var(--dialog-duration) cubic-bezier(0.32, 0.72, 0, 1);
+  will-change: transform;
 }
 
 .history-sheet::-webkit-scrollbar {
   display: none;
 }
 
-.history-sheet.is-open {
-  transform: translateY(0);
+.history-sheet-layer.is-dialog-visible .history-sheet {
+  transform: translateY(var(--history-drag-y, 0px));
+}
+
+.history-sheet.is-dragging {
+  transition: none;
 }
 
 .history-sheet-inner {
@@ -1905,12 +1905,23 @@ body.spread-modal-open {
   padding: 16px 0 56px;
 }
 
+.history-sheet-handle-target {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 44px;
+  margin: -12px 0 -4px;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
 .history-sheet-handle {
+  display: block;
   width: 32px;
   height: 3px;
-  margin: 0 auto 14px;
   border-radius: 2px;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .history-sheet-close-row {
@@ -1921,8 +1932,8 @@ body.spread-modal-open {
 
 .history-sheet-close {
   position: static;
-  width: 30px;
-  height: 30px;
+  width: 44px;
+  height: 44px;
   font-size: 1.15rem;
 }
 

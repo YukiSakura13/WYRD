@@ -613,12 +613,10 @@
     opacity 220ms ease;
 }
 
-#cover .cover-btn:hover,
 #cover .cover-btn:focus-visible {
   filter: brightness(1.02);
 }
 
-#cover .cover-btn:hover .cover-cta-fill,
 #cover .cover-btn:focus-visible .cover-cta-fill {
   opacity: 1;
   box-shadow:
@@ -626,7 +624,6 @@
     inset 0 -12px 18px rgba(0, 0, 0, 0.46);
 }
 
-#cover .cover-btn:hover .cover-cta-frame,
 #cover .cover-btn:focus-visible .cover-cta-frame {
   filter:
     grayscale(1)
@@ -637,7 +634,6 @@
     drop-shadow(0 19px 24px rgba(0, 0, 0, 0.24));
 }
 
-#cover .cover-btn:hover .cover-cta-label,
 #cover .cover-btn:focus-visible .cover-cta-label {
   color: var(--wyrd-text-action-active);
   letter-spacing: 0.07em;
@@ -766,7 +762,6 @@
   animation-delay: 0.9s;
 }
 
-.cover-icon-btn:hover .cover-icon-svg,
 .cover-icon-btn:focus-visible .cover-icon-svg {
   opacity: 1;
   animation: none;
@@ -776,7 +771,6 @@
     drop-shadow(0 0 10px rgba(228, 233, 238, 0.12));
 }
 
-.cover-icon-btn:hover .cover-icon-visual::before,
 .cover-icon-btn:focus-visible .cover-icon-visual::before {
   animation: none;
   opacity: 0.88;
@@ -787,7 +781,6 @@
   transform: translateY(1px) scale(0.98);
 }
 
-.cover-icon-btn:hover,
 .cover-icon-btn:focus-visible {
   background: transparent;
 }
@@ -1216,7 +1209,6 @@ body[data-scene="onboarding"] #profile {
   text-shadow: 0 0 12px rgba(201, 161, 74, 0.08);
 }
 
-.ritual-btn:hover,
 .ritual-btn:focus-visible {
   transform: translateY(-1px);
   filter: brightness(1.06);
@@ -1231,6 +1223,66 @@ body[data-scene="onboarding"] #profile {
 .text-btn:focus-visible {
   outline: 2px solid rgba(243, 225, 170, 0.88);
   outline-offset: 4px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  #cover .cover-btn:hover {
+    filter: brightness(1.02);
+  }
+
+  #cover .cover-btn:hover .cover-cta-fill {
+    opacity: 1;
+    box-shadow:
+      inset 0 1px 0 rgba(245, 248, 250, 0.18),
+      inset 0 -12px 18px rgba(0, 0, 0, 0.46);
+  }
+
+  #cover .cover-btn:hover .cover-cta-frame {
+    filter:
+      grayscale(1)
+      contrast(1.16)
+      brightness(1.48)
+      drop-shadow(0 1px 0 rgba(245, 248, 250, 0.24))
+      drop-shadow(0 12px 17px rgba(0, 0, 0, 0.56))
+      drop-shadow(0 19px 24px rgba(0, 0, 0, 0.24));
+  }
+
+  #cover .cover-btn:hover .cover-cta-label {
+    color: var(--wyrd-text-action-active);
+    letter-spacing: 0.07em;
+    text-shadow:
+      0 2px 12px rgba(0, 0, 0, 0.72),
+      0 0 12px rgba(232, 237, 242, 0.14);
+  }
+
+  .cover-icon-btn:hover .cover-icon-svg {
+    opacity: 1;
+    animation: none;
+    transform: translateY(-3px) scale(1.06);
+    filter:
+      drop-shadow(0 4px 14px rgba(210, 216, 224, 0.2))
+      drop-shadow(0 0 10px rgba(228, 233, 238, 0.12));
+  }
+
+  .cover-icon-btn:hover .cover-icon-visual::before {
+    animation: none;
+    opacity: 0.88;
+    transform: scale(1);
+  }
+
+  .cover-icon-btn:hover {
+    background: transparent;
+  }
+
+  .ritual-btn:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.06);
+    box-shadow:
+      0 20px 46px rgba(0, 0, 0, 0.38),
+      0 0 0 1px rgba(255, 245, 214, 0.22) inset,
+      0 0 26px rgba(201, 168, 76, 0.3),
+      0 0 46px rgba(201, 168, 76, 0.14);
+  }
 }
 
 .ritual-btn:active {

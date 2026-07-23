@@ -1,0 +1,429 @@
+/* Canonical folklore-silver component material for YUK-135. */
+
+.wyrd-artifact-card {
+  position: relative;
+  isolation: isolate;
+  width: min(100%, 24rem);
+  aspect-ratio: 1086 / 1448;
+  overflow: hidden;
+  background: var(--wyrd-bone-card-surface);
+  box-shadow:
+    0 22px 58px rgba(0, 0, 0, 0.42),
+    0 0 0 1px rgba(225, 228, 225, 0.08);
+}
+
+.wyrd-artifact-card__art {
+  position: absolute;
+  inset: 5.6% 7.2% 5.6%;
+  z-index: -2;
+  width: 85.6%;
+  height: 88.8%;
+  object-fit: cover;
+  object-position: 50% 50%;
+  background: var(--wyrd-bone-card-surface);
+  filter: none;
+}
+
+.wyrd-artifact-card__veil {
+  display: none;
+}
+
+.wyrd-artifact-card__frame {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.wyrd-artifact-card__caption {
+  position: absolute;
+  inset-inline: 9%;
+  bottom: 7.4%;
+  z-index: 1;
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  background: rgba(238, 229, 212, 0.86);
+  color: #191816;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(1rem, 3vw, 1.35rem);
+  font-weight: 600;
+  line-height: 1.1;
+  text-align: center;
+}
+
+.wyrd-utility-action {
+  position: relative;
+  display: inline-flex;
+  min-width: min(100%, 17rem);
+  min-height: var(--control-action-min-height);
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  padding: 0.7rem 1.15rem;
+  border: 1px solid var(--control-silver-line);
+  border-radius: var(--radius-medium);
+  appearance: none;
+  background: var(--wyrd-control-surface);
+  color: var(--wyrd-text-action);
+  box-shadow:
+    inset 0 1px 0 rgba(225, 228, 225, 0.04),
+    inset 0 -8px 16px rgba(0, 0, 0, 0.16),
+    0 8px 18px rgba(0, 0, 0, 0.22);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  cursor: pointer;
+  touch-action: manipulation;
+  white-space: nowrap;
+  transition:
+    border-color var(--dur-fast) var(--ease-out-strong),
+    color var(--dur-fast) var(--ease-out-strong),
+    box-shadow var(--dur-medium) var(--ease-out-strong),
+    transform var(--dur-fast) var(--ease-out-strong);
+}
+
+.wyrd-utility-action__icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex: 0 0 1.25rem;
+}
+
+.wyrd-utility-action__mark {
+  width: 1.05rem;
+  height: 1.05rem;
+  flex: 0 0 1.05rem;
+}
+
+.wyrd-utility-action:hover:not(:disabled),
+.wyrd-utility-action:focus-visible {
+  border-color: var(--control-silver-line-active);
+  color: var(--wyrd-text-action-active);
+  box-shadow:
+    inset 0 1px 0 rgba(225, 228, 225, 0.07),
+    0 0 14px rgba(225, 228, 225, 0.08),
+    0 8px 18px rgba(0, 0, 0, 0.24);
+}
+
+.wyrd-utility-action:focus-visible {
+  outline: 2px solid var(--control-focus-ring);
+  outline-offset: 3px;
+}
+
+.wyrd-utility-action:active:not(:disabled) {
+  transform: translateY(var(--control-pressed-offset));
+}
+
+.wyrd-utility-action:disabled,
+.wyrd-utility-action[aria-disabled="true"] {
+  opacity: var(--control-disabled-opacity);
+  cursor: default;
+}
+
+.wyrd-question-field {
+  display: grid;
+  width: min(100%, 37rem);
+  gap: 0.55rem;
+}
+
+.wyrd-question-field__label {
+  color: var(--wyrd-bone-muted);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.wyrd-question-field__shell {
+  position: relative;
+  min-height: 5.75rem;
+  border: 1px solid var(--control-silver-line);
+  border-radius: var(--radius-card);
+  background: var(--wyrd-control-surface);
+  box-shadow:
+    inset 0 0 0 1px rgba(225, 228, 225, 0.045),
+    0 12px 24px rgba(0, 0, 0, 0.18);
+  transition:
+    border-color var(--dur-medium) var(--ease-out-strong),
+    box-shadow var(--dur-medium) var(--ease-out-strong);
+}
+
+.wyrd-question-field__shell::before {
+  position: absolute;
+  inset: 4px;
+  border: 1px solid rgba(205, 209, 207, 0.12);
+  border-radius: var(--radius-small);
+  content: "";
+  pointer-events: none;
+}
+
+.wyrd-question-field__shell::after {
+  position: absolute;
+  inset: -1px;
+  border-radius: var(--radius-card);
+  padding: 1px;
+  background: conic-gradient(
+    from var(--wyrd-question-spark-angle, 0deg),
+    transparent 0deg,
+    transparent 298deg,
+    rgba(225, 228, 225, 0.12) 314deg,
+    var(--wyrd-silver-bright) 328deg,
+    rgba(225, 228, 225, 0.14) 342deg,
+    transparent 360deg
+  );
+  content: "";
+  opacity: 0.72;
+  pointer-events: none;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: wyrd-question-spark 3.8s linear infinite;
+}
+
+.wyrd-question-field__shell:focus-within {
+  border-color: var(--control-silver-line-active);
+  box-shadow:
+    inset 0 0 0 1px rgba(225, 228, 225, 0.055),
+    0 0 20px rgba(225, 228, 225, 0.075),
+    0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+.wyrd-question-field__shell:focus-within::after {
+  opacity: 0.94;
+}
+
+.wyrd-question-field__input {
+  width: 100%;
+  min-height: 5.75rem;
+  resize: none;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--wyrd-bone-text);
+  caret-color: var(--wyrd-silver-bright);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.08rem;
+  font-weight: 500;
+  line-height: 1.45;
+  padding: 1rem 1.05rem;
+}
+
+.wyrd-question-field__input::placeholder {
+  color: var(--wyrd-bone-muted);
+  font-style: italic;
+  opacity: 0.82;
+}
+
+.wyrd-material-surface {
+  min-height: 9rem;
+  padding: 1.25rem;
+  border: 1px solid rgba(205, 209, 207, 0.18);
+  border-radius: var(--radius-card);
+  color: var(--wyrd-text-secondary);
+}
+
+.wyrd-material-surface--artifact {
+  background: var(--wyrd-artifact-surface);
+  border-color: rgba(225, 228, 225, 0.32);
+}
+
+.wyrd-material-surface--quiet {
+  background: rgba(10, 12, 17, 0.46);
+}
+
+.wyrd-material-surface--control {
+  background: var(--wyrd-control-surface);
+}
+
+.wyrd-material-surface--sheet {
+  background: var(--wyrd-sheet-surface);
+  border-radius: var(--radius-sheet) var(--radius-sheet) var(--radius-card) var(--radius-card);
+  box-shadow: 0 24px 52px rgba(0, 0, 0, 0.42);
+}
+
+/* Runtime proof cluster: deck question, result frame and share action. */
+.deck-question-zone {
+  width: min(calc(100% - 2rem), 36rem);
+  margin-inline: auto;
+}
+
+.deck-question-zone::after {
+  background:
+    radial-gradient(circle, rgba(225, 228, 225, 0.96) 0 18%, transparent 24%),
+    linear-gradient(180deg, transparent, rgba(205, 209, 207, 0.78), transparent);
+  filter: drop-shadow(0 0 10px rgba(225, 228, 225, 0.26));
+}
+
+.deck-question-zone .deck-question-label {
+  margin: 0 0 0.58rem 0.2rem;
+  color: var(--wyrd-bone-muted);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.deck-question-shell.wyrd-question-field__shell,
+.deck-scene.is-question-ready .deck-question-shell.wyrd-question-field__shell {
+  min-height: 5.75rem;
+  border-color: var(--control-silver-line);
+  border-radius: var(--radius-card);
+  background: var(--wyrd-control-surface);
+  box-shadow:
+    inset 0 0 0 1px rgba(225, 228, 225, 0.045),
+    0 12px 24px rgba(0, 0, 0, 0.18);
+  transform: none;
+}
+
+.deck-question-shell.wyrd-question-field__shell::before {
+  inset: 4px;
+  border-color: rgba(205, 209, 207, 0.12);
+  border-radius: var(--radius-small);
+}
+
+.deck-question-shell.wyrd-question-field__shell:focus-within {
+  border-color: var(--control-silver-line-active);
+  background: var(--wyrd-control-surface);
+  box-shadow:
+    inset 0 0 0 1px rgba(225, 228, 225, 0.055),
+    0 0 20px rgba(225, 228, 225, 0.075),
+    0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+.deck-question-orbit {
+  display: block;
+  inset: -1px;
+  border-radius: 12px;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--question-orbit-angle, 0deg),
+    transparent 0deg,
+    transparent 298deg,
+    rgba(225, 228, 225, 0.12) 314deg,
+    var(--wyrd-silver-bright) 328deg,
+    rgba(225, 228, 225, 0.14) 342deg,
+    transparent 360deg
+  );
+  filter: drop-shadow(0 0 9px rgba(225, 228, 225, 0.16));
+  opacity: 0.72;
+  animation: questionOrbit 3.8s linear infinite;
+}
+
+.deck-question-shell.wyrd-question-field__shell::after {
+  display: none;
+}
+
+.deck-question-shell:focus-within .deck-question-orbit {
+  filter: drop-shadow(0 0 12px rgba(225, 228, 225, 0.24));
+  opacity: 0.94;
+}
+
+.deck-scene.is-question-ready .deck-question-orbit {
+  opacity: 0.42;
+  animation-duration: 8s;
+}
+
+.deck-question-input.wyrd-question-field__input {
+  min-height: 5.75rem;
+  resize: none;
+  color: var(--wyrd-bone-text);
+  caret-color: var(--wyrd-silver-bright);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.08rem;
+  font-weight: 500;
+  line-height: 1.45;
+  padding: 1rem 1.05rem;
+  text-shadow: none;
+}
+
+.deck-question-input.wyrd-question-field__input::placeholder {
+  color: var(--wyrd-bone-muted);
+  opacity: 0.82;
+}
+
+#result .card-frame {
+  opacity: 1;
+  animation: none;
+}
+
+#result .card-img {
+  filter: none;
+}
+
+#result .result-card-actions .wyrd-utility-action {
+  width: 100%;
+}
+
+@property --wyrd-question-spark-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes wyrd-question-spark {
+  from {
+    --wyrd-question-spark-angle: 0deg;
+  }
+
+  to {
+    --wyrd-question-spark-angle: 360deg;
+  }
+}
+
+@media (forced-colors: active) {
+  .wyrd-question-field__shell:focus-within,
+  .wyrd-utility-action:focus-visible {
+    outline: 2px solid ButtonText;
+    outline-offset: 3px;
+  }
+
+  .wyrd-question-field__shell::after {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wyrd-question-field__shell::after,
+  .deck-question-orbit {
+    animation: none;
+    opacity: 0;
+  }
+
+  .wyrd-utility-action,
+  .wyrd-question-field__shell {
+    transition: none;
+  }
+
+  .wyrd-utility-action:active:not(:disabled) {
+    transform: none;
+  }
+}
+
+@media (max-width: 22rem) {
+  .wyrd-utility-action {
+    gap: 0.42rem;
+    padding-inline: 0.68rem;
+    font-size: 1rem;
+  }
+
+  .wyrd-utility-action__icon {
+    width: 1.1rem;
+    height: 1.1rem;
+    flex-basis: 1.1rem;
+  }
+
+  .wyrd-utility-action__mark {
+    width: 0.92rem;
+    height: 0.92rem;
+    flex-basis: 0.92rem;
+  }
+}

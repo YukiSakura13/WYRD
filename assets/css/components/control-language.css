@@ -101,7 +101,7 @@
   flex: 0 0 var(--control-icon-hit-size);
   padding: 0;
   border: 1px solid var(--control-silver-line);
-  border-radius: 50%;
+  border-radius: var(--radius-circle);
   background:
     radial-gradient(circle at 50% 22%, rgba(229, 233, 230, 0.05), transparent 48%),
     linear-gradient(180deg, var(--control-surface-top), var(--control-surface-bottom));
