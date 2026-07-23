@@ -12,6 +12,15 @@ Describe the observable user or developer result.
 
 - [ ] Write measurable completion criteria.
 
+### Silver migration only — restoration-first acceptance
+
+- [ ] Read `docs/WYRD_SILVER_MIGRATION_PROTOCOL.md` and the current live Silver UI Kit before implementation.
+- [ ] Map every legacy control to a canonical component before editing.
+- [ ] Reuse approved geometry and mechanics 1:1; no screen-local redesign or invented behavior.
+- [ ] Verify all applicable states, keyboard/focus, reduced motion, 44px targets, responsive reflow, safe area, and authored card colors.
+- [ ] Attach side-by-side visual and interaction evidence.
+- [ ] Record every approved exception in the UI Kit and Foundations before using it in runtime.
+
 ## Scope
 
 - Priority: P0 / P1 / P2

@@ -6,6 +6,12 @@ This document maps current runtime selectors to the component families defined i
 
 ## Rules
 
+- Read and follow `docs/WYRD_SILVER_MIGRATION_PROTOCOL.md` before changing a
+  legacy gold screen.
+- Treat the approved local Silver UI Kit as an executable 1:1 contract, not as
+  inspiration.
+- Reuse canonical markup, classes, assets, states, and event logic wherever they
+  already exist.
 - Do not change visuals just because a selector is listed here.
 - Do not rename classes in bulk without screenshots and interaction checks.
 - Migrate one component family at a time.
@@ -180,7 +186,8 @@ Requires visual approval before commit.
 
 ## Acceptance Checklist For A Future Migration
 
-Before merging a component-family migration:
+Before merging a component-family migration, complete the full restoration
+checklist in `docs/WYRD_SILVER_MIGRATION_PROTOCOL.md` and confirm:
 
 - screenshots cover mobile `393px`, narrow mobile, and at least one desktop/tablet viewport;
 - no horizontal overflow;

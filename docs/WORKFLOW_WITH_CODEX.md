@@ -42,6 +42,20 @@ Codex должен опираться не только на код, но и н�
 1. [ARCHITECTURE.md](/Users/marinamart/Desktop/Oracle_dev/ARCHITECTURE.md)
 2. [docs/ADR.md](/Users/marinamart/Desktop/Oracle_dev/docs/ADR.md)
 
+### Для silver migration каждого экрана
+
+Перед началом любых правок обязательно полностью прочитать:
+
+1. [WYRD_SILVER_MIGRATION_PROTOCOL.md](./WYRD_SILVER_MIGRATION_PROTOCOL.md)
+2. [wyrd-ui-kit.html](./wyrd-ui-kit.html) и интерактивно проверить нужные блоки
+3. [WYRD_UI_FOUNDATIONS.md](./WYRD_UI_FOUNDATIONS.md)
+4. [WYRD_UI_COMPONENT_MAPPING.md](./WYRD_UI_COMPONENT_MAPPING.md)
+5. [WYRD_CONTROL_INVENTORY.md](./WYRD_CONTROL_INVENTORY.md)
+
+Silver UI Kit используется как исполняемый контракт: геометрия и механики
+восстанавливаются 1:1. Он не является референсом для свободной интерпретации.
+Если нужного компонента нет, сначала обновляется и утверждается сам кит.
+
 ---
 
 ## Форматы задач, которые работают лучше всего
@@ -123,6 +137,9 @@ Codex должен опираться не только на код, но и н�
 2. Убедиться, что рабочая папка `/Users/marinamart/Desktop/Oracle_dev` находится на `main`.
 3. Проверить, что есть связанная Linear-задача; если её нет, создать задачу до начала правок.
 4. Не мержить старые `codex/*` ветки в `main` без отдельного явного подтверждения пользователя.
+5. Для silver migration выполнить preflight из
+   [WYRD_SILVER_MIGRATION_PROTOCOL.md](./WYRD_SILVER_MIGRATION_PROTOCOL.md) и
+   добавить его acceptance block в экранную Linear-задачу.
 
 После завершения каждой законченной правки Codex обязан:
 

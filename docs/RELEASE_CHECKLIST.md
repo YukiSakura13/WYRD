@@ -30,6 +30,14 @@
 11. Открыть локально `http://localhost:4173`
 12. Проверить cover, «Лес», «Историю духов леса», draw, result, spreads, profile и sound toggle по [REFINEMENT_BASELINE.md](./REFINEMENT_BASELINE.md)
 
+Если затронута silver migration экрана, обязательно:
+
+13. Пройти per-screen restoration checklist из
+    [WYRD_SILVER_MIGRATION_PROTOCOL.md](./WYRD_SILVER_MIGRATION_PROTOCOL.md).
+14. Сравнить механику каждого перенесённого компонента с живым Silver UI Kit:
+    pointer, keyboard, focus, pressed, disabled, reduced motion и responsive.
+15. Приложить side-by-side и interaction evidence к связанной Linear-задаче.
+
 ## GitHub Pages publish check
 
 После push нужно проверить:
@@ -56,5 +64,6 @@
 - `.dist-pages` валиден;
 - GitHub Actions публикует зелёный deploy;
 - GitHub Pages показывает свежую версию сайта.
+- для silver migration выполнен restoration-first acceptance block.
 
 Дополнительно каждая задача проходит канонический [Definition of Ready & Done](./DEFINITION_OF_READY_DONE.md): PR содержит Linear link и self-review, а после deploy в Linear записываются evidence, риски и follow-ups.

@@ -18,10 +18,26 @@ The rule for future work:
 - `docs/WYRD_VISUAL_STYLE_GUIDE.html`
 - `docs/WYRD_UI_RULES.md`
 - `docs/WYRD_INTERACTION_QA.md`
+- `docs/WYRD_SILVER_MIGRATION_PROTOCOL.md` — mandatory restoration-first
+  workflow for every legacy gold → approved silver screen migration
 - `docs/wyrd-ui-kit.html` — live canonical Silver UI Kit
 - `assets/ui/card-frames/approved/wyrd-card-frame-artifact.svg` — transparent symmetric Artifact Frame master
 - `assets/ui/action-buttons/continuous/` — approved four-level Action Button family
 - current runtime screens: Forest, Deck, Result, Spread, Profile, Settings, Notifications, Spirit Book
+
+## Mandatory Restoration Rule
+
+Every screen migration must follow
+[`WYRD_SILVER_MIGRATION_PROTOCOL.md`](./WYRD_SILVER_MIGRATION_PROTOCOL.md).
+The live Silver UI Kit is an implementation contract, not inspiration.
+
+Before editing a screen, Codex must open the current kit, exercise the relevant
+components, map every legacy element to a canonical family, and then reuse the
+approved geometry and mechanics 1:1. A missing component is added to the kit and
+approved first; it is never invented locally inside one runtime screen.
+
+The old screen remains the source for product content, routes, state, and
+approved anatomy. It is not a source for gold presentation after migration.
 
 ## The Four Frame Families
 
@@ -543,10 +559,13 @@ WYRD should be recognizable without the logo through:
 
 This document is the design-system contract. Next implementation work should:
 
-1. use `docs/WYRD_UI_COMPONENT_MAPPING.md` to map current classes to the component set;
-2. use `docs/wyrd-ui-kit.html` as the local review surface before moving a component family into runtime;
-3. extract shared tokens instead of tuning per screen;
-4. migrate one family at a time;
-5. verify each migration with visual, keyboard, touch, responsive, contrast, and reduced-motion checks.
+1. complete the preflight and per-screen checklist in
+   `docs/WYRD_SILVER_MIGRATION_PROTOCOL.md`;
+2. use `docs/WYRD_UI_COMPONENT_MAPPING.md` to map current classes to the component set;
+3. use and interact with `docs/wyrd-ui-kit.html` before moving a component family into runtime;
+4. reuse canonical component code instead of approximating it per screen;
+5. extract shared tokens instead of tuning per screen;
+6. migrate one family at a time;
+7. verify each migration with visual, keyboard, touch, responsive, contrast, and reduced-motion checks.
 
 Do not use this document as permission to redesign all screens at once.
