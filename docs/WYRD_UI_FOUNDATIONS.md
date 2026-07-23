@@ -18,6 +18,9 @@ The rule for future work:
 - `docs/WYRD_VISUAL_STYLE_GUIDE.html`
 - `docs/WYRD_UI_RULES.md`
 - `docs/WYRD_INTERACTION_QA.md`
+- `docs/wyrd-ui-kit.html` — live canonical Silver UI Kit
+- `assets/ui/card-frames/approved/wyrd-card-frame-artifact.svg` — transparent symmetric Artifact Frame master
+- `assets/ui/action-buttons/continuous/` — approved four-level Action Button family
 - current runtime screens: Forest, Deck, Result, Spread, Profile, Settings, Notifications, Spirit Book
 
 ## The Four Frame Families
@@ -48,13 +51,17 @@ Current relatives:
 - Result oracle card;
 - Spirit Book illustration frame when it acts as a featured story image.
 
+The canonical card frame is a transparent `1086×1448` SVG overlay. Its left half is the restored master geometry and its right half is an exact mirror. It never owns the card illustration or the Bone surface beneath it. Source art remains unfiltered; silver is interface chrome, not an image treatment.
+
+The shareable result card keeps the existing product anatomy instead of becoming a full-bleed beige poster: dark outer artifact, warm unfiltered image window, card name, moon phase, and date. The UI Kit documents that structure; it does not replace the current share composition with a new card format.
+
 ### Quiet Frame
 
 Quiet Frame is for secondary cards and groups. It can invite touch, but it must not compete with Artifact Frame.
 
 Rules:
 - `1px` line;
-- radius `8-12px`;
+- radius `var(--radius-small)` through `var(--radius-card)` (`8-12px`);
 - border color around `rgba(168, 140, 84, 0.45-0.55)` for clear containers, lower alpha for grouped panels;
 - interior: transparent or `rgba(9, 10, 14, 0.32-0.46)`;
 - very light depth is allowed, but no heavy card body;
@@ -119,11 +126,49 @@ The shared interaction contract is implemented in `assets/css/components/control
 | Pager Icon Button | `.ui-pager-button` | `48px` circle; short SVG chevron |
 | Page Choice | `.ui-page-choice` | `44px` hit area around a quiet dot |
 | Action Button | `.ui-action` | `52px` minimum height; role modifiers |
+| Utility Action | `.wyrd-utility-action` | `52px` minimum height; familiar icon + label; no ritual ornament |
 | Row Action | `.ui-row-action` | full-width action; `68px` minimum height |
 | Choice Control | `.ui-choice` | `44px` minimum target; selected state is not color-only |
 | Card Action | `.ui-card-action` | full semantic card action; art remains unfiltered |
 
-Action role modifiers are `.ui-action--primary`, `.ui-action--secondary`, `.ui-action--quiet`, and `.ui-action--destructive`. At this stage they describe semantic priority only. Surface, frame, shadow, ornament and color remain outside the architecture contract until the WYRD silver theme is visually approved.
+Action role modifiers are `.ui-action--primary`, `.ui-action--secondary`, `.ui-action--quiet`, and `.ui-action--destructive`. The approved folklore-silver visual family is applied through the explicit `.wyrd-action-frame` opt-in and its `--hero`, `--secondary`, `--compact`, and `--quiet` modifiers. The oracle result → spread proof cluster is the first runtime application; other screens retain their aliases until they are migrated and checked in context.
+
+The visual ladder uses one continuous frame and one mirrored side construction:
+
+- Hero: longest frame, outer diamond and perpendicular connectors;
+- Secondary: approximately 9% shorter, outer diamond without the Hero connectors;
+- Compact: approximately 9% shorter, the original middle ornament;
+- Quiet: shortest frame, the large diamond plus the smallest center gem, with the intermediate diamond intentionally omitted.
+
+All four levels preserve the same visible height and material. Focus clarifies the existing silver geometry by repeating the approved frame asset as a brighter overlay; it does not introduce the rectangular laboratory outline, a new color, a CSS filter, or a scaled ornament.
+
+Utility actions are deliberately outside this ritual ladder. The approved «Поделиться картой» pattern is a familiar network Share icon plus text inside a restrained thin silver contour. It has no trailing diamond, ritual end sections, nested construction, or rich ornament. Default, loading, pressed, and completed states must preserve exactly the same outer geometry and dimensions.
+
+Shared component radii are semantic tokens, not one-off values:
+
+| Token | Value | Role |
+| --- | --- | --- |
+| `--radius-circle` | `999px` | circular icon controls and pill tracks |
+| `--radius-small` | `8px` | inset contours and compact controls |
+| `--radius-medium` | `10px` | utility actions |
+| `--radius-card` | `12px` | cards, fields, and grouped panels |
+| `--radius-sheet` | `20px` | top corners of sheets and modal surfaces |
+
+### Question Field
+
+The question field is a Control Frame, not a fifth ritual ornament.
+
+- wide rectangular shell with `10-12px` corners;
+- `88-100px` comfortable height for two lines of literary text;
+- one quiet outer silver line plus one inset hairline;
+- Bone label, text, and placeholder roles;
+- one restrained silver spark continuously traverses the border to identify the question field as the target action;
+- typing does not restart or accelerate the loop;
+- `prefers-reduced-motion` keeps the double contour and focus material change but removes the traversal.
+
+### Toggle
+
+The toggle keeps the familiar pill track and communicates state through knob position, fill, and contrast. Its knob uses the approved large-plus-small diamond mark; the intermediate diamond is intentionally omitted. Ornament stays inside the knob and never changes the control's `64×36px` outer geometry. The UI Kit must show Off, On, Focus, and Disabled.
 
 The complete route and owner map lives in `docs/WYRD_CONTROL_INVENTORY.md`.
 
@@ -166,6 +211,7 @@ Buttons in WYRD do not shout "click me". They invite touch through role, materia
 | Primary CTA | Control | commit/continue | seal of action |
 | Secondary Button | Control | alternative action | framed choice |
 | Ghost/Text Button | Control | low-priority action | quiet silver text |
+| Utility Action | Control | share and other familiar utilities | clear icon-and-label control without ritual ornament |
 | Navigation Icon Button | Control | back and close | one predictable circular tool |
 | Pager Icon Button | Control | previous/next chapter or page | related navigation tool |
 | Utility Icon Button | Control | settings and profile | quiet global tool |
@@ -217,6 +263,11 @@ These values come from the current brandbook and runtime tokens.
 | Quiet text | `rgba(216, 218, 216, 0.64)` | low-priority captions |
 | Control silver | `rgba(205, 209, 207, 0.42)` | default icon-control edge |
 | Active silver | `rgba(225, 228, 225, 0.68)` | hover, focus, pressed edge |
+| Silver base | `#CDD1CF` | canonical interface chrome |
+| Silver bright | `#E1E4E1` | directional highlight and active edge |
+| Silver lowlight | `#858B8B` | restrained engraved depth |
+| Bone card fallback | `#EEE5D4` | neutral underlay only; authored card-paper colors remain unchanged |
+| Bone muted | `rgba(238, 229, 212, 0.72)` | warm labels and supporting artifact copy |
 
 ### Borders
 
@@ -249,6 +300,9 @@ These values come from the current brandbook and runtime tokens.
 Rules:
 - do not use `IM Fell English` outside `WYRD`;
 - treat the system as `IM Fell English` for the mark, `Forum` for card headings, and `Cormorant Garamond` for body/captions;
+- keep `WYRD` and `Оракул духов леса` as one lockup without a divider;
+- use `#F3ECDD`, weight `400`, and `0.22em` tracking for `WYRD`;
+- use Cormorant Garamond `500`, at least `12px`, `0.24em` tracking, and uppercase for the lockup subtitle;
 - do not use wide caps for long body text;
 - avoid text below comfortable mobile size;
 - tile labels remain short and scannable.
@@ -296,11 +350,14 @@ Every interactive component must define these states before implementation.
 
 ## Motion Language
 
-WYRD motion is slow, quiet, and physical.
+WYRD motion is quiet, physical, and role-based.
 
 Rules:
-- default UI transitions: `160-260ms`;
-- atmospheric loops: `4-20s`;
+- `140ms` for press feedback and short response;
+- `220ms` for control state changes;
+- `320ms` for sheets and surface transitions;
+- `800ms` only for rare ritual reveal;
+- atmospheric loops: `4-20s`; continuous control motion is reserved for the question-field target spark;
 - pressed state: up to `1px` for navigation controls and up to `2px` for deep artifacts;
 - no jumpy bounce;
 - no attention-grabbing neon glow;
@@ -396,6 +453,29 @@ Layout is a shared component contract, not a per-screen decoration.
 The first runtime proof is the reading cluster: deck, single-card result and
 three/five-card spread. Their content may differ, but the Back axis and header
 identity must not move between steps.
+
+### Responsive Grid
+
+- `320-430px`: `16px` side margins, `12px` local gap, one content column;
+- `431-768px`: `24px` side margins, `16px` gap, adaptive two-column groups;
+- `769-1180px`: `32px` side margins, `18-24px` gap, tablet split view where useful;
+- `1181px+`: `48-52px` side margins and a `1440px` maximum content shell;
+- every range respects `env(safe-area-inset-*)` and keeps interactive targets at `44px+`.
+
+### Pager, Feedback and Empty States
+
+- pager ends are explicit `48px` controls; the current step is a large-plus-small diamond while inactive steps stay quieter;
+- weekday choices remain circular and use fill plus contrast for selection;
+- Loading, Success, Error and Empty always combine a readable title and explanation with the visual state;
+- state changes never resize their container or erase the user's question/data;
+- empty states explain what will appear and how it is created rather than showing a decorative blank panel.
+
+### Card Content Roles
+
+- `Artifact`: the primary oracle card with the full approved frame, name, Moon phase and date;
+- `Quiet`: paths and supporting images on a quieter surface;
+- `Trace`: compact saved-history objects with image, identity and date;
+- all three keep their original warm art without grayscale, brightness or saturation filters.
 
 ## Minimal Component Set
 

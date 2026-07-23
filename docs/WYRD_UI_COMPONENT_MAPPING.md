@@ -21,13 +21,14 @@ This document maps current runtime selectors to the component families defined i
 | Navigation Icon Button | `.ui-icon-button`, with `.btn-back-circle`, `.deck-back`, `.spread-card-modal-close`, `.save-screen-close`, `.history-sheet-close` retained as screen aliases | Control | Canonical runtime family: 48px hit area, 28px long-arrow Back glyph, shared silver material and state behavior. App Header owns placement; screen aliases own routing only. |
 | Pager Icon Button | `.ui-pager-button` with `.spirit-book-arrow` retained as a screen alias | Control | Implemented: 48px target, short SVG chevron, shared focus/pressed/disabled behavior. |
 | Utility Icon Button | `.forest-avatar-btn`, `.forest-settings-btn` | Control | Existing approved Forest controls. Normalize against shared ergonomics without replacing their semantic icons. |
-| Action Button | `.ui-action`, `.cover-btn`, `.cover-cta-button`, `.ritual-btn`, `.about-save`, `.btn-share`, `.hook-btn`, `.spread-continuation-btn`, `.spread-continuation-link`, `.profile-primary-action`, `.about-unsaved-primary`, `.about-unsaved-secondary`, `.about-unsaved-quiet`, `.reminders-sheet-primary`, `.reminders-sheet-secondary`, `.reminders-disable`, `.save-screen-link` | Control | Implemented interaction contract with primary, secondary, quiet and destructive roles. Current classes stay as visual aliases until each screen migrates. |
+| Utility Action | `.wyrd-utility-action`, with `[data-action="share-card"]` as the first runtime proof | Control | Implemented target: familiar network Share icon + label inside a thin silver contour. No trailing diamond, ritual end sections, or nested ornament; dimensions remain stable in every state. |
+| Action Button | `.ui-action`, `.wyrd-action-frame`, `.cover-btn`, `.cover-cta-button`, `.ritual-btn`, `.about-save`, `.hook-btn`, `.spread-continuation-btn`, `.spread-continuation-link`, `.profile-primary-action`, `.about-unsaved-primary`, `.about-unsaved-secondary`, `.about-unsaved-quiet`, `.reminders-sheet-primary`, `.reminders-sheet-secondary`, `.reminders-disable`, `.save-screen-link` | Control | Interaction contract is shared. The approved continuous silver family is active in the oracle result → spread proof cluster through explicit Hero, Secondary, Compact and Quiet modifiers; remaining screens keep their current visual aliases until checked in context. |
 | Hero Artifact | `.forest-card`, `.forest-card--daily`, `.deck-card`, `.share-card.card-box`, `.card-box`, `.save-screen-art` | Artifact | Main ritual objects. This family may carry the richest frame and depth, but only where hierarchy demands it. |
 | Card Tile | `.forest-tile`, `.forest-tile--lunar`, `.forest-tile--yes-no`, `.forest-tile--night`, `.forest-tile--traces`, `.forest-tile--book`, `.gift-card`, `.history-item`, `.profile-today-card` | Quiet | Secondary signs and traces. They must stay quieter than Hero Artifact. |
 | List Row | `.ui-row-action`, `.settings-row`, `.reminders-row`, `.about-select-row`, `.app-info-row` | Quiet + Control | Interactive settings/reminders rows use one runtime contract. Static rows keep the same layout without action semantics. |
-| Field | `.deck-question-shell`, `.deck-question-input`, `.about-field input`, `.about-select-row select`, `.reminders-time-picker select` | Control | Textarea, text input, select, and time picker need one field contract for focus, disabled, validation, and labels. |
+| Field | `.wyrd-question-field`, `.deck-question-shell`, `.deck-question-input`, `.about-field input`, `.about-select-row select`, `.reminders-time-picker select` | Control | Canonical question textarea is implemented: 12px rectangular double contour, 92px minimum height, Bone copy, and one continuous restrained silver orbit. Remaining text/select fields migrate by screen. |
 | Choice | `.ui-choice`, `.ui-page-choice`, `.about-segmented`, `.about-segment`, `.reminders-days`, `.reminders-day`, `.spirit-book-dot` | Control | Implemented 44px target and selected-state rules. Not every choice needs a visible frame. |
-| Toggle | `.settings-toggle` inside `.settings-row--toggle` / `.reminders-row--toggle` | Control | Toggle is one control reused in settings and notifications. State must be visible by knob position and color. |
+| Toggle | `.settings-toggle` inside `.settings-row--toggle` / `.reminders-row--toggle` | Control | Toggle is one control reused in settings and notifications. The familiar pill track remains; the knob uses the approved large-plus-small diamond. State is visible by knob position, fill, and contrast. |
 | Divider | `.hdr-line`, `.forest-brand-divider`, `.settings-rule`, `.deck-brand-line`, `.screen-brand-line`, `.card-divider`, `.hook-divider`, `.ritual-divider`, `.history-sheet-divider`, `.about-title-rule`, `.gift-divider` | Divider | Standardize into one line/sign/line language with quieter and richer variants. |
 | Sheet / Modal | `.about-unsaved-sheet`, `.about-unsaved-panel`, `.reminders-sheet`, `.reminders-sheet-panel`, `.spread-card-modal`, `.spread-card-modal-panel`, `.history-sheet`, `.history-sheet-inner`, `.save-screen`, `.save-screen-inner` | Sheet | All temporary overlays should share backdrop, layer, focus, close, and action placement rules. |
 | Feedback / Status | `.share-feedback`, `.about-save-status`, `.deck-question-status`, `.save-screen-loading`, `.history-empty-state`, `.forest-placeholder-panel`, `.oracle-voice`, `.result-question` | Quiet / state | Feedback should be explicit, readable, and calm. Avoid making every status a decorative card. |
@@ -40,12 +41,30 @@ This document maps current runtime selectors to the component families defined i
 | Navigation Icon Button | `.ui-icon-button` | Back/Close aliases | implemented |
 | Pager Icon Button | `.ui-pager-button` | `.spirit-book-arrow` | implemented |
 | Page Choice | `.ui-page-choice` | `.spirit-book-dot` | implemented |
-| Action Button | `.ui-action` | screen-specific action classes | interaction contract implemented; visual aliases migrate by screen |
+| Action Button | `.ui-action` + `.wyrd-action-frame` | screen-specific action classes | approved silver visual family implemented in the result → spread proof cluster; remaining aliases migrate by screen |
+| Utility Action | `.wyrd-utility-action` | `[data-action="share-card"]` | implemented in UI Kit and result proof cluster; 52px stable geometry |
+| Question Field | `.wyrd-question-field` / runtime field aliases | `.deck-question-shell`, `.deck-question-input` | implemented in UI Kit and deck proof cluster; continuous restrained silver orbit with reduced-motion fallback |
+| Artifact Card Frame | transparent SVG overlay | `.card-frame` | approved symmetric master implemented in UI Kit and result proof cluster |
 | Row Action | `.ui-row-action` | `.settings-row`, `.reminders-row` | interaction contract implemented; visual aliases migrate by screen |
 | Choice Control | `.ui-choice` | avatar, segment, day and toggle aliases | implemented |
 | Card Action | `.ui-card-action` | Forest, deck, spread, history and gift aliases | implemented |
 
 See `docs/WYRD_CONTROL_INVENTORY.md` for routes, state ownership and deferred visual work.
+
+### UI Kit interaction coverage
+
+The interactive documentation now includes the useful systems retained from the donated source kit, expressed through the approved WYRD language rather than copied as a skin:
+
+- ritual Action Button inspector: family filter plus Default, Hover, Pressed, Focus and Disabled;
+- Navigation, Avatar and Settings icon controls;
+- continuous question-field target spark and the real product placeholder;
+- circular day choices and the large-plus-small diamond toggle in On, Off, Focus and Disabled states;
+- frequent Action and Row/Sheet examples;
+- App Header anatomy and the responsive/safe-area grid;
+- working Pager/Indicator controls and circular weekday selection;
+- interactive Loading, Success, Error and Empty feedback states;
+- Artifact, Quiet and Trace card roles with unfiltered warm artwork;
+- an on-demand Motion Lab for `140/220/320/800ms` plus reduced-motion preview.
 
 This table records architecture only. The generic runtime families intentionally define no surface, frame, shadow, ornament or component radius; those properties belong to a later approved WYRD theme layer.
 
@@ -86,12 +105,16 @@ This table records architecture only. The generic runtime families intentionally
 | `.deck-scene`, `#result`, `#spread-result` + `.ui-scene-shell--oracle` | Scene Shell | One shell width and safe-area axis for the complete reading flow. |
 | `.deck-header`, `.screen-nav` + `.ui-app-header` | App Header | One Back position and centered identity across deck, result and spread. |
 | `.deck-back`, `.btn-back-circle` | Icon Button | Shared behavior and focus; placement is delegated to App Header. |
-| `.deck-question-shell`, `.deck-question-input` | Field | Question field; animation is state, not a separate component. |
+| `.deck-question-shell`, `.deck-question-input` | Field | Silver question field proof is active: rectangular double contour, Bone text, continuous target orbit, no focus or typing restart. |
 | `.deck-card` | Hero Artifact | Main ritual object. |
 | `.deck-touch-copy` | Text/Ghost Action | Secondary draw affordance. |
-| `.share-card.card-box` | Hero Artifact / Media Frame | Result oracle card. |
+| `.share-card.card-box`, `.card-frame` | Hero Artifact / Media Frame | Result oracle card keeps the existing share anatomy: dark artifact, warm unfiltered image window, card name, moon phase, and date beneath the approved transparent symmetric frame. |
 | `.result-question` | Feedback / Quiet info | Question context; no heavy card. |
 | `.card-message-block`, `.card-shadow-block` | Quiet content blocks | Interpretation sections, not new card frames. |
+| `.hook-btn.wyrd-action-frame--hero` | Hero Action | Longest approved frame for «Раскрыть три карты», the principal oracle expansion. |
+| `[data-action="share-card"].wyrd-utility-action` | Utility Action | Implemented approved utility pattern: familiar network Share icon + label + thin silver contour, without a trailing diamond. Loading text does not alter the outer dimensions. |
+| `.spread-continuation-btn.wyrd-action-frame--secondary` | Secondary Action | Continues the reading with one less ornament layer than Hero. |
+| `.spread-continuation-link.wyrd-action-frame--quiet` | Quiet Action | Shortest approved frame for starting a new question. |
 | `.hook-block`, `.spread-continuation`, `.oracle-voice` | Feedback / CTA block | Needs Quiet frame or no frame depending on hierarchy. |
 | `.spread-card` | Media Frame / Card Tile | Spread cards with anchor variant. |
 | `.spread-card-modal` | Sheet / Modal | Focused card inspection. |

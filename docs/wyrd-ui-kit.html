@@ -1,825 +1,819 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>WYRD UI Kit</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>WYRD Silver UI Kit</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Forum&family=IM+Fell+English:ital@0;1&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Forum&family=IM+Fell+English&display=swap"
       rel="stylesheet"
     />
-    <style>
-      :root {
-        --ink: #070709;
-        --night: #101019;
-        --night-soft: rgba(9, 10, 14, 0.42);
-        --gold: #c9a14a;
-        --gold-quiet: rgba(168, 140, 84, 0.48);
-        --gold-soft: rgba(168, 140, 84, 0.2);
-        --text: rgba(239, 226, 196, 0.92);
-        --text-bright: rgba(241, 232, 214, 0.94);
-        --text-muted: rgba(217, 206, 184, 0.62);
-        --focus: rgba(216, 177, 90, 0.72);
-        --font-brand: "IM Fell English", Georgia, serif;
-        --font-ui: "Cormorant Garamond", Georgia, serif;
-        --font-label: "Forum", Georgia, serif;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      html {
-        background: var(--ink);
-      }
-
-      body {
-        min-height: 100vh;
-        margin: 0;
-        background:
-          radial-gradient(circle at 16% 4%, rgba(232, 228, 216, 0.36) 0 1px, transparent 1.5px),
-          radial-gradient(circle at 47% 7%, rgba(232, 228, 216, 0.28) 0 1px, transparent 1.4px),
-          radial-gradient(circle at 82% 3%, rgba(232, 228, 216, 0.34) 0 1px, transparent 1.5px),
-          linear-gradient(180deg, rgba(7, 7, 9, 0.12), rgba(7, 7, 9, 0.94)),
-          var(--ink);
-        color: var(--text);
-        font-family: var(--font-ui);
-      }
-
-      body::after {
-        content: "";
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-      }
-
-      button,
-      input,
-      textarea {
-        font: inherit;
-      }
-
-      button {
-        cursor: pointer;
-        -webkit-tap-highlight-color: transparent;
-      }
-
-      button:focus-visible,
-      input:focus-visible,
-      textarea:focus-visible {
-        outline: none;
-        box-shadow:
-          0 0 0 3px rgba(201, 161, 74, 0.18),
-          0 0 0 1px var(--focus);
-      }
-
-      .sr-only {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
-        border: 0;
-      }
-
-      .page {
-        width: min(100%, 1180px);
-        margin: 0 auto;
-        padding: 28px 18px 44px;
-      }
-
-      .kit-header {
-        margin: 0 auto 26px;
-        text-align: center;
-      }
-
-      .brand {
-        margin: 0;
-        padding-left: 0.18em;
-        color: rgba(241, 232, 214, 0.62);
-        font-family: var(--font-brand);
-        font-size: clamp(30px, 6vw, 46px);
-        font-weight: 400;
-        letter-spacing: 0.18em;
-        line-height: 1;
-      }
-
-      .subtitle {
-        margin: 10px 0 0;
-        color: rgba(205, 178, 116, 0.46);
-        font-family: var(--font-ui);
-        font-size: 12px;
-        font-weight: 500;
-        letter-spacing: 0.26em;
-        line-height: 1.3;
-        text-transform: uppercase;
-      }
-
-      .hairline {
-        width: min(120px, 38vw);
-        height: 1px;
-        margin: 14px auto 0;
-        background: linear-gradient(90deg, transparent, rgba(168, 140, 84, 0.22), transparent);
-      }
-
-      .kit-board {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 18px;
-      }
-
-      .sample {
-        min-height: 210px;
-        padding: 22px;
-        border: 1px solid rgba(168, 140, 84, 0.14);
-        background: rgba(3, 4, 6, 0.52);
-      }
-
-      .sample-title {
-        margin: 0 0 18px;
-        color: rgba(205, 178, 116, 0.66);
-        font-family: var(--font-label);
-        font-size: 13px;
-        font-weight: 400;
-        letter-spacing: 0.14em;
-        line-height: 1.25;
-        text-transform: uppercase;
-      }
-
-      .sample-body {
-        display: grid;
-        justify-items: center;
-        align-items: center;
-        min-height: 144px;
-      }
-
-      .sample.note {
-        min-height: auto;
-      }
-
-      .sample-note {
-        margin: 0;
-        color: rgba(217, 206, 184, 0.66);
-        font-size: 17px;
-        line-height: 1.45;
-      }
-
-      .hero-card {
-        position: relative;
-        width: min(100%, 430px);
-        aspect-ratio: 1536 / 1024;
-        border: 0;
-        border-radius: 22px;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 22px;
-        padding: 12% 11%;
-        background:
-          radial-gradient(120% 112% at 50% 6%, rgba(31, 35, 48, 0.72) 0%, rgba(16, 16, 25, 0.86) 44%, rgba(10, 11, 14, 0.98) 100%);
-        color: inherit;
-        text-align: left;
-        box-shadow:
-          inset 0 2px 8px rgba(240, 232, 216, 0.1),
-          inset 0 -16px 24px rgba(0, 0, 0, 0.5),
-          inset 0 0 0 1px rgba(168, 140, 84, 0.16),
-          0 3px 0 #211706,
-          0 12px 22px -12px rgba(0, 0, 0, 0.86);
-      }
-
-      .hero-card-frame {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: fill;
-        opacity: 0.88;
-        pointer-events: none;
-      }
-
-      .hero-card-fern {
-        position: relative;
-        z-index: 1;
-        width: 33%;
-        max-height: 72%;
-        object-fit: contain;
-        filter: drop-shadow(0 0 8px rgba(184, 154, 94, 0.16));
-      }
-
-      .hero-card-copy {
-        position: relative;
-        z-index: 1;
-        display: grid;
-        gap: 10px;
-      }
-
-      .hero-card-title,
-      .tile-title,
-      .action-label {
-        font-family: var(--font-label);
-        font-weight: 400;
-        letter-spacing: 0.14em;
-        line-height: 1.18;
-        text-transform: uppercase;
-      }
-
-      .hero-card-title {
-        color: rgba(205, 178, 116, 0.9);
-        font-size: clamp(22px, 4.2vw, 32px);
-      }
-
-      .hero-card-note,
-      .tile-note {
-        color: rgba(217, 206, 184, 0.66);
-        font-style: italic;
-        font-size: 18px;
-        line-height: 1.25;
-      }
-
-      .tile {
-        position: relative;
-        width: min(100%, 310px);
-        min-height: 150px;
-        padding: 26px;
-        border: 1px solid rgba(168, 140, 84, 0.42);
-        border-radius: 16px;
-        background: rgba(9, 10, 14, 0.34);
-        color: var(--text);
-        display: grid;
-        grid-template-columns: 78px 1fr auto;
-        gap: 18px;
-        align-items: center;
-        text-align: left;
-      }
-
-      .tile img {
-        width: 76px;
-        max-height: 96px;
-        object-fit: contain;
-        opacity: 0.82;
-        filter: drop-shadow(0 0 6px rgba(184, 154, 94, 0.12));
-      }
-
-      .tile-title {
-        display: block;
-        color: rgba(205, 178, 116, 0.86);
-        font-size: 22px;
-      }
-
-      .tile-note {
-        display: block;
-        margin-top: 8px;
-      }
-
-      .tile-arrow {
-        color: rgba(205, 178, 116, 0.55);
-        font-size: 28px;
-        line-height: 1;
-      }
-
-      .actions {
-        width: min(100%, 320px);
-        display: grid;
-        gap: 12px;
-      }
-
-      .action {
-        min-height: 54px;
-        border-radius: 8px;
-        border: 1px solid rgba(198, 170, 110, 0.64);
-        background: rgba(9, 10, 14, 0.46);
-        color: var(--text-bright);
-        font-size: 23px;
-        font-weight: 600;
-      }
-
-      .action.secondary {
-        border-color: rgba(168, 140, 84, 0.28);
-        background: rgba(7, 7, 9, 0.5);
-        color: rgba(217, 206, 184, 0.76);
-      }
-
-      .action.quiet {
-        min-height: 44px;
-        border-color: transparent;
-        background: transparent;
-        color: rgba(205, 178, 116, 0.7);
-        font-size: 19px;
-      }
-
-      .icon-row {
-        display: flex;
-        gap: 16px;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .icon-btn,
-      .icon-btn-large {
-        padding: 0;
-        border-radius: 999px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        background: transparent;
-        color: rgba(201, 161, 74, 0.82);
-        line-height: 1;
-      }
-
-      .icon-btn {
-        width: 36px;
-        height: 36px;
-        border: 1px solid rgba(201, 161, 74, 0.12);
-        font-size: 16px;
-      }
-
-      .icon-btn-large {
-        width: 60px;
-        height: 60px;
-        border: 1px solid rgba(168, 140, 84, 0.45);
-        background: radial-gradient(circle at 50% 40%, rgba(26, 28, 38, 0.7), rgba(9, 10, 14, 0.92));
-      }
-
-      .icon-btn-large svg {
-        width: 30px;
-        height: 30px;
-        stroke-width: 1.7;
-      }
-
-      .question {
-        width: min(100%, 340px);
-      }
-
-      .question-label {
-        display: block;
-        margin: 0 0 9px 16px;
-        color: rgba(216, 177, 90, 0.72);
-        font-size: 11px;
-        font-weight: 700;
-        letter-spacing: 0.18em;
-        line-height: 1.2;
-        text-transform: uppercase;
-      }
-
-      .question-shell {
-        position: relative;
-        border: 1px solid rgba(201, 161, 74, 0.28);
-        border-radius: 20px;
-        background:
-          radial-gradient(circle at 50% 0%, rgba(216, 177, 90, 0.04), transparent 46%),
-          rgba(8, 9, 15, 0.4);
-        box-shadow:
-          inset 0 0 0 1px rgba(255, 248, 230, 0.02),
-          0 10px 22px rgba(0, 0, 0, 0.12);
-      }
-
-      .question-shell::before {
-        content: "";
-        position: absolute;
-        inset: 1px;
-        border-radius: 18px;
-        border: 1px solid rgba(240, 232, 216, 0.04);
-        pointer-events: none;
-      }
-
-      .question textarea {
-        width: 100%;
-        min-height: 76px;
-        resize: none;
-        border: 0;
-        background: transparent;
-        color: rgba(236, 222, 188, 0.92);
-        font-size: 16px;
-        font-weight: 500;
-        line-height: 1.5;
-        padding: 14px 16px;
-        outline: none;
-        caret-color: rgba(244, 220, 154, 0.94);
-      }
-
-      .question textarea::placeholder {
-        color: rgba(214, 183, 125, 0.66);
-        font-style: italic;
-      }
-
-      .list-row {
-        width: min(100%, 360px);
-        min-height: 76px;
-        padding: 16px 22px;
-        border: 0;
-        border-top: 1px solid rgba(168, 140, 84, 0.12);
-        background: transparent;
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
-        gap: 18px;
-        align-items: center;
-        color: var(--text);
-        text-align: left;
-      }
-
-      .row-title,
-      .row-value {
-        display: block;
-      }
-
-      .row-title {
-        color: var(--text-bright);
-        font-size: 25px;
-        font-weight: 600;
-        line-height: 1.08;
-      }
-
-      .row-value {
-        margin-top: 4px;
-        color: var(--text-muted);
-        font-size: 17px;
-        line-height: 1.3;
-      }
-
-      .row-arrow {
-        color: rgba(205, 178, 116, 0.62);
-        font-size: 34px;
-        line-height: 1;
-      }
-
-      .toggle {
-        position: relative;
-        width: 56px;
-        height: 32px;
-        border: 1px solid rgba(168, 140, 84, 0.5);
-        border-radius: 999px;
-        background: rgba(7, 7, 9, 0.72);
-      }
-
-      .toggle::after {
-        content: "";
-        position: absolute;
-        top: 4px;
-        left: 4px;
-        width: 22px;
-        height: 22px;
-        border-radius: 50%;
-        background: rgba(142, 126, 86, 0.9);
-      }
-
-      .toggle.is-on {
-        border-color: rgba(198, 170, 110, 0.76);
-        background: linear-gradient(180deg, #cdb274, #8e7240);
-      }
-
-      .toggle.is-on::after {
-        background: #15110b;
-        transform: translateX(24px);
-      }
-
-      .choices {
-        width: min(100%, 340px);
-        display: grid;
-        gap: 12px;
-      }
-
-      .choice {
-        min-height: 44px;
-        padding: 0;
-        border: 0;
-        background: transparent;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        color: rgba(217, 206, 184, 0.78);
-        font-size: 18px;
-        text-align: left;
-      }
-
-      .choice-mark {
-        width: 28px;
-        height: 28px;
-        border: 1px solid rgba(168, 140, 84, 0.5);
-        border-radius: 50%;
-        display: grid;
-        place-items: center;
-        flex: 0 0 auto;
-        color: rgba(205, 178, 116, 0.78);
-      }
-
-      .choice-mark.selected::before {
-        content: "";
-        width: 14px;
-        height: 14px;
-        border-radius: 50%;
-        background: rgba(205, 178, 116, 0.72);
-      }
-
-      .choice-mark.check.selected::before {
-        content: "✓";
-        width: auto;
-        height: auto;
-        background: none;
-        font-size: 18px;
-        line-height: 1;
-      }
-
-      .chip-row {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
-      }
-
-      .chip {
-        min-width: 44px;
-        min-height: 44px;
-        padding: 0 14px;
-        border: 1px solid rgba(168, 140, 84, 0.36);
-        border-radius: 9px;
-        background: rgba(7, 7, 9, 0.56);
-        color: rgba(239, 226, 196, 0.84);
-        font-size: 18px;
-      }
-
-      .divider {
-        width: min(220px, 68vw);
-        height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(168, 140, 84, 0.24), transparent);
-      }
-
-      .sheet {
-        width: min(100%, 340px);
-        padding: 24px 22px 22px;
-        border: 1px solid rgba(168, 140, 84, 0.28);
-        border-radius: 22px 22px 0 0;
-        background: rgba(9, 10, 14, 0.86);
-      }
-
-      .sheet-handle {
-        width: 46px;
-        height: 3px;
-        margin: 0 auto 18px;
-        border-radius: 999px;
-        background: rgba(205, 178, 116, 0.56);
-      }
-
-      .sheet h3 {
-        margin: 0 0 18px;
-        color: var(--text-bright);
-        font-size: 24px;
-        font-weight: 600;
-        text-align: center;
-      }
-
-      .sheet-actions {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-      }
-
-      .feedback {
-        width: min(100%, 330px);
-        display: grid;
-        gap: 10px;
-        text-align: left;
-      }
-
-      .feedback-label {
-        color: rgba(205, 178, 116, 0.62);
-        font-family: var(--font-label);
-        font-size: 13px;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-      }
-
-      .feedback-text {
-        margin: 0;
-        color: rgba(217, 206, 184, 0.72);
-        font-size: 18px;
-        line-height: 1.4;
-      }
-
-      .system-footer {
-        margin-top: 18px;
-        padding: 18px 0 0;
-        border-top: 1px solid rgba(168, 140, 84, 0.12);
-        color: rgba(217, 206, 184, 0.62);
-        font-size: 16px;
-        line-height: 1.45;
-      }
-
-      .system-footer p {
-        margin: 0;
-      }
-
-      @media (max-width: 760px) {
-        .page {
-          padding-inline: 12px;
-        }
-
-        .kit-board {
-          grid-template-columns: 1fr;
-          gap: 12px;
-        }
-
-        .sample {
-          padding: 18px 14px;
-        }
-
-        .hero-card {
-          width: min(100%, 350px);
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="../assets/css/tokens.css" />
+    <link rel="stylesheet" href="../assets/css/components/control-language.css" />
+    <link rel="stylesheet" href="../assets/css/components/action-buttons.css?v=20260722-2" />
+    <link rel="stylesheet" href="../assets/css/components/silver-components.css" />
+    <link rel="stylesheet" href="wyrd-ui-kit.css?v=20260722-9" />
   </head>
-  <body>
-    <main class="page">
-      <header class="kit-header">
-        <h1 class="brand">WYRD UI KIT</h1>
-        <p class="subtitle">компоненты из текущего языка приложения</p>
-        <div class="hairline" aria-hidden="true"></div>
-      </header>
+  <body class="wyrd-ui-kit-preview">
+    <a class="skip-link" href="#main">К основному содержанию</a>
 
-      <section class="kit-board" aria-label="WYRD UI Kit components">
-        <article class="sample">
-          <h2 class="sample-title">Hero Artifact</h2>
-          <div class="sample-body">
-            <button class="hero-card" type="button" aria-label="Раскрыть карту">
-              <img class="hero-card-frame" src="../archive/brand-gold/forest/f-hero2.png" alt="" />
-              <img class="hero-card-fern" src="../archive/brand-gold/forest/fern-hero2.png" alt="" />
-              <span class="hero-card-copy">
-                <span class="hero-card-title">Раскрыть<br />карту</span>
-                <span class="hero-card-note">карта дня · гадание</span>
-              </span>
-            </button>
-          </div>
-        </article>
+    <header class="kit-header">
+      <p class="kit-eyebrow">Silver foundations · YUK-135</p>
+      <div class="brand-lockup" aria-label="WYRD — Оракул духов леса">
+        <h1 class="brand-lockup__name">WYRD</h1>
+        <p class="brand-lockup__subtitle">Оракул духов леса</p>
+      </div>
+      <p class="kit-intro">
+        Каноническая система материалов, рамок и интерактивных компонентов.
+        Серебро принадлежит интерфейсу, а каждая карта сохраняет авторский цвет бумаги.
+      </p>
 
-        <article class="sample">
-          <h2 class="sample-title">Quiet Card</h2>
-          <div class="sample-body">
-            <button class="tile" type="button">
-              <img src="../archive/brand-gold/forest/tracks.png" alt="" />
-              <span>
-                <span class="tile-title">Следы<br />в лесу</span>
-                <span class="tile-note">твоя история<br />и дары</span>
-              </span>
-              <span class="tile-arrow" aria-hidden="true">›</span>
-            </button>
-          </div>
-        </article>
+      <nav class="section-nav section-nav--desktop" aria-label="Разделы UI Kit">
+        <a href="#foundations">Основа</a>
+        <a href="#typography">Типографика</a>
+        <a href="#card-frame">Рамка</a>
+        <a href="#symbols">Символы</a>
+        <a href="#result">Кнопки</a>
+        <a href="#question-field">Поле вопроса</a>
+        <a href="#controls">Контролы</a>
+        <a href="#materials">Материалы</a>
+        <a href="#layout">Сетка</a>
+        <a href="#accessibility">Доступность</a>
+      </nav>
 
-        <article class="sample">
-          <h2 class="sample-title">Action Buttons</h2>
-          <div class="sample-body">
-            <div class="actions">
-              <button class="action" type="button">Сохранить</button>
-              <button class="action secondary" type="button">Отмена</button>
-              <button class="action quiet" type="button">Остаться</button>
-            </div>
-          </div>
-        </article>
+      <details class="section-menu">
+        <summary>Разделы UI Kit</summary>
+        <nav class="section-nav section-nav--mobile" aria-label="Разделы UI Kit на мобильном">
+          <a href="#foundations">Основа</a>
+          <a href="#typography">Типографика</a>
+          <a href="#card-frame">Рамка</a>
+          <a href="#symbols">Символы</a>
+          <a href="#result">Кнопки</a>
+          <a href="#question-field">Поле вопроса</a>
+          <a href="#controls">Контролы</a>
+          <a href="#materials">Материалы</a>
+          <a href="#layout">Сетка</a>
+          <a href="#accessibility">Доступность</a>
+        </nav>
+      </details>
+    </header>
 
-        <article class="sample">
-          <h2 class="sample-title">Icon Buttons</h2>
-          <div class="sample-body">
-            <div class="icon-row">
-              <button class="icon-btn" type="button" aria-label="Назад">←</button>
-              <button class="icon-btn-large" type="button" aria-label="Профиль">
-                <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor">
-                  <path d="M20 21a8 8 0 0 0-16 0" />
-                  <circle cx="12" cy="7" r="4" />
-                </svg>
-              </button>
-              <button class="icon-btn-large" type="button" aria-label="Настройки">
-                <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor">
-                  <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" />
-                  <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.04 1.56V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.04-1.56 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.56-1.04H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.6 8a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 8.96 3a1.7 1.7 0 0 0 1.04-1.56V1a2 2 0 1 1 4 0v.09A1.7 1.7 0 0 0 15.04 3a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 8a1.7 1.7 0 0 0 1.56 1.04H21a2 2 0 1 1 0 4h-.09A1.7 1.7 0 0 0 19.4 15Z" />
-                </svg>
-              </button>
-            </div>
-          </div>
-        </article>
+    <main id="main" class="kit-main">
+      <section id="foundations" class="kit-section" aria-labelledby="foundations-title">
+        <div class="section-heading">
+          <p class="section-kicker">01 · Foundations</p>
+          <h2 id="foundations-title">Серебро и тёплый артефакт</h2>
+          <p>
+            Холодная ночная среда подчёркивает карту, но не перекрашивает её.
+            Все карточные изображения показываются без grayscale, saturate и brightness-фильтров.
+            Их собственный бежевый фон является каноном и может немного различаться от карты к карте;
+            Bone fallback используется только под прозрачным или отсутствующим изображением.
+            Строгая редакционная подача этого документа задаёт правила, но не заменяет живую
+            атмосферу экранов игры.
+          </p>
+        </div>
 
-        <article class="sample">
-          <h2 class="sample-title">Question Field</h2>
-          <div class="sample-body">
-            <label class="question">
-              <span class="question-label">Твой вопрос</span>
-              <span class="question-shell">
-                <textarea placeholder="Напиши вопрос Лесу"></textarea>
-              </span>
-            </label>
-          </div>
-        </article>
+        <div class="token-grid" role="list" aria-label="Цветовые токены">
+          <article class="token" role="listitem">
+            <span class="token__swatch" style="--token-color: #070709"></span>
+            <strong>Depth</strong>
+            <code>#070709</code>
+          </article>
+          <article class="token" role="listitem">
+            <span class="token__swatch" style="--token-color: #101019"></span>
+            <strong>Night</strong>
+            <code>#101019</code>
+          </article>
+          <article class="token" role="listitem">
+            <span class="token__swatch" style="--token-color: #cdd1cf"></span>
+            <strong>Silver</strong>
+            <code>#CDD1CF</code>
+          </article>
+          <article class="token" role="listitem">
+            <span class="token__swatch" style="--token-color: #e1e4e1"></span>
+            <strong>Bright edge</strong>
+            <code>#E1E4E1</code>
+          </article>
+          <article class="token" role="listitem">
+            <span class="token__swatch" style="--token-color: #f3ecdd"></span>
+            <strong>Bone text</strong>
+            <code>#F3ECDD</code>
+          </article>
+          <article class="token" role="listitem">
+            <span class="token__swatch" style="--token-color: #eee5d4"></span>
+            <strong>Bone fallback</strong>
+            <code>#EEE5D4</code>
+          </article>
+        </div>
 
-        <article class="sample">
-          <h2 class="sample-title">List Row</h2>
-          <div class="sample-body">
-            <button class="list-row" type="button">
-              <span>
-                <span class="row-title">Уведомления</span>
-                <span class="row-value">Время и дни</span>
-              </span>
-              <span class="row-arrow" aria-hidden="true">›</span>
-            </button>
-          </div>
-        </article>
-
-        <article class="sample">
-          <h2 class="sample-title">Toggle</h2>
-          <div class="sample-body">
-            <button class="list-row" type="button" aria-pressed="true">
-              <span>
-                <span class="row-title">Звук</span>
-                <span class="row-value">Звуки интерфейса</span>
-              </span>
-              <span class="toggle is-on" aria-hidden="true"></span>
-            </button>
-          </div>
-        </article>
-
-        <article class="sample">
-          <h2 class="sample-title">Choice</h2>
-          <div class="sample-body">
-            <div class="choices" role="radiogroup" aria-label="Пример выбора">
-              <button class="choice" type="button" role="radio" aria-checked="true">
-                <span class="choice-mark selected"></span>
-                Лунный день
-              </button>
-              <button class="choice" type="button" role="radio" aria-checked="false">
-                <span class="choice-mark"></span>
-                Нет или да
-              </button>
-              <button class="choice" type="button" aria-pressed="true">
-                <span class="choice-mark check selected"></span>
-                Напомнить о ритуале
-              </button>
-            </div>
-          </div>
-        </article>
-
-        <article class="sample">
-          <h2 class="sample-title">Day Chips</h2>
-          <div class="sample-body">
-            <div class="chip-row" aria-label="Дни недели">
-              <button class="chip" type="button">Пн</button>
-              <button class="chip" type="button">Вт</button>
-              <button class="chip" type="button">Ср</button>
-              <button class="chip" type="button">Чт</button>
-              <button class="chip" type="button">Пт</button>
-            </div>
-          </div>
-        </article>
-
-        <article class="sample">
-          <h2 class="sample-title">Divider</h2>
-          <div class="sample-body">
-            <div class="divider" aria-hidden="true"></div>
-          </div>
-        </article>
-
-        <article class="sample">
-          <h2 class="sample-title">Sheet</h2>
-          <div class="sample-body">
-            <div class="sheet" role="presentation">
-              <div class="sheet-handle" aria-hidden="true"></div>
-              <h3>Выберите время</h3>
-              <div class="sheet-actions">
-                <button class="action secondary" type="button">Отмена</button>
-                <button class="action" type="button">Готово</button>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="sample">
-          <h2 class="sample-title">Feedback</h2>
-          <div class="sample-body">
-            <div class="feedback" role="status">
-              <span class="feedback-label">Сохранено</span>
-              <p class="feedback-text">Изменения профиля сохранены.</p>
-            </div>
-          </div>
-        </article>
-
-        <article class="sample note">
-          <h2 class="sample-title">Что убрано</h2>
-          <p class="sample-note">Нет огромных ромбов, чужих заливок, декоративной звезды в поле ввода и новых рамок, которых нет в текущем приложении.</p>
-        </article>
-
-        <article class="sample note">
-          <h2 class="sample-title">Правило</h2>
-          <p class="sample-note">UI Kit показывает язык компонентов WYRD, а не придумывает новый экран. Любой следующий вариант сверяется с реальными кнопками, полями и строками приложения.</p>
-        </article>
       </section>
 
-      <footer class="system-footer">
-        <p>Локальная доска для проверки компонентов перед переносом в runtime. Сначала форма и поведение, потом декоративность.</p>
-      </footer>
+      <section id="typography" class="kit-section" aria-labelledby="typography-title">
+        <div class="section-heading">
+          <p class="section-kicker">02 · Typography &amp; lockup</p>
+          <h2 id="typography-title">Один фирменный голос, три текстовые роли</h2>
+          <p>
+            Знак всегда состоит из WYRD и «Оракул духов леса» без разделительной линии.
+            Минимальный размер подзаголовка — 12 px: он не превращается в декоративный шум.
+          </p>
+        </div>
+
+        <div class="type-system-grid">
+          <article class="type-specimen type-specimen--brand">
+            <p class="component-label">Brand lockup</p>
+            <div class="brand-lockup brand-lockup--specimen" aria-label="WYRD — Оракул духов леса">
+              <p class="brand-lockup__name">WYRD</p>
+              <p class="brand-lockup__subtitle">Оракул духов леса</p>
+            </div>
+            <dl class="type-specimen__rules">
+              <div><dt>WYRD</dt><dd>IM Fell English · 400 · #F3ECDD · 0.22em</dd></div>
+              <div><dt>Подзаголовок</dt><dd>Cormorant Garamond · 500 · ≥12 px · 0.24em</dd></div>
+            </dl>
+          </article>
+
+          <article class="type-specimen">
+            <p class="component-label">Display</p>
+            <p class="type-specimen__display">Вещий ворон</p>
+            <p>Forum — короткие заголовки экранов и карт, где важен ясный силуэт.</p>
+          </article>
+
+          <article class="type-specimen">
+            <p class="component-label">Reading &amp; actions</p>
+            <p class="type-specimen__reading">
+              Лес отвечает тихо. Cormorant Garamond остаётся основой для чтения,
+              пояснений и надписей действий.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="card-frame" class="kit-section" aria-labelledby="card-frame-title">
+        <div class="section-heading">
+          <p class="section-kicker">03 · Artifact frame</p>
+          <h2 id="card-frame-title">Каноническая рамка карты</h2>
+          <p>
+            Геометрия восстановлена симметрично. Рамка существует как прозрачный overlay,
+            а изображение и Bone-поверхность остаются независимыми слоями. Сохраняемая карта
+            остаётся самостоятельной тёмной композицией с иллюстрацией 3:4, названием,
+            фазой Луны и датой на отдельной строке.
+          </p>
+        </div>
+
+        <div class="frame-board">
+          <figure class="frame-study">
+            <div class="frame-study__night">
+              <img
+                src="../assets/ui/card-frames/approved/wyrd-card-frame-artifact.svg"
+                alt="Прозрачная симметричная серебряная рамка WYRD"
+              />
+            </div>
+            <figcaption>Прозрачный master asset · 1086×1448</figcaption>
+          </figure>
+
+          <figure class="frame-study frame-study--share-card">
+            <article class="share-card-specimen" aria-labelledby="share-card-specimen-title">
+              <img
+                class="share-card-specimen__frame"
+                src="../assets/ui/card-frames/approved/wyrd-card-frame-artifact.svg"
+                alt=""
+                aria-hidden="true"
+              />
+              <div class="share-card-specimen__media">
+                <img
+                  src="../assets/images/cards/iskra_lesa.webp"
+                  alt="Иллюстрация карты «Искра Леса» на исходном тёплом фоне"
+                />
+              </div>
+              <div class="share-card-specimen__identity">
+                <h3 id="share-card-specimen-title">Искра Леса</h3>
+                <div class="share-card-specimen__meta" aria-label="Первая четверть, 22 июля">
+                  <span class="share-card-specimen__phase">
+                    <span class="moon-icon-slot" data-moon-icon data-moon-type="fq" aria-hidden="true"></span>
+                    <span>Первая четверть</span>
+                  </span>
+                  <time datetime="2026-07-22">22 июля</time>
+                </div>
+              </div>
+            </article>
+            <figcaption>Сохраняемая карта · иллюстрация 3:4 · метаданные в две строки</figcaption>
+          </figure>
+        </div>
+
+        <div id="card-contexts" class="card-role-board" aria-label="Контексты отображения карт">
+          <article class="card-role card-role--result">
+            <header class="card-role__header">
+              <h3>Карта результата</h3>
+              <p>Полная карточка после раскрытия и при отправке.</p>
+            </header>
+            <div class="share-card-specimen share-card-specimen--role" aria-label="Вещий Ворон, первая четверть, 22 июля">
+              <img
+                class="share-card-specimen__frame"
+                src="../assets/ui/card-frames/approved/wyrd-card-frame-artifact.svg"
+                alt=""
+                aria-hidden="true"
+              />
+              <div class="share-card-specimen__media">
+                <img
+                  src="../assets/images/cards/veshchiy_voron.webp"
+                  alt="Иллюстрация карты «Вещий Ворон»"
+                />
+              </div>
+              <div class="share-card-specimen__identity">
+                <h4>Вещий Ворон</h4>
+                <div class="share-card-specimen__meta" aria-label="Первая четверть, 22 июля">
+                  <span class="share-card-specimen__phase">
+                    <span class="moon-icon-slot" data-moon-icon data-moon-type="fq" aria-hidden="true"></span>
+                    <span>Первая четверть</span>
+                  </span>
+                  <time datetime="2026-07-22">22 июля</time>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card-role card-role--quiet">
+            <header class="card-role__header">
+              <h3>Дополнительный образ</h3>
+              <p>Тихая дополнительная карта без героической рамки.</p>
+            </header>
+            <figure class="quiet-card-specimen">
+              <img src="../assets/images/cards/tropa_domoy.webp" alt="Карта «Тропа Домой»" />
+              <figcaption>Тропа Домой</figcaption>
+            </figure>
+          </article>
+
+          <article class="card-role card-role--history">
+            <header class="card-role__header">
+              <h3>Карта в истории</h3>
+              <p>Компактная запись уже сохранённой карты.</p>
+            </header>
+            <div class="history-card-specimen">
+              <img src="../assets/images/cards/sledy_vozvrashcheniya.webp" alt="Карта «Следы Возвращения»" />
+              <div class="history-card-specimen__body">
+                <strong>Следы Возвращения</strong>
+                <div class="history-card-specimen__meta" aria-label="Растущий серп, 18 июля">
+                  <span class="history-card-specimen__phase">
+                    <span class="moon-icon-slot" data-moon-icon data-moon-type="wc" aria-hidden="true"></span>
+                    <span>Растущий серп</span>
+                  </span>
+                  <time datetime="2026-07-18">18 июля</time>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="symbols" class="kit-section" aria-labelledby="symbols-title">
+        <div class="section-heading">
+          <p class="section-kicker">04 · Symbols &amp; metadata</p>
+          <h2 id="symbols-title">Лунная фаза — смысловой знак WYRD</h2>
+          <p>
+            Все восемь фаз используют серебряный знак без золотого оттенка. Название и дата
+            остаются тёплыми Bone-метаданными. Одна система получает компактный и карточный режимы.
+          </p>
+        </div>
+
+        <div class="moon-phase-grid" role="list" aria-label="Восемь фаз Луны">
+          <article class="moon-phase-sample" role="listitem">
+            <span class="moon-icon-slot" data-moon-icon data-moon-type="nm" aria-hidden="true"></span>
+            <span>Новолуние</span>
+          </article>
+          <article class="moon-phase-sample" role="listitem">
+            <span class="moon-icon-slot" data-moon-icon data-moon-type="wc" aria-hidden="true"></span>
+            <span>Растущий серп</span>
+          </article>
+          <article class="moon-phase-sample" role="listitem">
+            <span class="moon-icon-slot" data-moon-icon data-moon-type="fq" aria-hidden="true"></span>
+            <span>Первая четверть</span>
+          </article>
+          <article class="moon-phase-sample" role="listitem">
+            <span class="moon-icon-slot" data-moon-icon data-moon-type="wg" aria-hidden="true"></span>
+            <span>Растущая луна</span>
+          </article>
+          <article class="moon-phase-sample" role="listitem">
+            <span class="moon-icon-slot" data-moon-icon data-moon-type="fm" aria-hidden="true"></span>
+            <span>Полнолуние</span>
+          </article>
+          <article class="moon-phase-sample" role="listitem">
+            <span class="moon-icon-slot" data-moon-icon data-moon-type="wag" aria-hidden="true"></span>
+            <span>Убывающая луна</span>
+          </article>
+          <article class="moon-phase-sample" role="listitem">
+            <span class="moon-icon-slot" data-moon-icon data-moon-type="lq" aria-hidden="true"></span>
+            <span>Последняя четверть</span>
+          </article>
+          <article class="moon-phase-sample" role="listitem">
+            <span class="moon-icon-slot" data-moon-icon data-moon-type="wac" aria-hidden="true"></span>
+            <span>Убывающий серп</span>
+          </article>
+        </div>
+
+        <div class="moon-metadata-board">
+          <article class="moon-metadata-specimen">
+            <p class="component-label">Compact · history / result</p>
+            <div class="moon-metadata moon-metadata--inline" aria-label="Первая четверть, 22 июля">
+              <span class="moon-icon-slot" data-moon-icon data-moon-type="fq" aria-hidden="true"></span>
+              <span>Первая четверть</span>
+              <time datetime="2026-07-22">22 июля</time>
+            </div>
+            <p>Одна строка для истории и экрана результата.</p>
+          </article>
+
+          <article class="moon-metadata-specimen">
+            <p class="component-label">Stacked · saved card</p>
+            <div class="moon-metadata moon-metadata--stacked" aria-label="Первая четверть, 22 июля">
+              <span class="moon-metadata__phase">
+                <span class="moon-icon-slot" data-moon-icon data-moon-type="fq" aria-hidden="true"></span>
+                <span>Первая четверть</span>
+              </span>
+              <time datetime="2026-07-22">22 июля</time>
+            </div>
+            <p>На сохраняемой карте дата всегда находится на второй строке.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="result" class="kit-section" aria-labelledby="actions-title">
+        <div class="section-heading">
+          <p class="section-kicker">05 · Ritual actions</p>
+          <h2 id="actions-title">Одна конструкция, четыре уровня</h2>
+          <p>
+            Высота и материал едины. Длина и сложность орнамента растут вместе с весом действия.
+            Нажмите любую кнопку, чтобы проверить стабильность геометрии.
+          </p>
+        </div>
+
+        <div class="action-inspector" aria-label="Инспектор состояний кнопок">
+          <fieldset class="action-inspector__families">
+            <legend>Семейство</legend>
+            <button type="button" aria-pressed="true" data-action-family="all">Все</button>
+            <button type="button" aria-pressed="false" data-action-family="hero">Hero</button>
+            <button type="button" aria-pressed="false" data-action-family="secondary">Secondary</button>
+            <button type="button" aria-pressed="false" data-action-family="compact">Compact</button>
+            <button type="button" aria-pressed="false" data-action-family="quiet">Quiet</button>
+          </fieldset>
+
+          <label class="action-inspector__state">
+            <span>Состояние</span>
+            <select data-action-state>
+              <option value="default">Default</option>
+              <option value="hover">Hover · pointer</option>
+              <option value="pressed">Pressed · 140 ms</option>
+              <option value="focus">Focus · keyboard</option>
+              <option value="disabled">Disabled</option>
+            </select>
+          </label>
+
+          <p class="action-inspector__description" data-action-state-description>
+            Спокойный серебряный контур; геометрия и размер не меняются.
+          </p>
+        </div>
+
+        <div class="action-ladder">
+          <article class="action-sample" data-action-sample="hero">
+            <div class="action-sample__meta">
+              <strong>Hero / Full</strong>
+              <span>главное игровое действие</span>
+            </div>
+            <button class="ui-action wyrd-action-frame wyrd-action-frame--hero" type="button">
+              Раскрыть три карты
+            </button>
+          </article>
+          <article class="action-sample" data-action-sample="secondary">
+            <div class="action-sample__meta">
+              <strong>Secondary / Reduced</strong>
+              <span>продолжение сценария</span>
+            </div>
+            <button class="ui-action wyrd-action-frame wyrd-action-frame--secondary" type="button">
+              Продолжить
+            </button>
+          </article>
+          <article class="action-sample" data-action-sample="compact">
+            <div class="action-sample__meta">
+              <strong>Compact / Single</strong>
+              <span>сохранение и подтверждение</span>
+            </div>
+            <button class="ui-action wyrd-action-frame wyrd-action-frame--compact" type="button">
+              Сохранить
+            </button>
+          </article>
+          <article class="action-sample" data-action-sample="quiet">
+            <div class="action-sample__meta">
+              <strong>Quiet / Minimal</strong>
+              <span>отмена или новый вопрос</span>
+            </div>
+            <button class="ui-action wyrd-action-frame wyrd-action-frame--quiet" type="button">
+              Новый вопрос
+            </button>
+          </article>
+        </div>
+
+        <div class="utility-board">
+          <div>
+            <p class="component-label">Utility action</p>
+            <p class="component-note">
+              «Поделиться» не имитирует ритуальную кнопку: знакомая иконка, стабильный размер,
+              спокойный контур и никаких дополнительных знаков.
+            </p>
+          </div>
+          <button class="wyrd-utility-action" type="button" data-share-action>
+            <img
+              class="wyrd-utility-action__icon"
+              src="../assets/ui/icons/tabler-share-2.svg"
+              alt=""
+              aria-hidden="true"
+            />
+            <span>Поделиться картой</span>
+          </button>
+        </div>
+        <p class="status-line" data-action-status role="status" aria-live="polite"></p>
+      </section>
+
+      <section id="question-field" class="kit-section" aria-labelledby="question-title">
+        <div class="section-heading">
+          <p class="section-kicker">06 · Question field</p>
+          <h2 id="question-title">Поле без ритуального орнамента</h2>
+          <p>
+            Широкий прямоугольник с небольшими углами и двойным серебряным контуром.
+            Серебряная искра непрерывно и спокойно движется по рамке: поле остаётся заметной
+            точкой входа, но не получает ритуальный орнамент кнопок.
+          </p>
+        </div>
+
+        <div class="field-board">
+          <label class="wyrd-question-field">
+            <span class="wyrd-question-field__label">Твой вопрос</span>
+            <span class="wyrd-question-field__shell" data-question-shell>
+              <textarea
+                class="wyrd-question-field__input"
+                rows="2"
+                maxlength="240"
+                placeholder="Напиши вопрос или держи его в сердце..."
+              ></textarea>
+            </span>
+          </label>
+          <p class="field-caption">
+            В reduced motion движение отключается, а ясный двойной контур остаётся.
+          </p>
+        </div>
+      </section>
+
+      <section id="controls" class="kit-section" aria-labelledby="controls-title">
+        <div class="section-heading">
+          <p class="section-kicker">07 · Frequent controls</p>
+          <h2 id="controls-title">Частые действия остаются тихими</h2>
+          <p>
+            Навигация, выбор и строки не конкурируют с ритуальными действиями.
+            Видимый знак может быть небольшим, но интерактивная область — не меньше 44 px.
+          </p>
+        </div>
+
+        <div class="controls-grid">
+          <article class="control-sample">
+            <p class="component-label">Navigation</p>
+            <div class="icon-row">
+              <button class="ui-icon-button" type="button" aria-label="Назад">
+                <img class="kit-icon" src="../assets/ui/icons/tabler-arrow-left.svg" alt="" />
+              </button>
+              <button class="ui-icon-button" type="button" aria-label="Аватар">
+                <img class="kit-icon" src="../assets/ui/icons/wyrd-profile.svg" alt="" />
+              </button>
+              <button class="ui-icon-button" type="button" aria-label="Настройки">
+                <img class="kit-icon" src="../assets/ui/icons/wyrd-settings.svg" alt="" />
+              </button>
+            </div>
+          </article>
+
+          <article class="control-sample">
+            <p class="component-label">Row action</p>
+            <button class="ui-row-action kit-row-action" type="button">
+              <span>Уведомления</span>
+              <span aria-hidden="true">Включены</span>
+            </button>
+          </article>
+
+          <article class="control-sample">
+            <p class="component-label">Choice</p>
+            <fieldset class="choice-group">
+              <legend class="sr-only">Выберите день</legend>
+              <button class="kit-day-choice is-selected" type="button" aria-pressed="true">Пн</button>
+              <button class="kit-day-choice" type="button" aria-pressed="false">Ср</button>
+              <button class="kit-day-choice is-selected" type="button" aria-pressed="true">Пт</button>
+            </fieldset>
+          </article>
+
+          <article class="toggle-mechanism">
+            <div class="toggle-mechanism__intro">
+              <p class="component-label">Switches / toggles</p>
+              <h3>Переключатель как маленький серебряный механизм</h3>
+              <p>
+                Привычный трек сохраняет смысл переключателя. Положение, заливка и свечение
+                меняются вместе; бегунок использует большой и малый ромб без среднего.
+              </p>
+            </div>
+
+            <div class="toggle-mechanism__settings" aria-label="Примеры переключателей">
+              <div class="toggle-setting">
+                <div>
+                  <strong>Серебряная пыль</strong>
+                  <span>Подсказка для главного действия</span>
+                </div>
+                <button
+                  class="kit-toggle"
+                  type="button"
+                  role="switch"
+                  aria-checked="true"
+                  aria-label="Серебряная пыль"
+                  data-kit-toggle
+                >
+                  <img src="../assets/ui/action-buttons/continuous/wyrd-diamond-big-small.svg" alt="" aria-hidden="true" />
+                </button>
+              </div>
+              <div class="toggle-setting">
+                <div>
+                  <strong>Тихий режим</strong>
+                  <span>Убирает звук и постоянные петли</span>
+                </div>
+                <button
+                  class="kit-toggle"
+                  type="button"
+                  role="switch"
+                  aria-checked="false"
+                  aria-label="Тихий режим"
+                  data-kit-toggle
+                >
+                  <img src="../assets/ui/action-buttons/continuous/wyrd-diamond-big-small.svg" alt="" aria-hidden="true" />
+                </button>
+              </div>
+              <div class="toggle-setting">
+                <div>
+                  <strong>Тактильный отклик</strong>
+                  <span>Короткий ответ на tap в iOS / PWA</span>
+                </div>
+                <button
+                  class="kit-toggle"
+                  type="button"
+                  role="switch"
+                  aria-checked="true"
+                  aria-label="Тактильный отклик"
+                  data-kit-toggle
+                >
+                  <img src="../assets/ui/action-buttons/continuous/wyrd-diamond-big-small.svg" alt="" aria-hidden="true" />
+                </button>
+              </div>
+              <div class="toggle-setting">
+                <div>
+                  <strong>Недоступное состояние</strong>
+                  <span>Форма сохраняется, действие временно выключено</span>
+                </div>
+                <button
+                  class="kit-toggle"
+                  type="button"
+                  role="switch"
+                  aria-checked="false"
+                  aria-label="Недоступное состояние"
+                  data-kit-toggle
+                  disabled
+                >
+                  <img src="../assets/ui/action-buttons/continuous/wyrd-diamond-big-small.svg" alt="" aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="control-inventory-board">
+          <article class="frequent-action-block">
+            <div class="app-header-block__meta">
+              <p class="component-label">Action</p>
+              <span>frequent · utility · unavailable</span>
+            </div>
+            <div class="frequent-action-list">
+              <button type="button"><span>Сохранить след</span><small>Частое действие</small></button>
+              <button type="button"><span>Остаться</span><small>Тихое подтверждение</small></button>
+              <button type="button" disabled><span>Путь закрыт</span><small>Недоступно</small></button>
+            </div>
+          </article>
+
+          <article class="row-sheet-block">
+            <div class="app-header-block__meta">
+              <p class="component-label">Row / sheet</p>
+              <span>44 px minimum target</span>
+            </div>
+            <div class="row-sheet-list">
+              <button type="button">
+                <span><strong>Лунный день</strong><small>Оракул по фазе Луны</small></span>
+                <span aria-hidden="true">›</span>
+              </button>
+              <button type="button">
+                <span><strong>Следы в лесу</strong><small>Твоя история и дары</small></span>
+                <span aria-hidden="true">›</span>
+              </button>
+            </div>
+          </article>
+        </div>
+
+        <article class="app-header-block">
+          <div class="app-header-block__meta">
+            <p class="component-label">App header</p>
+            <span>Cover · Inner · Modal</span>
+          </div>
+          <div class="app-header-specimen" aria-label="Пример модального заголовка приложения">
+            <button class="ui-icon-button" type="button" aria-label="Назад">
+              <img class="kit-icon" src="../assets/ui/icons/tabler-arrow-left.svg" alt="" />
+            </button>
+            <div class="brand-lockup brand-lockup--header" aria-label="WYRD — Оракул духов леса">
+              <p class="brand-lockup__name">WYRD</p>
+              <p class="brand-lockup__subtitle">Оракул духов леса</p>
+            </div>
+            <button class="ui-icon-button" type="button" aria-label="Закрыть">
+              <img class="kit-icon" src="../assets/ui/icons/tabler-x.svg" alt="" />
+            </button>
+          </div>
+          <ul class="app-header-block__rules" aria-label="Правила заголовка приложения">
+            <li>48 px navigation axis</li>
+            <li>optically centered identity</li>
+            <li>safe-area aware</li>
+            <li>Close — только для modal</li>
+          </ul>
+        </article>
+
+        <div class="interaction-state-board">
+          <article class="pager-block">
+            <div class="app-header-block__meta">
+              <p class="component-label">Pager / indicator</p>
+              <span>48 px · explicit ends</span>
+            </div>
+            <div class="pager-control" aria-label="Страницы книги">
+              <button class="ui-pager-button kit-pager" type="button" aria-label="Предыдущая страница" data-page-previous disabled>
+                <img class="kit-icon" src="../assets/ui/icons/tabler-chevron-left.svg" alt="" />
+              </button>
+              <div class="page-indicators" role="group" aria-label="Выбор страницы">
+                <button type="button" aria-label="Страница 1" aria-pressed="true" data-page-index="1"><img src="../assets/ui/action-buttons/continuous/wyrd-diamond-big-small.svg" alt="" aria-hidden="true" /></button>
+                <button type="button" aria-label="Страница 2" aria-pressed="false" data-page-index="2"><img src="../assets/ui/action-buttons/continuous/wyrd-diamond-big-small.svg" alt="" aria-hidden="true" /></button>
+                <button type="button" aria-label="Страница 3" aria-pressed="false" data-page-index="3"><img src="../assets/ui/action-buttons/continuous/wyrd-diamond-big-small.svg" alt="" aria-hidden="true" /></button>
+                <button type="button" aria-label="Страница 4" aria-pressed="false" data-page-index="4"><img src="../assets/ui/action-buttons/continuous/wyrd-diamond-big-small.svg" alt="" aria-hidden="true" /></button>
+                <button type="button" aria-label="Страница 5" aria-pressed="false" data-page-index="5"><img src="../assets/ui/action-buttons/continuous/wyrd-diamond-big-small.svg" alt="" aria-hidden="true" /></button>
+              </div>
+              <button class="ui-pager-button kit-pager" type="button" aria-label="Следующая страница" data-page-next>
+                <img class="kit-icon kit-icon--next" src="../assets/ui/icons/tabler-chevron-left.svg" alt="" />
+              </button>
+            </div>
+            <p class="pager-caption" data-page-caption>Глава 1 из 5</p>
+            <div class="weekday-row" role="group" aria-label="Дни недели">
+              <button type="button" aria-pressed="false" data-weekday>Пн</button>
+              <button type="button" aria-pressed="false" data-weekday>Вт</button>
+              <button type="button" aria-pressed="false" data-weekday>Ср</button>
+              <button type="button" aria-pressed="false" data-weekday>Чт</button>
+              <button type="button" aria-pressed="false" data-weekday>Пт</button>
+              <button type="button" aria-pressed="true" data-weekday>Сб</button>
+              <button type="button" aria-pressed="false" data-weekday>Вс</button>
+            </div>
+          </article>
+
+          <article class="feedback-block">
+            <div class="app-header-block__meta">
+              <p class="component-label">Feedback / empty</p>
+              <span>state + text</span>
+            </div>
+            <div class="feedback-tabs" role="group" aria-label="Состояние ответа">
+              <button type="button" aria-pressed="true" data-feedback-state="loading">Loading</button>
+              <button type="button" aria-pressed="false" data-feedback-state="success">Success</button>
+              <button type="button" aria-pressed="false" data-feedback-state="error">Error</button>
+              <button type="button" aria-pressed="false" data-feedback-state="empty">Empty</button>
+            </div>
+            <div class="feedback-panel" role="status" aria-live="polite" data-feedback-panel data-state="loading">
+              <img src="../assets/ui/action-buttons/continuous/wyrd-diamond-big-small.svg" alt="" aria-hidden="true" />
+              <div>
+                <strong data-feedback-title>Лес слушает вопрос</strong>
+                <p data-feedback-copy>Тихий знак показывает, что ответ собирается.</p>
+              </div>
+            </div>
+            <div class="status-tags" aria-label="Статусные метки">
+              <span>Сохранено</span>
+              <span>Новая карта</span>
+              <span>Тихий режим</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="materials" class="kit-section" aria-labelledby="materials-title">
+        <div class="section-heading">
+          <p class="section-kicker">08 · Material hierarchy</p>
+          <h2 id="materials-title">Четыре семейства поверхности</h2>
+          <p>Роль определяет глубину. Новая рамка не создаётся для каждого отдельного экрана.</p>
+        </div>
+
+        <div class="materials-grid">
+          <article class="wyrd-material-surface wyrd-material-surface--artifact">
+            <strong>Artifact</strong>
+            <span>главный магический объект</span>
+          </article>
+          <article class="wyrd-material-surface wyrd-material-surface--quiet">
+            <strong>Quiet</strong>
+            <span>вторичный контент и навигация</span>
+          </article>
+          <article class="wyrd-material-surface wyrd-material-surface--control">
+            <strong>Control</strong>
+            <span>действия, поля и выбор</span>
+          </article>
+          <article class="wyrd-material-surface wyrd-material-surface--sheet">
+            <strong>Sheet</strong>
+            <span>временная поверхность над сценой</span>
+          </article>
+        </div>
+
+        <div class="motion-scale" aria-label="Шкала анимации">
+          <span><strong>140 ms</strong> feedback</span>
+          <span><strong>220 ms</strong> control</span>
+          <span><strong>320 ms</strong> surface</span>
+          <span><strong>800 ms</strong> ritual</span>
+        </div>
+        <p class="motion-principle">
+          Без bounce. Движение объясняет состояние или действие: 800 ms используется только
+          для редкого ритуального раскрытия, а непрерывная искра разрешена только у поля вопроса
+          как указатель целевого ввода. Reduced motion сохраняет смысл без движения.
+        </p>
+
+        <div class="motion-lab" data-motion-lab>
+          <div>
+            <p class="component-label">Motion lab</p>
+            <p class="component-note">Превью запускается только по запросу и не превращает интерфейс в постоянную анимацию.</p>
+          </div>
+          <div class="motion-lab__stage" aria-live="polite">
+            <img src="../assets/ui/action-buttons/continuous/wyrd-diamond-big-small.svg" alt="" aria-hidden="true" data-motion-mark />
+            <span data-motion-status>Готово к проверке 220 ms</span>
+          </div>
+          <div class="motion-lab__controls">
+            <button type="button" data-motion-preview="feedback">140 ms · Feedback</button>
+            <button type="button" data-motion-preview="control">220 ms · Control</button>
+            <button type="button" data-motion-preview="surface">320 ms · Surface</button>
+            <button type="button" data-motion-preview="ritual">800 ms · Ritual</button>
+            <label>
+              <input type="checkbox" data-motion-reduced />
+              Reduced motion
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <section id="layout" class="kit-section" aria-labelledby="layout-title">
+        <div class="section-heading">
+          <p class="section-kicker">09 · Responsive layout</p>
+          <h2 id="layout-title">Сетка меняется, характер остаётся</h2>
+          <p>
+            Диапазоны фиксируют поля, локальные gaps и safe area. Компоненты меняют раскладку,
+            но сохраняют материал, читаемость и минимум 44 px для нажатия.
+          </p>
+        </div>
+
+        <div class="layout-board">
+          <div class="layout-grid-preview" aria-label="Четырёхколоночная мобильная сетка">
+            <span class="layout-grid-preview__safe">Safe area</span>
+            <div class="layout-grid-preview__columns" aria-hidden="true">
+              <i></i><i></i><i></i><i></i>
+            </div>
+            <strong>16 px</strong>
+            <span>4-column content grid</span>
+          </div>
+
+          <dl class="layout-ranges">
+            <div><dt>320–430</dt><dd>16 px side margin · 12 px local gap · one column</dd></div>
+            <div><dt>431–768</dt><dd>24 px side margin · 16 px gap · adaptive two-column groups</dd></div>
+            <div><dt>769–1180</dt><dd>32 px side margin · 18–24 px gap · tablet split view ready</dd></div>
+            <div><dt>1181+</dt><dd>48–52 px side margin · max 1440 px content shell</dd></div>
+            <div><dt>Safe area</dt><dd><code>env(safe-area-inset-*)</code> for notches, home indicator and PWA chrome</dd></div>
+            <div><dt>Controls</dt><dd>44 px minimum hit target with 12 px breathing room between bezels</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <section id="accessibility" class="kit-section" aria-labelledby="accessibility-title">
+        <div class="section-heading">
+          <p class="section-kicker">10 · Accessibility contract</p>
+          <h2 id="accessibility-title">Красота не уменьшает ясность</h2>
+        </div>
+        <ul class="checklist">
+          <li>Минимальная интерактивная область — 44×44 px; основные icon controls — 48×48 px.</li>
+          <li>Фокус усиливает существующий серебряный силуэт; forced-colors получает системный outline.</li>
+          <li>Pressed не изменяет ширину и высоту компонента.</li>
+          <li>Reduced motion сохраняет состояния, но убирает движение искры и смещение.</li>
+          <li>Мобильная навигация не исчезает — она сворачивается в доступное меню.</li>
+          <li>Bone-карта и исходный арт никогда не получают серебряный фильтр.</li>
+        </ul>
+      </section>
     </main>
+
+    <footer class="kit-footer">
+      <span>WYRD Silver UI Kit</span>
+      <span>Canonical checkpoint · YUK-135</span>
+    </footer>
+
+    <script type="module" src="wyrd-ui-kit.js"></script>
   </body>
 </html>

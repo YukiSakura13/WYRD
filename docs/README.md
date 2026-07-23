@@ -33,7 +33,7 @@
 17. [WYRD_MASTER_CARD_STYLE.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_MASTER_CARD_STYLE.md)
 18. [WYRD_UI_FOUNDATIONS.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_UI_FOUNDATIONS.md)
 19. [WYRD_UI_COMPONENT_MAPPING.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_UI_COMPONENT_MAPPING.md)
-20. [wyrd-ui-kit.html](/Users/marinamart/Desktop/Oracle_dev/docs/wyrd-ui-kit.html)
+20. [wyrd-ui-kit.html](./wyrd-ui-kit.html)
 
 ---
 
@@ -55,7 +55,7 @@
 - [WYRD_UI_FOUNDATIONS.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_UI_FOUNDATIONS.md) — системный язык UI-компонентов: 4 рамки, Button & Frame Language, depth, motion, состояния и правила упрощения
 - [WYRD_UI_COMPONENT_MAPPING.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_UI_COMPONENT_MAPPING.md) — сопоставление текущих runtime-классов с компонентами UI Foundations и порядок безопасной миграции
 - [WYRD_CONTROL_INVENTORY.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_CONTROL_INVENTORY.md) — канонические семейства интерактивных контролов, их маршруты, состояния и владельцы
-- [wyrd-ui-kit.html](/Users/marinamart/Desktop/Oracle_dev/docs/wyrd-ui-kit.html) — legacy HTML-доска; не является активным silver-каноном до отдельного визуального прохода
+- [wyrd-ui-kit.html](./wyrd-ui-kit.html) — живой канонический Silver UI Kit и интерактивная проверочная доска `YUK-135`
 
 ### Техника
 
@@ -83,7 +83,7 @@
 - Если меняется визуальный стиль, формат генерации, фон или правила обработки изображений карт, обновляем [WYRD_MASTER_CARD_STYLE.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_MASTER_CARD_STYLE.md).
 - Если меняется язык UI-компонентов, рамок, кнопок, состояний или depth-система, обновляем [WYRD_UI_FOUNDATIONS.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_UI_FOUNDATIONS.md).
 - Если меняется соответствие текущих CSS/HTML-классов дизайн-системе, обновляем [WYRD_UI_COMPONENT_MAPPING.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_UI_COMPONENT_MAPPING.md).
-- Если меняется визуальный эталон компонентов UI Kit, обновляем [wyrd-ui-kit.html](/Users/marinamart/Desktop/Oracle_dev/docs/wyrd-ui-kit.html) и проверяем его локально на desktop/mobile.
+- Если меняется визуальный эталон компонентов UI Kit, обновляем [wyrd-ui-kit.html](./wyrd-ui-kit.html) и проверяем его локально на desktop/mobile.
 - Если принимается важное техническое или продуктовое решение, записываем его в [ADR.md](/Users/marinamart/Desktop/Oracle_dev/docs/ADR.md).
 - Если меняется выпускной процесс, smoke-проверки или deploy-поток, обновляем [RELEASE_CHECKLIST.md](/Users/marinamart/Desktop/Oracle_dev/docs/RELEASE_CHECKLIST.md).
 - Каждая разработка проходит [Definition of Ready & Done](/Users/marinamart/Desktop/Oracle_dev/docs/DEFINITION_OF_READY_DONE.md).
