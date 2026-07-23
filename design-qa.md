@@ -44,11 +44,13 @@ The four variants retain exact geometry across Default, Hover, Pressed, Focus an
 
 ### Controls and feedback
 
-- The mobile section menu opens, exposes ten section links, navigates to the selected section and closes afterward.
+- The mobile section menu opens, exposes twelve section links, navigates to the selected section and closes afterward.
 - The toggle updates its checked state.
 - Pager advances to `Глава 2 из 5` and updates the active nested diamond.
-- Feedback switches to Error and shows `Лес не смог ответить`.
-- Motion Lab with Reduced motion enabled reports `control показан без движения` and starts no animation.
+- Feedback keeps the branded Oracle owl in Loading, Success, Error and Empty; Error shows `Туман скрыл дорогу`, while Empty uses the quiet dashed surface.
+- Motion Lab exposes Breath, Reveal, Drift and Success as semantic scenarios with a separate `Воспроизвести` action.
+- Reveal completes in 800 ms; Success reveals the Oracle sign and line once.
+- With Reduced motion enabled, Success remains visible as a static sign and starts no animation.
 
 ### Runtime proof
 
@@ -67,7 +69,8 @@ No horizontal overflow and no visible interactive target below 44 × 44 px were 
 - 393 × 852;
 - 430 × 932;
 - 768 × 1024;
-- landscape 852 × 393.
+- landscape 852 × 393;
+- landscape 932 × 430.
 
 The 393 px card specimen keeps:
 
@@ -79,6 +82,10 @@ The 393 px card specimen keeps:
 The narrow 320 px pager reflows to two rows rather than shrinking its targets.
 
 ## Canonical evidence
+
+The screenshot set records the approved base kit and runtime proof. The later Motion Lab
+and Oracle-owl correction was re-verified interactively in the browser and is protected
+by `scripts/smoke-ui-interactions.mjs` and the Pages artifact validator.
 
 - `docs/screenshots/wyrd-ui-kit-release-desktop-1440.jpg`
 - `docs/screenshots/wyrd-ui-kit-actions-default-1440.jpg`

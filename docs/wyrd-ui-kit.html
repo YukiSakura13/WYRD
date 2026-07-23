@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="../assets/css/components/control-language.css" />
     <link rel="stylesheet" href="../assets/css/components/action-buttons.css?v=20260722-2" />
     <link rel="stylesheet" href="../assets/css/components/silver-components.css" />
-    <link rel="stylesheet" href="wyrd-ui-kit.css?v=20260722-9" />
+    <link rel="stylesheet" href="wyrd-ui-kit.css?v=20260723-2" />
   </head>
   <body class="wyrd-ui-kit-preview">
     <a class="skip-link" href="#main">К основному содержанию</a>
@@ -40,7 +40,9 @@
         <a href="#question-field">Поле вопроса</a>
         <a href="#controls">Контролы</a>
         <a href="#materials">Материалы</a>
+        <a href="#motion-lab">Движение</a>
         <a href="#layout">Сетка</a>
+        <a href="#implementation">Реализация</a>
         <a href="#accessibility">Доступность</a>
       </nav>
 
@@ -55,7 +57,9 @@
           <a href="#question-field">Поле вопроса</a>
           <a href="#controls">Контролы</a>
           <a href="#materials">Материалы</a>
+          <a href="#motion-lab">Движение</a>
           <a href="#layout">Сетка</a>
+          <a href="#implementation">Реализация</a>
           <a href="#accessibility">Доступность</a>
         </nav>
       </details>
@@ -675,7 +679,7 @@
             </div>
           </article>
 
-          <article class="feedback-block">
+          <article id="feedback-empty" class="feedback-block">
             <div class="app-header-block__meta">
               <p class="component-label">Feedback / empty</p>
               <span>state + text</span>
@@ -687,7 +691,12 @@
               <button type="button" aria-pressed="false" data-feedback-state="empty">Empty</button>
             </div>
             <div class="feedback-panel" role="status" aria-live="polite" data-feedback-panel data-state="loading">
-              <img src="../assets/ui/action-buttons/continuous/wyrd-diamond-big-small.svg" alt="" aria-hidden="true" />
+              <img
+                class="feedback-panel__oracle"
+                src="../public/apple-touch-icon-wyrd-owl-symbol.png"
+                alt=""
+                aria-hidden="true"
+              />
               <div>
                 <strong data-feedback-title>Лес слушает вопрос</strong>
                 <p data-feedback-copy>Тихий знак показывает, что ответ собирается.</p>
@@ -740,23 +749,54 @@
           как указатель целевого ввода. Reduced motion сохраняет смысл без движения.
         </p>
 
-        <div class="motion-lab" data-motion-lab>
-          <div>
+        <div id="motion-lab" class="motion-lab" data-motion-lab>
+          <div class="motion-lab__intro">
             <p class="component-label">Motion lab</p>
-            <p class="component-note">Превью запускается только по запросу и не превращает интерфейс в постоянную анимацию.</p>
+            <p class="component-note" data-motion-description>
+              Breath мягко приглашает к одному главному действию и не превращается
+              в постоянный декоративный цикл.
+            </p>
+            <p class="motion-lab__performance">
+              Только transform, opacity и clip-path. Выход короче входа; bounce запрещён.
+            </p>
           </div>
-          <div class="motion-lab__stage" aria-live="polite">
-            <img src="../assets/ui/action-buttons/continuous/wyrd-diamond-big-small.svg" alt="" aria-hidden="true" data-motion-mark />
-            <span data-motion-status>Готово к проверке 220 ms</span>
+          <div
+            class="motion-lab__stage"
+            data-motion-stage
+            data-motion-scenario="breath"
+            aria-live="polite"
+          >
+            <div class="motion-lab__scene" aria-hidden="true">
+              <span class="motion-lab__drift-mark motion-lab__drift-mark--one"></span>
+              <span class="motion-lab__drift-mark motion-lab__drift-mark--two"></span>
+              <span class="motion-lab__drift-mark motion-lab__drift-mark--three"></span>
+              <div class="motion-lab__card-shell">
+                <img
+                  class="motion-lab__card"
+                  src="../assets/images/cards/iskra_lesa.webp"
+                  alt=""
+                />
+              </div>
+              <div class="motion-lab__success-sign">
+                <span></span>
+                <img src="../public/apple-touch-icon-wyrd-owl-symbol.png" alt="" />
+                <span></span>
+              </div>
+            </div>
+            <strong data-motion-title>Breath · приглашение</strong>
+            <span data-motion-status>Выбери сценарий и нажми «Воспроизвести»</span>
           </div>
           <div class="motion-lab__controls">
-            <button type="button" data-motion-preview="feedback">140 ms · Feedback</button>
-            <button type="button" data-motion-preview="control">220 ms · Control</button>
-            <button type="button" data-motion-preview="surface">320 ms · Surface</button>
-            <button type="button" data-motion-preview="ritual">800 ms · Ritual</button>
+            <div class="motion-lab__scenarios" role="group" aria-label="Сценарий движения">
+              <button type="button" aria-pressed="true" data-motion-preview="breath">Breath</button>
+              <button type="button" aria-pressed="false" data-motion-preview="reveal">Reveal</button>
+              <button type="button" aria-pressed="false" data-motion-preview="drift">Drift</button>
+              <button type="button" aria-pressed="false" data-motion-preview="success">Success</button>
+            </div>
+            <button class="motion-lab__play" type="button" data-motion-play>Воспроизвести</button>
             <label>
               <input type="checkbox" data-motion-reduced />
-              Reduced motion
+              Показать fallback для reduced motion
             </label>
           </div>
         </div>
@@ -793,9 +833,51 @@
         </div>
       </section>
 
+      <section id="implementation" class="kit-section" aria-labelledby="implementation-title">
+        <div class="section-heading">
+          <p class="section-kicker">10 · Implementation handoff</p>
+          <h2 id="implementation-title">Один канон для дизайна и runtime</h2>
+          <p>
+            UI Kit показывает компоненты, а канонические SVG, токены и сборочные сценарии
+            остаются в репозитории. Экран не создаёт собственную копию геометрии.
+          </p>
+        </div>
+
+        <div class="implementation-grid">
+          <article>
+            <p class="component-label">Canonical assets</p>
+            <ul>
+              <li><code>assets/ui/action-buttons/continuous/</code></li>
+              <li><code>assets/ui/card-frames/approved/wyrd-card-frame-artifact.svg</code></li>
+              <li><code>public/apple-touch-icon-wyrd-owl-symbol.png</code></li>
+            </ul>
+          </article>
+          <article>
+            <p class="component-label">Tokens &amp; runtime</p>
+            <ul>
+              <li><code>assets/css/tokens.css</code></li>
+              <li><code>assets/css/components/control-language.css</code></li>
+              <li><code>assets/css/components/silver-components.css</code></li>
+            </ul>
+          </article>
+          <article>
+            <p class="component-label">Build &amp; validation</p>
+            <ul>
+              <li><code>scripts/build-wyrd-action-button-family.mjs</code></li>
+              <li><code>scripts/build-wyrd-card-frame-recommended.mjs</code></li>
+              <li><code>scripts/validate_control_language.py</code></li>
+            </ul>
+          </article>
+        </div>
+        <p class="implementation-note">
+          Карточный арт не фильтруется. Серебряная обработка допускается только для
+          отдельного фирменного знака совы в Feedback и Motion Success.
+        </p>
+      </section>
+
       <section id="accessibility" class="kit-section" aria-labelledby="accessibility-title">
         <div class="section-heading">
-          <p class="section-kicker">10 · Accessibility contract</p>
+          <p class="section-kicker">11 · Accessibility contract</p>
           <h2 id="accessibility-title">Красота не уменьшает ясность</h2>
         </div>
         <ul class="checklist">
@@ -814,6 +896,6 @@
       <span>Canonical checkpoint · YUK-135</span>
     </footer>
 
-    <script type="module" src="wyrd-ui-kit.js"></script>
+    <script type="module" src="wyrd-ui-kit.js?v=20260723-2"></script>
   </body>
 </html>

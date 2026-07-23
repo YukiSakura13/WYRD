@@ -116,8 +116,8 @@ import { createMoonIcon } from "../assets/js/ui/moon.js";
 
   const feedbackCopy = {
     loading: ["Лес слушает вопрос", "Тихий знак показывает, что ответ собирается."],
-    success: ["Ответ собран", "Карта готова и может быть прочитана или сохранена."],
-    error: ["Лес не смог ответить", "Попробуй ещё раз — вопрос и сохранённые данные не потеряны."],
+    success: ["След сохранён", "Карта добавлена в историю и не требует повторного действия."],
+    error: ["Туман скрыл дорогу", "Попробуй ещё раз — вопрос и сохранённые данные не потеряны."],
     empty: ["Здесь пока тихо", "Когда появится первая карта, её след будет показан здесь."],
   };
   const feedbackTitle = document.querySelector("[data-feedback-title]");
@@ -138,41 +138,107 @@ import { createMoonIcon } from "../assets/js/ui/moon.js";
     });
   });
 
-  const motionMark = document.querySelector("[data-motion-mark]");
+  const motionStage = document.querySelector("[data-motion-stage]");
+  const motionTitle = document.querySelector("[data-motion-title]");
   const motionStatus = document.querySelector("[data-motion-status]");
+  const motionDescription = document.querySelector("[data-motion-description]");
   const reducedMotionToggle = document.querySelector("[data-motion-reduced]");
-  const motionClasses = [
-    "is-motion-feedback",
-    "is-motion-control",
-    "is-motion-surface",
-    "is-motion-ritual",
-  ];
-  const motionDurations = {
-    feedback: 140,
-    control: 220,
-    surface: 320,
-    ritual: 800,
+  const motionPlay = document.querySelector("[data-motion-play]");
+  const motionScenarioButtons = [...document.querySelectorAll("[data-motion-preview]")];
+  const systemReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const motionScenarios = {
+    breath: {
+      duration: 320,
+      title: "Breath · приглашение",
+      description:
+        "Breath мягко приглашает к одному главному действию и не превращается в постоянный декоративный цикл.",
+      complete: "Breath завершён; поверхность снова спокойна.",
+    },
+    reveal: {
+      duration: 800,
+      title: "Reveal · ритуальное раскрытие",
+      description:
+        "Reveal применяется только к редкому появлению карты. Арт не масштабируется и сохраняет авторский цвет.",
+      complete: "Reveal завершён за 800 ms; карта остаётся полностью видимой.",
+    },
+    drift: {
+      duration: 320,
+      title: "Drift · атмосфера",
+      description:
+        "Drift сдвигает только окружающие знаки на несколько пикселей и никогда не конкурирует с чтением карты.",
+      complete: "Drift завершён; окружающие знаки вернулись в покой.",
+    },
+    success: {
+      duration: 220,
+      title: "Success · подтверждение",
+      description:
+        "Success один раз проявляет знак Оракула и линию, после чего движение останавливается.",
+      complete: "Success подтверждён; знак остаётся видимым без дальнейшего движения.",
+    },
   };
+  let selectedMotionScenario = "breath";
+  let motionRun = 0;
 
-  document.querySelectorAll("[data-motion-preview]").forEach((button) => {
-    button.addEventListener("click", () => {
-      const scenario = button.dataset.motionPreview;
-      const duration = motionDurations[scenario] ?? 220;
-      const reduced = reducedMotionToggle?.checked;
+  function usesReducedMotion() {
+    return Boolean(reducedMotionToggle?.checked || systemReducedMotion.matches);
+  }
 
-      motionMark?.classList.remove(...motionClasses);
+  function selectMotionScenario(scenario) {
+    const config = motionScenarios[scenario] ?? motionScenarios.breath;
+    selectedMotionScenario = scenario in motionScenarios ? scenario : "breath";
+    motionRun += 1;
 
-      if (reduced) {
-        if (motionStatus) motionStatus.textContent = `Reduced motion: ${scenario} показан без движения`;
-        return;
-      }
-
-      requestAnimationFrame(() => {
-        motionMark?.classList.add(`is-motion-${scenario}`);
-      });
-      if (motionStatus) motionStatus.textContent = `${scenario} · ${duration} ms`;
+    motionScenarioButtons.forEach((button) => {
+      button.setAttribute("aria-pressed", String(button.dataset.motionPreview === selectedMotionScenario));
     });
+
+    motionStage?.classList.remove("is-playing", "is-reduced", "is-complete");
+    if (motionStage) motionStage.dataset.motionScenario = selectedMotionScenario;
+    if (motionTitle) motionTitle.textContent = config.title;
+    if (motionDescription) motionDescription.textContent = config.description;
+    if (motionStatus) {
+      motionStatus.textContent = usesReducedMotion()
+        ? "Reduced motion включён: воспроизведение покажет статический смысл состояния"
+        : `Готово к воспроизведению · ${config.duration} ms`;
+    }
+  }
+
+  function playMotionScenario() {
+    const config = motionScenarios[selectedMotionScenario];
+    if (!motionStage || !config) return;
+
+    motionRun += 1;
+    const currentRun = motionRun;
+    motionStage.classList.remove("is-playing", "is-reduced", "is-complete");
+    void motionStage.offsetWidth;
+
+    if (usesReducedMotion()) {
+      motionStage.classList.add("is-reduced");
+      if (motionStatus) {
+        motionStatus.textContent = `Reduced motion · ${config.title}: смысл показан контуром и статическим знаком`;
+      }
+      return;
+    }
+
+    motionStage.classList.add("is-playing");
+    if (motionStatus) motionStatus.textContent = `${config.title} · ${config.duration} ms`;
+
+    window.setTimeout(() => {
+      if (motionRun === currentRun) {
+        motionStage.classList.remove("is-playing");
+        if (selectedMotionScenario === "success") motionStage.classList.add("is-complete");
+        if (motionStatus) motionStatus.textContent = config.complete;
+      }
+    }, config.duration);
+  }
+
+  motionScenarioButtons.forEach((button) => {
+    button.addEventListener("click", () => selectMotionScenario(button.dataset.motionPreview));
   });
+  motionPlay?.addEventListener("click", playMotionScenario);
+  reducedMotionToggle?.addEventListener("change", () => selectMotionScenario(selectedMotionScenario));
+  systemReducedMotion.addEventListener?.("change", () => selectMotionScenario(selectedMotionScenario));
+  selectMotionScenario(selectedMotionScenario);
 
   document.querySelectorAll(".section-nav--mobile a").forEach((link) => {
     link.addEventListener("click", () => {

@@ -62,7 +62,7 @@ Quiet Frame is for secondary cards and groups. It can invite touch, but it must 
 Rules:
 - `1px` line;
 - radius `var(--radius-small)` through `var(--radius-card)` (`8-12px`);
-- border color around `rgba(168, 140, 84, 0.45-0.55)` for clear containers, lower alpha for grouped panels;
+- border color around `rgba(205, 209, 207, 0.18-0.32)` for clear containers, lower alpha for grouped panels;
 - interior: transparent or `rgba(9, 10, 14, 0.32-0.46)`;
 - very light depth is allowed, but no heavy card body;
 - no ornamental corners unless the component is promoted to Artifact.
@@ -357,10 +357,15 @@ Rules:
 - `220ms` for control state changes;
 - `320ms` for sheets and surface transitions;
 - `800ms` only for rare ritual reveal;
+- `Breath` invites attention to one primary target, then returns to calm;
+- `Reveal` belongs only to a rare card appearance and uses the `800ms` ritual token;
+- `Drift` moves only ambient signs by a few pixels and never moves authored card art;
+- `Success` reveals the Oracle sign and line once, then stops;
 - atmospheric loops: `4-20s`; continuous control motion is reserved for the question-field target spark;
 - pressed state: up to `1px` for navigation controls and up to `2px` for deep artifacts;
 - no jumpy bounce;
 - no attention-grabbing neon glow;
+- prefer `transform`, `opacity`, and `clip-path`; exit is shorter than enter;
 - all decorative motion must stop under `prefers-reduced-motion: reduce`;
 - reduced motion keeps state changes visible through color, outline, position, and text.
 

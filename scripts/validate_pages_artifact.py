@@ -101,6 +101,23 @@ def main() -> None:
         (DIST / "assets/ui/card-frames/approved/wyrd-card-frame-artifact.svg").exists(),
         "Silver UI Kit canonical Artifact Frame is missing from the Pages artifact",
     )
+    require(
+        "../public/apple-touch-icon-wyrd-owl-symbol.png" in kit_html,
+        "Silver UI Kit Feedback lost the canonical Oracle owl",
+    )
+    for scenario in ("breath", "reveal", "drift", "success"):
+        require(
+            f'data-motion-preview="{scenario}"' in kit_html,
+            f"Silver UI Kit Motion Lab lost the {scenario} scenario",
+        )
+    require(
+        "data-motion-play" in kit_html and "data-motion-reduced" in kit_html,
+        "Silver UI Kit Motion Lab lost play or reduced-motion controls",
+    )
+    require(
+        'id="implementation"' in kit_html,
+        "Silver UI Kit implementation handoff is missing",
+    )
 
     print(f"Artifact validation passed for build {build_id}")
 
