@@ -37,6 +37,9 @@ SITE_FILES = [
     "index.html",
     "manifest.webmanifest",
     "sw.js",
+    "docs/wyrd-ui-kit.html",
+    "docs/wyrd-ui-kit.css",
+    "docs/wyrd-ui-kit.js",
 ]
 SITE_DIRS = [
     "assets",
@@ -54,6 +57,26 @@ def replace_build_markers(path: Path) -> None:
     text = re.sub(r"manifest\.webmanifest(?:\?v=[^\"']+)?", f"manifest.webmanifest?v={BUILD_ID}", text)
     text = re.sub(r"assets/css/styles\.css(?:\?v=[^\"']+)?", f"assets/css/styles.css?v={BUILD_ID}", text)
     text = re.sub(r"assets/js/main\.js(?:\?v=[^\"']+)?", f"assets/js/main.js?v={BUILD_ID}", text)
+    path.write_text(text, encoding="utf-8")
+
+
+def replace_kit_build_markers(path: Path) -> None:
+    text = path.read_text(encoding="utf-8")
+    text = re.sub(
+        r"wyrd-ui-kit\.css(?:\?v=[^\"']+)?",
+        f"wyrd-ui-kit.css?v={BUILD_ID}",
+        text,
+    )
+    text = re.sub(
+        r"wyrd-ui-kit\.js(?:\?v=[^\"']+)?",
+        f"wyrd-ui-kit.js?v={BUILD_ID}",
+        text,
+    )
+    text = re.sub(
+        r'((?:\.\./)assets/[^"\']+\.(?:css|webp|png|jpe?g|gif|svg))(?:\?v=[^"\']+)?',
+        lambda match: f"{match.group(1)}?v={BUILD_ID}",
+        text,
+    )
     path.write_text(text, encoding="utf-8")
 
 
@@ -89,12 +112,16 @@ def main() -> None:
     DIST.mkdir(parents=True)
 
     for relative in SITE_FILES:
-        shutil.copy2(ROOT / relative, DIST / relative)
+        destination = DIST / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(ROOT / relative, destination)
 
     for relative in SITE_DIRS:
         copy_tree(ROOT / relative, DIST / relative)
 
     replace_build_markers(DIST / "index.html")
+    replace_kit_build_markers(DIST / "docs/wyrd-ui-kit.html")
+    version_relative_js_imports(DIST / "docs/wyrd-ui-kit.js")
 
     for js_file in (DIST / "assets/js").rglob("*.js"):
         version_relative_js_imports(js_file)

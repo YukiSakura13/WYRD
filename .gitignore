@@ -3,4 +3,5 @@ Thumbs.db
 tmp/
 *.xlsx
 .dist-pages/
+output/playwright/
 assets/images/cards-normalized-preview/

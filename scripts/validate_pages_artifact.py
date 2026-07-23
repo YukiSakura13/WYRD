@@ -14,6 +14,9 @@ REQUIRED_FILES = [
     DIST / "manifest.webmanifest",
     DIST / "sw.js",
     DIST / ".nojekyll",
+    DIST / "docs/wyrd-ui-kit.html",
+    DIST / "docs/wyrd-ui-kit.css",
+    DIST / "docs/wyrd-ui-kit.js",
     DIST / "assets/css/styles.css",
     DIST / "assets/js/main.js",
     DIST / "public/social/og-wide-wyrd-owl-title.png",
@@ -76,6 +79,27 @@ def main() -> None:
     require(
         re.search(r'@import\s+["\'][^"\']+\.css\?v=' + re.escape(build_id), styles_entry),
         "CSS imports in .dist-pages/assets/css/styles.css are not versioned",
+    )
+
+    kit_html = (DIST / "docs/wyrd-ui-kit.html").read_text(encoding="utf-8")
+    require(
+        re.search(r'href=["\'](?:\./)?wyrd-ui-kit\.css(?:\?v=[^"\']+)?["\']', kit_html) is not None,
+        "Silver UI Kit lost its local stylesheet reference",
+    )
+    require(
+        re.search(r'src=["\'](?:\./)?wyrd-ui-kit\.js(?:\?v=[^"\']+)?["\']', kit_html) is not None,
+        "Silver UI Kit lost its local script reference",
+    )
+    ensure_versioned_reference(kit_html, "wyrd-ui-kit.css", build_id)
+    ensure_versioned_reference(kit_html, "wyrd-ui-kit.js", build_id)
+    ensure_versioned_reference(kit_html, "../assets/css/tokens.css", build_id)
+    require(
+        (DIST / "assets/ui/action-buttons/continuous/wyrd-action-hero.svg").exists(),
+        "Silver UI Kit canonical Hero asset is missing from the Pages artifact",
+    )
+    require(
+        (DIST / "assets/ui/card-frames/approved/wyrd-card-frame-artifact.svg").exists(),
+        "Silver UI Kit canonical Artifact Frame is missing from the Pages artifact",
     )
 
     print(f"Artifact validation passed for build {build_id}")
