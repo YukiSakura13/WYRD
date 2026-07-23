@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="../assets/css/components/control-language.css" />
     <link rel="stylesheet" href="../assets/css/components/action-buttons.css?v=20260722-2" />
     <link rel="stylesheet" href="../assets/css/components/silver-components.css" />
-    <link rel="stylesheet" href="wyrd-ui-kit.css?v=20260723-2" />
+    <link rel="stylesheet" href="wyrd-ui-kit.css?v=20260723-6" />
   </head>
   <body class="wyrd-ui-kit-preview">
     <a class="skip-link" href="#main">К основному содержанию</a>
@@ -243,10 +243,14 @@
               <h3>Дополнительный образ</h3>
               <p>Тихая дополнительная карта без героической рамки.</p>
             </header>
-            <figure class="quiet-card-specimen">
+            <button
+              class="quiet-card-specimen card-context-action"
+              type="button"
+              aria-label="Открыть дополнительную карту «Тропа Домой»"
+            >
               <img src="../assets/images/cards/tropa_domoy.webp" alt="Карта «Тропа Домой»" />
-              <figcaption>Тропа Домой</figcaption>
-            </figure>
+              <span>Тропа Домой</span>
+            </button>
           </article>
 
           <article class="card-role card-role--history">
@@ -254,21 +258,65 @@
               <h3>Карта в истории</h3>
               <p>Компактная запись уже сохранённой карты.</p>
             </header>
-            <div class="history-card-specimen">
+            <button
+              class="history-card-specimen card-context-action"
+              type="button"
+              aria-label="Открыть сохранённую карту «Следы Возвращения»"
+            >
               <img src="../assets/images/cards/sledy_vozvrashcheniya.webp" alt="Карта «Следы Возвращения»" />
-              <div class="history-card-specimen__body">
+              <span class="history-card-specimen__body">
                 <strong>Следы Возвращения</strong>
-                <div class="history-card-specimen__meta" aria-label="Растущий серп, 18 июля">
+                <span class="history-card-specimen__meta" aria-label="Растущий серп, 18 июля">
                   <span class="history-card-specimen__phase">
                     <span class="moon-icon-slot" data-moon-icon data-moon-type="wc" aria-hidden="true"></span>
                     <span>Растущий серп</span>
                   </span>
                   <time datetime="2026-07-18">18 июля</time>
-                </div>
-              </div>
-            </div>
+                </span>
+              </span>
+            </button>
           </article>
         </div>
+
+        <article class="card-reveal-demo" aria-labelledby="card-reveal-title">
+          <div class="card-reveal-demo__head">
+            <div>
+              <p class="component-label">Artifact interaction</p>
+              <h3 id="card-reveal-title">Ритуальное раскрытие</h3>
+            </div>
+            <span>rare motion · 800 ms</span>
+          </div>
+          <div class="card-reveal-demo__body">
+            <button
+              class="card-reveal"
+              type="button"
+              aria-label="Раскрыть карту «Искра Леса»"
+              aria-pressed="false"
+              data-card-reveal
+            >
+              <span class="card-reveal__inner">
+                <span class="card-reveal__face card-reveal__back" aria-hidden="true">
+                  <img src="../assets/images/rubashka.webp" alt="" />
+                </span>
+                <span class="card-reveal__face card-reveal__front">
+                  <img src="../assets/images/cards/iskra_lesa.webp" alt="Карта «Искра Леса»" />
+                </span>
+              </span>
+            </button>
+            <div class="card-reveal-demo__copy">
+              <p>
+                Одно редкое движение объясняет переход от скрытой колоды к прочитанной карте.
+                Повторные действия остаются короткими.
+              </p>
+              <button class="ui-action card-reveal-demo__trigger" type="button" data-card-reveal-trigger>
+                Раскрыть карту
+              </button>
+              <p class="card-reveal-demo__status" role="status" aria-live="polite" data-card-reveal-status>
+                Карта скрыта.
+              </p>
+            </div>
+          </div>
+        </article>
       </section>
 
       <section id="symbols" class="kit-section" aria-labelledby="symbols-title">
@@ -277,7 +325,8 @@
           <h2 id="symbols-title">Лунная фаза — смысловой знак WYRD</h2>
           <p>
             Все восемь фаз используют серебряный знак без золотого оттенка. Название и дата
-            остаются тёплыми Bone-метаданными. Одна система получает компактный и карточный режимы.
+            остаются тёплыми Bone-метаданными. В компактном и карточном режимах фаза и дата
+            всегда занимают две строки.
           </p>
         </div>
 
@@ -319,12 +368,14 @@
         <div class="moon-metadata-board">
           <article class="moon-metadata-specimen">
             <p class="component-label">Compact · history / result</p>
-            <div class="moon-metadata moon-metadata--inline" aria-label="Первая четверть, 22 июля">
-              <span class="moon-icon-slot" data-moon-icon data-moon-type="fq" aria-hidden="true"></span>
-              <span>Первая четверть</span>
+            <div class="moon-metadata moon-metadata--stacked" aria-label="Первая четверть, 22 июля">
+              <span class="moon-metadata__phase">
+                <span class="moon-icon-slot" data-moon-icon data-moon-type="fq" aria-hidden="true"></span>
+                <span>Первая четверть</span>
+              </span>
               <time datetime="2026-07-22">22 июля</time>
             </div>
-            <p>Одна строка для истории и экрана результата.</p>
+            <p>Фаза и дата всегда разделены на две строки, в том числе в истории и на экране результата.</p>
           </article>
 
           <article class="moon-metadata-specimen">
@@ -450,17 +501,24 @@
 
         <div class="field-board">
           <label class="wyrd-question-field">
-            <span class="wyrd-question-field__label">Твой вопрос</span>
+            <span class="question-field-meta">
+              <span class="wyrd-question-field__label">Твой вопрос</span>
+              <span class="question-field-count" data-question-count>0 / 120</span>
+            </span>
             <span class="wyrd-question-field__shell" data-question-shell>
               <textarea
                 class="wyrd-question-field__input"
                 rows="2"
-                maxlength="240"
+                maxlength="120"
                 placeholder="Напиши вопрос или держи его в сердце..."
+                data-question-input
               ></textarea>
             </span>
           </label>
-          <p class="field-caption">
+          <p class="field-caption" role="status" aria-live="polite" data-question-status>
+            Можно оставить поле пустым — карта всё равно придёт.
+          </p>
+          <p class="field-caption field-caption--motion">
             В reduced motion движение отключается, а ясный двойной контур остаётся.
           </p>
         </div>
@@ -502,11 +560,11 @@
 
           <article class="control-sample">
             <p class="component-label">Choice</p>
-            <fieldset class="choice-group">
+            <fieldset class="choice-group" data-exclusive-choice>
               <legend class="sr-only">Выберите день</legend>
               <button class="kit-day-choice is-selected" type="button" aria-pressed="true">Пн</button>
               <button class="kit-day-choice" type="button" aria-pressed="false">Ср</button>
-              <button class="kit-day-choice is-selected" type="button" aria-pressed="true">Пт</button>
+              <button class="kit-day-choice" type="button" aria-pressed="false">Пт</button>
             </fieldset>
           </article>
 
@@ -521,71 +579,54 @@
             </div>
 
             <div class="toggle-mechanism__settings" aria-label="Примеры переключателей">
-              <div class="toggle-setting">
-                <div>
+              <button
+                class="toggle-setting"
+                type="button"
+                role="switch"
+                aria-checked="true"
+                data-switch-label="Серебряная пыль"
+                data-kit-toggle
+              >
+                <span class="toggle-setting__copy">
                   <strong>Серебряная пыль</strong>
                   <span>Подсказка для главного действия</span>
-                </div>
-                <button
-                  class="kit-toggle"
-                  type="button"
-                  role="switch"
-                  aria-checked="true"
-                  aria-label="Серебряная пыль"
-                  data-kit-toggle
-                >
+                </span>
+                <span class="kit-toggle" aria-hidden="true">
                   <img src="../assets/ui/action-buttons/continuous/wyrd-diamond-big-small.svg" alt="" aria-hidden="true" />
-                </button>
-              </div>
-              <div class="toggle-setting">
-                <div>
+                </span>
+              </button>
+              <button
+                class="toggle-setting"
+                type="button"
+                role="switch"
+                aria-checked="false"
+                data-switch-label="Тихий режим"
+                data-kit-toggle
+              >
+                <span class="toggle-setting__copy">
                   <strong>Тихий режим</strong>
                   <span>Убирает звук и постоянные петли</span>
-                </div>
-                <button
-                  class="kit-toggle"
-                  type="button"
-                  role="switch"
-                  aria-checked="false"
-                  aria-label="Тихий режим"
-                  data-kit-toggle
-                >
+                </span>
+                <span class="kit-toggle" aria-hidden="true">
                   <img src="../assets/ui/action-buttons/continuous/wyrd-diamond-big-small.svg" alt="" aria-hidden="true" />
-                </button>
-              </div>
-              <div class="toggle-setting">
-                <div>
+                </span>
+              </button>
+              <button
+                class="toggle-setting"
+                type="button"
+                role="switch"
+                aria-checked="true"
+                data-switch-label="Тактильный отклик"
+                data-kit-toggle
+              >
+                <span class="toggle-setting__copy">
                   <strong>Тактильный отклик</strong>
                   <span>Короткий ответ на tap в iOS / PWA</span>
-                </div>
-                <button
-                  class="kit-toggle"
-                  type="button"
-                  role="switch"
-                  aria-checked="true"
-                  aria-label="Тактильный отклик"
-                  data-kit-toggle
-                >
+                </span>
+                <span class="kit-toggle" aria-hidden="true">
                   <img src="../assets/ui/action-buttons/continuous/wyrd-diamond-big-small.svg" alt="" aria-hidden="true" />
-                </button>
-              </div>
-              <div class="toggle-setting">
-                <div>
-                  <strong>Недоступное состояние</strong>
-                  <span>Форма сохраняется, действие временно выключено</span>
-                </div>
-                <button
-                  class="kit-toggle"
-                  type="button"
-                  role="switch"
-                  aria-checked="false"
-                  aria-label="Недоступное состояние"
-                  data-kit-toggle
-                  disabled
-                >
-                  <img src="../assets/ui/action-buttons/continuous/wyrd-diamond-big-small.svg" alt="" aria-hidden="true" />
-                </button>
-              </div>
+                </span>
+              </button>
             </div>
           </article>
         </div>
@@ -613,7 +654,7 @@
                 <span><strong>Лунный день</strong><small>Оракул по фазе Луны</small></span>
                 <span aria-hidden="true">›</span>
               </button>
-              <button type="button">
+              <button type="button" aria-haspopup="dialog" aria-controls="kit-demo-sheet" data-sheet-open>
                 <span><strong>Следы в лесу</strong><small>Твоя история и дары</small></span>
                 <span aria-hidden="true">›</span>
               </button>
@@ -657,11 +698,11 @@
                 <img class="kit-icon" src="../assets/ui/icons/tabler-chevron-left.svg" alt="" />
               </button>
               <div class="page-indicators" role="group" aria-label="Выбор страницы">
-                <button type="button" aria-label="Страница 1" aria-pressed="true" data-page-index="1"><img src="../assets/ui/action-buttons/continuous/wyrd-diamond-big-small.svg" alt="" aria-hidden="true" /></button>
-                <button type="button" aria-label="Страница 2" aria-pressed="false" data-page-index="2"><img src="../assets/ui/action-buttons/continuous/wyrd-diamond-big-small.svg" alt="" aria-hidden="true" /></button>
-                <button type="button" aria-label="Страница 3" aria-pressed="false" data-page-index="3"><img src="../assets/ui/action-buttons/continuous/wyrd-diamond-big-small.svg" alt="" aria-hidden="true" /></button>
-                <button type="button" aria-label="Страница 4" aria-pressed="false" data-page-index="4"><img src="../assets/ui/action-buttons/continuous/wyrd-diamond-big-small.svg" alt="" aria-hidden="true" /></button>
-                <button type="button" aria-label="Страница 5" aria-pressed="false" data-page-index="5"><img src="../assets/ui/action-buttons/continuous/wyrd-diamond-big-small.svg" alt="" aria-hidden="true" /></button>
+                <button type="button" aria-label="Страница 1" aria-pressed="true" data-page-index="1"></button>
+                <button type="button" aria-label="Страница 2" aria-pressed="false" data-page-index="2"></button>
+                <button type="button" aria-label="Страница 3" aria-pressed="false" data-page-index="3"></button>
+                <button type="button" aria-label="Страница 4" aria-pressed="false" data-page-index="4"></button>
+                <button type="button" aria-label="Страница 5" aria-pressed="false" data-page-index="5"></button>
               </div>
               <button class="ui-pager-button kit-pager" type="button" aria-label="Следующая страница" data-page-next>
                 <img class="kit-icon kit-icon--next" src="../assets/ui/icons/tabler-chevron-left.svg" alt="" />
@@ -767,9 +808,7 @@
             aria-live="polite"
           >
             <div class="motion-lab__scene" aria-hidden="true">
-              <span class="motion-lab__drift-mark motion-lab__drift-mark--one"></span>
-              <span class="motion-lab__drift-mark motion-lab__drift-mark--two"></span>
-              <span class="motion-lab__drift-mark motion-lab__drift-mark--three"></span>
+              <span class="motion-lab__halo"></span>
               <div class="motion-lab__card-shell">
                 <img
                   class="motion-lab__card"
@@ -777,14 +816,14 @@
                   alt=""
                 />
               </div>
-              <div class="motion-lab__success-sign">
-                <span></span>
-                <img src="../public/apple-touch-icon-wyrd-owl-symbol.png" alt="" />
-                <span></span>
-              </div>
+              <img
+                class="motion-lab__success-sign"
+                src="../public/apple-touch-icon-wyrd-owl-symbol.png"
+                alt=""
+              />
             </div>
-            <strong data-motion-title>Breath · приглашение</strong>
-            <span data-motion-status>Выбери сценарий и нажми «Воспроизвести»</span>
+            <strong data-motion-title>Свет приглашает, но не торопит</strong>
+            <span data-motion-status>Готово к воспроизведению · 800 ms</span>
           </div>
           <div class="motion-lab__controls">
             <div class="motion-lab__scenarios" role="group" aria-label="Сценарий движения">
@@ -794,10 +833,14 @@
               <button type="button" aria-pressed="false" data-motion-preview="success">Success</button>
             </div>
             <button class="motion-lab__play" type="button" data-motion-play>Воспроизвести</button>
-            <label>
-              <input type="checkbox" data-motion-reduced />
-              Показать fallback для reduced motion
-            </label>
+            <button
+              class="motion-lab__reduced"
+              type="button"
+              aria-pressed="false"
+              data-motion-reduced
+            >
+              Reduced motion: off
+            </button>
           </div>
         </div>
       </section>
@@ -891,11 +934,41 @@
       </section>
     </main>
 
+    <button
+      class="kit-sheet-backdrop"
+      type="button"
+      aria-label="Закрыть панель"
+      data-sheet-backdrop
+      hidden
+    ></button>
+    <aside
+      class="kit-sheet"
+      id="kit-demo-sheet"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="kit-sheet-title"
+      data-kit-sheet
+      hidden
+    >
+      <span class="kit-sheet__handle" aria-hidden="true"></span>
+      <button class="ui-icon-button kit-sheet__close" type="button" aria-label="Закрыть" data-sheet-close>
+        <img class="kit-icon" src="../assets/ui/icons/tabler-x.svg" alt="" />
+      </button>
+      <p class="component-label">Sheet frame</p>
+      <h2 id="kit-sheet-title">След в лесу</h2>
+      <blockquote>«Что сейчас просит моего внимания?»</blockquote>
+      <p>
+        Вещий ворон напоминает: сначала назови узор, который уже видишь.
+        Ответ становится яснее, когда вопрос перестаёт прятаться в тумане.
+      </p>
+      <button class="ui-action kit-sheet__action" type="button">Открыть карту</button>
+    </aside>
+
     <footer class="kit-footer">
       <span>WYRD Silver UI Kit</span>
       <span>Canonical checkpoint · YUK-135</span>
     </footer>
 
-    <script type="module" src="wyrd-ui-kit.js?v=20260723-2"></script>
+    <script defer src="wyrd-ui-kit.js?v=20260723-4"></script>
   </body>
 </html>

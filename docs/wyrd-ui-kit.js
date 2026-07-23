@@ -1,4 +1,99 @@
-import { createMoonIcon } from "../assets/js/ui/moon.js";
+const MOON_SOURCE_COLOR = "#c9a14a";
+let moonIconId = 0;
+
+function createSvgNode(name, attributes = {}) {
+  const node = document.createElementNS("http://www.w3.org/2000/svg", name);
+
+  Object.entries(attributes).forEach(([key, value]) => {
+    node.setAttribute(key, value);
+  });
+
+  return node;
+}
+
+function createMoonCircle(attributes = {}) {
+  return createSvgNode("circle", { cx: "9", cy: "9", r: "7", ...attributes });
+}
+
+function createMoonIcon(type) {
+  const id = `kit-moon-clip-${moonIconId}`;
+  moonIconId += 1;
+
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("width", "44");
+  svg.setAttribute("height", "44");
+  svg.setAttribute("viewBox", "0 0 18 18");
+  svg.setAttribute("aria-hidden", "true");
+
+  const defs = createSvgNode("defs");
+  const clipPath = createSvgNode("clipPath", { id });
+  clipPath.append(createSvgNode("circle", { cx: "9", cy: "9", r: "7" }));
+  defs.append(clipPath);
+  svg.append(defs);
+
+  if (type === "fm") {
+    svg.append(createMoonCircle({ fill: MOON_SOURCE_COLOR }));
+    return svg;
+  }
+
+  if (type === "fq" || type === "lq") {
+    const group = createSvgNode("g", { "clip-path": `url(#${id})` });
+    group.append(
+      createSvgNode("rect", {
+        x: type === "fq" ? "9" : "2",
+        y: "2",
+        width: "7",
+        height: "14",
+        fill: MOON_SOURCE_COLOR,
+      }),
+    );
+    group.append(
+      createMoonCircle({ fill: "none", stroke: MOON_SOURCE_COLOR, "stroke-width": "0.9" }),
+    );
+    svg.append(group);
+    return svg;
+  }
+
+  if (type === "wc" || type === "wac") {
+    const group = createSvgNode("g", { "clip-path": `url(#${id})` });
+    group.append(
+      createSvgNode("ellipse", {
+        cx: type === "wc" ? "12.2" : "5.8",
+        cy: "9",
+        rx: "5.4",
+        ry: "7",
+        fill: MOON_SOURCE_COLOR,
+      }),
+    );
+    group.append(
+      createMoonCircle({ fill: "none", stroke: MOON_SOURCE_COLOR, "stroke-width": "0.9" }),
+    );
+    svg.append(group);
+    return svg;
+  }
+
+  if (type === "wg" || type === "wag") {
+    const group = createSvgNode("g", { "clip-path": `url(#${id})` });
+    group.append(createMoonCircle({ fill: MOON_SOURCE_COLOR }));
+    group.append(
+      createSvgNode("ellipse", {
+        cx: type === "wg" ? "5.2" : "12.8",
+        cy: "9",
+        rx: "3.8",
+        ry: "7",
+        fill: "#12121c",
+      }),
+    );
+    group.append(
+      createMoonCircle({ fill: "none", stroke: MOON_SOURCE_COLOR, "stroke-width": "0.9" }),
+    );
+    svg.append(group);
+    return svg;
+  }
+
+  svg.append(createMoonCircle({ fill: "none", stroke: MOON_SOURCE_COLOR, "stroke-width": "1.1" }));
+  return svg;
+}
 
 (() => {
   const status = document.querySelector("[data-action-status]");
@@ -67,11 +162,71 @@ import { createMoonIcon } from "../assets/js/ui/moon.js";
     }
   });
 
+  const cardReveal = document.querySelector("[data-card-reveal]");
+  const cardRevealTrigger = document.querySelector("[data-card-reveal-trigger]");
+  const cardRevealStatus = document.querySelector("[data-card-reveal-status]");
+
+  function setCardReveal(nextState) {
+    if (!cardReveal) return;
+
+    cardReveal.classList.toggle("is-revealed", nextState);
+    cardReveal.setAttribute("aria-pressed", String(nextState));
+    cardReveal.setAttribute(
+      "aria-label",
+      nextState ? "Скрыть карту «Искра Леса»" : "Раскрыть карту «Искра Леса»",
+    );
+
+    if (cardRevealTrigger) {
+      cardRevealTrigger.textContent = nextState ? "Скрыть карту" : "Раскрыть карту";
+    }
+
+    if (cardRevealStatus) {
+      cardRevealStatus.textContent = nextState
+        ? "Карта раскрыта за 800 ms."
+        : "Карта скрыта.";
+    }
+  }
+
+  function toggleCardReveal() {
+    setCardReveal(cardReveal?.getAttribute("aria-pressed") !== "true");
+  }
+
+  cardReveal?.addEventListener("click", toggleCardReveal);
+  cardRevealTrigger?.addEventListener("click", toggleCardReveal);
+
+  const questionInput = document.querySelector("[data-question-input]");
+  const questionCount = document.querySelector("[data-question-count]");
+  const questionStatus = document.querySelector("[data-question-status]");
+
+  function updateQuestionField() {
+    if (!questionInput) return;
+
+    const currentLength = questionInput.value.length;
+    const maximumLength = questionInput.maxLength;
+
+    if (questionCount) {
+      questionCount.textContent = `${currentLength} / ${maximumLength}`;
+    }
+
+    if (questionStatus) {
+      questionStatus.textContent = currentLength
+        ? "Вопрос сохранится до раскрытия карты."
+        : "Можно оставить поле пустым — карта всё равно придёт.";
+    }
+  }
+
+  questionInput?.addEventListener("input", updateQuestionField);
+  updateQuestionField();
+
   document.querySelectorAll(".kit-day-choice").forEach((button) => {
     button.addEventListener("click", () => {
-      const isSelected = button.getAttribute("aria-pressed") === "true";
-      button.setAttribute("aria-pressed", String(!isSelected));
-      button.classList.toggle("is-selected", !isSelected);
+      const group = button.closest("[data-exclusive-choice]") ?? button.parentElement;
+
+      group?.querySelectorAll(".kit-day-choice").forEach((candidate) => {
+        const isSelected = candidate === button;
+        candidate.setAttribute("aria-pressed", String(isSelected));
+        candidate.classList.toggle("is-selected", isSelected);
+      });
     });
   });
 
@@ -114,11 +269,92 @@ import { createMoonIcon } from "../assets/js/ui/moon.js";
     });
   });
 
+  const sheetOpen = document.querySelector("[data-sheet-open]");
+  const sheet = document.querySelector("[data-kit-sheet]");
+  const sheetBackdrop = document.querySelector("[data-sheet-backdrop]");
+  const sheetClose = document.querySelector("[data-sheet-close]");
+  const sheetMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let sheetReturnFocus = null;
+  let sheetHideTimer = 0;
+
+  function sheetFocusableElements() {
+    if (!sheet) return [];
+
+    return [...sheet.querySelectorAll("button:not([disabled]), [href], textarea, input, select, [tabindex]:not([tabindex='-1'])")];
+  }
+
+  function openSheet() {
+    if (!sheet || !sheetBackdrop) return;
+
+    window.clearTimeout(sheetHideTimer);
+    sheetReturnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : sheetOpen;
+    sheet.hidden = false;
+    sheetBackdrop.hidden = false;
+    document.body.classList.add("has-kit-sheet-open");
+
+    window.requestAnimationFrame(() => {
+      sheet.classList.add("is-open");
+      sheetBackdrop.classList.add("is-open");
+      sheetClose?.focus();
+    });
+  }
+
+  function closeSheet() {
+    if (!sheet || !sheetBackdrop || sheet.hidden) return;
+
+    sheet.classList.remove("is-open");
+    sheetBackdrop.classList.remove("is-open");
+    document.body.classList.remove("has-kit-sheet-open");
+
+    const finishClose = () => {
+      sheet.hidden = true;
+      sheetBackdrop.hidden = true;
+      sheetReturnFocus?.focus();
+    };
+
+    if (sheetMotion.matches) {
+      finishClose();
+      return;
+    }
+
+    sheetHideTimer = window.setTimeout(finishClose, 320);
+  }
+
+  sheetOpen?.addEventListener("click", openSheet);
+  sheetClose?.addEventListener("click", closeSheet);
+  sheetBackdrop?.addEventListener("click", closeSheet);
+
+  document.addEventListener("keydown", (event) => {
+    if (!sheet || sheet.hidden) return;
+
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeSheet();
+      return;
+    }
+
+    if (event.key !== "Tab") return;
+
+    const focusable = sheetFocusableElements();
+    if (!focusable.length) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
+
   const feedbackCopy = {
     loading: ["Лес слушает вопрос", "Тихий знак показывает, что ответ собирается."],
-    success: ["След сохранён", "Карта добавлена в историю и не требует повторного действия."],
-    error: ["Туман скрыл дорогу", "Попробуй ещё раз — вопрос и сохранённые данные не потеряны."],
-    empty: ["Здесь пока тихо", "Когда появится первая карта, её след будет показан здесь."],
+    success: ["След сохранён", "Короткая линия подтверждает действие и сразу успокаивается."],
+    error: ["Туман скрыл дорогу", "Причина названа ясно. Можно попробовать снова, не теряя вопрос."],
+    empty: ["Здесь пока тихо", "Пустое состояние объясняет следующий доступный шаг."],
   };
   const feedbackTitle = document.querySelector("[data-feedback-title]");
   const feedbackText = document.querySelector("[data-feedback-copy]");
@@ -148,39 +384,46 @@ import { createMoonIcon } from "../assets/js/ui/moon.js";
   const systemReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const motionScenarios = {
     breath: {
-      duration: 320,
-      title: "Breath · приглашение",
+      duration: 800,
+      label: "INVITATION / BREATH",
+      title: "Свет приглашает, но не торопит",
       description:
-        "Breath мягко приглашает к одному главному действию и не превращается в постоянный декоративный цикл.",
+        "Редкий серебряный импульс проходит по кромке и исчезает до следующего цикла.",
       complete: "Breath завершён; поверхность снова спокойна.",
     },
     reveal: {
       duration: 800,
-      title: "Reveal · ритуальное раскрытие",
+      label: "RITUAL / REVEAL",
+      title: "Знак выходит из темноты",
       description:
-        "Reveal применяется только к редкому появлению карты. Арт не масштабируется и сохраняет авторский цвет.",
+        "Редкое раскрытие длится 800 мс и объясняет переход от колоды к прочитанной карте.",
       complete: "Reveal завершён за 800 ms; карта остаётся полностью видимой.",
     },
     drift: {
-      duration: 320,
-      title: "Drift · атмосфера",
+      duration: 800,
+      label: "AMBIENCE / DRIFT",
+      title: "Живой слой почти неподвижен",
       description:
-        "Drift сдвигает только окружающие знаки на несколько пикселей и никогда не конкурирует с чтением карты.",
-      complete: "Drift завершён; окружающие знаки вернулись в покой.",
+        "Смещение остаётся в пределах нескольких пикселей и не мешает чтению.",
+      complete: "Drift завершён; карта вернулась в покой.",
     },
     success: {
-      duration: 220,
-      title: "Success · подтверждение",
+      duration: 320,
+      label: "FEEDBACK / SUCCESS",
+      title: "Ответ подтверждён одним знаком",
       description:
-        "Success один раз проявляет знак Оракула и линию, после чего движение останавливается.",
-      complete: "Success подтверждён; знак остаётся видимым без дальнейшего движения.",
+        "Символ появляется один раз — без линии, конфетти и бесконечной петли.",
+      complete: "Success завершён; сцена снова спокойна.",
     },
   };
   let selectedMotionScenario = "breath";
   let motionRun = 0;
 
   function usesReducedMotion() {
-    return Boolean(reducedMotionToggle?.checked || systemReducedMotion.matches);
+    return Boolean(
+      reducedMotionToggle?.getAttribute("aria-pressed") === "true" ||
+        systemReducedMotion.matches,
+    );
   }
 
   function selectMotionScenario(scenario) {
@@ -192,7 +435,7 @@ import { createMoonIcon } from "../assets/js/ui/moon.js";
       button.setAttribute("aria-pressed", String(button.dataset.motionPreview === selectedMotionScenario));
     });
 
-    motionStage?.classList.remove("is-playing", "is-reduced", "is-complete");
+    motionStage?.classList.remove("is-playing");
     if (motionStage) motionStage.dataset.motionScenario = selectedMotionScenario;
     if (motionTitle) motionTitle.textContent = config.title;
     if (motionDescription) motionDescription.textContent = config.description;
@@ -209,35 +452,47 @@ import { createMoonIcon } from "../assets/js/ui/moon.js";
 
     motionRun += 1;
     const currentRun = motionRun;
-    motionStage.classList.remove("is-playing", "is-reduced", "is-complete");
+    motionStage.classList.remove("is-playing");
     void motionStage.offsetWidth;
 
-    if (usesReducedMotion()) {
-      motionStage.classList.add("is-reduced");
-      if (motionStatus) {
-        motionStatus.textContent = `Reduced motion · ${config.title}: смысл показан контуром и статическим знаком`;
-      }
-      return;
-    }
-
     motionStage.classList.add("is-playing");
-    if (motionStatus) motionStatus.textContent = `${config.title} · ${config.duration} ms`;
+    if (motionStatus) {
+      motionStatus.textContent = usesReducedMotion()
+        ? `Reduced motion · ${config.label}`
+        : `${config.label} · ${config.duration} ms`;
+    }
 
     window.setTimeout(() => {
       if (motionRun === currentRun) {
         motionStage.classList.remove("is-playing");
-        if (selectedMotionScenario === "success") motionStage.classList.add("is-complete");
         if (motionStatus) motionStatus.textContent = config.complete;
       }
-    }, config.duration);
+    }, usesReducedMotion() ? 120 : 920);
   }
 
   motionScenarioButtons.forEach((button) => {
-    button.addEventListener("click", () => selectMotionScenario(button.dataset.motionPreview));
+    button.addEventListener("click", () => {
+      selectMotionScenario(button.dataset.motionPreview);
+      playMotionScenario();
+    });
   });
   motionPlay?.addEventListener("click", playMotionScenario);
-  reducedMotionToggle?.addEventListener("change", () => selectMotionScenario(selectedMotionScenario));
-  systemReducedMotion.addEventListener?.("change", () => selectMotionScenario(selectedMotionScenario));
+  reducedMotionToggle?.addEventListener("click", () => {
+    const reduced = reducedMotionToggle.getAttribute("aria-pressed") !== "true";
+    reducedMotionToggle.setAttribute("aria-pressed", String(reduced));
+    reducedMotionToggle.textContent = `Reduced motion: ${reduced ? "on" : "off"}`;
+    motionStage?.classList.toggle("is-reduced", reduced || systemReducedMotion.matches);
+    if (motionStatus) {
+      motionStatus.textContent = usesReducedMotion()
+        ? "Reduced motion включён · следующий replay завершится без заметного движения"
+        : `Готово к воспроизведению · ${motionScenarios[selectedMotionScenario].duration} ms`;
+    }
+  });
+  systemReducedMotion.addEventListener?.("change", () => {
+    motionStage?.classList.toggle("is-reduced", usesReducedMotion());
+    selectMotionScenario(selectedMotionScenario);
+  });
+  motionStage?.classList.toggle("is-reduced", usesReducedMotion());
   selectMotionScenario(selectedMotionScenario);
 
   document.querySelectorAll(".section-nav--mobile a").forEach((link) => {

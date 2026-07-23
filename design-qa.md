@@ -45,12 +45,50 @@ The four variants retain exact geometry across Default, Hover, Pressed, Focus an
 ### Controls and feedback
 
 - The mobile section menu opens, exposes twelve section links, navigates to the selected section and closes afterward.
-- The toggle updates its checked state.
+- The source UI Kit was re-audited directly at
+  `https://runic-frame-kit-cr8v-2026.alexandername.chatgpt.site/?release=10-natural-magnet`.
+- Every retained switch is one 78 px-high button. Clicking anywhere in the row
+  updates `aria-checked`, leaves focus on that row and draws the same thin 2 px
+  silver outline with a 3 px offset as the source.
+- The restored switch specimen contains the same three source rows. No extra
+  invented switch remains.
+- Checked toggles preserve the source kit's static two-layer silver glow: a bright
+  7 px edge and a quieter 15 px halo. The approved large-and-small diamond asset
+  remains unchanged.
+- The question field preserves the production placeholder, enforces the source
+  120-character maximum, updates `0 / 120` live and changes its explanatory status.
+- Exclusive choices update one selected item at a time.
 - Pager advances to `Глава 2 из 5` and updates the active nested diamond.
-- Feedback keeps the branded Oracle owl in Loading, Success, Error and Empty; Error shows `Туман скрыл дорогу`, while Empty uses the quiet dashed surface.
+- `Следы в лесу` opens the restored bottom sheet, moves focus to Close, traps
+  keyboard focus, closes with Escape or the backdrop and returns focus to its opener.
+- The Artifact card and its explicit action both control the same 800 ms reveal.
+  Quiet and history card specimens are also semantic interactive targets, matching
+  the retained source card mechanics.
+- Feedback keeps the branded Oracle owl in Loading, Success, Error and Empty.
+  Each tab restores the source copy, solid border treatment, owl opacity and Error
+  filter; Error shows `Туман скрыл дорогу`, while Empty remains quiet without an
+  invented dashed border.
 - Motion Lab exposes Breath, Reveal, Drift and Success as semantic scenarios with a separate `Воспроизвести` action.
-- Reveal completes in 800 ms; Success reveals the Oracle sign and line once.
+- Reveal completes in 800 ms; Success reveals the Oracle sign once without an invented line.
 - With Reduced motion enabled, Success remains visible as a static sign and starts no animation.
+
+### Moon metadata alignment
+
+The card specimen, result/history rule and saved-card rule now use one two-column
+grid rather than unrelated padding and centering:
+
+- row 1: Moon symbol in column 1, phase name in column 2;
+- row 2: date in column 2, aligned exactly to the phase name;
+- the authored string remains `22 июля`;
+- the date uses normal caps, no text transformation and the same quiet italic
+  Cormorant treatment in every specimen.
+
+Browser measurements confirmed equal left edges:
+
+| Context | Phase name | Date |
+| --- | ---: | ---: |
+| Card specimen | 279.633 px | 279.633 px |
+| Metadata rule | 75.109 px | 75.109 px |
 
 ### Runtime proof
 
@@ -84,8 +122,11 @@ The narrow 320 px pager reflows to two rows rather than shrinking its targets.
 ## Canonical evidence
 
 The screenshot set records the approved base kit and runtime proof. The later Motion Lab
-and Oracle-owl correction was re-verified interactively in the browser and is protected
-by `scripts/smoke-ui-interactions.mjs` and the Pages artifact validator.
+and Oracle-owl correction was re-verified interactively in the browser. The source and
+implementation switch sections were compared at the same 1280 × 720 viewport and focused
+row state; row height, focus outline and state change match while the approved WYRD
+double-diamond artwork remains intentionally local. The mechanics are protected by
+`scripts/smoke-ui-interactions.mjs` and the Pages artifact validator.
 
 - `docs/screenshots/wyrd-ui-kit-release-desktop-1440.jpg`
 - `docs/screenshots/wyrd-ui-kit-actions-default-1440.jpg`
@@ -112,4 +153,4 @@ This environment did not provide genuine operating-system emulation for:
 
 The corresponding CSS contracts and documentation are present, while 320 px reflow and landscape were verified as strong proxies. These platform checks remain open; the UI Kit must not be marked fully Done on their behalf.
 
-Final result: **Release Candidate passed for the verified scope; platform-specific acceptance remains open.**
+Final result: passed
