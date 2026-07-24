@@ -6,9 +6,10 @@
   align-content: start;
   justify-items: center;
   padding:
-    max(1.05rem, calc(env(safe-area-inset-top) + 0.4rem))
-    1.5rem
-    max(0.95rem, calc(env(safe-area-inset-bottom) + 0.35rem));
+    max(1.05rem, calc(var(--layout-safe-top) + 0.4rem))
+    max(1.5rem, var(--layout-safe-inline-end))
+    max(0.95rem, calc(var(--layout-safe-bottom) + 0.35rem))
+    max(1.5rem, var(--layout-safe-inline-start));
   overflow: hidden;
 }
 
@@ -61,8 +62,8 @@
 .deck-back {
   position: absolute;
   z-index: 2;
-  top: max(0.95rem, calc(env(safe-area-inset-top) + 0.18rem));
-  left: max(0.9rem, calc(env(safe-area-inset-left) + 0.08rem));
+  top: max(0.95rem, calc(var(--layout-safe-top) + 0.18rem));
+  left: max(0.9rem, calc(var(--layout-safe-inline-start) + 0.08rem));
   width: 34px;
   height: 34px;
   border-radius: 999px;
@@ -455,6 +456,10 @@
 }
 
 .deck-touch-copy {
+  min-height: var(--control-touch-min);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   margin: 0;
   border: 0;
   background: transparent;

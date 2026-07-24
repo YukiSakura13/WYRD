@@ -189,7 +189,11 @@ body[data-scene="forest"] .forest-atmosphere {
   width: min(100%, 393px);
   min-height: 852px;
   margin: 0 auto;
-  padding: 52px 24px max(40px, calc(var(--layout-safe-bottom) + 24px));
+  padding:
+    max(52px, calc(var(--layout-safe-top) + 24px))
+    max(24px, var(--layout-safe-inline-end))
+    max(40px, calc(var(--layout-safe-bottom) + 24px))
+    max(24px, var(--layout-safe-inline-start));
   box-sizing: border-box;
   font-family: "Cormorant Garamond", Georgia, serif;
 }
@@ -713,16 +717,17 @@ body[data-scene="forest"] .forest-atmosphere {
   display: grid;
   place-items: center;
   padding:
-    max(1rem, calc(env(safe-area-inset-top) + 0.5rem))
-    clamp(1rem, 5vw, 1.5rem)
-    max(1.25rem, calc(env(safe-area-inset-bottom) + 0.75rem));
+    max(1rem, calc(var(--layout-safe-top) + 0.5rem))
+    max(clamp(1rem, 5vw, 1.5rem), var(--layout-safe-inline-end))
+    max(1.25rem, calc(var(--layout-safe-bottom) + 0.75rem))
+    max(clamp(1rem, 5vw, 1.5rem), var(--layout-safe-inline-start));
   box-sizing: border-box;
 }
 
 .forest-placeholder-back {
   position: absolute;
-  top: max(1rem, calc(env(safe-area-inset-top) + 0.5rem));
-  left: max(1rem, calc(env(safe-area-inset-left) + 0.5rem));
+  top: max(1rem, calc(var(--layout-safe-top) + 0.5rem));
+  left: max(1rem, calc(var(--layout-safe-inline-start) + 0.5rem));
   z-index: 2;
 }
 
@@ -896,7 +901,9 @@ body[data-scene="forest"] .forest-atmosphere {
 
 @media (max-width: 374px) {
   .forest-shell {
-    padding-inline: 20px;
+    padding-inline:
+      max(20px, var(--layout-safe-inline-start))
+      max(20px, var(--layout-safe-inline-end));
   }
 
   .forest-hero-card {

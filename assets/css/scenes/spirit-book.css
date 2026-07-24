@@ -23,9 +23,10 @@ body[data-scene="spirit-book"] .footer {
   overflow-x: hidden;
   overflow-y: auto;
   padding:
-    max(26px, calc(env(safe-area-inset-top) + 16px))
-    18px
-    max(28px, calc(env(safe-area-inset-bottom) + 20px));
+    max(26px, calc(var(--layout-safe-top) + 16px))
+    max(18px, var(--layout-safe-inline-end))
+    max(28px, calc(var(--layout-safe-bottom) + 20px))
+    max(18px, var(--layout-safe-inline-start));
   color: rgba(239, 226, 196, 0.94);
   font-family: "Cormorant Garamond", Georgia, serif;
 }
@@ -59,8 +60,8 @@ body[data-scene="spirit-book"] .footer {
 
 .spirit-book-back {
   position: absolute;
-  top: max(1rem, calc(env(safe-area-inset-top) + 0.38rem));
-  left: max(1rem, calc(env(safe-area-inset-left) + 0.38rem));
+  top: max(1rem, calc(var(--layout-safe-top) + 0.38rem));
+  left: max(1rem, calc(var(--layout-safe-inline-start) + 0.38rem));
   z-index: 3;
 }
 
@@ -482,11 +483,35 @@ body[data-scene="spirit-book"] .footer {
   }
 }
 
+@media (max-width: 22.5rem) {
+  .spirit-book-controls {
+    display: grid;
+    grid-template-columns: var(--control-pager-hit-size) minmax(0, 1fr) var(--control-pager-hit-size);
+    gap: 0.25rem;
+  }
+
+  .spirit-book-dots {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-self: center;
+  }
+
+  .spirit-book-arrow[data-action="spirit-book-prev"] {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .spirit-book-arrow[data-action="spirit-book-next"] {
+    grid-column: 3;
+    grid-row: 1;
+  }
+}
+
 @media (min-width: 780px) {
   .spirit-book {
     display: grid;
     align-content: center;
-    padding-top: max(1.4rem, calc(env(safe-area-inset-top) + 1rem));
+    padding-top: max(1.4rem, calc(var(--layout-safe-top) + 1rem));
   }
 
   .spirit-book-page,

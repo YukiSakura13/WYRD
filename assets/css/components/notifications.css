@@ -1,9 +1,9 @@
 .wyrd-notifications {
   position: fixed;
   z-index: 120;
-  top: max(12px, calc(env(safe-area-inset-top) + 8px));
-  right: max(12px, env(safe-area-inset-right));
-  left: max(12px, env(safe-area-inset-left));
+  top: max(12px, calc(var(--layout-safe-top) + 8px));
+  right: max(12px, var(--layout-safe-inline-end));
+  left: max(12px, var(--layout-safe-inline-start));
   display: grid;
   justify-items: center;
   gap: 8px;

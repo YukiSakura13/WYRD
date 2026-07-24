@@ -73,16 +73,17 @@ body[data-scene="app-info"] .footer {
   min-height: 100svh;
   margin: 0 auto;
   padding:
-    max(26px, calc(env(safe-area-inset-top) + 16px))
-    18px
-    max(28px, calc(env(safe-area-inset-bottom) + 20px));
+    max(26px, calc(var(--layout-safe-top) + 16px))
+    max(18px, var(--layout-safe-inline-end))
+    max(28px, calc(var(--layout-safe-bottom) + 20px))
+    max(18px, var(--layout-safe-inline-start));
   font-family: "Cormorant Garamond", Georgia, serif;
 }
 
 .settings-back {
   position: absolute;
-  top: max(24px, calc(env(safe-area-inset-top) + 14px));
-  left: 18px;
+  top: max(24px, calc(var(--layout-safe-top) + 14px));
+  left: max(18px, var(--layout-safe-inline-start));
   z-index: 2;
 }
 
@@ -344,6 +345,7 @@ body[data-scene="app-info"] .footer {
   padding: 4px 18px 14px;
   overflow-x: auto;
   overscroll-behavior-x: contain;
+  scroll-padding-inline: 8px;
   scroll-snap-type: x proximity;
   scrollbar-width: none;
 }
@@ -556,7 +558,7 @@ body[data-scene="app-info"] .footer {
   padding:
     24px
     22px
-    max(22px, calc(env(safe-area-inset-bottom) + 18px));
+    max(22px, calc(var(--layout-safe-bottom) + 18px));
   border: 1px solid rgba(168, 140, 84, 0.32);
   border-radius: 20px 20px 0 0;
   background: linear-gradient(180deg, rgba(20, 21, 26, 0.98), rgba(8, 8, 10, 0.99));
@@ -737,7 +739,7 @@ body[data-scene="app-info"] .footer {
   padding:
     24px
     22px
-    max(22px, calc(env(safe-area-inset-bottom) + 18px));
+    max(22px, calc(var(--layout-safe-bottom) + 18px));
   border: 1px solid rgba(168, 140, 84, 0.32);
   border-radius: 20px 20px 0 0;
   background: linear-gradient(180deg, rgba(16, 17, 22, 0.96), rgba(7, 7, 9, 0.98));
@@ -857,6 +859,14 @@ body[data-scene="app-info"] .footer {
 
 @media (max-width: 370px) {
   .settings-shell {
+    padding-inline: 14px;
+  }
+
+  .about-avatar-section {
+    margin-inline: -14px;
+  }
+
+  .about-avatar-track {
     padding-inline: 14px;
   }
 

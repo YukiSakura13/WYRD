@@ -2,6 +2,8 @@
 
 Date: 2026-07-23
 
+Acceptance update: 2026-07-24
+
 Linear scope: YUK-135 (UI foundations) with runtime evidence relevant to YUK-54.
 
 ## Release decision
@@ -119,6 +121,9 @@ The 393 px card specimen keeps:
 
 The narrow 320 px pager reflows to two rows rather than shrinking its targets.
 
+The per-surface result and the explicit platform boundary are recorded in
+`docs/WYRD_ACTIVE_SCREEN_ACCEPTANCE_MATRIX.md`.
+
 ## Canonical evidence
 
 The screenshot set records the approved base kit and runtime proof. The later Motion Lab
@@ -143,14 +148,23 @@ double-diamond artwork remains intentionally local. The mechanics are protected 
 - `docs/screenshots/wyrd-runtime-spread-393.jpg`
 - `docs/screenshots/wyrd-runtime-history-sheet-393.jpg`
 
-## Honest acceptance boundary
+## Honest release boundary
 
-This environment did not provide genuine operating-system emulation for:
+Chromium forced-colors emulation now passes the complete active-screen Tab
+matrix, and composite Telegram safe-area tokens pass portrait and landscape
+inset simulation. This environment still did not provide genuine platform
+evidence for:
 
-- forced-colors mode;
+- operating-system forced-colors mode;
 - browser zoom at exactly 200%;
 - Telegram WebView safe-area insets on a physical device.
 
-The corresponding CSS contracts and documentation are present, while 320 px reflow and landscape were verified as strong proxies. These platform checks remain open; the UI Kit must not be marked fully Done on their behalf.
+Page-scale emulation was rejected as non-equivalent to browser zoom. These
+checks remain open for the parallel platform track: Telegram mapping belongs to
+YUK-57, modal/history/save-share verification to YUK-54, and the final
+all-surface visual/platform baseline to YUK-56. They are release-readiness work,
+not a replacement for the approved silver-rebrand sequence.
 
-Final result: passed
+Final result: the automated YUK-135 design-system checkpoint passes. It awaits
+explicit review, commit, deployment and published-kit verification before
+YUK-139 begins.

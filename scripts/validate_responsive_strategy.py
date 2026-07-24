@@ -9,6 +9,12 @@ ROOT = Path(__file__).resolve().parent.parent
 TOKENS = ROOT / "assets/css/tokens.css"
 BASE = ROOT / "assets/css/base.css"
 COVER = ROOT / "assets/css/scenes/cover-onboarding.css"
+DECK = ROOT / "assets/css/scenes/deck.css"
+CSS_ROOT = ROOT / "assets/css"
+UI_KIT_CSS = ROOT / "docs/wyrd-ui-kit.css"
+INDEX = ROOT / "index.html"
+RENDER = ROOT / "assets/js/ui/render.js"
+MAIN = ROOT / "assets/js/main.js"
 STRATEGY = ROOT / "docs/RESPONSIVE_STRATEGY.md"
 
 
@@ -25,6 +31,10 @@ def read(path: Path) -> str:
 def main() -> None:
     tokens = read(TOKENS)
     layout_css = "\n".join((read(BASE), read(COVER)))
+    deck_css = read(DECK)
+    index = read(INDEX)
+    render = read(RENDER)
+    runtime = read(MAIN)
     strategy = read(STRATEGY)
 
     for token in (
@@ -70,6 +80,34 @@ def main() -> None:
         "document-level horizontal overflow",
     ):
         require(phrase in strategy, f"Responsive strategy is missing rule: {phrase}")
+
+    for css_path in (*CSS_ROOT.rglob("*.css"), UI_KIT_CSS):
+        if css_path == TOKENS:
+            continue
+        require(
+            "env(safe-area-inset" not in read(css_path),
+            f"{css_path.relative_to(ROOT)} bypasses the composite layout safe-area tokens",
+        )
+
+    require(
+        "elements.main.inert = isCoverScene;" in render,
+        "The covered runtime surface must leave the keyboard and accessibility tree",
+    )
+    require(
+        'elements.aboutAvatarTrack.addEventListener("focusin"' in runtime
+        and "window.requestAnimationFrame" in runtime
+        and "visibleRight" in runtime,
+        "The horizontal avatar chooser must keep the keyboard-focused option visible",
+    )
+    require(
+        'id="about-avatar-upload" type="file" accept="image/*" tabindex="-1" aria-hidden="true"' in index,
+        "The programmatic avatar file input must not create a hidden keyboard stop",
+    )
+    require(
+        ".deck-touch-copy {" in deck_css
+        and "min-height: var(--control-touch-min);" in deck_css,
+        "The quiet deck draw action must keep the canonical 44px target",
+    )
 
     print("Responsive strategy validation passed")
 

@@ -92,9 +92,10 @@
   max-width: 400px;
   margin: 0 auto;
   padding:
-    max(1.05rem, calc(env(safe-area-inset-top) + 0.4rem))
-    0
-    max(1.2rem, calc(env(safe-area-inset-bottom) + 0.55rem));
+    max(1.05rem, calc(var(--layout-safe-top) + 0.4rem))
+    var(--layout-safe-inline-end)
+    max(1.2rem, calc(var(--layout-safe-bottom) + 0.55rem))
+    var(--layout-safe-inline-start);
 }
 
 #profile {
@@ -102,9 +103,10 @@
   width: 100%;
   animation-name: profileReveal;
   padding:
-    max(1.05rem, calc(env(safe-area-inset-top) + 0.4rem))
-    0
-    max(1.2rem, calc(env(safe-area-inset-bottom) + 0.55rem));
+    max(1.05rem, calc(var(--layout-safe-top) + 0.4rem))
+    var(--layout-safe-inline-end)
+    max(1.2rem, calc(var(--layout-safe-bottom) + 0.55rem))
+    var(--layout-safe-inline-start);
 }
 
 @keyframes profileReveal {
@@ -190,7 +192,7 @@
 .screen-nav .btn-back-circle {
   position: absolute;
   top: 0;
-  left: max(0.9rem, calc(env(safe-area-inset-left) + 0.08rem));
+  left: max(0.9rem, calc(var(--layout-safe-inline-start) + 0.08rem));
 }
 
 #profile .screen-nav {

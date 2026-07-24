@@ -239,8 +239,12 @@
   position: relative;
   z-index: 5;
   width: min(100%, 394px);
-  margin: auto auto max(4.125rem, calc(env(safe-area-inset-bottom) + 4.125rem));
-  padding: 0 30px;
+  margin: auto auto max(4.125rem, calc(var(--layout-safe-bottom) + 4.125rem));
+  padding:
+    0
+    max(30px, var(--layout-safe-inline-end))
+    0
+    max(30px, var(--layout-safe-inline-start));
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -976,9 +980,9 @@ body[data-scene="onboarding"] #profile {
   inset: 0;
   width: 100%;
   padding:
-    max(1rem, calc(env(safe-area-inset-top) + 0.45rem))
+    max(1rem, calc(var(--layout-safe-top) + 0.45rem))
     1.25rem
-    max(1rem, calc(env(safe-area-inset-bottom) + 0.5rem));
+    max(1rem, calc(var(--layout-safe-bottom) + 0.5rem));
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -1083,7 +1087,7 @@ body[data-scene="onboarding"] #profile {
 
 .ritual-back {
   align-self: flex-start;
-  margin-left: max(0rem, env(safe-area-inset-left));
+  margin-left: max(0rem, var(--layout-safe-inline-start));
 }
 
 .ritual-content {
@@ -1300,7 +1304,7 @@ body[data-scene="onboarding"] #profile {
   text-transform: uppercase;
   color: rgba(124, 115, 101, 0.58);
   text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
-  padding-bottom: max(0rem, calc(env(safe-area-inset-bottom) + 0.1rem));
+  padding-bottom: max(0rem, calc(var(--layout-safe-bottom) + 0.1rem));
 }
 
 .text-btn {

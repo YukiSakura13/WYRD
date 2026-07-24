@@ -62,6 +62,36 @@ createCoverCtaAnimation(document.querySelector(".cover-cta-button"));
 createForestMotion(document);
 createHistorySheetDrag(document).connect();
 
+if (elements.aboutAvatarTrack) {
+  elements.aboutAvatarTrack.addEventListener("focusin", function keepFocusedAvatarVisible(event) {
+    const avatar = event.target.closest(".about-avatar, .about-upload-avatar");
+
+    if (!avatar) {
+      return;
+    }
+
+    window.requestAnimationFrame(function revealFocusedAvatar() {
+      if (!avatar.isConnected) {
+        return;
+      }
+
+      const avatarBounds = avatar.getBoundingClientRect();
+      const trackBounds = elements.aboutAvatarTrack.getBoundingClientRect();
+      const focusClearance = 8;
+      const visibleLeft = Math.max(0, trackBounds.left) + focusClearance;
+      const visibleRight = Math.min(window.innerWidth, trackBounds.right) - focusClearance;
+
+      if (avatarBounds.left < visibleLeft || avatarBounds.right > visibleRight) {
+        avatar.scrollIntoView({
+          behavior: "auto",
+          block: "nearest",
+          inline: "center",
+        });
+      }
+    });
+  });
+}
+
 function renderApp() {
   const state = store.syncDayBoundary();
   renderer.render(state, uiState);

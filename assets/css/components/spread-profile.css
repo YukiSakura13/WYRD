@@ -1463,9 +1463,10 @@
   justify-items: center;
   box-sizing: border-box;
   padding:
-    max(1.25rem, calc(env(safe-area-inset-top) + 1rem))
-    1rem
-    max(1rem, calc(env(safe-area-inset-bottom) + 1rem));
+    max(1.25rem, calc(var(--layout-safe-top) + 1rem))
+    max(1rem, var(--layout-safe-inline-end))
+    max(1rem, calc(var(--layout-safe-bottom) + 1rem))
+    max(1rem, var(--layout-safe-inline-start));
   overflow-y: auto;
   overscroll-behavior: contain;
 }
@@ -1485,7 +1486,7 @@
   position: relative;
   width: min(100%, 31rem);
   max-height: calc(100vh - 2.25rem);
-  max-height: calc(100dvh - max(2.25rem, calc(env(safe-area-inset-top) + env(safe-area-inset-bottom) + 2rem)));
+  max-height: calc(100dvh - max(2.25rem, calc(var(--layout-safe-top) + var(--layout-safe-bottom) + 2rem)));
   margin: 0 auto;
   border: 1px solid var(--accent-18);
   border-radius: 8px;
@@ -1501,7 +1502,7 @@
 
 .spread-card-modal-close {
   position: absolute;
-  top: max(0.75rem, env(safe-area-inset-top));
+  top: max(0.75rem, var(--layout-safe-top));
   right: 0.75rem;
   z-index: 2;
   width: 48px;
@@ -2211,7 +2212,7 @@ body[data-scene="deck"] .footer {
 
   body[data-scene="deck"] .hdr {
     position: absolute;
-    top: max(1rem, calc(env(safe-area-inset-top) + 0.45rem));
+    top: max(1rem, calc(var(--layout-safe-top) + 0.45rem));
     left: 50%;
     transform: translateX(-50%);
     width: min(calc(100% - 2rem), 22rem);
@@ -2233,9 +2234,9 @@ body[data-scene="deck"] .footer {
 
   .ritual-onboarding {
     padding:
-      max(0.9rem, calc(env(safe-area-inset-top) + 0.3rem))
+      max(0.9rem, calc(var(--layout-safe-top) + 0.3rem))
       1rem
-      max(0.9rem, calc(env(safe-area-inset-bottom) + 0.35rem));
+      max(0.9rem, calc(var(--layout-safe-bottom) + 0.35rem));
   }
 
   .ritual-content {
@@ -2415,7 +2416,7 @@ body[data-scene="deck"] .footer {
   }
 
   .cover-copy {
-    margin: auto auto max(4.125rem, calc(env(safe-area-inset-bottom) + 4.125rem));
+    margin: auto auto max(4.125rem, calc(var(--layout-safe-bottom) + 4.125rem));
     width: min(100%, 430px);
   }
 
@@ -2582,9 +2583,10 @@ body[data-scene="deck"] .footer {
   max-width: 400px;
   margin: 0 auto;
   padding:
-    max(1.05rem, calc(env(safe-area-inset-top) + 0.4rem))
-    0
-    max(1.2rem, calc(env(safe-area-inset-bottom) + 0.55rem));
+    max(1.05rem, calc(var(--layout-safe-top) + 0.4rem))
+    var(--layout-safe-inline-end)
+    max(1.2rem, calc(var(--layout-safe-bottom) + 0.55rem))
+    var(--layout-safe-inline-start);
   overflow-x: hidden;
 }
 

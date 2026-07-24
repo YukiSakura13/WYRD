@@ -234,6 +234,8 @@ export function createRenderer(elements) {
     elements.cover.classList.toggle("gone", !isCoverScene);
     elements.transitionVeil.classList.toggle("is-active", Boolean(uiState.transitioning));
     elements.main.classList.toggle("on", !isCoverScene);
+    elements.main.inert = isCoverScene;
+    elements.main.setAttribute("aria-hidden", String(isCoverScene));
     elements.body.dataset.scene = uiState.activeScene;
     if (isCoverScene && previousScene !== SCENES.COVER) {
       resetCoverBreathAnimations();
