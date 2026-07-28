@@ -60,6 +60,14 @@
   --layout-oracle-content: 25rem;
   --layout-app-header-min-height: 7.25rem;
   --layout-app-header-padding-inline: 1.25rem;
+  --layout-deck-header-min-height: 4.5rem;
+  --layout-deck-question-max: 20rem;
+  --layout-deck-artifact-max: 21.5rem;
+  --layout-deck-artifact-inline-fit: 86vw;
+  --layout-deck-artifact-block-fit: 43svh;
+  --layout-deck-artifact-short-max: 14.25rem;
+  --layout-deck-intent-thread: 2rem;
+  --motion-deck-idle: 7200ms;
   --control-silver-line: rgba(205, 209, 207, 0.46);
   --control-silver-line-active: rgba(225, 228, 225, 0.82);
   --control-silver-icon: rgba(225, 228, 225, 0.78);

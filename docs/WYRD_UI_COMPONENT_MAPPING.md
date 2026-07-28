@@ -24,7 +24,7 @@ This document maps current runtime selectors to the component families defined i
 | --- | --- | --- | --- |
 | Scene Shell | `#cover`, `.forest-home`, `.forest-placeholder`, `.settings-screen`, `.about-you-screen`, `.reminders-screen`, `.app-info-screen`, `.spirit-book`, `.ritual-onboarding`, `.deck-scene`, `#result`, `#spread-result`, `#profile` | background/world | Canonical runtime classes start with `.ui-scene-shell`; the reading cluster uses one `30rem` shell and a separate `25rem` content measure. |
 | App Header | `.hdr`, `.forest-brand`, `.settings-header`, `.deck-header`, `.screen-nav`, `.ritual-content` brand group | divider + typography | Canonical runtime classes start with `.ui-app-header`; the header owns the Back axis and centered identity. Deck, result and spread are the first proof cluster. |
-| Navigation Icon Button | `.ui-icon-button`, with `.btn-back-circle`, `.deck-back`, `.spread-card-modal-close`, `.save-screen-close`, `.history-sheet-close` retained as screen aliases | Control | Canonical runtime family: 48px hit area, 28px long-arrow Back glyph, shared silver material and state behavior. App Header owns placement; screen aliases own routing only. |
+| Navigation Icon Button | `.ui-icon-button`, with `.btn-back-circle`, `.deck-back`, `.spread-card-modal-close`, `.save-screen-close`, `.history-sheet-close` retained as screen aliases | Control | Canonical runtime family: 48px hit area and shared state behavior. The Deck-only `.ui-icon-button--quiet-reading` modifier keeps that hit area while reducing the visible disc to 40px and the Back glyph to 24px. App Header owns placement; screen aliases own routing only. |
 | Pager Icon Button | `.ui-pager-button` with `.spirit-book-arrow` retained as a screen alias | Control | Implemented: 48px target, short SVG chevron, shared focus/pressed/disabled behavior. |
 | Utility Icon Button | `.forest-avatar-btn`, `.forest-settings-btn` | Control | Existing approved Forest controls. Normalize against shared ergonomics without replacing their semantic icons. |
 | Utility Action | `.wyrd-utility-action`, with `[data-action="share-card"]` as the first runtime proof | Control | Implemented target: familiar network Share icon + label inside a thin silver contour. No trailing diamond, ritual end sections, or nested ornament; dimensions remain stable in every state. |
@@ -50,6 +50,7 @@ This document maps current runtime selectors to the component families defined i
 | Action Button | `.ui-action` + `.wyrd-action-frame` | screen-specific action classes | approved silver visual family implemented in the result → spread proof cluster; remaining aliases migrate by screen |
 | Utility Action | `.wyrd-utility-action` | `[data-action="share-card"]` | implemented in UI Kit and result proof cluster; 52px stable geometry |
 | Question Field | `.wyrd-question-field` / runtime field aliases | `.deck-question-shell`, `.deck-question-input` | implemented in UI Kit and deck proof cluster; continuous restrained silver orbit with reduced-motion fallback |
+| Deck Composition | `.wyrd-deck-composition` / runtime Deck aliases | `.deck-header`, `.deck-question-zone`, `.deck-card-zone`, `.deck-card` | approved full-height four-row scene, quiet 48/40/24 Back, Field capped at 320px and narrowed with the hero on constrained heights, 17–24px Field→Artifact air, responsive 322–344px Raven Artifact, bottom whisper, directional contact depth, distinct rear-card edges, rare 7200ms 2px idle answer, measured 800ms silver intent thread, and reduced-motion fallback |
 | Artifact Card Frame | transparent SVG overlay | `.card-frame` | approved symmetric master implemented in UI Kit and result proof cluster |
 | Row Action | `.ui-row-action` | `.settings-row`, `.reminders-row` | interaction contract implemented; visual aliases migrate by screen |
 | Choice Control | `.ui-choice` | avatar, segment, day and toggle aliases | implemented |
@@ -109,10 +110,10 @@ This table records architecture only. The generic runtime families intentionally
 | Current | Foundation Component | Notes |
 | --- | --- | --- |
 | `.deck-scene`, `#result`, `#spread-result` + `.ui-scene-shell--oracle` | Scene Shell | One shell width and safe-area axis for the complete reading flow. |
-| `.deck-header`, `.screen-nav` + `.ui-app-header` | App Header | One Back position and centered identity across deck, result and spread. |
-| `.deck-back`, `.btn-back-circle` | Icon Button | Shared behavior and focus; placement is delegated to App Header. |
-| `.deck-question-shell`, `.deck-question-input` | Field | Silver question field proof is active: rectangular double contour, Bone text, continuous target orbit, no focus or typing restart. |
-| `.deck-card` | Hero Artifact | Main ritual object. |
+| `.deck-header`, `.screen-nav` + `.ui-app-header` | App Header | Back-only 72px reading header; the WYRD lockup remains reserved for Cover and Forest. |
+| `.deck-back`, `.btn-back-circle` | Icon Button | Shared 48px behavior and focus; Deck uses the quiet 40px-disc / 24px-glyph reading modifier while App Header owns placement. |
+| `.deck-question-shell`, `.deck-question-input` | Field | Centered Silver Field capped at 320px and narrowed with the Artifact on constrained heights: rectangular double contour, Bone text, continuous target orbit, no focus or typing restart. |
+| `.deck-card` | Hero Artifact | 3:4 Raven object uses `min(86vw, 43svh, 344px)` with a compact short-height rule and 17–24px real Field gap; directional contact shadow and distinct rear edges establish resting depth; rare 7200ms 2px idle answer and partial silver edge glint, measured 800ms intent thread, slight stack separation, 1px press, no scale pulse or full halo. |
 | `.deck-touch-copy` | Text/Ghost Action | Secondary draw affordance. |
 | `.share-card.card-box`, `.card-frame` | Hero Artifact / Media Frame | Result oracle card keeps the existing share anatomy: dark artifact, warm unfiltered image window, card name, moon phase, and date beneath the approved transparent symmetric frame. |
 | `.result-question` | Feedback / Quiet info | Question context; no heavy card. |

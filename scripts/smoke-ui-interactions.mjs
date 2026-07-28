@@ -26,12 +26,36 @@ assert.equal(
   "a slow drag over the distance threshold should dismiss",
 );
 
-const [kitHtml, kitCss, kitJs, uiRules] = await Promise.all([
-  readFile(new URL("../docs/wyrd-ui-kit.html", import.meta.url), "utf8"),
-  readFile(new URL("../docs/wyrd-ui-kit.css", import.meta.url), "utf8"),
-  readFile(new URL("../docs/wyrd-ui-kit.js", import.meta.url), "utf8"),
-  readFile(new URL("../docs/WYRD_UI_RULES.md", import.meta.url), "utf8"),
-]);
+const [
+  kitHtml,
+  kitCss,
+  kitJs,
+  uiRules,
+  tokens,
+  runtimeHtml,
+  runtimeStyles,
+  readingSilver,
+  silverComponents,
+  controlLanguage,
+  runtimeBase,
+  runtimeActions,
+  runtimeRender,
+] =
+  await Promise.all([
+    readFile(new URL("../docs/wyrd-ui-kit.html", import.meta.url), "utf8"),
+    readFile(new URL("../docs/wyrd-ui-kit.css", import.meta.url), "utf8"),
+    readFile(new URL("../docs/wyrd-ui-kit.js", import.meta.url), "utf8"),
+    readFile(new URL("../docs/WYRD_UI_RULES.md", import.meta.url), "utf8"),
+    readFile(new URL("../assets/css/tokens.css", import.meta.url), "utf8"),
+    readFile(new URL("../index.html", import.meta.url), "utf8"),
+    readFile(new URL("../assets/css/styles.css", import.meta.url), "utf8"),
+    readFile(new URL("../assets/css/scenes/reading-silver.css", import.meta.url), "utf8"),
+    readFile(new URL("../assets/css/components/silver-components.css", import.meta.url), "utf8"),
+    readFile(new URL("../assets/css/components/control-language.css", import.meta.url), "utf8"),
+    readFile(new URL("../assets/css/base.css", import.meta.url), "utf8"),
+    readFile(new URL("../assets/js/ui/actions.js", import.meta.url), "utf8"),
+    readFile(new URL("../assets/js/ui/render.js", import.meta.url), "utf8"),
+  ]);
 
 assert.match(
   kitHtml,
@@ -133,6 +157,67 @@ assert.match(
   /questionCount\.textContent = `\$\{currentLength\} \/ \$\{maximumLength\}`/,
   "Question field count must update from the actual input length",
 );
+for (const [token, value] of [
+  ["--layout-deck-header-min-height", "4.5rem"],
+  ["--layout-deck-question-max", "20rem"],
+  ["--layout-deck-artifact-max", "21.5rem"],
+  ["--layout-deck-artifact-inline-fit", "86vw"],
+  ["--layout-deck-artifact-block-fit", "43svh"],
+  ["--layout-deck-artifact-short-max", "14.25rem"],
+  ["--layout-deck-intent-thread", "2rem"],
+  ["--motion-deck-idle", "7200ms"],
+]) {
+  assert.match(
+    tokens,
+    new RegExp(`${token}:\\s*${value.replace(".", "\\.")}`),
+    `Deck composition must keep ${token} at ${value}`,
+  );
+}
+assert.match(
+  kitHtml,
+  /data-deck-composition[\s\S]{0,1800}data-deck-composition-card/,
+  "The UI Kit must include the approved Field-to-Raven Deck composition",
+);
+assert.match(
+  silverComponents,
+  /\.wyrd-deck-composition__question\s*\{[\s\S]*?--layout-deck-question-max/,
+  "The shared Deck composition must consume the canonical 320 px Field token",
+);
+assert.match(
+  silverComponents,
+  /\.wyrd-deck-composition__question\s*\{[\s\S]*?max-width:\s*var\(--layout-deck-artifact-block-fit\)/,
+  "The Deck Field must narrow with the Artifact on height-constrained screens",
+);
+assert.match(
+  silverComponents,
+  /\.wyrd-deck-artifact\s*\{[\s\S]*?--layout-deck-artifact-inline-fit[\s\S]*?--layout-deck-artifact-block-fit[\s\S]*?--layout-deck-artifact-max/,
+  "The shared Deck composition must consume the approved responsive Artifact tokens",
+);
+assert.match(
+  silverComponents,
+  /\.wyrd-deck-composition\.is-intent-transferred \.wyrd-deck-artifact::after\s*\{[\s\S]*?wyrd-deck-intent-thread/,
+  "Accepted intent must replay the approved one-shot silver thread",
+);
+assert.match(
+  silverComponents,
+  /wyrd-deck-idle-face var\(--motion-deck-idle\)[\s\S]*?@keyframes wyrd-deck-idle-face[\s\S]*?translateY\(-2px\)/,
+  "The canonical Deck must keep the rare 7200 ms two-pixel idle answer",
+);
+assert.match(
+  silverComponents,
+  /\.wyrd-deck-artifact__face::before[\s\S]*?width:\s*36%;[\s\S]*?wyrd-deck-idle-edge/,
+  "The canonical Deck idle answer must use only a short upper-edge silver glint",
+);
+assert.match(
+  kitJs,
+  /function replayDeckIntent\(\)[\s\S]*?is-intent-transferred[\s\S]*?920/,
+  "The UI Kit Deck specimen must replay and then clear its one-shot intent state",
+);
+assert.doesNotMatch(
+  kitCss,
+  /\.wyrd-deck-artifact[\s\S]{0,500}moonAnswerPulse/,
+  "The approved Deck composition must not restore the legacy moon pulse",
+);
 assert.match(
   kitHtml,
   /data-sheet-open/,
@@ -218,6 +303,124 @@ assert.doesNotMatch(
   uiRules,
   /primary gold|quiet gold link|final outline gold|var\(--gold\)/i,
   "Active UI rules must not restore gold-era controls",
+);
+
+assert.match(
+  runtimeStyles,
+  /@import "\.\/scenes\/reading-silver\.css";\s*$/,
+  "The YUK-139 restoration layer must remain the final runtime theme mapping",
+);
+assert.match(
+  runtimeHtml,
+  /<label class="sr-only" for="question-input">Вопрос<\/label>[\s\S]{0,420}maxlength="120"[\s\S]{0,100}data-question-input/,
+  "Runtime Deck must keep the 120-character input contract without visible duplicate metadata",
+);
+assert.doesNotMatch(
+  runtimeHtml,
+  /id="deck-question-count"|>Твой вопрос<\/label>/,
+  "Runtime Deck must not render the removed visible label or character counter",
+);
+assert.doesNotMatch(
+  runtimeHtml,
+  /id="(?:deck-wrap|result|spread-result)"[\s\S]{0,700}wyrd-brand--screen/,
+  "Reading screens must reserve the WYRD lockup for Cover and Forest",
+);
+assert.match(
+  silverComponents,
+  /\.wyrd-deck-artifact__stack,[\s\S]*?raven-arch\.jpg[\s\S]*?filter:\s*none;/,
+  "Shared Kit/runtime Deck must use the approved Raven artwork without color filtering",
+);
+assert.match(
+  readingSilver,
+  /#deck-wrap \.ui-app-header\s*\{[\s\S]*?--layout-deck-header-min-height/,
+  "Runtime Deck must consume the canonical 72 px Back-only header token",
+);
+assert.match(
+  runtimeHtml,
+  /id="deck-wrap"[\s\S]{0,320}wyrd-deck-composition__header[\s\S]{0,700}wyrd-deck-composition__question/,
+  "Runtime Deck must reuse the canonical composition and Field classes",
+);
+assert.match(
+  runtimeHtml,
+  /wyrd-deck-composition__artifact-zone[\s\S]{0,250}wyrd-deck-artifact/,
+  "Runtime Deck must reuse the canonical Artifact-zone and Artifact classes",
+);
+assert.doesNotMatch(
+  readingSilver,
+  /#deck-wrap \.deck-question-orbit,[\s\S]{0,120}display:\s*none/,
+  "Runtime Deck must not hide the canonical continuous question-field spark",
+);
+assert.match(
+  controlLanguage,
+  /\.ui-icon-button--quiet-reading::before\s*\{[\s\S]*?inset:\s*4px;/,
+  "Reading Back must preserve its 48 px target with a quiet 40 px visible disc",
+);
+assert.match(
+  runtimeBase,
+  /body\[data-scene="deck"\]\s*\{[\s\S]*?radial-gradient\(circle at 50% -10%[\s\S]*?linear-gradient\(180deg,\s*#0b0d12 0%,\s*var\(--wyrd-depth\) 48%,\s*#050608 100%\)/,
+  "Runtime Deck background must match the published Silver UI Kit background",
+);
+assert.match(
+  runtimeActions,
+  /questionRect[\s\S]*?deckRect[\s\S]*?--deck-intent-distance[\s\S]*?is-intent-transferred/,
+  "Runtime Deck accepted intent must measure and replay the approved silver thread",
+);
+assert.doesNotMatch(
+  silverComponents,
+  /moonAnswerPulse/,
+  "Runtime Silver Deck must not restore the legacy moon pulse",
+);
+assert.doesNotMatch(
+  silverComponents,
+  /scale\(1\.0|deck-artifact-silver-glow|radial-gradient\(\s*ellipse at 50% 48%/,
+  "Canonical Deck motion must not restore scale pulsing or a full silver halo",
+);
+assert.doesNotMatch(runtimeActions, /deck-question-count/, "Removed Deck counter must have no runtime updater");
+assert.match(
+  runtimeRender,
+  /phase\.className = "card-moon-phase"[\s\S]{0,500}traceDate\.className = "card-moon-date"/,
+  "Runtime Result must keep Moon phase and date on separate metadata rows",
+);
+assert.match(
+  readingSilver,
+  /#result \.share-card-media\s*\{[\s\S]*?top:\s*11\.5%;[\s\S]*?width:\s*61\.5%;[\s\S]*?aspect-ratio:\s*3 \/ 4;/,
+  "Runtime Result must preserve the approved Artifact image window geometry",
+);
+assert.match(
+  readingSilver,
+  /#result \.card-title-block\s*\{[\s\S]*?bottom:\s*9\.25%;/,
+  "Runtime Result must preserve the approved Artifact identity position",
+);
+assert.match(
+  readingSilver,
+  /#spread-result\s*\{[\s\S]*?animation:\s*none;/,
+  "Spread must not recreate a transformed containing block around the fixed Sheet",
+);
+assert.match(
+  readingSilver,
+  /\.spread-card-modal\s*\{[\s\S]*?position:\s*fixed;[\s\S]*?align-items:\s*end;/,
+  "Card detail must use the approved viewport-fixed bottom Sheet",
+);
+for (const selector of [
+  "#result .card-img",
+  "#spread-result .spread-card img",
+  ".spread-card-modal-image",
+]) {
+  assert.match(
+    readingSilver,
+    new RegExp(`${selector.replaceAll(".", "\\.")}\\s*\\{[\\s\\S]*?filter:\\s*none;`),
+    `${selector} must keep authored card art unfiltered`,
+  );
+}
+assert.match(
+  readingSilver,
+  /@media \(forced-colors: active\)[\s\S]*?outline:\s*2px solid ButtonText;/,
+  "YUK-139 controls must retain a visible forced-colors focus state",
+);
+assert.match(
+  readingSilver,
+  /@media \(prefers-reduced-motion: reduce\)[\s\S]*?#spread-result \.spread-card\s*\{[\s\S]*?animation:\s*none;/,
+  "YUK-139 card meaning must remain visible in reduced motion",
 );
 
 console.log("WYRD UI interaction smoke tests passed");

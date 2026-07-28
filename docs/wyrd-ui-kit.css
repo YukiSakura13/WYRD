@@ -200,6 +200,7 @@ a {
 }
 
 .kit-section {
+  min-width: 0;
   scroll-margin-top: 5rem;
   padding: clamp(1.4rem, 4vw, 2.4rem);
   border: 1px solid rgba(205, 209, 207, 0.14);
@@ -1105,6 +1106,48 @@ a {
 .field-caption--motion {
   margin-top: -0.35rem;
   font-size: 0.88rem;
+}
+
+.deck-composition-specimen {
+  min-width: 0;
+  display: grid;
+  gap: 0.8rem;
+  margin-top: 2rem;
+  padding: clamp(1rem, 3vw, 1.5rem);
+  border: 1px solid rgba(205, 209, 207, 0.14);
+  border-radius: 12px;
+  background: rgba(6, 8, 12, 0.68);
+}
+
+.deck-composition-specimen__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 1rem;
+}
+
+.deck-composition-specimen__head h3,
+.deck-composition-specimen__head p,
+.deck-composition-specimen__note {
+  margin: 0;
+}
+
+.deck-composition-specimen__head h3 {
+  margin-top: 0.28rem;
+  color: var(--wyrd-bone-text);
+  font-family: Forum, Georgia, serif;
+  font-size: clamp(1.35rem, 2.8vw, 1.8rem);
+  font-weight: 400;
+}
+
+.deck-composition-specimen__head > span,
+.deck-composition-specimen__note {
+  color: var(--wyrd-text-quiet);
+  font-size: 0.88rem;
+}
+
+.deck-composition-specimen__note {
+  max-width: 40rem;
 }
 
 .controls-grid,
@@ -2411,6 +2454,18 @@ body.has-kit-sheet-open {
     border-radius: 12px;
   }
 
+  .deck-composition-specimen__head {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .deck-composition-specimen .wyrd-deck-composition {
+    width: 100vw;
+    max-width: 24.5625rem;
+    margin-left: calc(50% - 50vw);
+    margin-right: 0;
+  }
+
   .frame-board,
   .utility-board,
   .controls-grid,
@@ -2566,6 +2621,8 @@ body.has-kit-sheet-open {
   .card-reveal__inner,
   .card-reveal-demo__trigger,
   .card-context-action,
+  .wyrd-deck-artifact,
+  .wyrd-deck-composition__touch,
   .kit-sheet,
   .kit-sheet-backdrop,
   .feedback-panel__oracle,
@@ -2580,6 +2637,8 @@ body.has-kit-sheet-open {
   .toggle-setting:active,
   .card-reveal-demo__trigger:active,
   .card-context-action:active,
+  .wyrd-deck-artifact:active,
+  .wyrd-deck-composition__touch:active,
   .frequent-action-list button:active,
   .row-sheet-list button:active,
   .motion-lab__controls button:active {
@@ -2591,6 +2650,10 @@ body.has-kit-sheet-open {
   }
 
   .feedback-panel[data-state="loading"] .feedback-panel__oracle,
+  .wyrd-deck-artifact,
+  .wyrd-deck-artifact::before,
+  .wyrd-deck-artifact::after,
+  .wyrd-deck-artifact__face,
   .motion-lab__halo,
   .motion-lab__card-shell,
   .motion-lab__success-sign,
@@ -2601,6 +2664,15 @@ body.has-kit-sheet-open {
 
   .feedback-panel[data-state="loading"] .feedback-panel__oracle {
     opacity: 0.64;
+    transform: none;
+  }
+
+  .wyrd-deck-artifact::before,
+  .wyrd-deck-artifact::after {
+    opacity: 0;
+  }
+
+  .wyrd-deck-artifact__face {
     transform: none;
   }
 }
@@ -2623,6 +2695,8 @@ body.has-kit-sheet-open {
   .toggle-setting:focus-visible,
   .card-reveal:focus-visible,
   .card-reveal-demo__trigger:focus-visible,
+  .wyrd-deck-artifact:focus-visible,
+  .wyrd-deck-composition__touch:focus-visible,
   .kit-sheet :focus-visible {
     outline: 2px solid Highlight;
   }

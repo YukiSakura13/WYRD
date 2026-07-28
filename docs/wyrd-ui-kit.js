@@ -218,6 +218,55 @@ function createMoonIcon(type) {
   questionInput?.addEventListener("input", updateQuestionField);
   updateQuestionField();
 
+  const deckComposition = document.querySelector("[data-deck-composition]");
+  const deckCompositionInput = document.querySelector("[data-deck-composition-input]");
+  const deckCompositionCard = document.querySelector("[data-deck-composition-card]");
+  const deckCompositionTouch = document.querySelector("[data-deck-composition-touch]");
+  const deckCompositionStatus = document.querySelector("[data-deck-composition-status]");
+  let deckCompositionTimer = 0;
+
+  function syncDeckIntentDistance() {
+    if (!deckCompositionInput || !deckCompositionCard) return;
+
+    const field =
+      deckCompositionInput.closest(".wyrd-question-field__shell") ?? deckCompositionInput;
+    const fieldRect = field.getBoundingClientRect();
+    const cardRect = deckCompositionCard.getBoundingClientRect();
+    const distance = Math.max(16, Math.round(cardRect.top - fieldRect.bottom));
+
+    deckCompositionCard.style.setProperty("--deck-intent-distance", `${distance}px`);
+  }
+
+  function replayDeckIntent() {
+    if (!deckComposition || !deckCompositionCard) return;
+
+    window.clearTimeout(deckCompositionTimer);
+    syncDeckIntentDistance();
+    deckComposition.classList.remove("is-intent-transferred");
+    void deckComposition.offsetWidth;
+    deckComposition.classList.add("is-intent-transferred");
+    deckCompositionCard.focus({ preventScroll: true });
+
+    if (deckCompositionStatus) {
+      deckCompositionStatus.textContent =
+        "Серебряная нить передала намерение колоде за 800 ms. Колода снова спокойна.";
+    }
+
+    deckCompositionTimer = window.setTimeout(() => {
+      deckComposition.classList.remove("is-intent-transferred");
+    }, 920);
+  }
+
+  deckCompositionInput?.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" || event.shiftKey) return;
+
+    event.preventDefault();
+    deckCompositionInput.blur();
+    replayDeckIntent();
+  });
+  deckCompositionCard?.addEventListener("click", replayDeckIntent);
+  deckCompositionTouch?.addEventListener("click", replayDeckIntent);
+
   document.querySelectorAll(".kit-day-choice").forEach((button) => {
     button.addEventListener("click", () => {
       const group = button.closest("[data-exclusive-choice]") ?? button.parentElement;

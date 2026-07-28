@@ -1351,7 +1351,18 @@ export function createRenderer(elements) {
 
     const date = new Date(reading.createdAt || Date.now());
     const moon = getMoonPhase(date);
-    elements.cardMoonMeta.replaceChildren(createMoonIcon(moon.type), document.createTextNode(`${capitalizeFirst(moon.name)} · ${formatTraceDate(date)}`));
+    const phase = document.createElement("span");
+    phase.className = "card-moon-phase";
+    const phaseName = document.createElement("span");
+    phaseName.textContent = capitalizeFirst(moon.name);
+    phase.append(createMoonIcon(moon.type), phaseName);
+
+    const traceDate = document.createElement("time");
+    traceDate.className = "card-moon-date";
+    traceDate.dateTime = date.toISOString();
+    traceDate.textContent = formatTraceDate(date);
+
+    elements.cardMoonMeta.replaceChildren(phase, traceDate);
   }
 
   function capitalizeFirst(value) {

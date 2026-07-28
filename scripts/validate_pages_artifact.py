@@ -115,6 +115,11 @@ def main() -> None:
         "Silver UI Kit Motion Lab lost play or reduced-motion controls",
     )
     require(
+        "data-deck-composition" in kit_html
+        and "data-deck-composition-card" in kit_html,
+        "Silver UI Kit lost the approved Deck composition specimen",
+    )
+    require(
         'id="implementation"' in kit_html,
         "Silver UI Kit implementation handoff is missing",
     )

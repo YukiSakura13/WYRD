@@ -1,0 +1,708 @@
+/*
+ * YUK-139 — restoration-first Silver migration for Deck, Result and Spread.
+ * Geometry and states below map legacy screen aliases onto the approved
+ * Silver UI Kit contract without changing routes or reading state.
+ */
+
+:is(#deck-wrap, #result, #spread-result).ui-scene-shell--oracle {
+  min-height: 100svh;
+  padding:
+    max(1.05rem, calc(var(--layout-safe-top) + 0.4rem))
+    max(1rem, var(--layout-safe-inline-end))
+    max(1.2rem, calc(var(--layout-safe-bottom) + 0.55rem))
+    max(1rem, var(--layout-safe-inline-start));
+  overflow-x: clip;
+  color: var(--wyrd-text-secondary);
+}
+
+:is(#result, #spread-result) .ui-app-header {
+  min-height: 4.25rem;
+  padding-bottom: 0.75rem;
+}
+
+#deck-wrap .ui-app-header {
+  min-height: var(--layout-deck-header-min-height);
+  padding: 0;
+  justify-content: flex-start;
+}
+
+#deck-wrap .ui-app-header .ui-icon-button {
+  position: relative;
+  top: auto;
+  left: auto;
+}
+
+:is(#deck-wrap, #result, #spread-result) .ui-scene-content--oracle {
+  width: min(100%, var(--layout-oracle-content));
+}
+
+/* Deck — runtime consumes the canonical component classes from silver-components.css. */
+
+#deck-wrap.deck-scene::before,
+#deck-wrap.deck-scene::after {
+  display: none;
+}
+
+#deck-wrap .deck-question-zone::after,
+#deck-wrap :is(.deck-card-stack, .deck-card-face)::after {
+  display: none;
+}
+
+#deck-wrap .deck-card-zone {
+  align-self: stretch;
+  margin: 0;
+}
+
+#deck-wrap .deck-touch-copy,
+#deck-wrap.deck-scene.is-question-ready .deck-touch-copy,
+#deck-wrap.deck-scene.is-intent-transferred .deck-touch-copy {
+  color: var(--wyrd-text-quiet);
+  text-align: center;
+  text-shadow: none;
+  text-transform: none;
+}
+
+#deck-wrap .deck-whisper-zone {
+  width: min(100%, 21rem);
+  align-self: end;
+  margin: 0;
+  text-align: center;
+}
+
+
+/* Shared quiet question context. */
+
+:is(#result, #spread-result) .result-question {
+  margin: 0 0 1rem;
+  padding: 0.55rem 0 0.55rem 0.9rem;
+  border-left: 1px solid rgba(225, 228, 225, 0.32);
+  background: transparent;
+  text-align: left;
+}
+
+:is(#result, #spread-result) .result-question-label {
+  margin: 0 0 0.25rem;
+  color: var(--wyrd-bone-muted);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  line-height: 1.2;
+}
+
+:is(#result, #spread-result) .result-question-text {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--wyrd-bone-text);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1rem;
+  font-style: italic;
+  line-height: 1.45;
+  white-space: normal;
+}
+
+:is(#result, #spread-result) .result-question.is-muted {
+  border-left-color: rgba(205, 209, 207, 0.18);
+}
+
+:is(#result, #spread-result) .result-question.is-muted .result-question-text {
+  color: var(--wyrd-text-quiet);
+}
+
+/* Single-card result — exact Artifact anatomy from the live kit. */
+
+#result {
+  max-width: var(--layout-oracle-shell);
+  animation: none;
+}
+
+#result .result-card-wrap {
+  width: 100%;
+  padding: 0;
+}
+
+#result .card-box {
+  position: relative;
+  isolation: isolate;
+  width: min(100%, 20rem);
+  aspect-ratio: 1086 / 1448;
+  min-width: 0;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 2px;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(225, 228, 225, 0.055), transparent 42%),
+    linear-gradient(180deg, #11131b, #08090d 58%, #0d0e14);
+  box-shadow:
+    0 24px 54px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(225, 228, 225, 0.08);
+  opacity: 0;
+  transform: translateY(1rem);
+  filter: none;
+  transition:
+    opacity 800ms cubic-bezier(0.77, 0, 0.175, 1),
+    transform 800ms cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+#result .card-box::before,
+#result .card-box::after {
+  display: none;
+}
+
+#result .card-box.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: none;
+  animation: none;
+}
+
+#result .card-frame {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  opacity: 1;
+  pointer-events: none;
+  transform: none;
+  animation: none;
+}
+
+#result .share-card-media {
+  position: absolute;
+  top: 11.5%;
+  left: 50%;
+  width: 61.5%;
+  min-height: 0;
+  height: auto;
+  max-height: none;
+  aspect-ratio: 3 / 4;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(225, 228, 225, 0.24);
+  background: var(--wyrd-bone-card-surface);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.28);
+  transform: translateX(-50%);
+}
+
+#result .share-card-media::after {
+  display: none;
+}
+
+#result .card-img {
+  position: static;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  max-height: none;
+  display: block;
+  object-fit: cover;
+  object-position: 50% 47%;
+  background: var(--wyrd-bone-card-surface);
+  filter: none;
+}
+
+#result .card-title-block {
+  position: absolute;
+  inset-inline: 12%;
+  bottom: 9.25%;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  gap: 0.31rem;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+#result .card-name {
+  margin: 0;
+  color: var(--wyrd-bone-text);
+  font-family: Forum, Georgia, serif;
+  font-size: clamp(1.2rem, 3.7vw, 1.55rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.1;
+}
+
+#result .card-moon-meta {
+  --moon-metadata-gap: 0.42rem;
+  --moon-metadata-icon-size: 1.125rem;
+  display: grid;
+  grid-template-columns: var(--moon-metadata-icon-size) max-content;
+  align-items: center;
+  justify-content: center;
+  justify-items: start;
+  column-gap: var(--moon-metadata-gap);
+  row-gap: 0.08rem;
+  margin: 0;
+  color: var(--wyrd-bone-muted);
+  font-family: Manrope, Arial, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.2;
+}
+
+#result .card-moon-phase {
+  display: contents;
+}
+
+#result .card-moon-meta svg {
+  width: var(--moon-metadata-icon-size);
+  height: var(--moon-metadata-icon-size);
+  opacity: 1;
+  filter: none;
+}
+
+#result .card-moon-date {
+  grid-column: 2;
+  grid-row: 2;
+  justify-self: start;
+}
+
+#result .result-card-actions {
+  width: min(100%, 20rem);
+  margin: 1rem auto 0;
+}
+
+#result .result-interpretation {
+  margin: 1.75rem 0 0;
+  padding: 0 0 0 1rem;
+  border-left: 1px solid rgba(225, 228, 225, 0.32);
+  background: transparent;
+  box-shadow: none;
+}
+
+#result .card-message-block,
+#result .card-shd-wrap {
+  padding: 0;
+  text-align: left;
+}
+
+#result .card-shd-wrap {
+  margin-top: 1.25rem;
+}
+
+#result .lbl,
+#result .card-shadow-block .lbl {
+  margin: 0 0 0.45rem;
+  color: var(--wyrd-bone-muted);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  line-height: 1.2;
+  opacity: 1;
+}
+
+#result .card-msg,
+#result .card-msg.is-compact,
+#result .card-msg.is-condensed,
+#result .card-shd,
+#result .card-shd.is-condensed-shadow {
+  color: var(--wyrd-bone-text);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.15rem;
+  font-style: normal;
+  line-height: 1.55;
+}
+
+#result .card-shd {
+  color: var(--wyrd-bone-muted);
+}
+
+#result .card-msg,
+#result .card-shd-wrap {
+  opacity: 0;
+  transform: translateY(0.75rem);
+  filter: none;
+  transition:
+    opacity var(--dur-slow) var(--ease-out-strong),
+    transform var(--dur-slow) var(--ease-out-strong);
+}
+
+#result .card-msg.is-visible,
+#result .card-shd-wrap.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: none;
+}
+
+#result .hook-block {
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+}
+
+#result .hook-copy {
+  max-width: 23rem;
+  margin: 0 auto 0.5rem;
+  color: var(--wyrd-text-secondary);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Three/five-card spread — Quiet media roles and the approved Sheet. */
+
+#spread-result {
+  max-width: var(--layout-oracle-shell);
+  animation: none;
+}
+
+#spread-result .spread-grid {
+  width: 100%;
+  max-width: var(--layout-oracle-content);
+  gap: 0.65rem;
+}
+
+#spread-result .spread-grid--three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+#spread-result .spread-grid--five {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+#spread-result .spread-grid--three.spread-grid--archetype-a {
+  grid-template-columns: minmax(0, 11rem);
+}
+
+#spread-result :is(.spread-grid--three.spread-grid--archetype-c, .spread-grid--three.spread-grid--archetype-d) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+#spread-result :is(.spread-grid--five.spread-grid--archetype-b, .spread-grid--five.spread-grid--archetype-c) {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+#spread-result .spread-card {
+  width: 100%;
+  min-width: var(--control-touch-min);
+  min-height: var(--control-touch-min);
+  padding: 0.28rem;
+  overflow: hidden;
+  border: 1px solid rgba(205, 209, 207, 0.24);
+  border-radius: var(--radius-small);
+  background: rgba(9, 10, 14, 0.38);
+  box-shadow:
+    0 12px 24px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(225, 228, 225, 0.03);
+  opacity: 0;
+  animation-duration: 800ms;
+  animation-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+#spread-result .spread-card[data-anchor="true"],
+#spread-result .spread-card[data-active="true"] {
+  border-color: var(--control-silver-line-active);
+  box-shadow:
+    0 16px 30px rgba(0, 0, 0, 0.28),
+    0 0 0 1px rgba(225, 228, 225, 0.05);
+}
+
+#spread-result .spread-card:focus-visible {
+  outline: 2px solid var(--control-focus-ring);
+  outline-offset: 3px;
+}
+
+#spread-result .spread-card:active {
+  transform: translateY(var(--control-pressed-offset));
+}
+
+#spread-result .spread-card img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  margin: 0;
+  display: block;
+  border-radius: 4px;
+  object-fit: cover;
+  object-position: top;
+  background: var(--wyrd-bone-card-surface);
+  filter: none;
+}
+
+#spread-result .oracle-voice {
+  margin: 1.5rem 0 0;
+  padding: 0 0 0 1rem;
+  border-left: 1px solid rgba(225, 228, 225, 0.32);
+}
+
+#spread-result .oracle-voice-message {
+  color: var(--wyrd-bone-muted);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+#spread-result .oracle-voice-prefix {
+  color: var(--wyrd-bone-text);
+  font-weight: 500;
+}
+
+#spread-result .spread-continuation {
+  margin-top: 1.75rem;
+  padding: 0;
+}
+
+#spread-result .spread-continuation-copy {
+  margin: 0 auto 0.75rem;
+  color: var(--wyrd-text-secondary);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+#spread-result .spread-continuation-btn,
+#spread-result .spread-continuation[data-size="5"] .spread-continuation-btn,
+#spread-result .spread-continuation-link {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.spread-card-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  align-items: end;
+  justify-items: stretch;
+  padding: 0;
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
+
+.spread-card-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: rgba(3, 4, 7, 0.78);
+  opacity: 0;
+  backdrop-filter: none;
+  transition: opacity 220ms var(--ease-out-strong);
+}
+
+.spread-card-modal-panel {
+  position: relative;
+  z-index: 1;
+  width: min(calc(100% - var(--layout-safe-inline-start) - var(--layout-safe-inline-end)), 42rem);
+  max-height: min(84dvh, 44rem);
+  margin-inline: auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 2.25rem clamp(1rem, 4vw, 2rem) calc(1.5rem + var(--layout-safe-bottom));
+  border: 1px solid rgba(225, 228, 225, 0.32);
+  border-bottom: 0;
+  border-radius: 18px 18px 0 0;
+  background:
+    linear-gradient(180deg, rgba(31, 35, 48, 0.34), transparent 42%),
+    #0a0b10;
+  box-shadow: 0 -24px 70px rgba(0, 0, 0, 0.54);
+  color: var(--wyrd-text-secondary);
+  opacity: 0;
+  transform: translateY(2rem);
+  transition:
+    opacity 220ms var(--ease-out-strong),
+    transform 320ms var(--ease-out-strong);
+}
+
+.spread-card-modal.is-dialog-visible .spread-card-modal-backdrop,
+.spread-card-modal.is-dialog-visible .spread-card-modal-panel {
+  opacity: 1;
+}
+
+.spread-card-modal.is-dialog-visible .spread-card-modal-panel {
+  transform: translateY(0);
+}
+
+.spread-card-modal-handle {
+  position: absolute;
+  top: 0.7rem;
+  left: 50%;
+  width: 3rem;
+  height: 2px;
+  background: rgba(225, 228, 225, 0.34);
+  transform: translateX(-50%);
+}
+
+.spread-card-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 2;
+}
+
+.spread-card-modal-image {
+  width: min(100%, 10rem);
+  max-height: none;
+  aspect-ratio: 3 / 4;
+  margin: 0.75rem auto 0;
+  display: block;
+  border: 1px solid rgba(225, 228, 225, 0.24);
+  border-radius: 2px;
+  background: var(--wyrd-bone-card-surface);
+  object-fit: cover;
+  object-position: top;
+  filter: none;
+}
+
+.spread-card-modal-copy {
+  max-width: 32rem;
+  margin: 0 auto;
+  padding: 1rem 0 0;
+  text-align: left;
+}
+
+.spread-card-modal-role,
+.spread-card-modal-keyword {
+  margin: 0 3.5rem 0.45rem 0;
+  color: var(--wyrd-bone-muted);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  line-height: 1.2;
+}
+
+.spread-card-modal-name {
+  margin: 0.45rem 3.5rem 1rem 0;
+  color: var(--wyrd-bone-text);
+  font-family: Forum, Georgia, serif;
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: 400;
+  line-height: 1.1;
+  text-align: left;
+}
+
+.spread-card-modal-section {
+  display: block;
+  margin: 1.25rem 0 0.45rem;
+  color: var(--wyrd-bone-muted);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.spread-card-modal-section::before,
+.spread-card-modal-section::after {
+  display: none;
+}
+
+.spread-card-modal-message,
+.spread-card-modal-shadow {
+  margin: 0;
+  padding: 0 0 0 1rem;
+  border-left: 1px solid rgba(225, 228, 225, 0.32);
+  color: var(--wyrd-bone-text);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.15rem;
+  font-style: normal;
+  line-height: 1.55;
+  text-align: left;
+}
+
+.spread-card-modal-shadow {
+  color: var(--wyrd-bone-muted);
+}
+
+body.has-open-dialog {
+  overflow: hidden;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  #deck-wrap .deck-touch-copy:hover {
+    color: var(--wyrd-text-action-active);
+  }
+
+  #spread-result .spread-card:hover {
+    border-color: var(--control-silver-line-active);
+    background: rgba(31, 35, 48, 0.52);
+  }
+}
+
+@media (max-width: 22.5rem) {
+  :is(#deck-wrap, #result, #spread-result).ui-scene-shell--oracle {
+    padding-inline:
+      max(0.75rem, var(--layout-safe-inline-start))
+      max(0.75rem, var(--layout-safe-inline-end));
+  }
+
+  #result .card-name {
+    font-size: 1.12rem;
+  }
+
+  #result .card-moon-meta {
+    --moon-metadata-icon-size: 1rem;
+    font-size: 0.7rem;
+  }
+
+  #spread-result .spread-grid {
+    gap: 0.45rem;
+  }
+
+  #spread-result .spread-card {
+    padding: 0.2rem;
+  }
+}
+
+@media (max-height: 40rem) {
+  #deck-wrap.wyrd-deck-composition {
+    padding:
+      max(0.5rem, calc(var(--layout-safe-top) + 0.1rem))
+      max(0.75rem, var(--layout-safe-inline-end))
+      max(0.5rem, calc(var(--layout-safe-bottom) + 0.1rem))
+      max(0.75rem, var(--layout-safe-inline-start));
+  }
+
+  #deck-wrap .deck-question-shell.wyrd-question-field__shell,
+  #deck-wrap .deck-question-input.wyrd-question-field__input {
+    min-height: 5.5rem;
+  }
+}
+
+@media (forced-colors: active) {
+  #spread-result .spread-card,
+  .spread-card-modal-panel,
+  .spread-card-modal-image,
+  #result .share-card-media {
+    border-color: CanvasText;
+  }
+
+  #spread-result .spread-card:focus-visible {
+    outline: 2px solid ButtonText;
+    outline-offset: 3px;
+  }
+
+  .spread-card-modal-backdrop {
+    background: Canvas;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #result .card-box,
+  #result .card-msg,
+  #result .card-shd-wrap,
+  #spread-result .spread-card,
+  .spread-card-modal-backdrop,
+  .spread-card-modal-panel {
+    transition: none;
+  }
+
+  #spread-result .spread-card {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  #spread-result .spread-card:active {
+    transform: none;
+  }
+}

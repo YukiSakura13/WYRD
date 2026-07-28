@@ -1094,10 +1094,10 @@ export function createDeckQuestionGuidance() {
 
     if (touchMain) {
       touchMain.textContent = isReady
-        ? "✦ коснись колоды, чтобы начать расклад ✦"
+        ? "Коснись колоды, чтобы начать расклад"
         : isQuestionHeld
-          ? "✦ коснись колоды, чтобы начать ✦"
-          : "✦ коснись колоды ✦";
+          ? "Коснись колоды, чтобы начать"
+          : "Коснись колоды";
     }
 
     if (status) {
@@ -1116,6 +1116,15 @@ export function createDeckQuestionGuidance() {
 
     if (!deckWrap) {
       return;
+    }
+
+    const questionShell = document.querySelector("#deck-wrap .wyrd-question-field__shell");
+    if (questionShell) {
+      const questionRect = questionShell.getBoundingClientRect();
+      const deckRect = deckCard.getBoundingClientRect();
+      const distance = Math.max(16, Math.round(deckRect.top - questionRect.bottom));
+
+      deckCard.style.setProperty("--deck-intent-distance", `${distance}px`);
     }
 
     window.clearTimeout(transferTimer);

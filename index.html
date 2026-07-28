@@ -29,7 +29,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <meta name="wyrd-build" content="silver-20260722-action-family" />
+    <meta name="wyrd-build" content="silver-20260728-yuk139-atmosphere" />
     <title>WYRD — Оракул духов леса</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -38,7 +38,7 @@
       rel="stylesheet"
     />
     <link rel="manifest" href="./manifest.webmanifest?v=silver-20260710-forest" />
-    <link rel="stylesheet" href="./assets/css/styles.css?v=silver-20260722-action-family" />
+    <link rel="stylesheet" href="./assets/css/styles.css?v=silver-20260728-yuk139-atmosphere" />
   </head>
   <body>
     <div class="scene-fog scene-fog--back" aria-hidden="true"></div>
@@ -671,11 +671,6 @@
           <button class="ui-icon-button ui-icon-button--back btn-back-circle" data-action="new-question" type="button" aria-label="Вернуться к колоде">
             <svg class="ui-icon-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12H2M10 4l-8 8 8 8" /></svg>
           </button>
-          <div class="screen-nav-title ui-app-header__identity wyrd-brand wyrd-brand--screen" aria-label="WYRD. Оракул духов леса">
-            <p class="wyrd-brand__word">WYRD</p>
-            <p class="wyrd-brand__subtitle">Оракул духов леса</p>
-          </div>
-          <div class="screen-nav-spacer ui-app-header__balance" aria-hidden="true"></div>
         </div>
         <div class="ui-scene-content ui-scene-content--oracle">
         <div class="result-question" id="result-question" aria-live="polite">
@@ -696,11 +691,6 @@
             </div>
             <div class="card-title-block">
               <h2 class="card-name" id="card-name"></h2>
-              <div class="card-divider" aria-hidden="true">
-                <span class="card-divider-line"></span>
-                <span class="card-divider-star">✦</span>
-                <span class="card-divider-line"></span>
-              </div>
               <div class="card-moon-meta" id="card-moon-meta" aria-label="Лунная дата карты"></div>
             </div>
           </article>
@@ -730,11 +720,6 @@
         </section>
 
         <div class="hook-block" id="hook-block" hidden>
-          <div class="hook-divider" aria-hidden="true">
-            <span class="hook-divider-line"></span>
-            <span class="hook-divider-star">✦</span>
-            <span class="hook-divider-line"></span>
-          </div>
           <p class="hook-copy">
             Духи леса услышали твой вопрос. Три карты покажут то, что скрыто за первым знаком.
           </p>
@@ -752,11 +737,6 @@
           <button class="ui-icon-button ui-icon-button--back btn-back-circle" data-action="ritual-back" type="button" aria-label="Вернуться на предыдущий слой">
             <svg class="ui-icon-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12H2M10 4l-8 8 8 8" /></svg>
           </button>
-          <div class="screen-nav-title ui-app-header__identity wyrd-brand wyrd-brand--screen" aria-label="WYRD. Оракул духов леса">
-            <p class="wyrd-brand__word">WYRD</p>
-            <p class="wyrd-brand__subtitle">Оракул духов леса</p>
-          </div>
-          <div class="screen-nav-spacer ui-app-header__balance" aria-hidden="true"></div>
         </div>
         <div class="ui-scene-content ui-scene-content--oracle">
         <div class="result-question spread-question" id="spread-question" aria-live="polite">
@@ -795,6 +775,7 @@
             aria-modal="true"
             role="dialog"
           >
+            <span class="spread-card-modal-handle" aria-hidden="true"></span>
             <button class="ui-icon-button ui-icon-button--close spread-card-modal-close" id="spread-card-modal-close" data-dialog-dismiss-primary type="button" aria-label="Закрыть карту">
               <svg class="ui-icon-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17" /></svg>
             </button>
@@ -813,27 +794,23 @@
         </div>
       </section>
 
-      <section class="deck-scene ui-scene-shell ui-scene-shell--oracle" id="deck-wrap" aria-label="Экран колоды WYRD">
-        <header class="deck-header ui-app-header ui-app-header--inner">
-          <button class="ui-icon-button ui-icon-button--back deck-back" data-action="back-to-forest" type="button" aria-label="Вернуться в Лес">
+      <section class="deck-scene ui-scene-shell ui-scene-shell--oracle wyrd-deck-composition" id="deck-wrap" aria-label="Экран колоды WYRD">
+        <header class="deck-header ui-app-header ui-app-header--inner wyrd-deck-composition__header">
+          <button class="ui-icon-button ui-icon-button--back ui-icon-button--quiet-reading deck-back" data-action="back-to-forest" type="button" aria-label="Вернуться в Лес">
             <svg class="ui-icon-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12H2M10 4l-8 8 8 8" /></svg>
           </button>
-          <div class="ui-app-header__identity wyrd-brand wyrd-brand--screen" aria-label="WYRD. Оракул духов леса">
-            <h2 class="wyrd-brand__word">WYRD</h2>
-            <p class="wyrd-brand__subtitle">Оракул духов леса</p>
-          </div>
-          <div class="screen-nav-spacer ui-app-header__balance" aria-hidden="true"></div>
         </header>
 
-        <section class="deck-question-zone" aria-label="Поле вопроса">
-          <label class="deck-question-label wyrd-question-field__label" for="question-input">Твой вопрос</label>
+        <section class="deck-question-zone wyrd-question-field wyrd-deck-composition__question" aria-label="Поле вопроса">
+          <label class="sr-only" for="question-input">Вопрос</label>
           <div class="deck-question-shell wyrd-question-field__shell" data-question-shell>
             <span class="deck-question-orbit" aria-hidden="true"></span>
             <textarea
               id="question-input"
               class="deck-question-input wyrd-question-field__input"
               rows="2"
-              maxlength="280"
+              maxlength="120"
+              data-question-input
               aria-describedby="deck-question-status"
               placeholder="Напиши вопрос или держи его в сердце..."
             ></textarea>
@@ -843,21 +820,19 @@
           </p>
         </section>
 
-        <section class="deck-card-zone" aria-label="Колода">
-          <button class="deck-card ui-card-action" data-action="draw" type="button" aria-label="Коснуться колоды">
-            <span class="deck-card-stack deck-card-stack--left" aria-hidden="true"></span>
-            <span class="deck-card-stack deck-card-stack--mid" aria-hidden="true"></span>
-            <span class="deck-card-face" aria-hidden="true"></span>
-            <span class="deck-card-moon-glow" aria-hidden="true"></span>
+        <section class="deck-card-zone wyrd-deck-composition__artifact-zone" aria-label="Колода">
+          <button class="deck-card ui-card-action wyrd-deck-artifact" data-action="draw" type="button" aria-label="Коснуться колоды">
+            <span class="deck-card-stack deck-card-stack--left wyrd-deck-artifact__stack wyrd-deck-artifact__stack--left" aria-hidden="true"></span>
+            <span class="deck-card-stack deck-card-stack--mid wyrd-deck-artifact__stack wyrd-deck-artifact__stack--mid" aria-hidden="true"></span>
+            <span class="deck-card-face wyrd-deck-artifact__face" aria-hidden="true"></span>
           </button>
-          <button class="deck-touch-copy" data-action="draw" type="button" aria-label="Коснуться колоды, чтобы начать расклад">
-            <span id="deck-touch-main">✦ коснись колоды ✦</span>
+          <button class="deck-touch-copy wyrd-deck-composition__touch" data-action="draw" type="button" aria-label="Коснуться колоды, чтобы начать расклад">
+            <span id="deck-touch-main">Коснись колоды</span>
           </button>
         </section>
 
         <section class="deck-whisper-zone" aria-label="Тихая подпись">
-          <p class="deck-stars" aria-hidden="true">✦ ✦ ✦</p>
-          <p class="deck-whisper">Лес отвечает тем, кто умеет слушать тишину.</p>
+          <p class="deck-whisper wyrd-deck-composition__whisper">Лес отвечает тем, кто умеет слушать тишину.</p>
         </section>
       </section>
 
@@ -988,6 +963,6 @@
       window.WYRD_BUILD_ID =
         document.querySelector('meta[name="wyrd-build"]')?.content || "dev";
     </script>
-    <script type="module" src="./assets/js/main.js?v=silver-20260715-small-cards-restored"></script>
+    <script type="module" src="./assets/js/main.js?v=silver-20260728-yuk139-atmosphere"></script>
   </body>
 </html>

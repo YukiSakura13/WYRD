@@ -182,6 +182,53 @@ The question field is a Control Frame, not a fifth ritual ornament.
 - typing does not restart or accelerate the loop;
 - `prefers-reduced-motion` keeps the double contour and focus material change but removes the traversal.
 
+### Deck Composition
+
+The Deck screen is the canonical composition of one Control Frame and one Hero
+Artifact. The Artifact is the visual owner of the scene.
+
+- Back occupies a `48px` target inside a `72px` Back-only header, leaving
+  `24px` of air before the field; its reading variant has a perceived `40px`
+  disc, a `24px` glyph, no resting shadow, and gains clarity only on
+  hover/focus/press;
+- the question field is centered, quiet, and capped at `320px`;
+- on height-constrained screens the field narrows with the Artifact instead of
+  becoming wider than the scene's hero; the Artifact remains the visual owner;
+- the Raven deck keeps a `3:4` ratio and uses
+  `min(86vw, 43svh, 344px)`: about `322×430px` at `375×812`,
+  `338×451px` at `393×852`, and `344×459px` at `430×932`;
+- viewports up to `640px` tall use the compact `min(71vw, 228px)` artifact
+  rule so `320×568` keeps the `44px` action and bottom whisper without overlap;
+- the scene is a full-height four-row grid: Back, Field, flexible centered
+  Artifact stage, and a safe-area-aware bottom whisper;
+- the flexible stage keeps `17-24px` of real air after the Field before the
+  Artifact begins; remaining stage space centers the Artifact rather than
+  collapsing the screen into one top-heavy group;
+- the quiet draw copy remains a separate `44px` target and never gains an
+  ornamental frame;
+- after long stillness, the top card rises at most `2px` once per `7200ms`
+  cycle while the rear cards separate by about `1px` and fractions of a degree;
+- that rare idle answer carries only a short silver glint across part of the
+  upper edge: no full halo and no scale pulse;
+- the resting stack keeps a directional contact shadow, distinct rear-card
+  edges, and clearer silver material on hover/focus so it reads as one physical
+  touch target without recoloring or filtering the Raven artwork;
+- accepting the question sends one measured `800ms` silver thread from the
+  field to the deck, repeats the slight stack separation, and traces the same
+  short upper-edge glint;
+- no moon pulse, gold glow, bounce, scale pulse, or authored-art filter;
+- pressed depth is `1px`; Reveal remains the separate canonical `800ms`
+  transition from hidden deck to the selected card;
+- `prefers-reduced-motion` removes idle translation, glint travel, thread, and
+  pressed movement while preserving focus, border, status copy, and final state.
+
+The live specimen and replay behavior are in the Question Field section of the
+Silver UI Kit. These values are shared tokens:
+`--layout-deck-header-min-height`, `--layout-deck-question-max`,
+`--layout-deck-artifact-max`, `--layout-deck-artifact-inline-fit`,
+`--layout-deck-artifact-block-fit`, `--layout-deck-artifact-short-max`,
+`--layout-deck-intent-thread`, and `--motion-deck-idle`.
+
 ### Toggle
 
 The toggle keeps the familiar pill track and communicates state through knob position, fill, and contrast. Its knob uses the approved large-plus-small diamond mark; the intermediate diamond is intentionally omitted. Ornament stays inside the knob and never changes the control's `64×36px` outer geometry. The UI Kit must show Off, On, Focus, and Disabled.

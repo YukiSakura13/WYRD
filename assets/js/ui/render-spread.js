@@ -80,7 +80,7 @@ export function createSpreadRenderer(elements) {
     elements.spreadDetailRole.textContent = card.spreadLabel || layerLabel(card.layer);
     elements.spreadDetailImage.src = getCardImage(card);
     elements.spreadDetailImage.alt = card.name;
-    elements.spreadDetailKeyword.textContent = `✦ ${card.keyword} ✦`;
+    elements.spreadDetailKeyword.textContent = card.keyword;
     elements.spreadDetailName.textContent = card.name;
     elements.spreadDetailMessage.textContent = card.message;
     elements.spreadDetailShadow.textContent = card.shadow;
@@ -98,8 +98,8 @@ export function createSpreadRenderer(elements) {
 
     elements.spreadModalImage.src = getCardImage(card);
     elements.spreadModalImage.alt = card.name;
-    elements.spreadModalRole.textContent = `✦ ${card.spreadLabel || layerLabel(card.layer)} ✦`;
-    elements.spreadModalKeyword.textContent = `✦ ${card.keyword} ✦`;
+    elements.spreadModalRole.textContent = card.spreadLabel || layerLabel(card.layer);
+    elements.spreadModalKeyword.textContent = card.keyword;
     elements.spreadModalName.textContent = card.name;
     elements.spreadModalMessage.textContent = card.message;
     elements.spreadModalShadow.textContent = card.shadow;

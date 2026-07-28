@@ -11,11 +11,11 @@
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Forum&family=IM+Fell+English&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="../assets/css/tokens.css" />
-    <link rel="stylesheet" href="../assets/css/components/control-language.css" />
+    <link rel="stylesheet" href="../assets/css/tokens.css?v=20260728-1" />
+    <link rel="stylesheet" href="../assets/css/components/control-language.css?v=20260728-1" />
     <link rel="stylesheet" href="../assets/css/components/action-buttons.css?v=20260722-2" />
-    <link rel="stylesheet" href="../assets/css/components/silver-components.css" />
-    <link rel="stylesheet" href="wyrd-ui-kit.css?v=20260723-6" />
+    <link rel="stylesheet" href="../assets/css/components/silver-components.css?v=20260728-1" />
+    <link rel="stylesheet" href="wyrd-ui-kit.css?v=20260728-1" />
   </head>
   <body class="wyrd-ui-kit-preview">
     <a class="skip-link" href="#main">К основному содержанию</a>
@@ -522,6 +522,59 @@
             В reduced motion движение отключается, а ясный двойной контур остаётся.
           </p>
         </div>
+
+        <article class="deck-composition-specimen" aria-labelledby="deck-composition-title">
+          <div class="deck-composition-specimen__head">
+            <div>
+              <p class="component-label">Deck screen composition</p>
+              <h3 id="deck-composition-title">Поле уступает место артефакту</h3>
+            </div>
+            <span>≤320 / 322–344 · bottom anchor</span>
+          </div>
+          <p class="deck-composition-specimen__note">
+            Нажми Enter в поле: серебряная нить передаст намерение колоде за
+            800 ms. В покое колода лишь изредка отвечает движением в 2 px и
+            коротким бликом по верхней кромке.
+          </p>
+          <div class="wyrd-deck-composition" data-deck-composition>
+            <div class="wyrd-deck-composition__header">
+              <button class="ui-icon-button ui-icon-button--back ui-icon-button--quiet-reading" type="button" aria-label="Вернуться в Лес">
+                <img class="kit-icon" src="../assets/ui/icons/tabler-arrow-left.svg" alt="" />
+              </button>
+            </div>
+            <label class="wyrd-deck-composition__question wyrd-question-field">
+              <span class="sr-only">Вопрос</span>
+              <span class="wyrd-question-field__shell">
+                <textarea
+                  class="wyrd-question-field__input"
+                  rows="2"
+                  maxlength="120"
+                  placeholder="Напиши вопрос или держи его в сердце..."
+                  data-deck-composition-input
+                ></textarea>
+              </span>
+            </label>
+            <div class="wyrd-deck-composition__artifact-zone">
+              <button
+                class="wyrd-deck-artifact"
+                type="button"
+                aria-label="Коснуться колоды"
+                data-deck-composition-card
+              >
+                <span class="wyrd-deck-artifact__stack wyrd-deck-artifact__stack--left" aria-hidden="true"></span>
+                <span class="wyrd-deck-artifact__stack wyrd-deck-artifact__stack--mid" aria-hidden="true"></span>
+                <span class="wyrd-deck-artifact__face" aria-hidden="true"></span>
+              </button>
+              <button class="wyrd-deck-composition__touch" type="button" data-deck-composition-touch>
+                Коснись колоды
+              </button>
+            </div>
+            <p class="wyrd-deck-composition__whisper">Лес отвечает тем, кто умеет слушать тишину.</p>
+            <p class="sr-only" role="status" aria-live="polite" data-deck-composition-status>
+              Колода спокойна.
+            </p>
+          </div>
+        </article>
       </section>
 
       <section id="controls" class="kit-section" aria-labelledby="controls-title">
@@ -969,6 +1022,6 @@
       <span>Canonical checkpoint · YUK-135</span>
     </footer>
 
-    <script defer src="wyrd-ui-kit.js?v=20260723-4"></script>
+    <script defer src="wyrd-ui-kit.js?v=20260728-1"></script>
   </body>
 </html>
