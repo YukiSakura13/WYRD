@@ -65,8 +65,15 @@ def main() -> None:
     build_id = extract_build_id(index_html)
 
     ensure_versioned_reference(index_html, "manifest.webmanifest", build_id)
-    ensure_versioned_reference(index_html, "assets/css/styles.css", build_id)
     ensure_versioned_reference(index_html, "assets/js/main.js", build_id)
+    require(
+        f'<style id="wyrd-runtime-styles" data-build="{build_id}">' in index_html,
+        "Runtime CSS is not inlined in the Pages HTML",
+    )
+    require(
+        'href="./assets/css/styles.css' not in index_html,
+        "Pages HTML still depends on the external runtime stylesheet",
+    )
 
     pwa_js = (DIST / "assets/js/pwa.js").read_text(encoding="utf-8")
     require(
@@ -75,10 +82,15 @@ def main() -> None:
     )
 
     styles_entry = (DIST / "assets/css/styles.css").read_text(encoding="utf-8")
-    require("@import" in styles_entry, "CSS entry file no longer imports style modules")
     require(
-        re.search(r'@import\s+["\'][^"\']+\.css\?v=' + re.escape(build_id), styles_entry),
-        "CSS imports in .dist-pages/assets/css/styles.css are not versioned",
+        "@import" not in styles_entry,
+        "Bundled Pages CSS still contains @import",
+    )
+    require(
+        ".cover-scene" in styles_entry
+        and ".wyrd-deck-composition" in styles_entry
+        and f"?v={build_id}" in styles_entry,
+        "Bundled Pages CSS lost required runtime rules or versioned assets",
     )
 
     kit_html = (DIST / "docs/wyrd-ui-kit.html").read_text(encoding="utf-8")

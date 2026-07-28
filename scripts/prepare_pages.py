@@ -7,6 +7,7 @@ import re
 import shutil
 import subprocess
 from pathlib import Path
+from urllib.parse import urlsplit, urlunsplit
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -105,6 +106,104 @@ def version_relative_css_imports(path: Path) -> None:
     path.write_text(text, encoding="utf-8")
 
 
+def rewrite_css_asset_url(value: str, source: Path) -> str:
+    stripped = value.strip()
+    lowered = stripped.lower()
+    if (
+        not stripped
+        or lowered.startswith(("data:", "http:", "https:", "//"))
+        or stripped.startswith(("/", "#"))
+    ):
+        return value
+
+    parts = urlsplit(stripped)
+    target = (source.parent / parts.path).resolve()
+    try:
+        relative = target.relative_to(DIST)
+    except ValueError as error:
+        raise RuntimeError(f"CSS asset escaped the Pages artifact: {stripped}") from error
+
+    versioned_query = parts.query or f"v={BUILD_ID}"
+    return urlunsplit(("", "", "./" + relative.as_posix(), versioned_query, parts.fragment))
+
+
+def rewrite_css_asset_urls(text: str, source: Path) -> str:
+    protected: dict[str, str] = {}
+
+    def replace_quoted(match: re.Match[str]) -> str:
+        quote = match.group(1)
+        value = rewrite_css_asset_url(match.group(2), source)
+        key = f"__WYRD_CSS_URL_{len(protected)}__"
+        protected[key] = f"url({quote}{value}{quote})"
+        return key
+
+    def replace_unquoted(match: re.Match[str]) -> str:
+        value = rewrite_css_asset_url(match.group(1), source)
+        return f'url("{value}")'
+
+    text = re.sub(r"url\(\s*([\"'])(.*?)\1\s*\)", replace_quoted, text)
+    text = re.sub(r"url\(\s*([^\"')][^)]*?)\s*\)", replace_unquoted, text)
+    for key, value in protected.items():
+        text = text.replace(key, value)
+    return text
+
+
+def bundle_runtime_css(entry: Path) -> str:
+    active: set[Path] = set()
+
+    def inline(path: Path) -> str:
+        resolved = path.resolve()
+        if resolved in active:
+            raise RuntimeError(f"Circular CSS import: {resolved.relative_to(DIST)}")
+
+        active.add(resolved)
+        text = resolved.read_text(encoding="utf-8")
+        text = rewrite_css_asset_urls(text, resolved)
+
+        def replace_import(match: re.Match[str]) -> str:
+            import_value = match.group(1)
+            import_path = urlsplit(import_value).path
+            imported = (resolved.parent / import_path).resolve()
+            return inline(imported)
+
+        text = re.sub(
+            r'@import\s+(?:url\(\s*)?["\']([^"\']+?\.css(?:\?[^"\']*)?)["\']\s*\)?\s*;',
+            replace_import,
+            text,
+        )
+        active.remove(resolved)
+
+        source_label = resolved.relative_to(DIST).as_posix()
+        return f"\n/* source: {source_label} */\n{text.strip()}\n"
+
+    bundled = inline(entry)
+    if "@import" in bundled:
+        raise RuntimeError("Runtime CSS bundle still contains @import")
+    return bundled.strip() + "\n"
+
+
+def inline_runtime_css(index_path: Path, css_entry: Path) -> None:
+    bundled = bundle_runtime_css(css_entry)
+    css_entry.write_text(bundled, encoding="utf-8")
+
+    html = index_path.read_text(encoding="utf-8")
+    inline_style = (
+        f'<style id="wyrd-runtime-styles" data-build="{BUILD_ID}">\n'
+        f"{bundled}"
+        "</style>"
+    )
+    html, replacements = re.subn(
+        r'<link\s+rel="stylesheet"\s+href="\./assets/css/styles\.css\?v=[^"]+"\s*/>',
+        inline_style,
+        html,
+        count=1,
+    )
+    if replacements != 1:
+        raise RuntimeError("Runtime stylesheet link was not found in Pages index.html")
+
+    index_path.write_text(html, encoding="utf-8")
+
+
 def main() -> None:
     if DIST.exists():
         shutil.rmtree(DIST)
@@ -128,6 +227,11 @@ def main() -> None:
 
     for css_file in (DIST / "assets/css").rglob("*.css"):
         version_relative_css_imports(css_file)
+
+    inline_runtime_css(
+        DIST / "index.html",
+        DIST / "assets/css/styles.css",
+    )
 
     (DIST / ".nojekyll").write_text("", encoding="utf-8")
 
