@@ -20,16 +20,20 @@
   padding-bottom: 0.75rem;
 }
 
-#deck-wrap .ui-app-header {
-  min-height: var(--layout-deck-header-min-height);
-  padding: 0;
+:is(#deck-wrap, #result, #spread-result) .ui-app-header {
   justify-content: flex-start;
+  padding-inline: 0;
 }
 
-#deck-wrap .ui-app-header .ui-icon-button {
+:is(#deck-wrap, #result, #spread-result) .ui-app-header .ui-icon-button {
   position: relative;
   top: auto;
   left: auto;
+}
+
+#deck-wrap .ui-app-header {
+  min-height: var(--layout-deck-header-min-height);
+  padding: 0;
 }
 
 :is(#deck-wrap, #result, #spread-result) .ui-scene-content--oracle {
@@ -48,25 +52,153 @@
   display: none;
 }
 
+#deck-wrap.deck-scene.is-question-ready .deck-question-orbit {
+  opacity: 0;
+  filter: none;
+  animation: none;
+}
+
+#deck-wrap.deck-scene.is-intent-transferred .wyrd-deck-artifact::after {
+  opacity: 0;
+  animation: none;
+}
+
 #deck-wrap .deck-card-zone {
   align-self: stretch;
   margin: 0;
 }
 
+#deck-wrap .wyrd-deck-composition__artifact-zone {
+  gap: 0.625rem;
+}
+
+#deck-wrap .wyrd-deck-artifact {
+  /*
+   * Review control only: 1 reproduces the measured reference geometry.
+   * This is not a user-facing runtime setting.
+   */
+  --deck-spread: 1;
+
+  width: min(
+    69vw,
+    var(--layout-deck-artifact-block-fit),
+    var(--layout-deck-artifact-max)
+  );
+}
+
+#deck-wrap :is(.wyrd-deck-artifact__stack, .wyrd-deck-artifact__face) {
+  transform-origin: 50% 50%;
+}
+
+/*
+ * Measured three-card contour, expressed relative to the middle card.
+ * At --deck-spread: 1 the angles, centres and equal card sizes reproduce the
+ * supplied reference. Static placement uses the individual transform
+ * properties so the rare idle response can animate `transform` independently.
+ */
+#deck-wrap .wyrd-deck-artifact__stack--left {
+  z-index: 0;
+  opacity: 0.88;
+  translate:
+    calc(-10.66% * var(--deck-spread, 1))
+    calc(-0.58% * var(--deck-spread, 1));
+  rotate: calc(1.4deg - 4.7deg * var(--deck-spread, 1));
+  animation: wyrd-runtime-deck-fan-left var(--motion-deck-idle) var(--ease-in-out-strong) infinite;
+}
+
+#deck-wrap .wyrd-deck-artifact__stack--mid {
+  z-index: 1;
+  opacity: 0.94;
+  translate: 0 0;
+  rotate: 1.4deg;
+  animation: wyrd-runtime-deck-fan-mid var(--motion-deck-idle) var(--ease-in-out-strong) infinite;
+}
+
+#deck-wrap .wyrd-deck-artifact__face {
+  z-index: 2;
+  translate:
+    calc(11.38% * var(--deck-spread, 1))
+    calc(0.87% * var(--deck-spread, 1));
+  rotate: calc(1.4deg + 3.1deg * var(--deck-spread, 1));
+  animation: wyrd-runtime-deck-fan-face var(--motion-deck-idle) var(--ease-in-out-strong) infinite;
+}
+
+@keyframes wyrd-runtime-deck-fan-left {
+  0%,
+  78%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  87% {
+    transform: translate3d(0.3%, 0, 0);
+  }
+}
+
+@keyframes wyrd-runtime-deck-fan-mid {
+  0%,
+  78%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  87% {
+    transform: translate3d(0.2%, 0, 0);
+  }
+}
+
+@keyframes wyrd-runtime-deck-fan-face {
+  0%,
+  78%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  87% {
+    transform: translate3d(0, -2px, 0);
+  }
+
+  94% {
+    transform: translate3d(0, -1px, 0);
+  }
+}
+
 #deck-wrap .deck-touch-copy,
 #deck-wrap.deck-scene.is-question-ready .deck-touch-copy,
 #deck-wrap.deck-scene.is-intent-transferred .deck-touch-copy {
-  color: var(--wyrd-text-quiet);
+  position: relative;
+  z-index: 4;
+  min-height: 3rem;
+  padding: 0.6rem 0.75rem;
+  color: rgba(225, 228, 225, 0.8);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.045em;
   text-align: center;
   text-shadow: none;
   text-transform: none;
 }
 
-#deck-wrap .deck-whisper-zone {
-  width: min(100%, 21rem);
-  align-self: end;
-  margin: 0;
-  text-align: center;
+#deck-wrap :is(
+  .deck-card,
+  .deck-card:hover,
+  .deck-card:focus-visible,
+  .deck-scene.is-question-ready .deck-card,
+  .deck-scene.is-intent-transferred .deck-card
+) {
+  filter: none;
+  transform: none;
+}
+
+#deck-wrap .deck-card:active {
+  transform: translateY(var(--control-pressed-offset));
+}
+
+#deck-wrap :is(
+  .deck-card-face::before,
+  .deck-card-moon-glow
+) {
+  display: none;
 }
 
 

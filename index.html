@@ -29,7 +29,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <meta name="wyrd-build" content="silver-20260728-yuk139-atmosphere" />
+    <meta name="wyrd-build" content="silver-20260729-yuk139-contour-restoration" />
     <title>WYRD — Оракул духов леса</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -38,7 +38,7 @@
       rel="stylesheet"
     />
     <link rel="manifest" href="./manifest.webmanifest?v=silver-20260710-forest" />
-    <link rel="stylesheet" href="./assets/css/styles.css?v=silver-20260728-yuk139-atmosphere" />
+    <link rel="stylesheet" href="./assets/css/styles.css?v=silver-20260729-yuk139-contour-restoration" />
   </head>
   <body>
     <div class="scene-fog scene-fog--back" aria-hidden="true"></div>
@@ -668,7 +668,7 @@
 
       <section class="ui-scene-shell ui-scene-shell--oracle" id="result" hidden aria-labelledby="card-name">
         <div class="screen-nav ui-app-header ui-app-header--inner">
-          <button class="ui-icon-button ui-icon-button--back btn-back-circle" data-action="new-question" type="button" aria-label="Вернуться к колоде">
+          <button class="ui-icon-button ui-icon-button--back ui-icon-button--quiet-reading btn-back-circle" data-action="new-question" type="button" aria-label="Вернуться к колоде">
             <svg class="ui-icon-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12H2M10 4l-8 8 8 8" /></svg>
           </button>
         </div>
@@ -734,7 +734,7 @@
 
       <section class="ui-scene-shell ui-scene-shell--oracle" id="spread-result" hidden aria-label="Расклад карт">
         <div class="screen-nav ui-app-header ui-app-header--inner">
-          <button class="ui-icon-button ui-icon-button--back btn-back-circle" data-action="ritual-back" type="button" aria-label="Вернуться на предыдущий слой">
+          <button class="ui-icon-button ui-icon-button--back ui-icon-button--quiet-reading btn-back-circle" data-action="ritual-back" type="button" aria-label="Вернуться на предыдущий слой">
             <svg class="ui-icon-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12H2M10 4l-8 8 8 8" /></svg>
           </button>
         </div>
@@ -811,6 +811,7 @@
               rows="2"
               maxlength="120"
               data-question-input
+              enterkeyhint="done"
               aria-describedby="deck-question-status"
               placeholder="Напиши вопрос или держи его в сердце..."
             ></textarea>
@@ -826,14 +827,11 @@
             <span class="deck-card-stack deck-card-stack--mid wyrd-deck-artifact__stack wyrd-deck-artifact__stack--mid" aria-hidden="true"></span>
             <span class="deck-card-face wyrd-deck-artifact__face" aria-hidden="true"></span>
           </button>
-          <button class="deck-touch-copy wyrd-deck-composition__touch" data-action="draw" type="button" aria-label="Коснуться колоды, чтобы начать расклад">
+          <button class="deck-touch-copy wyrd-deck-composition__touch" data-action="draw" type="button" aria-label="Коснуться колоды">
             <span id="deck-touch-main">Коснись колоды</span>
           </button>
         </section>
 
-        <section class="deck-whisper-zone" aria-label="Тихая подпись">
-          <p class="deck-whisper wyrd-deck-composition__whisper">Лес отвечает тем, кто умеет слушать тишину.</p>
-        </section>
       </section>
 
       <!-- free beta launch: all reading modes stay open -->
@@ -963,6 +961,6 @@
       window.WYRD_BUILD_ID =
         document.querySelector('meta[name="wyrd-build"]')?.content || "dev";
     </script>
-    <script type="module" src="./assets/js/main.js?v=silver-20260728-yuk139-atmosphere"></script>
+    <script type="module" src="./assets/js/main.js?v=silver-20260729-yuk139-contour-restoration"></script>
   </body>
 </html>

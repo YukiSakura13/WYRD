@@ -200,7 +200,7 @@ assert.match(
 );
 assert.match(
   silverComponents,
-  /wyrd-deck-idle-face var\(--motion-deck-idle\)[\s\S]*?@keyframes wyrd-deck-idle-face[\s\S]*?translateY\(-2px\)/,
+  /wyrd-deck-idle-face var\(--motion-deck-idle\)[\s\S]*?@keyframes wyrd-deck-idle-face[\s\S]*?78%[\s\S]*?translateY\(-2px\)/,
   "The canonical Deck must keep the rare 7200 ms two-pixel idle answer",
 );
 assert.match(
@@ -212,6 +212,46 @@ assert.match(
   kitJs,
   /function replayDeckIntent\(\)[\s\S]*?is-intent-transferred[\s\S]*?920/,
   "The UI Kit Deck specimen must replay and then clear its one-shot intent state",
+);
+assert.match(
+  readingSilver,
+  /#deck-wrap \.deck-touch-copy,[\s\S]*?min-height:\s*3rem;[\s\S]*?color:\s*rgba\(225,\s*228,\s*225,\s*0\.8\);[\s\S]*?font-size:\s*1rem;[\s\S]*?font-weight:\s*500;[\s\S]*?letter-spacing:\s*0\.045em;/,
+  "Runtime Deck invitation must remain quiet but fully readable in its own 48 px action zone",
+);
+assert.match(
+  readingSilver,
+  /#deck-wrap \.wyrd-deck-artifact\s*\{[\s\S]*?69vw[\s\S]*?var\(--layout-deck-artifact-block-fit\)/,
+  "Runtime Deck must fit the complete three-card fan inside the mobile viewport",
+);
+assert.match(
+  readingSilver,
+  /#deck-wrap \.wyrd-deck-artifact\s*\{[\s\S]*?--deck-spread:\s*1;/,
+  "Runtime Deck must keep the exact reference fan as the default review value",
+);
+assert.match(
+  readingSilver,
+  /#deck-wrap :is\(\.wyrd-deck-artifact__stack, \.wyrd-deck-artifact__face\)\s*\{[\s\S]*?transform-origin:\s*50% 50%/,
+  "Runtime Deck cards must use the measured centre-origin reference geometry",
+);
+assert.match(
+  readingSilver,
+  /\.wyrd-deck-artifact__stack--left\s*\{[\s\S]*?translate:[\s\S]*?-10\.66%[\s\S]*?-0\.58%[\s\S]*?rotate:\s*calc\(1\.4deg - 4\.7deg \* var\(--deck-spread, 1\)\)[\s\S]*?\.wyrd-deck-artifact__stack--mid\s*\{[\s\S]*?translate:\s*0 0;[\s\S]*?rotate:\s*1\.4deg;[\s\S]*?\.wyrd-deck-artifact__face\s*\{[\s\S]*?translate:[\s\S]*?11\.38%[\s\S]*?0\.87%[\s\S]*?rotate:\s*calc\(1\.4deg \+ 3\.1deg \* var\(--deck-spread, 1\)\)/,
+  "Runtime Deck must preserve the measured asymmetric three-card reference through one spread control",
+);
+assert.match(
+  readingSilver,
+  /@keyframes wyrd-runtime-deck-fan-face[\s\S]*?78%[\s\S]*?translate3d\(0, 0, 0\)[\s\S]*?87%[\s\S]*?translate3d\(0, -2px, 0\)/,
+  "Runtime Deck idle motion must remain independent from the static fan angles and centres",
+);
+assert.doesNotMatch(
+  runtimeHtml,
+  /deck-whisper-zone/,
+  "Runtime Deck must not retain the removed bottom whisper block",
+);
+assert.doesNotMatch(
+  silverComponents,
+  /wyrd-deck-intent-spark|is-entering|ellipse 42% 60% at 50% 57%/,
+  "Restored Deck must not keep the rejected field spark, entry settle, or static light well",
 );
 assert.doesNotMatch(
   kitCss,
@@ -312,7 +352,7 @@ assert.match(
 );
 assert.match(
   runtimeHtml,
-  /<label class="sr-only" for="question-input">Вопрос<\/label>[\s\S]{0,420}maxlength="120"[\s\S]{0,100}data-question-input/,
+  /<label class="sr-only" for="question-input">Вопрос<\/label>[\s\S]{0,420}maxlength="120"[\s\S]{0,120}data-question-input[\s\S]{0,120}enterkeyhint="done"/,
   "Runtime Deck must keep the 120-character input contract without visible duplicate metadata",
 );
 assert.doesNotMatch(
@@ -345,10 +385,15 @@ assert.match(
   /wyrd-deck-composition__artifact-zone[\s\S]{0,250}wyrd-deck-artifact/,
   "Runtime Deck must reuse the canonical Artifact-zone and Artifact classes",
 );
-assert.doesNotMatch(
+assert.match(
   readingSilver,
-  /#deck-wrap \.deck-question-orbit,[\s\S]{0,120}display:\s*none/,
-  "Runtime Deck must not hide the canonical continuous question-field spark",
+  /#deck-wrap \.deck-question-zone::after[\s\S]{0,120}display:\s*none/,
+  "Runtime Deck must hide the rejected falling field spark",
+);
+assert.match(
+  readingSilver,
+  /#deck-wrap\.deck-scene\.is-question-ready \.deck-question-orbit\s*\{[\s\S]*?opacity:\s*0;[\s\S]*?animation:\s*none;/,
+  "Runtime Deck must stop and hide the question-field spark after Enter",
 );
 assert.match(
   controlLanguage,
@@ -360,10 +405,45 @@ assert.match(
   /body\[data-scene="deck"\]\s*\{[\s\S]*?radial-gradient\(circle at 50% -10%[\s\S]*?linear-gradient\(180deg,\s*#0b0d12 0%,\s*var\(--wyrd-depth\) 48%,\s*#050608 100%\)/,
   "Runtime Deck background must match the published Silver UI Kit background",
 );
+assert.doesNotMatch(
+  runtimeActions,
+  /transferIntentToDeck|--deck-intent-distance|is-intent-transferred/,
+  "Runtime Enter acceptance must not replay a spark, silver thread, or deck-response animation",
+);
 assert.match(
   runtimeActions,
-  /questionRect[\s\S]*?deckRect[\s\S]*?--deck-intent-distance[\s\S]*?is-intent-transferred/,
-  "Runtime Deck accepted intent must measure and replay the approved silver thread",
+  /updateDeckQuestionState\(hasQuestion \? "accept" : "hold"\);\s*deckCard\.focus\(\{ preventScroll: true \}\);/,
+  "Runtime Enter acceptance must move focus to the deck without visual motion",
+);
+assert.match(
+  runtimeActions,
+  /touchMain\.textContent = "Коснись колоды";/,
+  "Runtime Deck invitation must keep the approved constant visible copy",
+);
+assert.doesNotMatch(
+  runtimeActions,
+  /Коснись колоды, чтобы начать/,
+  "Runtime Deck must not add unapproved visible draw microcopy",
+);
+assert.doesNotMatch(
+  runtimeRender,
+  /enteredDeck|is-entering/,
+  "Runtime Deck must not replay the rejected whole-stack entry settle",
+);
+assert.match(
+  runtimeActions,
+  /lineBreakMode = event\.shiftKey \? "newline" : "accept"[\s\S]*?if \(event\.shiftKey\)[\s\S]*?return;[\s\S]*?acceptQuestionIntent/,
+  "Shift+Enter must preserve a newline while Enter accepts the question",
+);
+assert.match(
+  readingSilver,
+  /#deck-wrap :is\([\s\S]*?\.deck-card:hover[\s\S]*?filter:\s*none;[\s\S]*?transform:\s*none;/,
+  "Runtime Deck must neutralize the legacy hover lift and brightness jerk",
+);
+assert.match(
+  runtimeHtml,
+  /id="result"[\s\S]{0,420}ui-icon-button--quiet-reading[\s\S]*?id="spread-result"[\s\S]{0,420}ui-icon-button--quiet-reading/,
+  "Result and Spread must reuse the same quiet reading Back control as Deck",
 );
 assert.doesNotMatch(
   silverComponents,
@@ -372,8 +452,8 @@ assert.doesNotMatch(
 );
 assert.doesNotMatch(
   silverComponents,
-  /scale\(1\.0|deck-artifact-silver-glow|radial-gradient\(\s*ellipse at 50% 48%/,
-  "Canonical Deck motion must not restore scale pulsing or a full silver halo",
+  /@keyframes wyrd-deck-intent[\s\S]*?scale\(|deck-artifact-silver-glow|radial-gradient\(\s*ellipse at 50% 48%/,
+  "Canonical Deck intent must not restore scaling or a full silver halo",
 );
 assert.doesNotMatch(runtimeActions, /deck-question-count/, "Removed Deck counter must have no runtime updater");
 assert.match(

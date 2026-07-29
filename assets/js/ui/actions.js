@@ -1007,8 +1007,9 @@ export function createInitialUIState(state) {
 }
 
 export function createDeckQuestionGuidance() {
-  let transferTimer = null;
   let questionHeldInHeart = false;
+  let lineBreakMode = null;
+  let lineBreakModeTimer = 0;
 
   return {
     connect,
@@ -1037,8 +1038,18 @@ export function createDeckQuestionGuidance() {
       updateDeckQuestionState("blur");
     });
 
-    questionEl.addEventListener("beforeinput", function handleQuestionLineBreak(event) {
-      if (event.inputType !== "insertLineBreak") {
+    questionEl.addEventListener("keydown", function handleQuestionEnter(event) {
+      if (event.key !== "Enter") {
+        return;
+      }
+
+      window.clearTimeout(lineBreakModeTimer);
+      lineBreakMode = event.shiftKey ? "newline" : "accept";
+      lineBreakModeTimer = window.setTimeout(function resetLineBreakMode() {
+        lineBreakMode = null;
+      }, 0);
+
+      if (event.shiftKey) {
         return;
       }
 
@@ -1046,13 +1057,21 @@ export function createDeckQuestionGuidance() {
       acceptQuestionIntent(questionEl, deckCard);
     });
 
-    questionEl.addEventListener("keydown", function handleQuestionEnter(event) {
-      if (event.key !== "Enter" || event.shiftKey) {
+    questionEl.addEventListener("beforeinput", function handleQuestionLineBreak(event) {
+      if (event.inputType !== "insertLineBreak") {
+        return;
+      }
+
+      if (lineBreakMode === "newline") {
+        lineBreakMode = null;
         return;
       }
 
       event.preventDefault();
-      acceptQuestionIntent(questionEl, deckCard);
+      if (lineBreakMode !== "accept") {
+        acceptQuestionIntent(questionEl, deckCard);
+      }
+      lineBreakMode = null;
     });
 
     updateDeckQuestionState("init");
@@ -1068,7 +1087,7 @@ export function createDeckQuestionGuidance() {
 
     questionEl.blur();
     updateDeckQuestionState(hasQuestion ? "accept" : "hold");
-    transferIntentToDeck(deckCard);
+    deckCard.focus({ preventScroll: true });
   }
 
   function updateDeckQuestionState(source) {
@@ -1093,47 +1112,16 @@ export function createDeckQuestionGuidance() {
     deckWrap.classList.toggle("is-question-ready", isDeckReady);
 
     if (touchMain) {
-      touchMain.textContent = isReady
-        ? "Коснись колоды, чтобы начать расклад"
-        : isQuestionHeld
-          ? "Коснись колоды, чтобы начать"
-          : "Коснись колоды";
+      touchMain.textContent = "Коснись колоды";
     }
 
     if (status) {
-      status.textContent = isReady
+      status.textContent = isReady || isQuestionHeld
         ? "Вопрос принят. Теперь коснись колоды."
-        : isQuestionHeld
-          ? "Вопрос оставлен в сердце. Теперь коснись колоды."
-          : hasQuestion
+        : hasQuestion
             ? "Когда вопрос готов, нажми Enter или коснись колоды."
             : "Сначала задай вопрос. Потом коснись колоды.";
     }
-  }
-
-  function transferIntentToDeck(deckCard) {
-    const deckWrap = document.getElementById("deck-wrap");
-
-    if (!deckWrap) {
-      return;
-    }
-
-    const questionShell = document.querySelector("#deck-wrap .wyrd-question-field__shell");
-    if (questionShell) {
-      const questionRect = questionShell.getBoundingClientRect();
-      const deckRect = deckCard.getBoundingClientRect();
-      const distance = Math.max(16, Math.round(deckRect.top - questionRect.bottom));
-
-      deckCard.style.setProperty("--deck-intent-distance", `${distance}px`);
-    }
-
-    window.clearTimeout(transferTimer);
-    deckWrap.classList.add("is-intent-transferred");
-    deckCard.focus({ preventScroll: true });
-
-    transferTimer = window.setTimeout(function clearTransferState() {
-      deckWrap.classList.remove("is-intent-transferred");
-    }, 920);
   }
 
 }
