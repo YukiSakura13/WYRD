@@ -215,8 +215,8 @@ assert.match(
 );
 assert.match(
   readingSilver,
-  /#deck-wrap \.deck-touch-copy,[\s\S]*?min-height:\s*3rem;[\s\S]*?color:\s*rgba\(225,\s*228,\s*225,\s*0\.8\);[\s\S]*?font-size:\s*1rem;[\s\S]*?font-weight:\s*500;[\s\S]*?letter-spacing:\s*0\.045em;/,
-  "Runtime Deck invitation must remain quiet but fully readable in its own 48 px action zone",
+  /#deck-wrap \.deck-touch-copy,[\s\S]*?min-height:\s*2\.75rem;[\s\S]*?color:\s*rgba\(225,\s*228,\s*225,\s*0\.58\);[\s\S]*?font-size:\s*1rem;[\s\S]*?font-weight:\s*400;[\s\S]*?letter-spacing:\s*0\.025em;/,
+  "Runtime Deck invitation must read as a quiet accessible hint rather than a separate CTA",
 );
 assert.match(
   readingSilver,
@@ -240,8 +240,91 @@ assert.match(
 );
 assert.match(
   readingSilver,
-  /@keyframes wyrd-runtime-deck-fan-face[\s\S]*?78%[\s\S]*?translate3d\(0, 0, 0\)[\s\S]*?87%[\s\S]*?translate3d\(0, -2px, 0\)/,
-  "Runtime Deck idle motion must remain independent from the static fan angles and centres",
+  /--motion-runtime-deck-idle:\s*6200ms[\s\S]*?@keyframes wyrd-runtime-deck-fan-face[\s\S]*?72%[\s\S]*?translate3d\(0, 0, 0\)[\s\S]*?84%[\s\S]*?translate3d\(0, -3px, 0\)/,
+  "Runtime Deck must keep the approved rare 6200 ms three-pixel physical answer independent from static geometry",
+);
+assert.equal(
+  (runtimeHtml.match(/data-action="draw"/g) || []).length,
+  1,
+  "Runtime Deck must expose exactly one draw control and one tab stop",
+);
+assert.match(
+  runtimeHtml,
+  /<button class="deck-interaction"[^>]*data-action="draw"[\s\S]*?<span class="deck-card ui-card-action wyrd-deck-artifact"[\s\S]*?<span class="deck-touch-copy wyrd-deck-composition__touch"/,
+  "Runtime Deck Artifact and invitation must live inside one accessible button",
+);
+assert.match(
+  readingSilver,
+  /\.wyrd-deck-artifact__stack--left::before\s*\{[\s\S]*?rgba\(4,\s*6,\s*10,\s*0\.27\)[\s\S]*?\.wyrd-deck-artifact__stack::after/,
+  "Runtime rear cards must stay opaque while only their internal artwork is veiled",
+);
+assert.match(
+  readingSilver,
+  /@keyframes wyrd-runtime-deck-light-well[\s\S]*?opacity:\s*0\.88[\s\S]*?84%[\s\S]*?opacity:\s*1/,
+  "Runtime Deck must have a restrained lower light well that answers with the idle breath",
+);
+assert.match(
+  runtimeHtml,
+  /<span class="deck-atmosphere" aria-hidden="true">[\s\S]*?<span class="deck-fireflies">[\s\S]*?<header class="deck-header ui-app-header/,
+  "Runtime Deck atmosphere must be a full-scene decorative layer behind the header, Field, Deck and text",
+);
+const deckFirefliesMarkup = runtimeHtml.match(
+  /<span class="deck-fireflies">([\s\S]*?)<\/span>/,
+)?.[1] || "";
+assert.equal(
+  (deckFirefliesMarkup.match(/<i><\/i>/g) || []).length,
+  17,
+  "Runtime Deck must keep a lower-density 17-spark field than the 18-particle main action",
+);
+assert.match(
+  readingSilver,
+  /#deck-wrap \.deck-atmosphere\s*\{[\s\S]*?position:\s*absolute;[\s\S]*?inset:\s*0;[\s\S]*?z-index:\s*0;[\s\S]*?#deck-wrap > :not\(\.deck-atmosphere\)\s*\{[\s\S]*?z-index:\s*1;/,
+  "Runtime sparks and mist must stay above the scene background and below all content",
+);
+assert.match(
+  readingSilver,
+  /--deck-mist-opacity-low:\s*0\.16;[\s\S]*?--deck-mist-opacity-high:\s*0\.24;[\s\S]*?\.deck-atmosphere-mist--front\s*\{[\s\S]*?--deck-mist-opacity-low:\s*0\.08;[\s\S]*?--deck-mist-opacity-high:\s*0\.14;/,
+  "Runtime full-scene mist must stay quieter than the Deck-local light well",
+);
+assert.match(
+  readingSilver,
+  /@keyframes wyrd-runtime-deck-spark-rise[\s\S]*?-108svh/,
+  "Runtime sparks must rise through the complete screen rather than stay localized behind the Deck",
+);
+assert.match(
+  readingSilver,
+  /\.deck-question-shell\.wyrd-question-field__shell::before\s*\{[\s\S]*?display:\s*none;[\s\S]*?\.deck-question-shell\.wyrd-question-field__shell:focus-within\s*\{[\s\S]*?border-color:\s*rgba\(225,\s*228,\s*225,\s*0\.7\);/,
+  "Runtime Field must use one quieter outer contour while its canonical orbit carries the spark",
+);
+assert.match(
+  readingSilver,
+  /\.deck-interaction\s*\{[\s\S]*?gap:\s*0\.25rem;[\s\S]*?\.deck-touch-copy,[\s\S]*?color:\s*rgba\(225,\s*228,\s*225,\s*0\.58\);[\s\S]*?font-size:\s*1rem;[\s\S]*?font-weight:\s*400;[\s\S]*?letter-spacing:\s*0\.025em;/,
+  "Runtime Deck invitation must remain a close, quiet and readable hint rather than a competing CTA",
+);
+assert.match(
+  readingSilver,
+  /@media \(prefers-reduced-motion:\s*reduce\)[\s\S]*?\.deck-atmosphere-mist\s*\{[\s\S]*?opacity:\s*var\(--deck-mist-opacity-low\);/,
+  "Reduced motion must not make the lower mist heavier than the approved static atmosphere",
+);
+assert.match(
+  readingSilver,
+  /#deck-wrap \.wyrd-deck-composition__question\s*\{[\s\S]*?margin-inline-start:\s*4px;[\s\S]*?margin-inline-end:\s*max\([\s\S]*?var\(--layout-oracle-content\)[\s\S]*?justify-self:\s*stretch;[\s\S]*?\.deck-question-shell\.wyrd-question-field__shell,[\s\S]*?min-height:\s*5rem;[\s\S]*?\.deck-question-input\.wyrd-question-field__input\s*\{[\s\S]*?padding-block:\s*0\.85rem;/,
+  "Runtime Field must align from the visible Back edge to the front-card corner and hold two text lines",
+);
+assert.match(
+  readingSilver,
+  /orientation:\s*portrait[\s\S]*?min-width:\s*31\.25rem[\s\S]*?min-height:\s*50rem[\s\S]*?\.wyrd-deck-composition__question\s*\{[\s\S]*?margin-inline-end:\s*-1px;/,
+  "Tall portrait screens must keep the Field aligned after the Deck reaches its maximum width",
+);
+assert.match(
+  readingSilver,
+  /@media \(prefers-reduced-motion:\s*reduce\)[\s\S]*?\.deck-fireflies\s*\{[\s\S]*?display:\s*none;/,
+  "Runtime full-screen sparks must disappear when reduced motion is requested",
+);
+assert.match(
+  readingSilver,
+  /orientation:\s*landscape[\s\S]*?grid-template-columns:[\s\S]*?\.wyrd-deck-composition__question[\s\S]*?grid-column:\s*1[\s\S]*?\.wyrd-deck-composition__artifact-zone[\s\S]*?grid-column:\s*2/,
+  "Short landscape must use the approved two-column question and Deck contract",
 );
 assert.doesNotMatch(
   runtimeHtml,
@@ -377,7 +460,7 @@ assert.match(
 );
 assert.match(
   runtimeHtml,
-  /id="deck-wrap"[\s\S]{0,320}wyrd-deck-composition__header[\s\S]{0,700}wyrd-deck-composition__question/,
+  /id="deck-wrap"[\s\S]{0,1200}wyrd-deck-composition__header[\s\S]{0,700}wyrd-deck-composition__question/,
   "Runtime Deck must reuse the canonical composition and Field classes",
 );
 assert.match(
@@ -437,8 +520,8 @@ assert.match(
 );
 assert.match(
   readingSilver,
-  /#deck-wrap :is\([\s\S]*?\.deck-card:hover[\s\S]*?filter:\s*none;[\s\S]*?transform:\s*none;/,
-  "Runtime Deck must neutralize the legacy hover lift and brightness jerk",
+  /@media \(hover:\s*hover\) and \(pointer:\s*fine\)[\s\S]*?\.deck-interaction:hover \.wyrd-deck-artifact::before[\s\S]*?animation:\s*none;[\s\S]*?opacity:\s*1;/,
+  "Runtime Deck hover may clarify light but must not move the fan",
 );
 assert.match(
   runtimeHtml,

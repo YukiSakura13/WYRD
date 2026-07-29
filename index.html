@@ -29,7 +29,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <meta name="wyrd-build" content="silver-20260729-yuk139-contour-restoration" />
+    <meta name="wyrd-build" content="silver-20260729-yuk139-quiet-embers-preview" />
     <title>WYRD — Оракул духов леса</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -38,7 +38,7 @@
       rel="stylesheet"
     />
     <link rel="manifest" href="./manifest.webmanifest?v=silver-20260710-forest" />
-    <link rel="stylesheet" href="./assets/css/styles.css?v=silver-20260729-yuk139-contour-restoration" />
+    <link rel="stylesheet" href="./assets/css/styles.css?v=silver-20260729-yuk139-quiet-embers-preview" />
   </head>
   <body>
     <div class="scene-fog scene-fog--back" aria-hidden="true"></div>
@@ -795,6 +795,29 @@
       </section>
 
       <section class="deck-scene ui-scene-shell ui-scene-shell--oracle wyrd-deck-composition" id="deck-wrap" aria-label="Экран колоды WYRD">
+        <span class="deck-atmosphere" aria-hidden="true">
+          <span class="deck-atmosphere-mist deck-atmosphere-mist--rear"></span>
+          <span class="deck-atmosphere-mist deck-atmosphere-mist--front"></span>
+          <span class="deck-fireflies">
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+          </span>
+        </span>
         <header class="deck-header ui-app-header ui-app-header--inner wyrd-deck-composition__header">
           <button class="ui-icon-button ui-icon-button--back ui-icon-button--quiet-reading deck-back" data-action="back-to-forest" type="button" aria-label="Вернуться в Лес">
             <svg class="ui-icon-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12H2M10 4l-8 8 8 8" /></svg>
@@ -822,13 +845,15 @@
         </section>
 
         <section class="deck-card-zone wyrd-deck-composition__artifact-zone" aria-label="Колода">
-          <button class="deck-card ui-card-action wyrd-deck-artifact" data-action="draw" type="button" aria-label="Коснуться колоды">
-            <span class="deck-card-stack deck-card-stack--left wyrd-deck-artifact__stack wyrd-deck-artifact__stack--left" aria-hidden="true"></span>
-            <span class="deck-card-stack deck-card-stack--mid wyrd-deck-artifact__stack wyrd-deck-artifact__stack--mid" aria-hidden="true"></span>
-            <span class="deck-card-face wyrd-deck-artifact__face" aria-hidden="true"></span>
-          </button>
-          <button class="deck-touch-copy wyrd-deck-composition__touch" data-action="draw" type="button" aria-label="Коснуться колоды">
-            <span id="deck-touch-main">Коснись колоды</span>
+          <button class="deck-interaction" data-action="draw" type="button" aria-label="Коснуться колоды">
+            <span class="deck-card ui-card-action wyrd-deck-artifact" aria-hidden="true">
+              <span class="deck-card-stack deck-card-stack--left wyrd-deck-artifact__stack wyrd-deck-artifact__stack--left"></span>
+              <span class="deck-card-stack deck-card-stack--mid wyrd-deck-artifact__stack wyrd-deck-artifact__stack--mid"></span>
+              <span class="deck-card-face wyrd-deck-artifact__face"></span>
+            </span>
+            <span class="deck-touch-copy wyrd-deck-composition__touch" aria-hidden="true">
+              <span id="deck-touch-main">Коснись колоды</span>
+            </span>
           </button>
         </section>
 
@@ -961,6 +986,6 @@
       window.WYRD_BUILD_ID =
         document.querySelector('meta[name="wyrd-build"]')?.content || "dev";
     </script>
-    <script type="module" src="./assets/js/main.js?v=silver-20260729-yuk139-contour-restoration"></script>
+    <script type="module" src="./assets/js/main.js?v=silver-20260729-yuk139-quiet-embers-preview"></script>
   </body>
 </html>

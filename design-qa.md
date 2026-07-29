@@ -1,140 +1,208 @@
-# YUK-139 Deck fan restoration — Design QA
+# YUK-139 Deck quiet-embers preview — Design QA
 
 Date: 2026-07-29
 
-Linear scope: YUK-139 (`In Progress`)
+Scope: local runtime preview only. The canonical Silver UI Kit, Linear, git
+history, published Pages build, and shared card artwork are intentionally
+unchanged.
 
-## Comparison target
+## Approved input for this pass
 
-- Source visual truth: user-supplied transparent three-card reference,
-  `833 × 940px`, RGBA. The third-party artwork is not stored in the repository.
-- Browser-rendered implementation:
-  [Approved Deck fan — 393 px](https://uploads.linear.app/869d01d0-49df-460a-9261-5f3c55da8c17/b86b90ee-b436-4c00-9e1f-8c1c3cc2f80a/d91af67b-e5eb-42dc-8690-2b059c426dc7),
-  CSS viewport `393 × 852`, device density `1`.
-- Focused reference/runtime comparison and the controlled `1.00 / 1.15 / 1.25`
-  spread variants were reviewed locally; only the approved `1.00` runtime
-  screenshot is retained as project evidence.
-- Additional full-view browser checks: `320 × 568`, `375 × 812`, `430 × 932`,
-  `768 × 1024`, and `852 × 393`.
-- State: Deck at rest, empty question, no hover, no focus ring.
+- Preserve the approved `--deck-spread: 1` three-card reference geometry,
+  equal card dimensions, Raven back artwork, copy, routes, and reading state.
+- Make rear cards opaque physical planes; mute only their internal artwork.
+- Add restrained cold depth and a narrow reflection beneath the fan.
+- Replace the weak idle twitch with a rare, smooth physical answer.
+- Keep Enter motionless: only a static ready-state and focus transfer.
+- Keep Artifact and `Коснись колоды` inside one semantic control.
+- Keep the approved Field geometry but remove its redundant inset contour;
+  retain one outer contour carrying the moving silver spark.
+- Return `Коснись колоды` from a separate CTA-like phrase to a quiet,
+  accessible hint attached to the Deck.
+- Make sparks an atmospheric layer of the complete screen: above the
+  background, below Back, Field, Deck, and text; less bright and less dense than
+  the main-screen fire effect.
+- Do not change the Kit or record evidence in Linear before user approval.
 
-The source is a transparent crop of a three-card object, not a complete WYRD
-screen. Only card count, equal card size, relative centres, angles, overlap,
-and outer contour are treated as visual truth. Its artwork, frame, palette, and
-symbols are deliberately not copied.
+## Implemented result
 
-## Findings
+### Materiality
 
-No actionable P0, P1, or P2 difference remains in this fan-restoration slice.
+- All three card planes remain at `opacity: 1`.
+- Only the rear artwork is veiled: `27%` for the back card and `15%` for the
+  middle card.
+- Short contact shadows separate the overlaps.
+- Cold one-pixel edges appear only on exposed upper/right card edges.
+- A vertical cold light well sits behind the lower part of the fan.
+- A narrow reflection immediately beneath the cards grounds the object.
 
-- Exactly three equal `3:4` cards form the object.
-- Relative to the middle card, the measured reference geometry is restored:
-  - back: `translate(-10.66%, -0.58%) rotate(-3.3deg)`;
-  - middle: `translate(0, 0) rotate(1.4deg)`;
-  - front: `translate(11.38%, 0.87%) rotate(4.5deg)`.
-- The angular gaps remain intentionally asymmetric: `4.7deg` between back and
-  middle, then `3.1deg` between middle and front.
-- The default review coefficient is `--deck-spread: 1`, which reproduces the
-  measured reference. Wider `1.15` and `1.25` captures exist only for visual
-  comparison and are not active in runtime.
-- At `393px`, the front card remains `271.16px` wide and the complete fan
-  envelope is `354.88px` wide: ratio `1.3087`, matching the approximately
-  `1.31` reference envelope.
-- The visible rear cards use the same authored Raven back as the front card.
-  Both illustrated faces, top contours, and side exposures are readable, so
-  the object registers as a three-card fan rather than backing plates.
-- Static placement uses individual `translate` and `rotate` properties. The
-  rare idle response animates only `transform`, so motion cannot overwrite or
-  drift the measured fan geometry.
+The reference contour is unchanged:
 
-## Required fidelity surfaces
+| Card | translate | rotate |
+| --- | --- | --- |
+| Back | `-10.66% -0.58%` | `-3.3deg` |
+| Middle | `0 0` | `1.4deg` |
+| Front | `11.38% 0.87%` | `4.5deg` |
 
-- **Fonts and typography:** the reference has no text. Runtime Back, Question
-  Field, and `Коснись колоды` typography remain the approved Silver
-  implementation without changes in this pass.
-- **Spacing and layout rhythm:** the complete transformed fan is centred as one
-  object. The question and invitation zones retain their approved runtime
-  spacing.
-- **Colors and visual tokens:** the reference palette and gold border are not
-  copied. Existing cold-silver borders, authored monochrome card art, shadows,
-  and WYRD background tokens remain unchanged.
-- **Image quality and asset fidelity:** all three layers reuse the existing
-  Raven card asset. No generated art, placeholder, recolouring, CSS redraw, or
-  reference-image raster is shipped.
-- **Copy and content:** no copy was introduced or changed. `Коснись колоды`
-  remains the only text below the Deck.
+### Composition
 
-## Responsive evidence
+- In portrait, the Field begins on the visible left edge of Back and ends on
+  the upper-right edge of the front card. The alignment is derived from the
+  existing responsive content and artifact variables rather than a
+  screenshot-specific fixed width.
+- At the `505 × 705` review viewport, Back and Field both begin at `32.5px`.
+  The Field ends at `449.5px`; the measured front-card edge ends at
+  `451.1px` (`1.6px` optical difference).
+- The Field shell is `82px` high and its input is `80px` high. A two-line
+  content check reports equal `clientHeight` and `scrollHeight` (`80px`), so
+  two lines fit without introducing a scrollbar.
+- The inner `4px` inset contour is removed. The outer border and the existing
+  moving orbit now read as one frame; no dimensions, radius, alignment, or
+  input padding changed.
+- The Artifact zone no longer vertically centers itself inside all remaining
+  free height. The Field-to-fan gap is now bounded by responsive padding.
+- The invitation remains `16px`, moves from `500` to `400`, uses `58%`
+  silver, and sits `6px` closer to the artifact. Ready/hover states stop at
+  `66%` and do not add text glow.
+- Portrait remains one column. Short landscape uses the approved two-column
+  contract: Field left, fan plus invitation right.
 
-Browser measurements of the transformed fan:
+### Full-screen atmosphere
 
-| Viewport | Front card | Fan width | Fan left/right | Touch target | Horizontal overflow |
-| --- | ---: | ---: | --- | ---: | --- |
-| `320 × 568` | `220.80px` | `288.96px` | `17.78 / 13.27px` | `48px` | none |
-| `375 × 812` | `258.75px` | `338.63px` | `20.83 / 15.54px` | `48px` | none |
-| `393 × 852` | `271.16px` | `354.88px` | `21.83 / 16.30px` | `48px` | none |
-| `430 × 932` | `296.70px` | `388.29px` | `23.88 / 17.83px` | `48px` | none |
-| `768 × 1024` | `344.00px` | `450.19px` | `162.42 / 155.39px` | `48px` | none |
-| `852 × 393` | `168.98px` | `221.13px` | `317.18 / 313.69px` | `48px` | none |
+- Seventeen low-density cold sparks rise from below the viewport to above it.
+- Spark diameters now range from `1.15px` to `2.15px`, with staggered
+  `13.5–21s` paths. They remain quieter and less dense than the main-screen
+  eighteen-particle action.
+- Spark origins now cover `5–96%` of the complete viewport width, including
+  both outer lower edges and the central lower field instead of clustering
+  visually beneath the Deck.
+- The atmospheric wrapper uses `position: absolute; inset: 0; z-index: 0`.
+- Every content child of the Deck scene uses `z-index: 1`.
+- Broad lower-scene mist is reduced to `0.16–0.24` on the rear layer and
+  `0.08–0.14` on the front layer. The Deck-local light well and narrow
+  reflection remain unchanged, preserving the volume visible beneath the
+  cards without turning the whole lower viewport grey.
+- The Deck-specific light well remains attached to the Deck object; the sparks
+  are not localized behind it.
+- The atmospheric layer is `aria-hidden` and does not receive pointer events.
 
-The complete fan remains visible without horizontal scroll. Short landscape
-uses the existing vertical-scroll strategy rather than shrinking controls below
-their accessible sizes.
+### Motion and interaction
 
-## Comparison history
+- Idle cycle: `6200ms`, with `72%` complete stillness.
+- Front response: smooth `3px` lift.
+- Rear response: `0.85px` and `0.45px` convergence.
+- The upper-right edge glint, light well, and reflection share the same phase.
+- Angles, scale, fan width, and authored image never animate.
+- Hover changes only light/edge/text opacity and is limited to fine pointers.
+- Pointer-down moves the unified Artifact by `1px` in `110ms`.
+- Enter stops the Field orbit, applies a static ready hierarchy, and transfers
+  keyboard focus to the Deck. It does not create a thread, spark, or Deck
+  movement.
+- Reduced motion removes card movement and rising sparks while retaining
+  static depth. Its static mist now uses each layer's approved low opacity
+  instead of becoming heavier when animation is disabled.
 
-### Rejected P1 — staircase geometry
+## Visual comparison evidence
 
-The earlier runtime accumulated Y offsets and used different angles from the
-reference. Rear cards descended like steps, only isolated corners were visible,
-and the object did not read as the supplied fan.
+- Source visual truth: temporary in-app Browser QA capture
+  `01-before.png` (`505 × 705`), intentionally not committed.
+- Final implementation: temporary in-app Browser QA capture
+  `04-after-505x705.png`, intentionally not committed.
+- Responsive implementation: temporary in-app Browser QA capture
+  `03-after-393x852.png`, intentionally not committed.
+- Source and review implementation are both `505 × 705` pixels at a
+  `505 × 705` CSS viewport and `1×` capture density. The phone evidence is
+  `393 × 852` pixels at a `393 × 852` CSS viewport and `1×` density.
+- Full-view comparison: the final frame preserves the approved fan, Field
+  bounds, vertical rhythm, fog, card scale, and copy while visibly removing
+  the inset Field frame and quieting/attaching the invitation.
+- Focused comparison was made on the Field contour and invitation region;
+  card artwork required no focused crop because its asset, scale, and geometry
+  were unchanged.
 
-**Fix:** replaced the approximated placement with the independently measured
-centres and angles above, all relative to the middle card.
+### Comparison history
 
-### Rejected P1 — motion overwrote placement
+- Earlier P2: the Field read as two competing frames. Fix: remove only the
+  runtime inset pseudo-element and inset shadow. Post-fix evidence shows one
+  structural contour with the orbit on the same perimeter.
+- Earlier P2: `Коснись колоды` read as an independent CTA. Fix: retain `16px`
+  but use `400`, `58%` silver, tighter tracking, and a `0.25rem` artifact gap.
+  Post-fix evidence shows a readable annotation attached to the object.
+- Earlier P2: ambient sparks appeared too sparse and centered around the Deck.
+  Fix: increase `14 → 17` and place origins across `5–96%`. The final runtime
+  sample exposed `15` concurrently visible sparks distributed from `49.5px`
+  to `466.1px` at the `505px` review width.
 
-The previous keyframes animated the complete `transform` declaration that also
-positioned each card. This made exact geometry fragile and caused visible
-movement away from the reference.
+## Responsive browser matrix
 
-**Fix:** static geometry now lives in `translate` and `rotate`; the approved
-rare idle response is an independent, sub-pixel/2px `transform` layer.
+All measurements are CSS pixels from the local in-app Browser.
 
-### Review-only spread alternatives
+| Viewport | Layout | Field bounds | Fan bounds | Field → fan | CTA bottom | Overflow |
+| --- | --- | --- | --- | ---: | ---: | --- |
+| `320 × 568` | portrait | `16–305` | `15.5–304.5` | `24.2px` | `524.4` | none |
+| `375 × 812` | portrait | `20–356` | `18.2–356.8` | `39.6px` | `612.5` | none |
+| `393 × 852` | portrait | `20–374` | `19.1–373.9` | `41.5px` | `631.5` | none |
+| `430 × 932` | portrait | `20–411` | `20.9–409.1` | `45.4px` | `670.3` | none |
+| `505 × 705` | portrait review | `32.5–449.5` | right edge `451.1` | bounded | visible | none |
+| `768 × 1024` | portrait/tablet | `164–609` | right edge `609.1` | bounded | `738.9` | none |
+| `852 × 393` | two columns | independent column | `511.1–732.2` | independent | `363.2` | none |
 
-The front card size is identical in all three captures. Only the fan opening
-changes:
+The portrait alignment stays within `1.6px` of the requested visual axes
+across the matrix. At `320 × 568`, all content remains visible, the fan is not
+clipped, and the invitation stays above the bottom edge.
 
-| `--deck-spread` | Fan width at `393px` | Envelope ratio | Runtime status |
-| ---: | ---: | ---: | --- |
-| `1.00` | `354.88px` | `1.3087` | active exact reference |
-| `1.15` | `367.33px` | `1.3546` | comparison only |
-| `1.25` | `375.61px` | `1.3852` | comparison only |
+## Accessibility and mechanics
 
-This preserves the user's visual choice without turning the coefficient into a
-user-facing product setting or silently departing from the reference.
+- Accessibility snapshot exposes exactly one draw button:
+  `Коснуться колоды`.
+- Keyboard order remains Back → Question → Deck.
+- After Enter, `:focus-visible` matches the unified Deck button and the
+  perceived fan contour becomes visible.
+- The Field orbit reports `animation: none` in ready state.
+- The placeholder's estimated rendered contrast is approximately `7.0:1`.
+- The invitation at `58%` silver is approximately `5.6:1` against the lower
+  scene background, above the `4.5:1` normal-text target while remaining quiet.
+- The screen has no visible duplicate label, character count, or bottom
+  whisper.
+- Clicking the Deck opens the one-card Result immediately.
+- `Вернуться к колоде` returns to the clean Deck state.
+- Forced-colors styling uses a system `ButtonText` outline; this pass verifies
+  the rule statically and does not claim a physical forced-colors device pass.
 
-## Interaction and engineering verification
+## Motion review
 
-- Enter accepts the question and transfers focus to `Коснуться колоды`.
-- Enter adds no spark, intent thread, or response animation.
-- The rare idle response runs without changing the measured static placement.
-- Pointer hit-testing across `376` sampled visible points outside the base
-  button rectangle still resolves to a Deck descendant or the Deck button.
-- Clicking the Deck opens the one-card Result; Back returns to Deck.
-- Browser console: no errors or warnings.
-- Domain, state, UI-interaction, control-language, product-scope, lore-canon,
-  responsive-strategy, Pages preparation/artifact, PR-body, and
-  `git diff --check` gates: passed.
-- Canonical Silver UI Kit files remain unchanged.
-- No commit or push was performed.
+| Before | After | Why |
+| --- | --- | --- |
+| `7.2s`, `2px` lift, sub-pixel rear response | `6.2s`, `3px`, coordinated `0.85px / 0.45px`, `72%` stillness | The invitation becomes perceivable without continuous agitation |
+| Abrupt intermediate front keyframe | One rise and one return using strong segment easing | Removes the visible twitch and gives the card one physical breath |
+| Glint over the illustration | Short glint on the exposed upper-right edge | Reads as material rather than decoration painted over the Raven |
+| Sparse, centered scene atmosphere | Seventeen full-screen sparks distributed across `5–96%` plus unchanged restrained mist | The lower field feels alive while the Deck remains dominant and keeps its local depth |
+| Enter could imply an effect | Static ready-state and visible focus only | Keyboard submission stays immediate and motionless |
+| Separate Artifact and text actions | One unified control with `110ms` press feedback | One object, one hit area, one tab stop |
 
-## Residual boundary
+Motion verdict: **Approve for user review.** The ambient cycles are justified
+as low-frequency atmosphere, interactive feedback stays within the
+`100–160ms` button-press range, only `transform` and `opacity` animate,
+fine-pointer hover is gated, and reduced motion removes positional movement.
 
-This report accepts only the local Deck fan geometry and interaction slice.
-YUK-139 remains `In Progress` until user visual approval and the complete
-Result / 3-card / 5-card / Sheet acceptance are finished.
+## Automated verification
+
+- `node scripts/smoke-domain.mjs`: passed.
+- `node scripts/smoke-state.mjs`: passed.
+- `node scripts/smoke-ui-interactions.mjs`: passed.
+- `python3 scripts/validate_control_language.py`: passed.
+- `python3 scripts/validate_product_scope.py`: passed.
+- `python3 scripts/validate_responsive_strategy.py`: passed.
+- `git diff --check`: passed.
+
+## Review boundary
+
+- No commit.
+- No push.
+- No Linear mutation.
+- No canonical Kit edit.
+- No claim of physical Telegram WebView, exact 200% browser zoom, or genuine
+  forced-colors validation.
 
 ## Final result
 
