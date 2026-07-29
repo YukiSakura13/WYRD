@@ -273,8 +273,8 @@ const deckFirefliesMarkup = runtimeHtml.match(
 )?.[1] || "";
 assert.equal(
   (deckFirefliesMarkup.match(/<i><\/i>/g) || []).length,
-  17,
-  "Runtime Deck must keep a lower-density 17-spark field than the 18-particle main action",
+  24,
+  "Runtime Deck must keep a restrained 24-spark full-scene field",
 );
 assert.match(
   readingSilver,

@@ -1,10 +1,9 @@
-# YUK-139 Deck quiet-embers preview — Design QA
+# YUK-139 Deck centered-embers preview — Design QA
 
 Date: 2026-07-29
 
-Scope: local runtime preview only. The canonical Silver UI Kit, Linear, git
-history, published Pages build, and shared card artwork are intentionally
-unchanged.
+Scope: user-approved YUK-139 Deck runtime checkpoint. The canonical Silver UI
+Kit and shared card artwork are intentionally unchanged.
 
 ## Approved input for this pass
 
@@ -22,6 +21,10 @@ unchanged.
 - Make sparks an atmospheric layer of the complete screen: above the
   background, below Back, Field, Deck, and text; less bright and less dense than
   the main-screen fire effect.
+- Restore the canonical vertically centered Artifact stage and adaptive
+  Field-to-stage padding without resizing the cards or changing the approved
+  `--deck-spread: 1` geometry.
+- Increase the ambient spark field to `24` quieter, more frequent points.
 - Do not change the Kit or record evidence in Linear before user approval.
 
 ## Implemented result
@@ -59,8 +62,13 @@ The reference contour is unchanged:
 - The inner `4px` inset contour is removed. The outer border and the existing
   moving orbit now read as one frame; no dimensions, radius, alignment, or
   input padding changed.
-- The Artifact zone no longer vertically centers itself inside all remaining
-  free height. The Field-to-fan gap is now bounded by responsive padding.
+- The Artifact zone again uses the canonical `align-content: center` inside the
+  flexible stage. Its top padding is restored from the runtime-only
+  `clamp(2.75rem, 6svh, 4rem)` to the Kit value
+  `min(2.5svh, 1.25rem)`; short-height screens use the canonical `0.75rem`.
+- Card width, height, `3:4` proportion, transforms, and `--deck-spread: 1`
+  remain byte-for-byte unchanged. Only the complete Artifact control is
+  repositioned within available vertical space.
 - The invitation remains `16px`, moves from `500` to `400`, uses `58%`
   silver, and sits `6px` closer to the artifact. Ready/hover states stop at
   `66%` and do not add text glow.
@@ -69,10 +77,11 @@ The reference contour is unchanged:
 
 ### Full-screen atmosphere
 
-- Seventeen low-density cold sparks rise from below the viewport to above it.
-- Spark diameters now range from `1.15px` to `2.15px`, with staggered
-  `13.5–21s` paths. They remain quieter and less dense than the main-screen
-  eighteen-particle action.
+- Twenty-four low-density cold sparks rise from below the viewport to above it.
+- Spark diameters range from `1.3px` to `2.25px`, with staggered
+  `12.2–17s` paths. Their peak opacity is `0.48`; they remain much quieter
+  than the main-screen fire effect even though the atmospheric field is now
+  more continuous.
 - Spark origins now cover `5–96%` of the complete viewport width, including
   both outer lower edges and the central lower field instead of clustering
   visually beneath the Deck.
@@ -104,21 +113,26 @@ The reference contour is unchanged:
 
 ## Visual comparison evidence
 
-- Source visual truth: temporary in-app Browser QA capture
-  `01-before.png` (`505 × 705`), intentionally not committed.
-- Final implementation: temporary in-app Browser QA capture
-  `04-after-505x705.png`, intentionally not committed.
-- Responsive implementation: temporary in-app Browser QA capture
-  `03-after-393x852.png`, intentionally not committed.
-- Source and review implementation are both `505 × 705` pixels at a
-  `505 × 705` CSS viewport and `1×` capture density. The phone evidence is
-  `393 × 852` pixels at a `393 × 852` CSS viewport and `1×` density.
-- Full-view comparison: the final frame preserves the approved fan, Field
-  bounds, vertical rhythm, fog, card scale, and copy while visibly removing
-  the inset Field frame and quieting/attaching the invitation.
-- Focused comparison was made on the Field contour and invitation region;
-  card artwork required no focused crop because its asset, scale, and geometry
-  were unchanged.
+- Source visual truth: two external, user-provided physical-phone screenshots,
+  intentionally not committed. The `360 × 724` current-state capture shows the
+  top-anchored regression; the `601 × 1306` older capture supplies only the
+  approved centered-hierarchy reference.
+- Final implementation:
+  `.codex/audits/yuk-139-centered-embers/implementation-393x852.png`
+  (`393 × 852` pixels at a `393 × 852` CSS viewport and `1×` density) and
+  `.codex/audits/yuk-139-centered-embers/implementation-360x724.png`
+  (`360 × 724` pixels at a `360 × 724` CSS viewport and `1×` density).
+- Combined comparison input:
+  `.codex/audits/yuk-139-centered-embers/comparison-phone-before-old-centered-local-after.png`.
+  The physical screenshots include Safari chrome and do not expose their CSS
+  visual viewport; therefore they are used for hierarchy and perceived
+  centering, not false pixel-perfect browser-chrome measurements.
+- Full-view comparison: the local result removes the top-clustered reading of
+  the current phone capture and restores the Deck as the dominant centered
+  object while preserving the exact approved fan width and Field axes.
+- Focused comparison was made on the Field-to-Artifact rhythm and the fan's
+  outer bounds. Artwork, typography, Field geometry, Back, mist, light well,
+  and invitation styling were intentionally unchanged in this pass.
 
 ### Comparison history
 
@@ -132,6 +146,18 @@ The reference contour is unchanged:
   Fix: increase `14 → 17` and place origins across `5–96%`. The final runtime
   sample exposed `15` concurrently visible sparks distributed from `49.5px`
   to `466.1px` at the `505px` review width.
+- Current P1: the physical-phone capture showed the Deck held at the start of
+  the flexible stage, making it look smaller and top-heavy despite unchanged
+  card dimensions. Cause: a runtime override used `align-content: start` plus
+  `2.75rem–4rem` top padding. Fix: restore canonical stage centering and
+  adaptive padding. Post-fix evidence at `360 × 724` places the fan at
+  `248.5–600.6px` with no overflow; the card dimensions and horizontal axes
+  remain unchanged.
+- Current P2: sparks were atmospheric but too easy to miss on the phone.
+  Fix: increase `17 → 24`, shorten cycles to `12.2–17s`, raise the largest
+  point to `2.25px`, and increase peak opacity from `0.42` to `0.48`.
+  A live sample at `393 × 852` exposed `22/24` sparks above `0.05` opacity,
+  still underneath all interactive content.
 
 ## Responsive browser matrix
 
@@ -139,10 +165,11 @@ All measurements are CSS pixels from the local in-app Browser.
 
 | Viewport | Layout | Field bounds | Fan bounds | Field → fan | CTA bottom | Overflow |
 | --- | --- | --- | --- | ---: | ---: | --- |
-| `320 × 568` | portrait | `16–305` | `15.5–304.5` | `24.2px` | `524.4` | none |
-| `375 × 812` | portrait | `20–356` | `18.2–356.8` | `39.6px` | `612.5` | none |
-| `393 × 852` | portrait | `20–374` | `19.1–373.9` | `41.5px` | `631.5` | none |
-| `430 × 932` | portrait | `20–411` | `20.9–409.1` | `45.4px` | `670.3` | none |
+| `320 × 568` | portrait | `16–305` | `16.4–304.7` | `31.2px` | `532.2` | none |
+| `360 × 800` | portrait | `16–345` | `18.3–342.8` | `116.1px` | `675.4` | none |
+| `375 × 812` | portrait | `20–356` | `18.9–357.0` | `115.5px` | `688.3` | none |
+| `393 × 852` | portrait | `20–374` | `19.2–374.0` | `126.7px` | `716.6` | none |
+| `430 × 932` | portrait | `20–411` | `20.9–409.2` | `148.7px` | `773.6` | none |
 | `505 × 705` | portrait review | `32.5–449.5` | right edge `451.1` | bounded | visible | none |
 | `768 × 1024` | portrait/tablet | `164–609` | right edge `609.1` | bounded | `738.9` | none |
 | `852 × 393` | two columns | independent column | `511.1–732.2` | independent | `363.2` | none |
@@ -176,7 +203,7 @@ clipped, and the invitation stays above the bottom edge.
 | `7.2s`, `2px` lift, sub-pixel rear response | `6.2s`, `3px`, coordinated `0.85px / 0.45px`, `72%` stillness | The invitation becomes perceivable without continuous agitation |
 | Abrupt intermediate front keyframe | One rise and one return using strong segment easing | Removes the visible twitch and gives the card one physical breath |
 | Glint over the illustration | Short glint on the exposed upper-right edge | Reads as material rather than decoration painted over the Raven |
-| Sparse, centered scene atmosphere | Seventeen full-screen sparks distributed across `5–96%` plus unchanged restrained mist | The lower field feels alive while the Deck remains dominant and keeps its local depth |
+| Sparse, centered scene atmosphere | Twenty-four full-screen sparks distributed across `5–96%` plus unchanged restrained mist | The full scene feels alive while the Deck remains dominant and keeps its local depth |
 | Enter could imply an effect | Static ready-state and visible focus only | Keyboard submission stays immediate and motionless |
 | Separate Artifact and text actions | One unified control with `110ms` press feedback | One object, one hit area, one tab stop |
 
@@ -197,9 +224,8 @@ fine-pointer hover is gated, and reduced motion removes positional movement.
 
 ## Review boundary
 
-- No commit.
-- No push.
-- No Linear mutation.
+- User approved the centered Deck composition and authorized this checkpoint
+  for commit, push, and Linear evidence.
 - No canonical Kit edit.
 - No claim of physical Telegram WebView, exact 200% browser zoom, or genuine
   forced-colors validation.
