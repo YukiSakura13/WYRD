@@ -1,6 +1,13 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { shouldDismissHistoryDrag } from "../assets/js/ui/history-sheet-drag.js";
+import { formatFullTraceDate } from "../assets/js/ui/moon.js";
+
+assert.equal(
+  formatFullTraceDate(new Date(2026, 7, 3, 12)),
+  "3\u00a0августа",
+  "Result metadata must use the full lowercase month name",
+);
 
 assert.equal(
   shouldDismissHistoryDrag({ distance: 9, elapsed: 8, panelHeight: 640 }),
@@ -40,6 +47,7 @@ const [
   runtimeBase,
   runtimeActions,
   runtimeRender,
+  runtimeShare,
 ] =
   await Promise.all([
     readFile(new URL("../docs/wyrd-ui-kit.html", import.meta.url), "utf8"),
@@ -55,6 +63,7 @@ const [
     readFile(new URL("../assets/css/base.css", import.meta.url), "utf8"),
     readFile(new URL("../assets/js/ui/actions.js", import.meta.url), "utf8"),
     readFile(new URL("../assets/js/ui/render.js", import.meta.url), "utf8"),
+    readFile(new URL("../assets/js/ui/share.js", import.meta.url), "utf8"),
   ]);
 
 assert.match(
@@ -545,14 +554,119 @@ assert.match(
   "Runtime Result must keep Moon phase and date on separate metadata rows",
 );
 assert.match(
-  readingSilver,
-  /#result \.share-card-media\s*\{[\s\S]*?top:\s*11\.5%;[\s\S]*?width:\s*61\.5%;[\s\S]*?aspect-ratio:\s*3 \/ 4;/,
-  "Runtime Result must preserve the approved Artifact image window geometry",
+  runtimeRender,
+  /traceDate\.textContent = formatFullTraceDate\(date\);/,
+  "Runtime Result must use the full date formatter rather than the compact history formatter",
 );
 assert.match(
   readingSilver,
-  /#result \.card-title-block\s*\{[\s\S]*?bottom:\s*9\.25%;/,
-  "Runtime Result must preserve the approved Artifact identity position",
+  /#result \.card-moon-date\s*\{[\s\S]*?grid-row:\s*2;[\s\S]*?font-family:\s*"Cormorant Garamond"[\s\S]*?font-style:\s*italic;[\s\S]*?text-align:\s*left;/,
+  "Runtime Result date must preserve the canonical second-row typography and alignment",
+);
+assert.match(
+  kitHtml,
+  /data-result-reveal-demo[\s\S]*?Артефакт → Послание → Тень[\s\S]*?data-result-reveal-trigger/,
+  "Silver UI Kit must expose the approved replayable Result Reveal sequence",
+);
+assert.match(
+  kitCss,
+  /\.result-reveal-demo\.is-playing \.result-reveal-demo__artifact\s*\{[\s\S]*?800ms[\s\S]*?\.result-reveal-demo\.is-playing \.result-reveal-demo__message\s*\{[\s\S]*?320ms[\s\S]*?800ms[\s\S]*?\.result-reveal-demo\.is-playing \.result-reveal-demo__shadow\s*\{[\s\S]*?320ms[\s\S]*?1240ms/,
+  "Kit Result Reveal must order Artifact, Message, then Shadow",
+);
+assert.match(
+  kitCss,
+  /\.result-reveal-demo__artifact::after\s*\{[\s\S]*?clip-path:[\s\S]*?wyrd-card-frame-artifact\.svg/,
+  "Kit Result Reveal glint must reuse the approved Artifact Frame geometry",
+);
+assert.match(
+  runtimeRender,
+  /readingMotionPreference\?\.matches[\s\S]*?cardBox\?\.classList\.add\("is-visible"\)[\s\S]*?cardMessage\?\.classList\.add\("is-visible"\)[\s\S]*?cardShadowWrap\?\.classList\.add\("is-visible"\)/,
+  "Reduced motion must expose the complete Result immediately",
+);
+assert.match(
+  runtimeRender,
+  /revealCard[\s\S]*?is-reveal-glint[\s\S]*?}, 40\)[\s\S]*?revealMessage[\s\S]*?}, 840\)[\s\S]*?revealShadow[\s\S]*?}, 1240\)/,
+  "Runtime Result must reveal Artifact, then Message, then Shadow",
+);
+assert.match(
+  readingSilver,
+  /#result \.card-box\s*\{[\s\S]*?transform:\s*translateY\(2px\);[\s\S]*?opacity 800ms var\(--ease-out-strong\)/,
+  "Runtime Result Artifact must settle by only 2 px over the ritual token",
+);
+assert.match(
+  readingSilver,
+  /#result \.card-box::after\s*\{[\s\S]*?clip-path:[\s\S]*?wyrd-card-frame-artifact\.svg[\s\S]*?#result \.card-box\.is-reveal-glint::after\s*\{[\s\S]*?800ms/,
+  "Runtime Result must reuse the approved partial one-shot frame glint",
+);
+assert.match(
+  readingSilver,
+  /#result \.result-question-label\s*\{[\s\S]*?rgba\(238, 229, 212, 0\.42\)[\s\S]*?font-size:\s*0\.75rem;[\s\S]*?font-weight:\s*400;[\s\S]*?letter-spacing:\s*0;[\s\S]*?text-transform:\s*none;[\s\S]*?#result \.result-question-text\s*\{[\s\S]*?font-size:\s*1\.0625rem;[\s\S]*?font-weight:\s*500;/,
+  "Result question hierarchy must keep a readable 12 px quiet label and a visibly stronger 17 px actual question",
+);
+assert.match(
+  runtimeRender,
+  /if \(question\)[\s\S]*?textContent = "Твой вопрос"[\s\S]*?resultQuestionLabel\.hidden = true;[\s\S]*?Тайна приоткроется сама/,
+  "Result must hide the label for an empty question and keep the whisper beside the rail",
+);
+assert.match(
+  readingSilver,
+  /#result \.wyrd-utility-action\s*\{[\s\S]*?border-color:\s*rgba\(205, 209, 207, 0\.4\);[\s\S]*?color:\s*rgba\(231, 228, 219, 0\.86\);[\s\S]*?#result \.wyrd-utility-action:hover:not\(:disabled\),[\s\S]*?#result \.wyrd-utility-action:focus-visible\s*\{[\s\S]*?var\(--control-silver-line-active\)/,
+  "Result Share must be quieter at rest and restore full silver on hover/focus without changing other utility actions",
+);
+assert.match(
+  runtimeHtml,
+  /<p class="hook-copy">\s*Три карты покажут то, что скрыто\.\s*<\/p>/,
+  "Result hook must keep the approved concise continuation copy",
+);
+assert.doesNotMatch(
+  runtimeHtml,
+  /Духи леса услышали твой вопрос/,
+  "Result hook must not repeat that the question has already been heard",
+);
+assert.match(
+  readingSilver,
+  /#result \.share-card-media\s*\{[\s\S]*?top:\s*11\.5%;[\s\S]*?width:\s*61\.5%;[\s\S]*?aspect-ratio:\s*3 \/ 4;[\s\S]*?rgba\(225, 228, 225, 0\.32\)[\s\S]*?inset 0 0 0 1px rgba\(225, 228, 225, 0\.06\)/,
+  "Runtime Result must restore the approved Kit Artifact image window and material edge",
+);
+assert.match(
+  readingSilver,
+  /#result \.card-title-block\s*\{[\s\S]*?bottom:\s*9\.25%;[\s\S]*?gap:\s*0\.5rem;/,
+  "Runtime Result must restore the approved Artifact identity position and title gap",
+);
+assert.match(
+  readingSilver,
+  /#result \.result-card-wrap::before\s*\{[\s\S]*?rgba\(178, 197, 211, 0\.055\)[\s\S]*?filter:\s*blur\(18px\)/,
+  "Runtime Result must keep the approved static cold light-well behind the Artifact",
+);
+assert.match(
+  readingSilver,
+  /#result \.result-interpretation\s*\{[\s\S]*?width:\s*min\(100%, 20rem\);[\s\S]*?padding:\s*0 0 0 1rem;[\s\S]*?border-left:\s*1px solid rgba\(225, 228, 225, 0\.26\);/,
+  "Runtime Result must restore the shared Message and Shadow interpretation rail on the canonical axis",
+);
+assert.match(
+  kitCss,
+  /\.share-card-specimen__media\s*\{[\s\S]*?top:\s*11\.5%;[\s\S]*?width:\s*61\.5%;[\s\S]*?\.share-card-specimen__identity\s*\{[\s\S]*?bottom:\s*9\.25%;[\s\S]*?gap:\s*0\.5rem;/,
+  "Silver UI Kit must own the restored Artifact internal rhythm before runtime",
+);
+assert.match(
+  kitCss,
+  /\.result-reveal-demo__question p:first-child\s*\{[\s\S]*?font-size:\s*0\.75rem;[\s\S]*?font-weight:\s*400;[\s\S]*?letter-spacing:\s*0;[\s\S]*?\.result-reveal-demo__reading\s*\{[\s\S]*?padding-left:\s*1rem;[\s\S]*?border-left:\s*1px solid rgba\(225, 228, 225, 0\.26\);/,
+  "Silver UI Kit must document the quiet question label and interpretation rail",
+);
+assert.match(
+  runtimeShare,
+  /const SHARE_WIDTH = 1086;[\s\S]*?const SHARE_HEIGHT = 1448;[\s\S]*?ARTIFACT_MEDIA_TOP = 0\.115;[\s\S]*?ARTIFACT_MEDIA_WIDTH = 0\.615;[\s\S]*?ARTIFACT_IDENTITY_BOTTOM = 0\.0925;/,
+  "Native Share must export the exact canonical Artifact dimensions and geometry",
+);
+assert.match(
+  runtimeShare,
+  /silverMuted[\s\S]*?function drawMoonMetaStacked[\s\S]*?formatFullTraceDate\(date\)/,
+  "Native Share must use the full date and silver stacked moon metadata",
+);
+assert.doesNotMatch(
+  runtimeShare,
+  /drawDivider\(context, \{|drawStoryTexture\(context, \{|rgba\(201,161,74,0\.16\)/,
+  "Share and story rendering must not reintroduce legacy gold export chrome",
 );
 assert.match(
   readingSilver,

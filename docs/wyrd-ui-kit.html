@@ -317,6 +317,72 @@
             </div>
           </div>
         </article>
+
+        <article
+          class="result-reveal-demo"
+          aria-labelledby="result-reveal-title"
+          data-result-reveal-demo
+        >
+          <div class="result-reveal-demo__head">
+            <div>
+              <p class="component-label">Result sequence</p>
+              <h3 id="result-reveal-title">Артефакт → Послание → Тень</h3>
+            </div>
+            <button class="ui-action result-reveal-demo__trigger" type="button" data-result-reveal-trigger>
+              Повторить раскрытие
+            </button>
+          </div>
+          <p class="result-reveal-demo__note">
+            Артефакт проявляется один раз за 800 ms и оседает на 2 px. Короткий
+            серебряный блик касается только части существующей рамки. После
+            Послания и Тени сцена полностью неподвижна.
+          </p>
+          <div class="result-reveal-demo__question" aria-label="Пример контекста вопроса">
+            <p>Твой вопрос</p>
+            <p>Что будет дальше?</p>
+          </div>
+          <div class="result-reveal-demo__stage">
+            <div class="result-reveal-demo__artifact" data-result-reveal-artifact>
+              <article class="share-card-specimen share-card-specimen--role" aria-label="Вещий Ворон, первая четверть, 22 июля">
+                <img
+                  class="share-card-specimen__frame"
+                  src="../assets/ui/card-frames/approved/wyrd-card-frame-artifact.svg"
+                  alt=""
+                  aria-hidden="true"
+                />
+                <div class="share-card-specimen__media">
+                  <img
+                    src="../assets/images/cards/veshchiy_voron.webp"
+                    alt="Иллюстрация карты «Вещий Ворон»"
+                  />
+                </div>
+                <div class="share-card-specimen__identity">
+                  <h4>Вещий Ворон</h4>
+                  <div class="share-card-specimen__meta" aria-label="Первая четверть, 22 июля">
+                    <span class="share-card-specimen__phase">
+                      <span class="moon-icon-slot" data-moon-icon data-moon-type="fq" aria-hidden="true"></span>
+                      <span>Первая четверть</span>
+                    </span>
+                    <time datetime="2026-07-22">22 июля</time>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <div class="result-reveal-demo__reading">
+              <div class="result-reveal-demo__message" data-result-reveal-message>
+                <p class="component-label">Послание</p>
+                <p>Ответ приходит первым ясным знаком.</p>
+              </div>
+              <div class="result-reveal-demo__shadow" data-result-reveal-shadow>
+                <p class="component-label">Тень</p>
+                <p>То, что остаётся за краем увиденного.</p>
+              </div>
+            </div>
+          </div>
+          <p class="result-reveal-demo__status" role="status" aria-live="polite" data-result-reveal-status>
+            Готово к воспроизведению.
+          </p>
+        </article>
       </section>
 
       <section id="symbols" class="kit-section" aria-labelledby="symbols-title">

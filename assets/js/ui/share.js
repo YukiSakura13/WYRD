@@ -1,5 +1,5 @@
 import { getCardImage } from "./render-helpers.js";
-import { formatTraceDate, getMoonPhase } from "./moon.js";
+import { formatFullTraceDate, getMoonPhase } from "./moon.js";
 import { getDialogController } from "./dialog-controller.js";
 
 let isShareInProgress = false;
@@ -9,14 +9,17 @@ let cachedShareBlobPromise = null;
 let frameImagePromise = null;
 let saveScreenCleanupTimer = 0;
 
-const SHARE_WIDTH = 1024;
-const SHARE_HEIGHT = 1536;
+const SHARE_WIDTH = 1086;
+const SHARE_HEIGHT = 1448;
 const STORY_WIDTH = 1080;
 const STORY_HEIGHT = 1920;
 const CANVAS_TIMEOUT_MS = 8000;
 const ASSET_TIMEOUT_MS = 3500;
-const DEFAULT_RESULT_ILLUSTRATION_FADE_HEIGHT = 0.42;
 const FRAME_SRC = new URL("../../ui/card-frames/approved/wyrd-card-frame-artifact.svg", import.meta.url).href;
+
+const ARTIFACT_MEDIA_TOP = 0.115;
+const ARTIFACT_MEDIA_WIDTH = 0.615;
+const ARTIFACT_IDENTITY_BOTTOM = 0.0925;
 
 export function primeShareCard(reading) {
   const normalizedReading = normalizeReading(reading);
@@ -274,7 +277,7 @@ function showSaveScreenError(saveScreen, message = "Не удалось подг
   }
 }
 
-function generateStoryReadyPng(reading) {
+export function generateStoryReadyPng(reading) {
   if (!reading) {
     return Promise.reject(new Error("story render reading unavailable"));
   }
@@ -282,7 +285,6 @@ function generateStoryReadyPng(reading) {
   return prepareShareAssets(reading).then(function renderFromAssets(assets) {
     const palette = readPalette();
     const typography = readTypography();
-    const fadeRatio = readIllustrationFadeRatio();
     const cardCanvas = document.createElement("canvas");
     const storyCanvas = document.createElement("canvas");
     const cardContext = cardCanvas.getContext("2d");
@@ -297,17 +299,16 @@ function generateStoryReadyPng(reading) {
       throw new Error("story canvas context unavailable");
     }
 
-    drawShareCard(cardContext, assets, reading, palette, typography, fadeRatio);
+    drawShareCard(cardContext, assets, reading, palette, typography);
     drawStoryPoster(storyContext, cardCanvas, palette);
     return canvasToBlob(storyCanvas);
   });
 }
 
-function generateShareCardPng(reading) {
+export function generateShareCardPng(reading) {
   return prepareShareAssets(reading).then(function renderFromAssets(assets) {
     const palette = readPalette();
     const typography = readTypography();
-    const fadeRatio = readIllustrationFadeRatio();
     const canvas = document.createElement("canvas");
     canvas.width = SHARE_WIDTH;
     canvas.height = SHARE_HEIGHT;
@@ -317,57 +318,43 @@ function generateShareCardPng(reading) {
       throw new Error("canvas context unavailable");
     }
 
-    drawShareCard(context, assets, reading, palette, typography, fadeRatio);
+    drawShareCard(context, assets, reading, palette, typography);
     return canvasToBlob(canvas);
   });
 }
 
-function drawShareCard(context, assets, reading, palette, typography, fadeRatio) {
+function drawShareCard(context, assets, reading, palette, typography) {
   const width = SHARE_WIDTH;
   const height = SHARE_HEIGHT;
-  const cardX = 54;
-  const cardY = 28;
-  const cardWidth = width - cardX * 2;
-  const cardHeight = height - cardY * 2;
-  const radius = 34;
-  const artX = cardX + 92;
-  const artY = cardY + 142;
-  const artWidth = cardWidth - 184;
-  const artHeight = 850;
-  const artBottom = artY + artHeight;
-  const titleY = artBottom + 94;
-  const dividerY = titleY + 66;
-  const moonY = dividerY + 58;
+  const artWidth = width * ARTIFACT_MEDIA_WIDTH;
+  const artHeight = artWidth * (4 / 3);
+  const artX = (width - artWidth) / 2;
+  const artY = height * ARTIFACT_MEDIA_TOP;
+  const identityBottom = height * ARTIFACT_IDENTITY_BOTTOM;
+  const dateLineHeight = 54;
+  const phaseLineHeight = 50;
+  const metaRowGap = 14;
+  const identityGap = 27;
+  const titleLineHeight = 72;
+  const titleMaxWidth = width * 0.76;
+  const titleFontSize = fitSingleLineFontSize(context, reading.name, {
+    maxWidth: titleMaxWidth,
+    initialFontSize: 65,
+    minFontSize: 48,
+    fontFamily: typography.display,
+  });
+  const dateY = height - identityBottom - dateLineHeight / 2;
+  const phaseY = dateY - dateLineHeight / 2 - metaRowGap - phaseLineHeight / 2;
+  const titleY = phaseY - phaseLineHeight / 2 - identityGap - titleLineHeight / 2;
 
   context.clearRect(0, 0, width, height);
-
-  context.save();
-  context.shadowColor = "rgba(0, 0, 0, 0.72)";
-  context.shadowBlur = 28;
-  context.shadowOffsetY = 16;
-  context.fillStyle = "rgba(8, 8, 14, 0.86)";
-  drawRoundedRectPath(context, cardX, cardY, cardWidth, cardHeight, radius);
-  context.fill();
-  context.restore();
-
-  context.save();
-  clipRoundedRect(context, cardX, cardY, cardWidth, cardHeight, radius);
-
-  context.fillStyle = palette.darkBase;
-  context.fillRect(cardX, cardY, cardWidth, cardHeight);
-
-  const imageShell = context.createLinearGradient(0, cardY, 0, artBottom + 90);
-  imageShell.addColorStop(0, palette.darkBase);
-  imageShell.addColorStop(0.28, palette.darkElevated);
-  imageShell.addColorStop(1, palette.darkBase);
-  context.fillStyle = imageShell;
-  context.fillRect(cardX, cardY, cardWidth, artBottom + 90 - cardY);
+  drawArtifactBackground(context, { width, height });
 
   context.save();
   context.shadowColor = "rgba(0, 0, 0, 0.58)";
-  context.shadowBlur = 22;
-  context.shadowOffsetY = 14;
-  context.fillStyle = "rgba(242, 235, 221, 0.96)";
+  context.shadowBlur = 34;
+  context.shadowOffsetY = 16;
+  context.fillStyle = palette.parchmentBg;
   context.fillRect(artX, artY, artWidth, artHeight);
   context.restore();
 
@@ -380,184 +367,109 @@ function drawShareCard(context, assets, reading, palette, typography, fadeRatio)
   });
 
   context.save();
-  context.strokeStyle = "rgba(201, 161, 74, 0.28)";
-  context.lineWidth = 1.4;
+  context.strokeStyle = "rgba(225, 228, 225, 0.32)";
+  context.lineWidth = 3;
   context.strokeRect(artX + 0.5, artY + 0.5, artWidth - 1, artHeight - 1);
+  context.strokeStyle = "rgba(225, 228, 225, 0.06)";
+  context.lineWidth = 2;
+  context.strokeRect(artX + 4, artY + 4, artWidth - 8, artHeight - 8);
   context.restore();
-
-  const imageVignette = context.createRadialGradient(width / 2, artY + artHeight * 0.44, 120, width / 2, artY + artHeight * 0.44, 560);
-  imageVignette.addColorStop(0, "rgba(16,16,25,0)");
-  imageVignette.addColorStop(0.68, "rgba(16,16,25,0.03)");
-  imageVignette.addColorStop(1, "rgba(16,16,25,0.28)");
-  context.fillStyle = imageVignette;
-  context.fillRect(artX, artY, artWidth, artHeight);
-
-  const artBottomFade = context.createLinearGradient(0, artBottom - 96, 0, artBottom + 44);
-  artBottomFade.addColorStop(0, "rgba(16,16,25,0)");
-  artBottomFade.addColorStop(0.58, "rgba(16,16,25,0.18)");
-  artBottomFade.addColorStop(1, "rgba(16,16,25,0.62)");
-  context.fillStyle = artBottomFade;
-  context.fillRect(artX, artBottom - 96, artWidth, 140);
-
-  const lowerSurface = context.createLinearGradient(0, artBottom - 20, 0, cardY + cardHeight);
-  lowerSurface.addColorStop(0, "rgba(16,16,25,0.82)");
-  lowerSurface.addColorStop(0.22, palette.darkElevated);
-  lowerSurface.addColorStop(1, palette.darkBase);
-  context.fillStyle = lowerSurface;
-  context.fillRect(cardX, artBottom - 20, cardWidth, cardY + cardHeight - (artBottom - 20));
-
-  drawPerimeterVignette(context, {
-    width,
-    height,
-    topStrength: 0.2,
-    sideStrength: 0.2,
-    bottomStrength: 0.34,
-    cornerStrength: 0.22,
-    imageAreaHeight: artBottom,
-  });
 
   drawCenteredText(context, reading.name, {
     x: width / 2,
     y: titleY,
-    font: `400 56px ${typography.display}`,
+    font: `400 ${titleFontSize}px ${typography.display}`,
     color: palette.parchmentText,
-    maxWidth: cardWidth - 190,
-    lineHeight: 64,
     textAlign: "center",
   });
 
-  drawDivider(context, {
+  drawMoonMetaStacked(context, reading, {
     centerX: width / 2,
-    y: dividerY,
-    color: palette.gold,
-    width: 300,
-  });
-
-  drawMoonMeta(context, reading, {
-    x: width / 2,
-    y: moonY,
-    color: "rgba(201, 161, 74, 0.54)",
-    font: `500 18px ${typography.ui}`,
+    phaseY,
+    dateY,
+    color: palette.silverMuted,
+    dateColor: palette.textQuiet,
+    phaseFont: `400 42px ${typography.ui}`,
+    dateFont: `italic 400 44px ${typography.reading}`,
   });
 
   if (assets.frameImage) {
-    context.drawImage(assets.frameImage, cardX, cardY, cardWidth, cardHeight);
+    context.drawImage(assets.frameImage, 0, 0, width, height);
   }
-
-  context.restore();
 }
 
 function drawStoryPoster(context, cardCanvas, palette) {
   const width = STORY_WIDTH;
   const height = STORY_HEIGHT;
-  const cardWidth = 850;
+  const cardWidth = 900;
   const cardHeight = Math.round(cardWidth * (SHARE_HEIGHT / SHARE_WIDTH));
   const cardX = Math.round((width - cardWidth) / 2);
-  const cardY = 236;
-  const cardRadius = 34;
+  const cardY = Math.round((height - cardHeight) / 2);
 
   context.clearRect(0, 0, width, height);
 
   const baseGradient = context.createLinearGradient(0, 0, 0, height);
-  baseGradient.addColorStop(0, palette.darkElevated);
-  baseGradient.addColorStop(0.44, palette.darkBase);
-  baseGradient.addColorStop(1, "#090910");
+  baseGradient.addColorStop(0, "#11131b");
+  baseGradient.addColorStop(0.5, palette.darkBase);
+  baseGradient.addColorStop(1, "#050608");
   context.fillStyle = baseGradient;
   context.fillRect(0, 0, width, height);
 
-  drawStoryTexture(context, {
-    width,
-    height,
-    color: palette.gold,
-  });
-
-  const halo = context.createRadialGradient(width / 2, cardY + cardHeight * 0.4, 0, width / 2, cardY + cardHeight * 0.4, 620);
-  halo.addColorStop(0, "rgba(201,161,74,0.16)");
-  halo.addColorStop(0.36, "rgba(201,161,74,0.07)");
-  halo.addColorStop(0.72, "rgba(201,161,74,0.025)");
-  halo.addColorStop(1, "rgba(201,161,74,0)");
-  context.fillStyle = halo;
-  context.fillRect(0, 0, width, height);
+  const lightWell = context.createLinearGradient(0, cardY - 90, 0, cardY + cardHeight + 120);
+  lightWell.addColorStop(0, "rgba(178,197,211,0)");
+  lightWell.addColorStop(0.28, "rgba(178,197,211,0.035)");
+  lightWell.addColorStop(0.64, "rgba(178,197,211,0.055)");
+  lightWell.addColorStop(1, "rgba(178,197,211,0)");
+  context.fillStyle = lightWell;
+  context.fillRect(cardX - 70, cardY - 90, cardWidth + 140, cardHeight + 210);
 
   drawStoryCardShadow(context, {
     x: cardX,
     y: cardY,
     width: cardWidth,
     height: cardHeight,
-    radius: cardRadius,
-    gold: palette.gold,
   });
 
-  context.save();
-  clipRoundedRect(context, cardX, cardY, cardWidth, cardHeight, cardRadius);
   context.drawImage(cardCanvas, cardX, cardY, cardWidth, cardHeight);
-  context.restore();
-
-  context.save();
-  context.strokeStyle = "rgba(201,161,74,0.26)";
-  context.lineWidth = 1.4;
-  drawRoundedRectPath(context, cardX - 9, cardY - 9, cardWidth + 18, cardHeight + 18, cardRadius + 12);
-  context.stroke();
-  context.restore();
-
-  const lowerFade = context.createLinearGradient(0, height * 0.78, 0, height);
-  lowerFade.addColorStop(0, "rgba(9,9,16,0)");
-  lowerFade.addColorStop(1, "rgba(9,9,16,0.64)");
-  context.fillStyle = lowerFade;
-  context.fillRect(0, height * 0.78, width, height * 0.22);
-}
-
-function drawStoryTexture(context, options) {
-  const { width, height, color } = options;
-
-  context.save();
-  context.globalAlpha = 0.22;
-
-  const topGlow = context.createRadialGradient(width / 2, 0, 0, width / 2, 0, height * 0.62);
-  topGlow.addColorStop(0, "rgba(201,161,74,0.08)");
-  topGlow.addColorStop(1, "rgba(201,161,74,0)");
-  context.fillStyle = topGlow;
-  context.fillRect(0, 0, width, height);
-
-  context.strokeStyle = color;
-  context.globalAlpha = 0.08;
-  context.lineWidth = 1;
-  context.beginPath();
-  context.moveTo(140, 1540);
-  context.lineTo(404, 1540);
-  context.moveTo(676, 1540);
-  context.lineTo(940, 1540);
-  context.stroke();
-
-  drawCenteredText(context, "✦", {
-    x: width / 2,
-    y: 1540,
-    font: `400 24px ${readTypography().ui}`,
-    color,
-  });
-
-  context.restore();
 }
 
 function drawStoryCardShadow(context, options) {
-  const { x, y, width, height, radius, gold } = options;
+  const { x, y, width, height } = options;
 
   context.save();
   context.shadowColor = "rgba(0,0,0,0.72)";
   context.shadowBlur = 42;
   context.shadowOffsetY = 24;
   context.fillStyle = "rgba(0,0,0,0.72)";
-  drawRoundedRectPath(context, x, y, width, height, radius);
-  context.fill();
+  context.fillRect(x, y, width, height);
   context.restore();
 
   context.save();
-  context.shadowColor = "rgba(201,161,74,0.16)";
-  context.shadowBlur = 26;
-  context.strokeStyle = "rgba(201,161,74,0.18)";
-  context.lineWidth = 2;
-  drawRoundedRectPath(context, x - 4, y - 4, width + 8, height + 8, radius + 8);
-  context.stroke();
+  context.shadowColor = "rgba(178,197,211,0.14)";
+  context.shadowBlur = 30;
+  context.strokeStyle = "rgba(225,228,225,0.08)";
+  context.lineWidth = 1;
+  context.strokeRect(x - 1, y - 1, width + 2, height + 2);
+  context.restore();
+}
+
+function drawArtifactBackground(context, options) {
+  const { width, height } = options;
+  const base = context.createLinearGradient(0, 0, 0, height);
+  base.addColorStop(0, "#11131b");
+  base.addColorStop(0.58, "#08090d");
+  base.addColorStop(1, "#0d0e14");
+  context.fillStyle = base;
+  context.fillRect(0, 0, width, height);
+
+  context.save();
+  context.translate(width / 2, height * 0.18);
+  context.scale(1, 0.76);
+  const light = context.createRadialGradient(0, 0, 0, 0, 0, width * 0.52);
+  light.addColorStop(0, "rgba(225,228,225,0.055)");
+  light.addColorStop(1, "rgba(225,228,225,0)");
+  context.fillStyle = light;
+  context.fillRect(-width / 2, -height, width, height * 2);
   context.restore();
 }
 
@@ -575,33 +487,6 @@ function prepareShareAssets(reading) {
       frameImage: result[2],
     };
   });
-}
-
-function readIllustrationFadeRatio() {
-  const shareCard = document.getElementById("share-card");
-  if (!shareCard) {
-    return DEFAULT_RESULT_ILLUSTRATION_FADE_HEIGHT;
-  }
-
-  const style = getComputedStyle(shareCard);
-  const rawValue = style.getPropertyValue("--result-illustration-fade-height").trim();
-  if (!rawValue) {
-    return DEFAULT_RESULT_ILLUSTRATION_FADE_HEIGHT;
-  }
-
-  if (rawValue.endsWith("%")) {
-    const numericValue = Number.parseFloat(rawValue.slice(0, -1));
-    if (Number.isFinite(numericValue) && numericValue > 0) {
-      return Math.max(0.1, Math.min(0.9, numericValue / 100));
-    }
-  }
-
-  const ratio = Number.parseFloat(rawValue);
-  if (Number.isFinite(ratio) && ratio > 0) {
-    return Math.max(0.1, Math.min(0.9, ratio));
-  }
-
-  return DEFAULT_RESULT_ILLUSTRATION_FADE_HEIGHT;
 }
 
 function loadFrameImage() {
@@ -665,18 +550,17 @@ function readPalette() {
     darkElevated: readCssValue(rootStyle, "--color-bg-elevated", "#131320"),
     parchmentBg: "rgb(242, 235, 221)",
     parchmentText: readCssValue(rootStyle, "--parchment", "#f0e8d8"),
-    parchmentMuted: "rgba(240, 232, 216, 0.74)",
-    archiveGold: "rgba(154, 143, 122, 0.72)",
-    gold: readCssValue(rootStyle, "--gold", "#c9a14a"),
-    goldSoft: "rgba(201, 161, 74, 0.42)",
+    silverMuted: "rgba(238, 229, 212, 0.74)",
+    textQuiet: "rgba(238, 229, 212, 0.58)",
   };
 }
 
 function readTypography() {
   const rootStyle = getComputedStyle(document.documentElement);
   return {
-    display: readCssValue(rootStyle, "--display-font", 'Georgia, "Times New Roman", serif'),
+    display: "Forum, Georgia, serif",
     ui: readCssValue(rootStyle, "--ui-font", 'Georgia, "Times New Roman", serif'),
+    reading: '"Cormorant Garamond", Georgia, serif',
   };
 }
 
@@ -711,27 +595,31 @@ function drawHeroImage(context, image, rect) {
   context.drawImage(image, drawX, drawY, drawWidth, drawHeight);
 }
 
-function drawMoonMeta(context, reading, options) {
-  const { x, y, color, font } = options;
+function drawMoonMetaStacked(context, reading, options) {
+  const { centerX, phaseY, dateY, color, dateColor, phaseFont, dateFont } = options;
   const date = new Date(reading.createdAt || Date.now());
   const moon = getMoonPhase(date);
-  const text = `${capitalizeFirst(moon.name)} · ${formatTraceDate(date)}`;
-  const iconSize = 18;
-  const gap = 10;
+  const phaseText = capitalizeFirst(moon.name);
+  const dateText = formatFullTraceDate(date);
+  const iconSize = 61;
+  const gap = 23;
 
   context.save();
-  context.font = font;
+  context.font = phaseFont;
   context.fillStyle = color;
   context.textAlign = "left";
   context.textBaseline = "middle";
 
-  const tracking = 1.2;
-  const textWidth = measureTrackedTextWidth(context, text, tracking);
+  const textWidth = context.measureText(phaseText).width;
   const totalWidth = iconSize + gap + textWidth;
-  const startX = x - totalWidth / 2;
+  const startX = centerX - totalWidth / 2;
 
-  drawMoonGlyph(context, moon.type, startX + iconSize / 2, y, iconSize, color);
-  drawTrackedTextFromLeft(context, text, startX + iconSize + gap, y, tracking);
+  drawMoonGlyph(context, moon.type, startX + iconSize / 2, phaseY, iconSize, color);
+  context.fillText(phaseText, startX + iconSize + gap, phaseY);
+
+  context.font = dateFont;
+  context.fillStyle = dateColor;
+  context.fillText(dateText, startX + iconSize + gap, dateY);
   context.restore();
 }
 
@@ -899,6 +787,19 @@ function fitParagraph(text, options) {
     fontSize: minFontSize,
     lineHeight: Math.round(minFontSize * lineHeightRatio),
   };
+}
+
+function fitSingleLineFontSize(context, text, options) {
+  const { maxWidth, initialFontSize, minFontSize, fontFamily } = options;
+
+  for (let fontSize = initialFontSize; fontSize >= minFontSize; fontSize -= 1) {
+    context.font = `400 ${fontSize}px ${fontFamily}`;
+    if (context.measureText(text).width <= maxWidth) {
+      return fontSize;
+    }
+  }
+
+  return minFontSize;
 }
 
 function drawParagraph(context, text, options) {

@@ -4,7 +4,7 @@ import { AVATAR_OPTIONS, PRONOUN_OPTIONS, ZODIAC_OPTIONS } from "../data/persona
 import { SPIRIT_BOOK_PAGES } from "../data/spirit-book.js";
 import { createSpreadRenderer } from "./render-spread.js";
 import { getCardImage } from "./render-helpers.js";
-import { createMoonIcon, formatTraceDate, getMoonPhase } from "./moon.js";
+import { createMoonIcon, formatFullTraceDate, formatTraceDate, getMoonPhase } from "./moon.js";
 import { primeShareCard } from "./share.js";
 import { getDialogController } from "./dialog-controller.js";
 
@@ -135,6 +135,9 @@ export function createRenderer(elements) {
   let readingRevealTimers = [];
   let lastReadingId = null;
   let previousScene = null;
+  const readingMotionPreference = elements.body?.ownerDocument?.defaultView?.matchMedia?.(
+    "(prefers-reduced-motion: reduce)",
+  );
   const dialogs = getDialogController();
   const spreadRenderer = createSpreadRenderer(elements);
   const cardsById = new Map(CARDS.map((card) => [card.id, card]));
@@ -1304,26 +1307,36 @@ export function createRenderer(elements) {
     });
     readingRevealTimers = [];
     elements.cardBox?.classList.remove("is-visible");
+    elements.cardBox?.classList.remove("is-reveal-glint");
     elements.cardMessage?.classList.remove("is-visible");
     elements.cardShadowWrap?.classList.remove("is-visible");
   }
 
   function startReadingReveal() {
     resetReadingReveal();
+
+    if (readingMotionPreference?.matches) {
+      elements.cardBox?.classList.add("is-visible");
+      elements.cardMessage?.classList.add("is-visible");
+      elements.cardShadowWrap?.classList.add("is-visible");
+      return;
+    }
+
     readingRevealTimers.push(
       window.setTimeout(function revealCard() {
         elements.cardBox?.classList.add("is-visible");
+        elements.cardBox?.classList.add("is-reveal-glint");
       }, 40),
     );
     readingRevealTimers.push(
       window.setTimeout(function revealMessage() {
         elements.cardMessage?.classList.add("is-visible");
-      }, 420),
+      }, 840),
     );
     readingRevealTimers.push(
       window.setTimeout(function revealShadow() {
         elements.cardShadowWrap?.classList.add("is-visible");
-      }, 980),
+      }, 1240),
     );
   }
 
@@ -1334,12 +1347,13 @@ export function createRenderer(elements) {
 
     if (question) {
       elements.resultQuestionLabel.hidden = false;
+      elements.resultQuestionLabel.textContent = "Твой вопрос";
       elements.resultQuestionText.textContent = question;
       elements.resultQuestion.classList.remove("is-muted");
       return;
     }
 
-    elements.resultQuestionLabel.hidden = false;
+    elements.resultQuestionLabel.hidden = true;
     elements.resultQuestionText.textContent = "Тайна приоткроется сама...";
     elements.resultQuestion.classList.add("is-muted");
   }
@@ -1360,7 +1374,7 @@ export function createRenderer(elements) {
     const traceDate = document.createElement("time");
     traceDate.className = "card-moon-date";
     traceDate.dateTime = date.toISOString();
-    traceDate.textContent = formatTraceDate(date);
+    traceDate.textContent = formatFullTraceDate(date);
 
     elements.cardMoonMeta.replaceChildren(phase, traceDate);
   }

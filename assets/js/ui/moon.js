@@ -1,4 +1,19 @@
 const GOLD = "#c9a14a";
+const COMPACT_MONTHS = ["янв", "фев", "мар", "апр", "мая", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"];
+const FULL_MONTHS = [
+  "января",
+  "февраля",
+  "марта",
+  "апреля",
+  "мая",
+  "июня",
+  "июля",
+  "августа",
+  "сентября",
+  "октября",
+  "ноября",
+  "декабря",
+];
 let moonIconId = 0;
 
 export function getMoonPhase(date) {
@@ -34,9 +49,11 @@ export function getMoonPhase(date) {
 }
 
 export function formatTraceDate(date) {
-  const months = ["янв", "фев", "мар", "апр", "мая", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"];
+  return `${date.getDate()}\u00a0${COMPACT_MONTHS[date.getMonth()]}`;
+}
 
-  return `${date.getDate()}\u00a0${months[date.getMonth()]}`;
+export function formatFullTraceDate(date) {
+  return `${date.getDate()}\u00a0${FULL_MONTHS[date.getMonth()]}`;
 }
 
 export function createMoonIcon(type) {

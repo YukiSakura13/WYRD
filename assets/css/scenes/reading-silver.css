@@ -865,6 +865,20 @@
   color: var(--wyrd-text-quiet);
 }
 
+#result .result-question-label {
+  color: rgba(238, 229, 212, 0.42);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+#result .result-question-text {
+  color: rgba(243, 236, 221, 0.96);
+  font-size: 1.0625rem;
+  font-weight: 500;
+}
+
 /* Single-card result — exact Artifact anatomy from the live kit. */
 
 #result {
@@ -873,8 +887,31 @@
 }
 
 #result .result-card-wrap {
+  position: relative;
+  isolation: isolate;
   width: 100%;
   padding: 0;
+}
+
+#result .result-card-wrap::before {
+  position: absolute;
+  top: 0.45rem;
+  left: 50%;
+  z-index: 0;
+  width: min(112%, 23rem);
+  aspect-ratio: 0.72;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(178, 197, 211, 0) 0%,
+      rgba(178, 197, 211, 0.035) 24%,
+      rgba(178, 197, 211, 0.055) 62%,
+      rgba(178, 197, 211, 0) 100%
+    );
+  content: "";
+  filter: blur(18px);
+  pointer-events: none;
+  transform: translateX(-50%);
 }
 
 #result .card-box {
@@ -890,19 +927,33 @@
     radial-gradient(circle at 50% 18%, rgba(225, 228, 225, 0.055), transparent 42%),
     linear-gradient(180deg, #11131b, #08090d 58%, #0d0e14);
   box-shadow:
-    0 24px 54px rgba(0, 0, 0, 0.45),
-    0 0 0 1px rgba(225, 228, 225, 0.08);
+    12px 28px 52px rgba(0, 0, 0, 0.58),
+    0 34px 56px -30px rgba(178, 197, 211, 0.2),
+    0 0 0 1px rgba(225, 228, 225, 0.12);
   opacity: 0;
-  transform: translateY(1rem);
+  transform: translateY(2px);
   filter: none;
   transition:
-    opacity 800ms cubic-bezier(0.77, 0, 0.175, 1),
-    transform 800ms cubic-bezier(0.77, 0, 0.175, 1);
+    opacity 800ms var(--ease-out-strong),
+    transform 800ms var(--ease-out-strong);
 }
 
-#result .card-box::before,
-#result .card-box::after {
+#result .card-box::before {
   display: none;
+}
+
+#result .card-box::after {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: block;
+  background: var(--wyrd-silver-bright);
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  clip-path: polygon(-18% 0, -5% 0, 15% 100%, 2% 100%);
+  -webkit-mask: url("../../ui/card-frames/approved/wyrd-card-frame-artifact.svg") center / 100% 100% no-repeat;
+  mask: url("../../ui/card-frames/approved/wyrd-card-frame-artifact.svg") center / 100% 100% no-repeat;
 }
 
 #result .card-box.is-visible {
@@ -910,6 +961,31 @@
   transform: translateY(0);
   filter: none;
   animation: none;
+}
+
+#result .card-box.is-reveal-glint::after {
+  animation: wyrd-result-frame-glint 800ms var(--ease-out-strong) 80ms both;
+}
+
+@keyframes wyrd-result-frame-glint {
+  0% {
+    clip-path: polygon(-18% 0, -5% 0, 15% 100%, 2% 100%);
+    opacity: 0;
+  }
+
+  22% {
+    opacity: 0.62;
+  }
+
+  72% {
+    clip-path: polygon(85% 0, 98% 0, 118% 100%, 105% 100%);
+    opacity: 0.48;
+  }
+
+  100% {
+    clip-path: polygon(85% 0, 98% 0, 118% 100%, 105% 100%);
+    opacity: 0;
+  }
 }
 
 #result .card-frame {
@@ -936,9 +1012,11 @@
   aspect-ratio: 3 / 4;
   padding: 0;
   overflow: hidden;
-  border: 1px solid rgba(225, 228, 225, 0.24);
+  border: 1px solid rgba(225, 228, 225, 0.32);
   background: var(--wyrd-bone-card-surface);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.28);
+  box-shadow:
+    0 16px 34px rgba(0, 0, 0, 0.32),
+    inset 0 0 0 1px rgba(225, 228, 225, 0.06);
   transform: translateX(-50%);
 }
 
@@ -966,7 +1044,7 @@
   z-index: 2;
   display: grid;
   justify-items: center;
-  gap: 0.31rem;
+  gap: 0.5rem;
   margin: 0;
   padding: 0;
   text-align: center;
@@ -991,7 +1069,7 @@
   justify-content: center;
   justify-items: start;
   column-gap: var(--moon-metadata-gap);
-  row-gap: 0.08rem;
+  row-gap: 0.25rem;
   margin: 0;
   color: var(--wyrd-bone-muted);
   font-family: Manrope, Arial, sans-serif;
@@ -1012,21 +1090,64 @@
   filter: none;
 }
 
+#result .card-moon-meta svg [fill="#c9a14a"] {
+  fill: var(--wyrd-silver);
+}
+
+#result .card-moon-meta svg [stroke="#c9a14a"] {
+  stroke: var(--wyrd-silver-bright);
+}
+
+#result .card-moon-meta svg [fill="#12121c"] {
+  fill: var(--wyrd-night);
+}
+
 #result .card-moon-date {
   grid-column: 2;
   grid-row: 2;
   justify-self: start;
+  color: var(--wyrd-text-quiet);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 0.82rem;
+  font-style: italic;
+  font-variant: normal;
+  font-variant-caps: normal;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  text-align: left;
+  text-transform: none;
 }
 
 #result .result-card-actions {
-  width: min(100%, 20rem);
+  width: min(100%, 17rem);
   margin: 1rem auto 0;
 }
 
+#result .wyrd-utility-action {
+  border-color: rgba(205, 209, 207, 0.4);
+  color: rgba(231, 228, 219, 0.86);
+  box-shadow:
+    inset 0 1px 0 rgba(225, 228, 225, 0.03),
+    inset 0 -8px 16px rgba(0, 0, 0, 0.14),
+    0 7px 16px rgba(0, 0, 0, 0.19);
+}
+
+#result .wyrd-utility-action:hover:not(:disabled),
+#result .wyrd-utility-action:focus-visible {
+  border-color: var(--control-silver-line-active);
+  color: var(--wyrd-text-action-active);
+  box-shadow:
+    inset 0 1px 0 rgba(225, 228, 225, 0.07),
+    0 0 14px rgba(225, 228, 225, 0.08),
+    0 8px 18px rgba(0, 0, 0, 0.24);
+}
+
 #result .result-interpretation {
-  margin: 1.75rem 0 0;
+  width: min(100%, 20rem);
+  margin: 1.75rem auto 0;
   padding: 0 0 0 1rem;
-  border-left: 1px solid rgba(225, 228, 225, 0.32);
+  border-left: 1px solid rgba(225, 228, 225, 0.26);
   background: transparent;
   box-shadow: none;
 }
@@ -1055,9 +1176,7 @@
 
 #result .card-msg,
 #result .card-msg.is-compact,
-#result .card-msg.is-condensed,
-#result .card-shd,
-#result .card-shd.is-condensed-shadow {
+#result .card-msg.is-condensed {
   color: var(--wyrd-bone-text);
   font-family: "Cormorant Garamond", Georgia, serif;
   font-size: 1.15rem;
@@ -1065,14 +1184,23 @@
   line-height: 1.55;
 }
 
-#result .card-shd {
-  color: var(--wyrd-bone-muted);
+#result .card-shd,
+#result .card-shd.is-condensed-shadow {
+  color: rgba(238, 229, 212, 0.7);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1rem;
+  font-style: normal;
+  line-height: 1.5;
+}
+
+#result .card-shadow-block .lbl {
+  color: var(--wyrd-text-quiet);
 }
 
 #result .card-msg,
 #result .card-shd-wrap {
   opacity: 0;
-  transform: translateY(0.75rem);
+  transform: translateY(4px);
   filter: none;
   transition:
     opacity var(--dur-slow) var(--ease-out-strong),
@@ -1087,17 +1215,23 @@
 }
 
 #result .hook-block {
+  width: min(100%, 20rem);
   gap: 0.75rem;
-  margin-top: 1.75rem;
+  margin: 1.75rem auto 0;
 }
 
 #result .hook-copy {
-  max-width: 23rem;
+  max-width: 20rem;
   margin: 0 auto 0.5rem;
   color: var(--wyrd-text-secondary);
   font-family: "Cormorant Garamond", Georgia, serif;
   font-size: 1rem;
   line-height: 1.5;
+}
+
+#result .hook-cta-wrap {
+  width: 100%;
+  padding: 0;
 }
 
 /* Three/five-card spread — Quiet media roles and the approved Sheet. */
@@ -1499,7 +1633,8 @@ body.has-open-dialog {
   #deck-wrap .deck-atmosphere,
   #deck-wrap .wyrd-deck-artifact::before,
   #deck-wrap .wyrd-deck-artifact::after,
-  #deck-wrap .wyrd-deck-artifact__face::before {
+  #deck-wrap .wyrd-deck-artifact__face::before,
+  #result .card-box::after {
     display: none;
   }
 
@@ -1570,6 +1705,17 @@ body.has-open-dialog {
   .spread-card-modal-backdrop,
   .spread-card-modal-panel {
     transition: none;
+  }
+
+  #result .card-box,
+  #result .card-msg,
+  #result .card-shd-wrap {
+    transform: none;
+  }
+
+  #result .card-box::after {
+    display: none;
+    animation: none !important;
   }
 
   #spread-result .spread-card {

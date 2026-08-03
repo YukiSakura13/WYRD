@@ -194,6 +194,37 @@ function createMoonIcon(type) {
   cardReveal?.addEventListener("click", toggleCardReveal);
   cardRevealTrigger?.addEventListener("click", toggleCardReveal);
 
+  const resultRevealDemo = document.querySelector("[data-result-reveal-demo]");
+  const resultRevealTrigger = document.querySelector("[data-result-reveal-trigger]");
+  const resultRevealStatus = document.querySelector("[data-result-reveal-status]");
+  const resultRevealMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let resultRevealTimer = 0;
+
+  function replayResultReveal() {
+    if (!resultRevealDemo) return;
+
+    window.clearTimeout(resultRevealTimer);
+    resultRevealDemo.classList.remove("is-playing");
+    resultRevealDemo.classList.add("is-reset");
+    void resultRevealDemo.offsetWidth;
+    resultRevealDemo.classList.remove("is-reset");
+    resultRevealDemo.classList.add("is-playing");
+
+    if (resultRevealStatus) {
+      resultRevealStatus.textContent = resultRevealMotion.matches
+        ? "Reduced motion: финальное состояние показано сразу."
+        : "Артефакт раскрывается; затем появляются Послание и Тень.";
+    }
+
+    resultRevealTimer = window.setTimeout(() => {
+      if (resultRevealStatus) {
+        resultRevealStatus.textContent = "Раскрытие завершено; сцена полностью неподвижна.";
+      }
+    }, resultRevealMotion.matches ? 80 : 1600);
+  }
+
+  resultRevealTrigger?.addEventListener("click", replayResultReveal);
+
   const questionInput = document.querySelector("[data-question-input]");
   const questionCount = document.querySelector("[data-question-count]");
   const questionStatus = document.querySelector("[data-question-status]");

@@ -72,6 +72,8 @@ The interactive documentation now includes the useful systems retained from the 
 - interactive Loading, Success, Error and Empty feedback states;
 - Artifact, Quiet and Trace card roles with unfiltered warm artwork;
 - an on-demand Motion Lab for `140/220/320/800ms` plus reduced-motion preview.
+- a replayable Result Reveal specimen for Artifact → Message → Shadow, including
+  the one-shot partial frame glint and immediate reduced-motion final state.
 
 This table records architecture only. The generic runtime families intentionally define no surface, frame, shadow, ornament or component radius; those properties belong to a later approved WYRD theme layer.
 
@@ -115,9 +117,9 @@ This table records architecture only. The generic runtime families intentionally
 | `.deck-question-shell`, `.deck-question-input` | Field | Centered Silver Field capped at 320px and narrowed with the Artifact on constrained heights: rectangular double contour, Bone text, continuous target orbit, no focus or typing restart. |
 | `.deck-card` | Hero Artifact | 3:4 Raven object uses `min(86vw, 43svh, 344px)` with a compact short-height rule and 17–24px real Field gap; directional contact shadow and distinct rear edges establish resting depth; rare 7200ms 2px idle answer and partial silver edge glint, measured 800ms intent thread, slight stack separation, 1px press, no scale pulse or full halo. |
 | `.deck-touch-copy` | Text/Ghost Action | Secondary draw affordance. |
-| `.share-card.card-box`, `.card-frame` | Hero Artifact / Media Frame | Result oracle card keeps the existing share anatomy: dark artifact, warm unfiltered image window, card name, moon phase, and date beneath the approved transparent symmetric frame. |
-| `.result-question` | Feedback / Quiet info | Question context; no heavy card. |
-| `.card-message-block`, `.card-shadow-block` | Quiet content blocks | Interpretation sections, not new card frames. |
+| `.share-card.card-box`, `.card-frame` | Hero Artifact / Media Frame | Result oracle card and native Share PNG are one canonical `1086×1448` Artifact: dark surface, unfiltered `3:4` image at `61.5%` width / `11.5%` top, identity at `9.25%` bottom, `8px` title-to-meta and `4px` phase-to-date rhythm, silver moon phase and full date beneath the approved transparent symmetric frame. A static `4-6%` cold light-well and directional contact shadow belong to the surrounding space, not to a glowing frame. Its one-shot Result Reveal is `800ms`, settles by at most `2px`, and carries one partial frame glint before becoming fully still. Story export contains this same Artifact and adds no gold export-only chrome. |
+| `.result-question` | Feedback / Quiet info | Question context; no heavy card. For a real question, the sentence-case label is `12px / 400 / 42%` with no added tracking and stays perceptually quieter than the `17px / 500 / 96%` actual question. With no typed question the label is hidden and only the quiet fallback remains beside the rail. |
+| `.card-message-block`, `.card-shadow-block` | Quiet content blocks | Interpretation sections share one `1px / 26%` cold-silver rail with a `16px` inset, not a new card frame. Result order is Artifact → Message → Shadow; Shadow follows Message with a short stagger and is not reduced to disabled-like contrast. |
 | `.hook-btn.wyrd-action-frame--hero` | Hero Action | Longest approved frame for «Раскрыть три карты», the principal oracle expansion. |
 | `[data-action="share-card"].wyrd-utility-action` | Utility Action | Implemented approved utility pattern: familiar network Share icon + label + thin silver contour, without a trailing diamond. Loading text does not alter the outer dimensions. |
 | `.spread-continuation-btn.wyrd-action-frame--secondary` | Secondary Action | Continues the reading with one less ornament layer than Hero. |

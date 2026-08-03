@@ -69,7 +69,46 @@ Current relatives:
 
 The canonical card frame is a transparent `1086×1448` SVG overlay. Its left half is the restored master geometry and its right half is an exact mirror. It never owns the card illustration or the Bone surface beneath it. Source art remains unfiltered; silver is interface chrome, not an image treatment.
 
-The shareable result card keeps the existing product anatomy instead of becoming a full-bleed beige poster: dark outer artifact, warm unfiltered image window, card name, moon phase, and date. The UI Kit documents that structure; it does not replace the current share composition with a new card format.
+The shareable result card is the Result Artifact itself, not a second export-only composition: exact `1086×1448` dark outer artifact, warm unfiltered `3:4` image window, card name, silver moon phase, and full date. Native Share exports that same canonical Artifact at `1086×1448`; the story poster contains the same Artifact without gold export-only dividers, metadata, frames, or halo.
+
+#### Result Reveal
+
+The one-card Result uses one ordered reveal instead of several competing
+entrances:
+
+- the Artifact appears once over `800ms` with `Reveal`, settles by no more than
+  `2px`, and never scales;
+- one `700-900ms` cold-silver glint reveals only a moving fragment of the
+  existing Artifact Frame; it does not create a halo or redraw the frame;
+- Message starts only after the Artifact has settled; Shadow follows Message
+  with a short `80-140ms` stagger;
+- after the sequence completes, Artifact, Message and Shadow remain completely
+  still;
+- when a real question exists, the Result question label is sentence case at
+  the `12px` readability floor, `400` weight, no added tracking and about `42%`
+  Bone opacity; the actual question uses `17px`, `500` weight and about `96%`
+  Bone opacity; when no question was entered, the label is hidden and only the
+  whisper `Тайна приоткроется сама...` remains beside the existing rail;
+- the authored `3:4` image remains unfiltered and uncropped, but the Result
+  media window occupies `61.5%` of the Artifact width at `11.5%` from the top;
+  the identity rests at `9.25%` from the bottom; title-to-metadata uses about
+  `8px` and phase-to-date about `4px` at runtime size;
+- the media edge is material rather than luminous: one cold `1px` edge, an
+  inset hairline and a short contact shadow; no new inner ornament or halo;
+- the whole Artifact sits in one static vertical cold light-well at `4-6%`
+  intensity with a directional contact shadow; the frame itself does not glow
+  or pulse;
+- Message and Shadow share one `1px` cold-silver interpretation rail at about
+  `26%` opacity with `16px` internal inset; the rail groups the reading without
+  becoming a card or changing the shared `20rem` Result axis;
+- Result Share keeps the canonical Utility Action geometry but its resting
+  silver is approximately `10-15%` quieter than its hover/focus material;
+- `prefers-reduced-motion` skips translation, glint and staged delays and shows
+  the final readable state immediately.
+
+The Result Reveal is presentation only. It does not make the Result Artifact an
+interactive control. Hover, focus and pressed affordances belong to the
+Artifact only after a real card-detail action owns it.
 
 ### Quiet Frame
 
@@ -422,6 +461,8 @@ Rules:
 - `800ms` only for rare ritual reveal;
 - `Breath` invites attention to one primary target, then returns to calm;
 - `Reveal` belongs only to a rare card appearance and uses the `800ms` ritual token;
+- Result Reveal orders Artifact → Message → Shadow, then returns to complete
+  stillness; its frame glint runs once and never becomes an idle loop;
 - `Drift` moves only ambient signs by a few pixels and never moves authored card art;
 - `Success` reveals the Oracle sign and line once, then stops;
 - atmospheric loops: `4-20s`; continuous control motion is reserved for the question-field target spark;
