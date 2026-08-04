@@ -84,7 +84,7 @@ def replace_kit_build_markers(path: Path) -> None:
 def version_relative_js_imports(path: Path) -> None:
     text = path.read_text(encoding="utf-8")
     text = re.sub(
-        r'((?:from|import)\s*[("\']\s*)(\./|\.\./)([^"\']+?\.js)(\s*["\'])',
+        r'((?:from|import)\s*(?:\(\s*)?["\']\s*)(\./|\.\./)([^"\']+?\.js)(\s*["\'])',
         lambda match: f"{match.group(1)}{match.group(2)}{match.group(3)}?v={BUILD_ID}{match.group(4)}",
         text,
     )

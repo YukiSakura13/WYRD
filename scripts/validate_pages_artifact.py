@@ -135,6 +135,12 @@ def main() -> None:
         'id="implementation"' in kit_html,
         "Silver UI Kit implementation handoff is missing",
     )
+    kit_js = (DIST / "docs/wyrd-ui-kit.js").read_text(encoding="utf-8")
+    ensure_versioned_reference(
+        kit_js,
+        "../assets/js/ui/cover-cta.js",
+        build_id,
+    )
 
     print(f"Artifact validation passed for build {build_id}")
 
