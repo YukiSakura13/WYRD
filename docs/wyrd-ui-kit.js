@@ -124,6 +124,25 @@ function createMoonIcon(type) {
     });
   });
 
+  const coverInvitation = document.querySelector("[data-cover-invitation]");
+  coverInvitation?.addEventListener("click", () => {
+    if (status) {
+      status.textContent = "Проверено приглашение: Войти в лес";
+    }
+  });
+
+  if (coverInvitation && window.location.protocol !== "file:") {
+    import("../assets/js/ui/cover-cta.js")
+      .then(({ createCoverCtaAnimation }) => {
+        createCoverCtaAnimation(coverInvitation);
+      })
+      .catch(() => {
+        if (status) {
+          status.textContent = "Статическая геометрия доступна; motion-модуль не загрузился.";
+        }
+      });
+  }
+
   document.querySelectorAll("[data-action-family]").forEach((filter) => {
     filter.addEventListener("click", () => {
       const family = filter.dataset.actionFamily;

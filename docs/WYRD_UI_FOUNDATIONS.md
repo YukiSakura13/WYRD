@@ -181,12 +181,20 @@ The shared interaction contract is implemented in `assets/css/components/control
 | Pager Icon Button | `.ui-pager-button` | `48px` circle; short SVG chevron |
 | Page Choice | `.ui-page-choice` | `44px` hit area around a quiet dot |
 | Action Button | `.ui-action` | `52px` minimum height; role modifiers |
+| Cover Invitation | `.wyrd-cover-invitation` | `60px` minimum height; full Hero ornament; one Cover owner |
 | Utility Action | `.wyrd-utility-action` | `52px` minimum height; familiar icon + label; no ritual ornament |
 | Row Action | `.ui-row-action` | full-width action; `68px` minimum height |
 | Choice Control | `.ui-choice` | `44px` minimum target; selected state is not color-only |
 | Card Action | `.ui-card-action` | full semantic card action; art remains unfiltered |
 
-Action role modifiers are `.ui-action--primary`, `.ui-action--secondary`, `.ui-action--quiet`, and `.ui-action--destructive`. The approved folklore-silver visual family is applied through the explicit `.wyrd-action-frame` opt-in and its `--hero`, `--secondary`, `--compact`, and `--quiet` modifiers. The oracle result → spread proof cluster is the first runtime application; other screens retain their aliases until they are migrated and checked in context.
+Action role modifiers are `.ui-action--primary`, `.ui-action--secondary`, `.ui-action--quiet`, and `.ui-action--destructive`. The approved folklore-silver visual family is applied through the explicit `.wyrd-action-frame` opt-in and its `--hero`, `--secondary`, `--compact`, and `--quiet` modifiers. The Cover Invitation is the only active full-ornament invitation: `.wyrd-cover-invitation` reuses the Hero asset with the canonical breath, contained fireflies, magnetic pointer response, focus, press and reduced-motion behavior.
+
+The reading completion hierarchy is fixed:
+
+- single-card result → Secondary / Reduced «Раскрыть три карты» + unframed quiet «Новый вопрос»;
+- three-card result → the same Secondary / Reduced visual for «Раскрыть пять карт» + unframed quiet «Новый вопрос»;
+- five-card result → only the unframed quiet «Новый вопрос»;
+- the ornamented Quiet / Minimal frame remains in the family for future contextual actions, but it does not own the reading reset.
 
 The visual ladder uses one continuous frame and one mirrored side construction:
 
@@ -465,7 +473,7 @@ Rules:
   stillness; its frame glint runs once and never becomes an idle loop;
 - `Drift` moves only ambient signs by a few pixels and never moves authored card art;
 - `Success` reveals the Oracle sign and line once, then stops;
-- atmospheric loops: `4-20s`; continuous control motion is reserved for the question-field target spark;
+- atmospheric loops: `4-20s`; continuous control motion is reserved for the question-field target spark and the one Cover Invitation (`6.8s` breath/trace plus contained fireflies);
 - pressed state: up to `1px` for navigation controls and up to `2px` for deep artifacts;
 - no jumpy bounce;
 - no attention-grabbing neon glow;
@@ -562,6 +570,11 @@ Layout is a shared component contract, not a per-screen decoration.
 The first runtime proof is the reading cluster: deck, single-card result and
 three/five-card spread. Their content may differ, but the Back axis and header
 identity must not move between steps.
+
+All four reading surfaces share the same cold scene background: a restrained
+upper radial light over `#0b0d12 → #050608`. Legacy scene fog and stars are
+suppressed for Deck, Result and both Spread states; local content may add only
+the already approved object-level depth layers.
 
 ### Responsive Grid
 

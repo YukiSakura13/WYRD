@@ -54,11 +54,20 @@ export function createSpreadRenderer(elements) {
       image.alt = card.name;
       image.classList.toggle("is-empty", !card.image);
 
-      const srRole = document.createElement("span");
-      srRole.className = "sr-only";
-      srRole.textContent = card.spreadLabel || layerLabel(card.layer);
+      const caption = document.createElement("span");
+      caption.className = "spread-card-caption";
 
-      item.append(image, srRole);
+      const role = document.createElement("span");
+      role.className = "spread-card-role";
+      role.textContent = card.spreadLabel || layerLabel(card.layer);
+
+      const name = document.createElement("span");
+      name.className = "spread-card-name";
+      name.textContent = card.name;
+
+      caption.append(role, name);
+
+      item.append(image, caption);
       elements.spreadGrid.appendChild(item);
     });
 
@@ -149,23 +158,21 @@ export function createSpreadRenderer(elements) {
       }
 
       if (button) {
-        button.dataset.action = "new-question";
-        button.textContent = "Новый вопрос";
-        button.classList.remove("ui-action--primary", "wyrd-action-frame--secondary");
-        button.classList.add("ui-action--quiet", "wyrd-action-frame--quiet");
+        button.hidden = true;
       }
 
       if (link) {
-        link.hidden = true;
+        link.hidden = false;
       }
       return;
     }
 
     if (copy) {
-      copy.textContent = "Ты уже многое знаешь. Но пять карт откроют то, что три не сказали...";
+      copy.textContent = "Пять карт откроют то, что три не сказали.";
     }
 
     if (button) {
+      button.hidden = false;
       button.dataset.action = "spread-5";
       button.textContent = "Раскрыть пять карт";
       button.classList.remove("ui-action--quiet", "wyrd-action-frame--quiet");
@@ -218,13 +225,14 @@ export function createSpreadRenderer(elements) {
     }
 
     if (question) {
+      elements.spreadQuestionLabel.textContent = "Твой вопрос";
       elements.spreadQuestionLabel.hidden = false;
       elements.spreadQuestionText.textContent = question;
       elements.spreadQuestion.classList.remove("is-muted");
       return;
     }
 
-    elements.spreadQuestionLabel.hidden = false;
+    elements.spreadQuestionLabel.hidden = true;
     elements.spreadQuestionText.textContent = "Тайна приоткроется сама...";
     elements.spreadQuestion.classList.add("is-muted");
   }

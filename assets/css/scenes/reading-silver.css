@@ -836,7 +836,8 @@
   text-align: left;
 }
 
-:is(#result, #spread-result) .result-question-label {
+#result .result-question-label,
+#spread-result .result-question-label {
   margin: 0 0 0.25rem;
   color: var(--wyrd-bone-muted);
   font-family: "Cormorant Garamond", Georgia, serif;
@@ -846,7 +847,8 @@
   line-height: 1.2;
 }
 
-:is(#result, #spread-result) .result-question-text {
+#result .result-question-text,
+#spread-result .result-question-text {
   margin: 0;
   overflow-wrap: anywhere;
   color: var(--wyrd-bone-text);
@@ -873,7 +875,21 @@
   text-transform: none;
 }
 
+#spread-result .result-question-label {
+  color: rgba(238, 229, 212, 0.42);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
 #result .result-question-text {
+  color: rgba(243, 236, 221, 0.96);
+  font-size: 1.0625rem;
+  font-weight: 500;
+}
+
+#spread-result .result-question-text {
   color: rgba(243, 236, 221, 0.96);
   font-size: 1.0625rem;
   font-weight: 500;
@@ -1215,14 +1231,14 @@
 }
 
 #result .hook-block {
-  width: min(100%, 20rem);
-  gap: 0.75rem;
-  margin: 1.75rem auto 0;
+  width: min(100%, 35rem);
+  gap: 1rem;
+  margin: clamp(2.75rem, 8vw, 4rem) auto 0;
 }
 
 #result .hook-copy {
-  max-width: 20rem;
-  margin: 0 auto 0.5rem;
+  max-width: 28rem;
+  margin: 0 auto 0.25rem;
   color: var(--wyrd-text-secondary);
   font-family: "Cormorant Garamond", Georgia, serif;
   font-size: 1rem;
@@ -1257,7 +1273,7 @@
 }
 
 #spread-result .spread-grid--three.spread-grid--archetype-a {
-  grid-template-columns: minmax(0, 11rem);
+  grid-template-columns: minmax(0, 12rem);
 }
 
 #spread-result :is(.spread-grid--three.spread-grid--archetype-c, .spread-grid--three.spread-grid--archetype-d) {
@@ -1273,25 +1289,37 @@
   width: 100%;
   min-width: var(--control-touch-min);
   min-height: var(--control-touch-min);
-  padding: 0.28rem;
-  overflow: hidden;
-  border: 1px solid rgba(205, 209, 207, 0.24);
-  border-radius: var(--radius-small);
-  background: rgba(9, 10, 14, 0.38);
-  box-shadow:
-    0 12px 24px rgba(0, 0, 0, 0.22),
-    inset 0 1px 0 rgba(225, 228, 225, 0.03);
+  display: grid;
+  gap: 0.65rem;
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  filter: none;
   opacity: 0;
+  transform: none;
+  animation-name: wyrd-spread-card-reveal;
   animation-duration: 800ms;
   animation-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+  animation-fill-mode: both;
+}
+
+@keyframes wyrd-spread-card-reveal {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 #spread-result .spread-card[data-anchor="true"],
 #spread-result .spread-card[data-active="true"] {
-  border-color: var(--control-silver-line-active);
-  box-shadow:
-    0 16px 30px rgba(0, 0, 0, 0.28),
-    0 0 0 1px rgba(225, 228, 225, 0.05);
+  border-color: transparent;
+  box-shadow: none;
 }
 
 #spread-result .spread-card:focus-visible {
@@ -1308,11 +1336,49 @@
   aspect-ratio: 3 / 4;
   margin: 0;
   display: block;
-  border-radius: 4px;
+  border: 1px solid rgba(225, 228, 225, 0.22);
+  border-radius: 0;
   object-fit: cover;
   object-position: top;
   background: var(--wyrd-bone-card-surface);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.3);
   filter: none;
+  transition:
+    border-color var(--dur-fast) var(--ease-out-strong),
+    box-shadow var(--dur-medium) var(--ease-out-strong);
+}
+
+#spread-result .spread-card[data-anchor="true"] img,
+#spread-result .spread-card[data-active="true"] img {
+  border-color: rgba(225, 228, 225, 0.42);
+  box-shadow:
+    0 14px 30px rgba(0, 0, 0, 0.34),
+    0 0 0 1px rgba(225, 228, 225, 0.04);
+}
+
+#spread-result .spread-card-caption {
+  min-width: 0;
+  display: grid;
+  gap: 0.12rem;
+  padding-inline: 0.1rem;
+  text-align: center;
+}
+
+#spread-result .spread-card-role {
+  color: var(--wyrd-text-quiet);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+}
+
+#spread-result .spread-card-name {
+  color: var(--wyrd-bone-text);
+  font-family: Forum, Georgia, serif;
+  font-size: 1.08rem;
+  font-weight: 400;
+  line-height: 1.15;
 }
 
 #spread-result .oracle-voice {
@@ -1334,12 +1400,17 @@
 }
 
 #spread-result .spread-continuation {
-  margin-top: 1.75rem;
+  width: min(100%, 35rem);
+  margin: clamp(2.75rem, 8vw, 4rem) auto 0;
   padding: 0;
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
 }
 
 #spread-result .spread-continuation-copy {
-  margin: 0 auto 0.75rem;
+  max-width: 28rem;
+  margin: 0 auto 0.25rem;
   color: var(--wyrd-text-secondary);
   font-family: "Cormorant Garamond", Georgia, serif;
   font-size: 1rem;
@@ -1352,6 +1423,14 @@
   border: 0;
   background: transparent;
   box-shadow: none;
+}
+
+#spread-result .spread-continuation-btn[hidden] {
+  display: none;
+}
+
+#spread-result .spread-continuation[data-size="5"] {
+  gap: 1.25rem;
 }
 
 .spread-card-modal {
@@ -1523,8 +1602,15 @@ body.has-open-dialog {
   }
 
   #spread-result .spread-card:hover {
+    border-color: transparent;
+    background: transparent;
+  }
+
+  #spread-result .spread-card:hover img {
     border-color: var(--control-silver-line-active);
-    background: rgba(31, 35, 48, 0.52);
+    box-shadow:
+      0 14px 30px rgba(0, 0, 0, 0.34),
+      0 0 16px rgba(190, 207, 218, 0.07);
   }
 }
 
@@ -1548,9 +1634,6 @@ body.has-open-dialog {
     gap: 0.45rem;
   }
 
-  #spread-result .spread-card {
-    padding: 0.2rem;
-  }
 }
 
 @media (orientation: portrait) and (min-width: 31.25rem) and (min-height: 50rem) {
@@ -1639,6 +1722,7 @@ body.has-open-dialog {
   }
 
   #spread-result .spread-card,
+  #spread-result .spread-card img,
   .spread-card-modal-panel,
   .spread-card-modal-image,
   #result .share-card-media {

@@ -1267,6 +1267,33 @@ a {
   gap: 1rem;
 }
 
+.cover-invitation-specimen,
+.reading-action-contract {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1.15rem;
+  border: 1px solid rgba(205, 209, 207, 0.14);
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 50% -10%, rgba(225, 228, 225, 0.075), transparent 34rem),
+    linear-gradient(180deg, #0b0d12 0%, var(--wyrd-depth) 48%, #050608 100%);
+}
+
+.cover-invitation-specimen {
+  justify-items: center;
+}
+
+.cover-invitation-specimen .action-sample__meta,
+.cover-invitation-specimen .component-note {
+  width: 100%;
+}
+
+.action-sample__stack {
+  display: grid;
+  gap: 0.8rem;
+}
+
 .action-sample {
   min-width: 0;
   display: grid;
@@ -1293,6 +1320,38 @@ a {
 .action-sample__meta span {
   color: var(--wyrd-text-quiet);
   font-size: 0.92rem;
+}
+
+.reading-action-contract {
+  margin-top: 1.5rem;
+  margin-bottom: 0;
+}
+
+.reading-action-contract__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.reading-action-contract__grid > section {
+  min-width: 0;
+  display: grid;
+  align-content: start;
+  gap: 0.7rem;
+  min-height: 12rem;
+  padding: 1rem;
+  border: 1px solid rgba(205, 209, 207, 0.1);
+  border-radius: 10px;
+  background: rgba(5, 6, 9, 0.7);
+}
+
+.reading-action-contract__grid .wyrd-action-frame {
+  align-self: end;
+}
+
+.reading-action-contract__background {
+  padding-top: 1rem;
+  border-top: 1px solid rgba(205, 209, 207, 0.12);
 }
 
 #result .wyrd-action-frame {
@@ -2712,6 +2771,7 @@ body.has-kit-sheet-open {
 
   .frame-board,
   .utility-board,
+  .reading-action-contract__grid,
   .controls-grid,
   .type-system-grid,
   .control-inventory-board {

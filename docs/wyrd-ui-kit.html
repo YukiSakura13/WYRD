@@ -13,7 +13,7 @@
     />
     <link rel="stylesheet" href="../assets/css/tokens.css?v=20260728-1" />
     <link rel="stylesheet" href="../assets/css/components/control-language.css?v=20260728-1" />
-    <link rel="stylesheet" href="../assets/css/components/action-buttons.css?v=20260722-2" />
+    <link rel="stylesheet" href="../assets/css/components/action-buttons.css?v=20260804-1" />
     <link rel="stylesheet" href="../assets/css/components/silver-components.css?v=20260728-1" />
     <link rel="stylesheet" href="wyrd-ui-kit.css?v=20260728-1" />
   </head>
@@ -464,9 +464,46 @@
           <h2 id="actions-title">Одна конструкция, четыре уровня</h2>
           <p>
             Высота и материал едины. Длина и сложность орнамента растут вместе с весом действия.
-            Нажмите любую кнопку, чтобы проверить стабильность геометрии.
+            Активные роли чтения отделены от особого приглашения на обложке.
           </p>
         </div>
+
+        <article class="cover-invitation-specimen" aria-labelledby="cover-invitation-title">
+          <div class="action-sample__meta">
+            <strong id="cover-invitation-title">Cover Invitation / Full</strong>
+            <span>единственное ритуальное приглашение с дыханием, магнитом и огоньками</span>
+          </div>
+          <button
+            class="wyrd-cover-invitation ui-action ui-action--primary"
+            type="button"
+            data-cover-invitation
+          >
+            <canvas class="cover-cta-canvas" aria-hidden="true"></canvas>
+            <img
+              class="cover-cta-frame cover-cta-frame--halo"
+              src="../assets/ui/action-buttons/continuous/wyrd-action-hero.svg"
+              alt=""
+              aria-hidden="true"
+            />
+            <img
+              class="cover-cta-frame cover-cta-frame--main"
+              src="../assets/ui/action-buttons/continuous/wyrd-action-hero.svg"
+              alt=""
+              aria-hidden="true"
+            />
+            <img
+              class="cover-cta-frame cover-cta-frame--trace"
+              src="../assets/ui/action-buttons/continuous/wyrd-action-hero.svg"
+              alt=""
+              aria-hidden="true"
+            />
+            <span class="cover-cta-label">Войти в лес</span>
+          </button>
+          <p class="component-note">
+            Геометрия, частицы, hover, focus, press и reduced-motion совпадают с runtime 1:1.
+            Огоньки остаются внутри поля орнамента и затухают до его внешнего края.
+          </p>
+        </article>
 
         <div class="action-inspector" aria-label="Инспектор состояний кнопок">
           <fieldset class="action-inspector__families">
@@ -498,20 +535,25 @@
           <article class="action-sample" data-action-sample="hero">
             <div class="action-sample__meta">
               <strong>Hero / Full</strong>
-              <span>главное игровое действие</span>
+              <span>полный орнамент; источник для Cover Invitation</span>
             </div>
             <button class="ui-action wyrd-action-frame wyrd-action-frame--hero" type="button">
-              Раскрыть три карты
+              Ритуальное приглашение
             </button>
           </article>
           <article class="action-sample" data-action-sample="secondary">
             <div class="action-sample__meta">
               <strong>Secondary / Reduced</strong>
-              <span>продолжение сценария</span>
+              <span>единственный активный CTA продолжения чтения</span>
             </div>
-            <button class="ui-action wyrd-action-frame wyrd-action-frame--secondary" type="button">
-              Продолжить
-            </button>
+            <div class="action-sample__stack">
+              <button class="ui-action wyrd-action-frame wyrd-action-frame--secondary" type="button">
+                Раскрыть три карты
+              </button>
+              <button class="ui-action wyrd-action-frame wyrd-action-frame--secondary" type="button">
+                Раскрыть пять карт
+              </button>
+            </div>
           </article>
           <article class="action-sample" data-action-sample="compact">
             <div class="action-sample__meta">
@@ -525,13 +567,51 @@
           <article class="action-sample" data-action-sample="quiet">
             <div class="action-sample__meta">
               <strong>Quiet / Minimal</strong>
-              <span>отмена или новый вопрос</span>
+              <span>зарезервированный орнамент; не используется для сброса чтения</span>
             </div>
             <button class="ui-action wyrd-action-frame wyrd-action-frame--quiet" type="button">
-              Новый вопрос
+              Остаться
             </button>
           </article>
         </div>
+
+        <article class="reading-action-contract" aria-labelledby="reading-action-contract-title">
+          <div class="action-sample__meta">
+            <strong id="reading-action-contract-title">Reading completion contract</strong>
+            <span>прочитать → углубить расклад → при желании начать заново</span>
+          </div>
+          <div class="reading-action-contract__grid">
+            <section>
+              <p class="component-label">Одна карта</p>
+              <button class="ui-action wyrd-action-frame wyrd-action-frame--secondary" type="button">
+                Раскрыть три карты
+              </button>
+              <button class="reading-new-question-link ui-action ui-action--quiet" type="button">
+                Новый вопрос
+              </button>
+            </section>
+            <section>
+              <p class="component-label">Три карты</p>
+              <button class="ui-action wyrd-action-frame wyrd-action-frame--secondary" type="button">
+                Раскрыть пять карт
+              </button>
+              <button class="reading-new-question-link ui-action ui-action--quiet" type="button">
+                Новый вопрос
+              </button>
+            </section>
+            <section>
+              <p class="component-label">Пять карт</p>
+              <p class="component-note">Продолжения расклада нет.</p>
+              <button class="reading-new-question-link ui-action ui-action--quiet" type="button">
+                Новый вопрос
+              </button>
+            </section>
+          </div>
+          <p class="component-note reading-action-contract__background">
+            Deck, Result, 3 cards и 5 cards используют один холодный фон чтения:
+            световой провал сверху и переход #0b0d12 → #050608 без legacy fog и stars.
+          </p>
+        </article>
 
         <div class="utility-board">
           <div>
@@ -1088,6 +1168,6 @@
       <span>Canonical checkpoint · YUK-135</span>
     </footer>
 
-    <script defer src="wyrd-ui-kit.js?v=20260728-1"></script>
+    <script defer src="wyrd-ui-kit.js?v=20260804-1"></script>
   </body>
 </html>

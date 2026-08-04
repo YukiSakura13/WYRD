@@ -194,3 +194,353 @@
     transform: none;
   }
 }
+
+/*
+ * Cover Invitation — the canonical full-ornament entry action.
+ *
+ * The same markup and mechanics are used by the live Cover and the Silver Kit.
+ * Scene files may position the control, but must not redraw or restyle it.
+ */
+
+.wyrd-cover-invitation {
+  position: relative;
+  isolation: isolate;
+  display: block;
+  width: clamp(17.5rem, 82vw, 22.5rem);
+  min-width: var(--control-touch-min);
+  min-height: 3.75rem;
+  aspect-ratio: 1116 / 142;
+  height: auto;
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  appearance: none;
+  background: transparent;
+  box-shadow: none;
+  color: var(--wyrd-text-action);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(17px, 3.8vw, 19px);
+  font-weight: 500;
+  letter-spacing: 0.015em;
+  line-height: 1;
+  text-transform: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  transform: translateY(0) scale(1);
+  transition:
+    color 180ms var(--ease-out-strong),
+    filter 180ms var(--ease-out-strong),
+    transform 150ms var(--ease-out-strong);
+}
+
+.wyrd-cover-invitation :is(.cover-cta-canvas, .cover-cta-label, .cover-cta-frame) {
+  position: absolute;
+  inset: 0;
+}
+
+.wyrd-cover-invitation .cover-cta-canvas {
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.wyrd-cover-invitation .cover-cta-label {
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 62%;
+  margin: auto;
+  overflow: hidden;
+  padding: 0 0 1px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.96),
+    0 0 9px rgba(220, 225, 229, 0.13);
+  pointer-events: none;
+  transition:
+    color 180ms var(--ease-out-strong),
+    text-shadow 180ms var(--ease-out-strong),
+    transform 150ms var(--ease-out-strong);
+}
+
+.wyrd-cover-invitation .cover-cta-frame {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  transform: scaleY(1.18);
+  transform-origin: 50% 50%;
+}
+
+.wyrd-cover-invitation .cover-cta-frame--main {
+  z-index: 2;
+  opacity: 0.86;
+  filter:
+    drop-shadow(0 0 4px rgba(223, 232, 237, 0.13))
+    drop-shadow(0 0 16px rgba(164, 184, 200, 0.08));
+  transition:
+    filter 180ms var(--ease-out-strong),
+    opacity 180ms var(--ease-out-strong);
+}
+
+.wyrd-cover-invitation .cover-cta-frame--halo {
+  z-index: 1;
+  opacity: 0.09;
+  filter:
+    brightness(1.14)
+    blur(2px)
+    drop-shadow(0 0 10px rgba(213, 226, 235, 0.26));
+  animation: wyrdCoverPrimaryBreath 6.8s var(--ease-in-out-strong) infinite;
+}
+
+.wyrd-cover-invitation .cover-cta-frame--trace {
+  z-index: 4;
+  opacity: 0;
+  filter:
+    brightness(1.48)
+    drop-shadow(0 0 5px rgba(235, 242, 246, 0.46));
+  -webkit-mask-image: linear-gradient(100deg, transparent 0 30%, #000 46% 54%, transparent 70% 100%);
+  mask-image: linear-gradient(100deg, transparent 0 30%, #000 46% 54%, transparent 70% 100%);
+  -webkit-mask-position: 165% 50%;
+  mask-position: 165% 50%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 46% 100%;
+  mask-size: 46% 100%;
+  animation: wyrdCoverFrameTrace 6.8s var(--ease-in-out-strong) infinite;
+}
+
+.wyrd-cover-invitation:focus-visible {
+  outline: 2px solid rgba(228, 233, 238, 0.82);
+  outline-offset: 3px;
+  filter:
+    drop-shadow(0 0 5px rgba(232, 239, 239, 0.26))
+    drop-shadow(0 0 16px rgba(185, 205, 216, 0.2));
+}
+
+.wyrd-cover-invitation:focus-visible .cover-cta-frame--halo {
+  animation: none;
+  opacity: 0.36;
+}
+
+.wyrd-cover-invitation:focus-visible .cover-cta-frame--main {
+  opacity: 1;
+  filter:
+    brightness(1.06)
+    drop-shadow(0 0 6px rgba(232, 239, 239, 0.28))
+    drop-shadow(0 0 18px rgba(185, 205, 216, 0.2));
+}
+
+.wyrd-cover-invitation:focus-visible .cover-cta-frame--trace {
+  animation: none;
+  opacity: 0.26;
+  -webkit-mask-position: 50% 50%;
+  mask-position: 50% 50%;
+}
+
+.wyrd-cover-invitation:focus-visible .cover-cta-label {
+  color: #fff;
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.96),
+    0 0 8px rgba(243, 236, 221, 0.35),
+    0 0 20px rgba(194, 208, 220, 0.22);
+}
+
+.wyrd-cover-invitation:active,
+.wyrd-cover-invitation.is-activating {
+  color: #aeb4b5;
+  filter: none;
+  transform: translateY(1px) scale(0.995);
+}
+
+.wyrd-cover-invitation.is-activating {
+  pointer-events: none;
+}
+
+.wyrd-cover-invitation:is(:active, .is-activating) .cover-cta-label {
+  transform: translateY(1px);
+}
+
+.wyrd-cover-invitation:is(:active, .is-activating) :is(.cover-cta-frame--halo, .cover-cta-frame--trace) {
+  animation: none;
+  opacity: 0.06;
+}
+
+.wyrd-cover-invitation:is(:active, .is-activating) .cover-cta-frame--main {
+  opacity: 0.84;
+  filter: none;
+}
+
+@keyframes wyrdCoverPrimaryBreath {
+  0%,
+  48%,
+  100% {
+    opacity: 0.09;
+  }
+
+  62% {
+    opacity: 0.24;
+  }
+
+  74% {
+    opacity: 0.13;
+  }
+}
+
+@keyframes wyrdCoverFrameTrace {
+  0%,
+  48%,
+  100% {
+    opacity: 0;
+    -webkit-mask-position: 165% 50%;
+    mask-position: 165% 50%;
+  }
+
+  58% {
+    opacity: 0.24;
+  }
+
+  77% {
+    opacity: 0.07;
+    -webkit-mask-position: -65% 50%;
+    mask-position: -65% 50%;
+  }
+
+  83% {
+    opacity: 0;
+    -webkit-mask-position: -65% 50%;
+    mask-position: -65% 50%;
+  }
+}
+
+/* Reading Reset — quiet unframed exit from completed readings. */
+
+.reading-new-question-link {
+  width: fit-content;
+  min-width: var(--control-touch-min);
+  min-height: var(--control-touch-min);
+  margin-inline: auto;
+  padding: 0 1rem;
+  border: 0;
+  background: transparent;
+  color: rgba(225, 228, 225, 0.58);
+  box-shadow: none;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.3;
+  text-align: center;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 0.22em;
+  cursor: pointer;
+  transition:
+    color var(--dur-fast) var(--ease-out-strong),
+    text-decoration-color var(--dur-fast) var(--ease-out-strong),
+    transform var(--dur-fast) var(--ease-out-strong);
+}
+
+.reading-new-question-link:focus-visible {
+  outline: 2px solid var(--control-focus-ring);
+  outline-offset: 2px;
+  color: var(--wyrd-text-action-active);
+  text-decoration-color: currentColor;
+}
+
+.reading-new-question-link:active {
+  transform: translateY(var(--control-pressed-offset));
+}
+
+@media (min-width: 560px) and (min-height: 860px), (min-width: 768px) {
+  .wyrd-cover-invitation {
+    width: clamp(22.5rem, 50vw, 30rem);
+    font-size: 19px;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .wyrd-cover-invitation:hover {
+    color: #fff;
+    filter:
+      drop-shadow(0 0 7px rgba(231, 239, 242, 0.28))
+      drop-shadow(0 0 22px rgba(176, 197, 212, 0.17))
+      drop-shadow(0 0 38px rgba(129, 156, 179, 0.09));
+    transform: translateY(-1px);
+  }
+
+  .wyrd-cover-invitation:hover .cover-cta-frame--halo {
+    animation: none;
+    opacity: 0.34;
+  }
+
+  .wyrd-cover-invitation:hover .cover-cta-frame--main {
+    opacity: 0.96;
+    filter:
+      brightness(1.04)
+      drop-shadow(0 0 7px rgba(231, 239, 242, 0.22))
+      drop-shadow(0 0 20px rgba(176, 197, 212, 0.14));
+  }
+
+  .wyrd-cover-invitation:hover .cover-cta-frame--trace {
+    animation: none;
+    opacity: 0.26;
+    -webkit-mask-position: 50% 50%;
+    mask-position: 50% 50%;
+  }
+
+  .wyrd-cover-invitation:hover .cover-cta-label {
+    color: #fff;
+    text-shadow:
+      0 1px 0 rgba(0, 0, 0, 0.96),
+      0 0 8px rgba(243, 236, 221, 0.35),
+      0 0 20px rgba(194, 208, 220, 0.22);
+  }
+
+  .reading-new-question-link:hover {
+    color: rgba(241, 244, 241, 0.86);
+    text-decoration-color: currentColor;
+  }
+}
+
+@media (forced-colors: active) {
+  .wyrd-cover-invitation:focus-visible,
+  .reading-new-question-link:focus-visible {
+    outline-color: ButtonText;
+    color: ButtonText;
+  }
+
+  .wyrd-cover-invitation :is(.cover-cta-canvas, .cover-cta-frame--halo, .cover-cta-frame--trace) {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wyrd-cover-invitation,
+  .wyrd-cover-invitation :is(.cover-cta-label, .cover-cta-frame),
+  .reading-new-question-link {
+    transition: none;
+  }
+
+  .wyrd-cover-invitation :is(.cover-cta-frame--halo, .cover-cta-frame--trace) {
+    animation: none;
+  }
+
+  .wyrd-cover-invitation:is(:active, .is-activating),
+  .reading-new-question-link:active {
+    transform: none;
+  }
+
+  .wyrd-cover-invitation .cover-cta-frame--halo {
+    opacity: 0.09;
+  }
+
+  .wyrd-cover-invitation .cover-cta-frame--trace {
+    opacity: 0;
+  }
+}

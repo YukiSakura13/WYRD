@@ -1,3 +1,244 @@
+# YUK-139 Cover CTA height and motion correction — Design QA
+
+Date: 2026-08-04
+
+Scope: local refinement of the first ritual Cover action only. The approved
+compact/wide width contract, Moon, forest, brand lockup, copy, Hero asset,
+screen structure, canonical Kit, Linear, and all other runtime screens remain
+unchanged.
+
+## Reviewed correction
+
+- The control box is increased from `52px` to `60px` without changing its
+  responsive width. The Hero frame is scaled vertically by `1.18` while the
+  label remains unscaled, so the ornament gains height without stretching the
+  typography or widening the CTA.
+- The pointer attraction keeps its approved `28px × 14px` range but uses the
+  calmer spring pair `stiffness: 420`, `damping: 42`. Particle following uses
+  `stiffness: 240`, `damping: 31`, removing the abrupt correction near rest.
+- Fireflies retain their existing density, brightness, and cadence, but their
+  alpha now fades before the inner horizontal and vertical edges. The SVG halo
+  remains outside that particle mask, so the approved outer glow is preserved.
+- Top/bottom action spacing is `28px / 24px`; the existing Cover bottom reserve
+  remains `90px` at every tested viewport.
+
+## Visual evidence
+
+- Implementation screenshot: `/tmp/yuk139-cover-motion-wide.jpg`
+- State: resting Cover invitation after the initial reveal has settled.
+- The result reads as a taller ritual control rather than a flattened banner;
+  its width and Moon → WYRD → invitation hierarchy remain unchanged.
+
+## Responsive verification
+
+| Viewport | CTA box | Side space | Bottom space | Overflow |
+| --- | --- | --- | --- | --- |
+| `320 × 568` | `280 × 60` | `20px` | `90px` | `0px` |
+| `360 × 800` | `295 × 60` | `32px` | `90px` | `0px` |
+| `375 × 812` | `308 × 60` | `34px` | `90px` | `0px` |
+| `393 × 852` | `322 × 60` | `35px` | `90px` | `0px` |
+| `430 × 932` | `353 × 60` | `39px` | `90px` | `0px` |
+| `504 × 699` | `360 × 60` | `72px` | `90px` | `0px` |
+| `768 × 1024` | `384 × 60` | `192px` | `90px` | `0px` |
+| `852 × 393` | `426 × 60` | `213px` | `90px` | `0px` |
+
+## Interaction and verification
+
+- Domain, state, and UI interaction smoke tests: passed.
+- Control language, product scope, responsive strategy, lore canon, Pages
+  artifact validation, and `git diff --check`: passed.
+- Focus-visible, pressed, magnetic attraction, firefly rendering, and
+  reduced-motion remain covered by runtime assertions.
+- Genuine system forced-colors and a physical Telegram WebView are outside this
+  local visual pass and are not claimed here.
+
+## Review boundary
+
+- Canonical Kit: no changes.
+- Linear: no changes.
+- Git commit/push: not performed.
+
+final result: passed
+
+---
+
+# YUK-139 Cover CTA proportion correction — Design QA
+
+Date: 2026-08-04
+
+Scope: local correction of the ritual Cover invitation only. The Moon, forest,
+brand lockup, Hero ornament asset, copy, source interaction mechanics, Kit,
+Linear, and all other runtime screens are intentionally unchanged.
+
+## Comparison evidence
+
+- Source visual truth:
+  `/var/folders/bp/pzbghfvd7pjg61djny2r6sg80000gn/T/TemporaryItems/NSIRD_screencaptureui_dfLSxB/Снимок экрана — 2026-08-04 в 14.17.38.png`
+- Source pixels: `1008 × 1398` at Retina density; normalized to
+  `504 × 699` CSS pixels for comparison.
+- Implementation screenshot: `/tmp/yuk139-cover-proportion-504x699-crop.jpg`
+- Implementation pixels/CSS viewport: `504 × 699`, density-normalized.
+- Full-view comparison: `/tmp/yuk139-cover-proportion-before-after.jpg`
+- State: resting Cover invitation after the initial reveal has settled.
+
+The full view is sufficient for the reviewed change because the complete Hero
+ornament, label, glow envelope, brand lockup, and screen edges remain readable
+at the normalized size. A separate detail crop would not add evidence.
+
+## Comparison history
+
+### Pass 1 — blocked
+
+- **P1 — CTA dominated the complete Cover.** The source implementation used
+  `472 × 60px` at the `504 × 699` viewport: `93.7%` of the screen width with
+  only `16px` per side. The glow expanded the perceived envelope almost to the
+  screen edges, so the invitation read as a footer banner rather than the third
+  step in the hierarchy Moon → WYRD → action.
+- **Fix:** compact width is now `clamp(17.5rem, 82vw, 22.5rem)`; wide width is
+  `clamp(22.5rem, 50vw, 30rem)`. The normalized target becomes `360 × 52px`,
+  with `72px` per side. The action is raised optically by replacing the old
+  `52px` top gap with `36px` plus `24px` reserved lower breathing room.
+- **Fix:** resting main contour opacity is `0.86`; halo is `0.09` with a `0.24`
+  breath peak; trace peak is `0.24`. Hover/focus remain intentionally clearer.
+- **Fix:** label size is bounded to `17–19px`; the existing 52px touch target,
+  Hero aspect ratio, pointer attraction, fireflies, press, focus, and
+  reduced-motion behavior remain intact.
+
+### Pass 2 — passed
+
+The normalized comparison shows the CTA at the intended subordinate scale. The
+Moon remains the atmospheric focus, the approved lockup remains the identity
+focus, and the invitation is clear without becoming the widest and brightest
+object on the screen. No actionable P0/P1/P2 difference remains.
+
+## Required fidelity surfaces
+
+- **Typography:** the approved Cover lockup remains `60px / 13px`; CTA is
+  `17–19px`, weight `500`, with unchanged copy and typeface.
+- **Spacing/layout:** Hero geometry stays `1116:142`; compact width is bounded
+  to `280–360px`, wide width to `360–480px`; action target is never below
+  `52px`. The Moon and brand positions are unchanged.
+- **Colors/tokens:** the cold-silver palette is unchanged. Only the CTA resting
+  opacity and glow amplitude are reduced; hover/focus preserve full clarity.
+- **Image quality/assets:** the authored forest, Moon, and existing
+  `wyrd-action-hero.svg` are reused unchanged; no asset was redrawn.
+- **Copy/content:** `WYRD`, `Оракул духов леса`, and `Войти в лес` are unchanged.
+
+## Responsive verification
+
+| Viewport | CTA box | Side space | Bottom space | Overflow |
+| --- | --- | --- | --- | --- |
+| `320 × 568` | `280 × 52` | `20px` | `90px` | `0px` |
+| `360 × 800` | `295 × 52` | `32px` | `90px` | `0px` |
+| `375 × 812` | `308 × 52` | `34px` | `90px` | `0px` |
+| `393 × 852` | `322 × 52` | `35px` | `90px` | `0px` |
+| `430 × 932` | `353 × 52` | `39px` | `90px` | `0px` |
+| `504 × 699` | `360 × 52` | `72px` | `90px` | `0px` |
+| `768 × 1024` | `384 × 52` | `192px` | `90px` | `0px` |
+| `852 × 393` | `426 × 54` | `213px` | `90px` | `0px` |
+
+## Interaction and verification
+
+- Domain, state, and UI interaction smoke tests: passed.
+- Control language, product scope, responsive strategy, lore canon, Pages
+  artifact validation, and `git diff --check`: passed.
+- Existing hover, focus-visible, pressed, magnetic field, firefly cadence, and
+  reduced-motion contracts remain covered by runtime assertions.
+- Genuine system forced-colors and a physical Telegram WebView are outside this
+  local visual pass and are not claimed here.
+
+## Review boundary
+
+- Canonical Kit: no changes.
+- Linear: no changes.
+- Git commit/push: not performed.
+
+final result: passed
+
+---
+
+# YUK-139 reading actions and Cover invitation preview — Design QA
+
+Date: 2026-08-04
+
+Scope: local, user-reviewable runtime preview only. The canonical Silver UI
+Kit, Linear, commits, and published build are intentionally unchanged pending
+visual approval.
+
+## Restored contract
+
+- The ritual Cover keeps its approved forest, Moon, copy, and composition. Its
+  `Войти в лес` action now uses the existing full Hero ornament together with
+  the source invitation mechanics: restrained silver breathing, internal
+  fireflies, magnetic pointer response, press, focus, and reduced-motion state.
+- The Forest screen with the Raven card and `Раскрыть карту` is unchanged.
+- The single-card Result keeps its approved Artifact, interpretation, and Share
+  block. `Раскрыть три карты` now uses the Secondary frame; a separate quiet,
+  unframed `Новый вопрос` follows it.
+- The three-card reading ends in a deliberate sequence: reading, pause,
+  `Пять карт откроют то, что три не сказали.`, Secondary
+  `Раскрыть пять карт`, then quiet unframed `Новый вопрос`.
+- The five-card reading remains terminal: its existing final text is followed
+  only by the existing Quiet/Minimal framed `Новый вопрос` action.
+- Result, three-card, and five-card scenes use the same exact cold-silver
+  background and suppress the legacy gold/noise/fog overlays.
+
+## Visual comparison evidence
+
+- Source invitation capture: `/tmp/yuk139-action-audit/01-source-hero-invitation.png`
+- WYRD Cover implementation: `/tmp/yuk139-cover-implementation.png`
+- Side-by-side comparison: `/tmp/yuk139-cover-source-comparison.jpg`
+
+The comparison confirms that the runtime keeps WYRD's own ornament artwork and
+Cover composition while restoring the source interaction language. It does not
+copy the source screen's typography or surrounding visual treatment.
+
+## Flow and interaction verification
+
+- Cover → Forest → Deck → Result → three cards → five cards completes.
+- `Enter` in the question field preserves the approved static transition and
+  transfers focus to the Deck.
+- Back restores five cards → three cards → Result correctly.
+- Result and three-card continuation actions are Secondary controls; their
+  quiet `Новый вопрос` links are independent 44px targets and return to Deck.
+- Five cards exposes one terminal Quiet/Minimal `Новый вопрос`; the duplicate
+  unframed link stays hidden.
+- Pointer, touch, keyboard focus, pressed state, and reduced-motion fallbacks
+  remain implemented. Forced-colors and reduced-motion were inspected in code;
+  this pass does not claim genuine system-mode or physical-device validation.
+
+## Responsive matrix
+
+| Viewport | Result | Three cards | Five cards | Horizontal overflow |
+| --- | --- | --- | --- | --- |
+| `320 × 568` | Secondary + 44px quiet link | Secondary + 44px quiet link | Quiet only | `0px` |
+| `375 × 812` | Secondary + 44px quiet link | Secondary + 44px quiet link | Quiet only | `0px` |
+| `393 × 852` | Secondary + 44px quiet link | Secondary + 44px quiet link | Quiet only | `0px` |
+| `430 × 932` | Secondary + 44px quiet link | Secondary + 44px quiet link | Quiet only | `0px` |
+| `768 × 1024` | Secondary + 44px quiet link | Secondary + 44px quiet link | Quiet only | `0px` |
+| `852 × 393` | Secondary + 44px quiet link | Secondary + 44px quiet link | Quiet only | `0px` |
+
+The approved card geometry and reading content remain unchanged at every
+viewport. Short-height landscape scrolls vertically without clipping actions.
+
+## Automated verification
+
+- Domain smoke tests: passed.
+- State smoke tests: passed.
+- UI interaction smoke tests: passed.
+- Control language, product scope, responsive strategy, lore canon, Artifact
+  validation, and `git diff --check`: passed.
+
+## Review boundary
+
+- Canonical Kit: no changes.
+- Linear: no changes.
+- Git commit/push: not performed.
+
+Final result: **passed for local visual review**.
+
+---
+
 # YUK-139 Deck centered-embers preview — Design QA
 
 Date: 2026-07-29
@@ -229,6 +470,103 @@ fine-pointer hover is gated, and reduced motion removes positional movement.
 - No canonical Kit edit.
 - No claim of physical Telegram WebView, exact 200% browser zoom, or genuine
   forced-colors validation.
+
+## Final result
+
+final result: passed
+
+---
+
+# YUK-139 Three-card Spread restoration — Design QA
+
+Date: 2026-08-04
+
+Scope: restore the three-card reading surface from the approved Silver UI Kit
+without changing its archetype topology, question state, selected cards,
+reveal order, Back/New question routes, or card-detail Sheet mechanics. The
+five-card screen remains outside this local review slice.
+
+## Combined visual evidence
+
+- Canonical source: the live Kit `Quiet` card at a `393 × 852` CSS viewport,
+  captured locally as `/tmp/yuk139-kit-quiet-393.png`.
+- Runtime implementation: the three-card screen at the same `393 × 852` CSS
+  viewport, captured locally as `/tmp/yuk139-spread3-viewport-393.png`.
+- Side-by-side inspection: `/tmp/yuk139-spread3-comparison.png`.
+
+The comparison confirms the same authored 3:4 artwork, unfiltered warm card
+surface, `192px` Quiet width, `1px` quiet silver material edge, contact shadow,
+transparent control surface, `0.65rem` image-to-identity gap, and Forum card
+identity. The runtime adds only the product-required visible spread role above
+the card name.
+
+## Restored hierarchy and mechanics
+
+- Each spread position remains one semantic button and now exposes its role
+  and card name visibly beneath the image; its accessible name remains
+  `Открыть карту <роль> — <имя>`.
+- The real-question context now matches the accepted Result hierarchy:
+  sentence-case `Твой вопрос` at `12px/400`, followed by the actual question at
+  `17px/500`. For an empty question the label is hidden and only
+  `Тайна приоткроется сама...` remains.
+- Existing archetype geometry and selection order are unchanged. For the
+  vertical archetype A, all three cards use the Kit Quiet `12rem` width.
+- Legacy `blur`, `flip`, `scale(.97)`, and translated resting state are removed.
+  Reveal delays remain `0/460/920ms`; each card now appears through opacity
+  only over the canonical `800ms` calm reveal.
+- Card art remains unfiltered. Hover/focus clarifies only the physical image
+  edge and contact shadow; press feedback remains `1px`.
+- The existing fixed bottom Sheet, Close/Escape behavior, focus return, Back,
+  five-card continuation, and New question routes are unchanged.
+
+## Responsive browser matrix
+
+All measurements are CSS pixels from the local in-app Browser after the final
+legacy-transform removal.
+
+| Viewport | Question width | Card width | Card role/name | Min target | Horizontal overflow |
+| --- | ---: | ---: | --- | ---: | --- |
+| `320 × 568` | `296px` | `192px` | `12 / 17.28px` | `48px` | none |
+| `375 × 812` | `343px` | `192px` | `12 / 17.28px` | `48px` | none |
+| `393 × 852` | `361px` | `192px` | `12 / 17.28px` | `48px` | none |
+| `430 × 932` | `398px` | `192px` | `12 / 17.28px` | `48px` | none |
+| `768 × 1024` | `400px` | `192px` | `12 / 17.28px` | `48px` | none |
+| `852 × 393` | `400px` | `192px` | `12 / 17.28px` | `48px` | none |
+
+The authored vertical topology remains a scrollable reading in short-height
+and landscape contexts; no card, text, or control is horizontally clipped.
+
+## Accessibility and motion
+
+- Keyboard focus is visibly rendered with a `2px` silver outline and `3px`
+  offset; forced-colors adds the system `ButtonText` outline and applies
+  `CanvasText` to the image edge.
+- Modal Close receives initial focus; Escape closes the Sheet and returns
+  focus to the originating card.
+- Reduced motion removes the reveal animation and pressed translation while
+  preserving all card content at full opacity.
+- This local pass does not claim a genuine system forced-colors session, exact
+  `200%` browser zoom, or physical Telegram WebView validation.
+
+## Automated verification
+
+- `node scripts/smoke-domain.mjs`: passed.
+- `node scripts/smoke-state.mjs`: passed.
+- `node scripts/smoke-ui-interactions.mjs`: passed, including new Spread
+  identity, Quiet geometry, question hierarchy, and motion regression checks.
+- `python3 scripts/validate_control_language.py`: passed.
+- `python3 scripts/validate_product_scope.py`: passed.
+- `python3 scripts/validate_responsive_strategy.py`: passed.
+- `python3 scripts/validate_lore_canon.py`: passed.
+- `python3 scripts/prepare_pages.py`: passed.
+- `python3 scripts/validate_pages_artifact.py`: passed.
+- `git diff --check`: passed.
+
+## Review boundary
+
+- Silver UI Kit HTML/CSS/JS: zero diff.
+- Linear: not changed before user review.
+- Git: not committed or pushed before user review.
 
 ## Final result
 
@@ -673,6 +1011,63 @@ card geometry, Result rail, background, Share, interpretation, or CTA.
 - `python3 scripts/validate_control_language.py`: passed.
 - `python3 scripts/validate_responsive_strategy.py`: passed.
 - `git diff --check`: passed.
+
+## Final result
+
+final result: passed
+
+---
+
+# YUK-139 reading actions + Cover invitation canonicalization — Design QA
+
+Date: 2026-08-04
+
+Scope: publish the user-approved local Cover CTA and reading-completion hierarchy
+as the exact Silver UI Kit contract, without changing the accepted visual result.
+
+## Canonical ownership
+
+- Cover «Войти в лес» is one `.wyrd-cover-invitation` shared by Kit and runtime:
+  the same Hero ornament, `60px` minimum height, optical frame height, `6.8s`
+  breath/trace, contained fireflies, softened magnetic response, hover, focus,
+  press and reduced-motion fallback.
+- One-card and three-card continuation use the same Secondary / Reduced frame:
+  «Раскрыть три карты» and «Раскрыть пять карт».
+- «Новый вопрос» is one quiet unframed `44px+` action. After five cards it is
+  the only completion action; the framed continuation is hidden.
+- Deck, Result and both Spread states use the same cold reading background and
+  suppress the legacy fog/stars layers.
+
+## Accessibility and restoration checks
+
+- Kit and runtime consume the same shared CSS instead of separate redraws.
+- The Kit dynamically imports the exact runtime Cover motion module; the Kit
+  still opens as a static document when module loading is unavailable.
+- Cover and reading reset preserve keyboard focus, forced-colors fallback,
+  `44px+` targets and reduced-motion meaning.
+- The approved runtime screen geometry, copy, routes and card artwork remain
+  unchanged by the canonical extraction.
+
+## Verification
+
+- `node scripts/smoke-ui-interactions.mjs`: passed, including exact Kit/runtime
+  Cover ownership, reading hierarchy and five-card final-state assertions.
+- Browser end-to-end at `393×852`: Cover → Forest → Deck → Result → three cards
+  → five cards passed. Enter returns focus to the Deck; the one- and three-card
+  screens expose one Secondary CTA plus one quiet reset; five cards expose only
+  the quiet reset.
+- Browser regression found and fixed a real cascade bug: `hidden=true` on the
+  final framed CTA was overridden by the component's `display:grid`. The final
+  rule now produces `display:none` and a `0×0` box; the quiet reset remains
+  `44px` high.
+- Responsive browser matrix passed at `320×568`, `360×800`, `375×812`,
+  `393×852`, `430×932` and `768×1024`: document width equals viewport width,
+  the five-card grid stays inside the shell and the reset keeps a `44px` target.
+- Spread detail modal at `393×852` stays within `0–393px`, locks page scroll,
+  focuses Close, and returns focus to the opening card.
+- Browser console: no warnings or errors.
+- Remaining repository and Pages gates are recorded in the final YUK-139
+  evidence comment for this checkpoint.
 
 ## Final result
 

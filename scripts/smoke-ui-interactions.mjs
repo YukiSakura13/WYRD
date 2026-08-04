@@ -41,12 +41,15 @@ const [
   tokens,
   runtimeHtml,
   runtimeStyles,
+  actionButtonCss,
+  coverCta,
   readingSilver,
   silverComponents,
   controlLanguage,
   runtimeBase,
   runtimeActions,
   runtimeRender,
+  runtimeSpread,
   runtimeShare,
 ] =
   await Promise.all([
@@ -57,12 +60,15 @@ const [
     readFile(new URL("../assets/css/tokens.css", import.meta.url), "utf8"),
     readFile(new URL("../index.html", import.meta.url), "utf8"),
     readFile(new URL("../assets/css/styles.css", import.meta.url), "utf8"),
+    readFile(new URL("../assets/css/components/action-buttons.css", import.meta.url), "utf8"),
+    readFile(new URL("../assets/js/ui/cover-cta.js", import.meta.url), "utf8"),
     readFile(new URL("../assets/css/scenes/reading-silver.css", import.meta.url), "utf8"),
     readFile(new URL("../assets/css/components/silver-components.css", import.meta.url), "utf8"),
     readFile(new URL("../assets/css/components/control-language.css", import.meta.url), "utf8"),
     readFile(new URL("../assets/css/base.css", import.meta.url), "utf8"),
     readFile(new URL("../assets/js/ui/actions.js", import.meta.url), "utf8"),
     readFile(new URL("../assets/js/ui/render.js", import.meta.url), "utf8"),
+    readFile(new URL("../assets/js/ui/render-spread.js", import.meta.url), "utf8"),
     readFile(new URL("../assets/js/ui/share.js", import.meta.url), "utf8"),
   ]);
 
@@ -497,6 +503,73 @@ assert.match(
   /body\[data-scene="deck"\]\s*\{[\s\S]*?radial-gradient\(circle at 50% -10%[\s\S]*?linear-gradient\(180deg,\s*#0b0d12 0%,\s*var\(--wyrd-depth\) 48%,\s*#050608 100%\)/,
   "Runtime Deck background must match the published Silver UI Kit background",
 );
+for (const scene of ["result", "spread"]) {
+  assert.match(
+    runtimeBase,
+    new RegExp(`body\\[data-scene="${scene}"\\]\\s*\\{[\\s\\S]*?radial-gradient\\(circle at 50% -10%[\\s\\S]*?linear-gradient\\(180deg,\\s*#0b0d12 0%,\\s*var\\(--wyrd-depth\\) 48%,\\s*#050608 100%\\)`),
+    `Runtime ${scene} background must match the approved cold silver Result background`,
+  );
+}
+assert.match(
+  runtimeBase,
+  /body:is\(\[data-scene="deck"\], \[data-scene="result"\], \[data-scene="spread"\]\) :is\(\.scene-fog, \.wyrd-scene-stars\)\s*\{\s*display:\s*none;/,
+  "All reading surfaces must suppress the legacy fog and stars layers",
+);
+assert.match(
+  runtimeHtml,
+  /wyrd-cover-invitation[\s\S]*?data-cover-invitation[\s\S]*?cover-cta-frame--main[\s\S]*?assets\/ui\/action-buttons\/continuous\/wyrd-action-hero\.svg/,
+  "Runtime Cover invitation must reuse the canonical project Hero action ornament",
+);
+assert.match(
+  kitHtml,
+  /data-cover-invitation[\s\S]*?cover-cta-frame--main[\s\S]*?assets\/ui\/action-buttons\/continuous\/wyrd-action-hero\.svg[\s\S]*?Войти в лес/,
+  "Silver UI Kit must execute the same canonical Cover invitation markup",
+);
+assert.match(
+  kitJs,
+  /import\("\.\.\/assets\/js\/ui\/cover-cta\.js"\)[\s\S]*?createCoverCtaAnimation\(coverInvitation\)/,
+  "Silver UI Kit must load the exact runtime magnetic firefly mechanic",
+);
+assert.match(
+  actionButtonCss,
+  /wyrdCoverPrimaryBreath 6\.8s[\s\S]*?wyrdCoverFrameTrace 6\.8s/,
+  "Cover invitation must preserve the source breath and trace cadence",
+);
+assert.match(
+  actionButtonCss,
+  /\.wyrd-cover-invitation\s*\{[\s\S]*?width:\s*clamp\(17\.5rem, 82vw, 22\.5rem\)[\s\S]*?min-height:\s*3\.75rem[\s\S]*?aspect-ratio:\s*1116 \/ 142/,
+  "Compact Cover invitation must preserve the approved proportional width, touch target, and Hero aspect ratio",
+);
+assert.match(
+  actionButtonCss,
+  /\.wyrd-cover-invitation \.cover-cta-frame\s*\{[\s\S]*?transform:\s*scaleY\(1\.18\)[\s\S]*?transform-origin:\s*50% 50%/,
+  "Cover Hero ornament must use the approved local optical height correction",
+);
+assert.match(
+  actionButtonCss,
+  /@media \(min-width: 560px\) and \(min-height: 860px\), \(min-width: 768px\)[\s\S]*?\.wyrd-cover-invitation\s*\{[\s\S]*?width:\s*clamp\(22\.5rem, 50vw, 30rem\)/,
+  "Wide Cover invitation must use the approved bounded responsive width",
+);
+assert.match(
+  actionButtonCss,
+  /\.wyrd-cover-invitation:active,[\s\S]*?\.wyrd-cover-invitation\.is-activating\s*\{[\s\S]*?translateY\(1px\) scale\(0\.995\)/,
+  "Cover invitation must preserve the source pressed mechanic",
+);
+assert.match(
+  actionButtonCss,
+  /\.wyrd-cover-invitation:hover\s*\{[\s\S]*?translateY\(-1px\)/,
+  "Cover invitation must preserve the source hover mechanic",
+);
+assert.match(
+  coverCta,
+  /damping:\s*42[\s\S]*?stiffness:\s*420[\s\S]*?actionableArea:\s*42[\s\S]*?attraction:\s*64[\s\S]*?particleDamping:\s*31[\s\S]*?particleStiffness:\s*240[\s\S]*?hoverParticleCeiling:\s*34[\s\S]*?idleParticleCeiling:\s*12[\s\S]*?updateMagnetFromPoint/,
+  "Cover invitation must preserve the approved softened magnetic firefly field contract",
+);
+assert.match(
+  coverCta,
+  /const horizontalFade = clamp\([\s\S]*?const verticalFade = clamp\([\s\S]*?const edgeFade = horizontalFade \* verticalFade[\s\S]*?fadeOut \*[\s\S]*?edgeFade \*/,
+  "Cover particles must fade before the ornamental frame while leaving the outer glow unclipped",
+);
 assert.doesNotMatch(
   runtimeActions,
   /transferIntentToDeck|--deck-intent-distance|is-intent-transferred/,
@@ -618,6 +691,51 @@ assert.match(
   /<p class="hook-copy">\s*Три карты покажут то, что скрыто\.\s*<\/p>/,
   "Result hook must keep the approved concise continuation copy",
 );
+assert.match(
+  runtimeHtml,
+  /class="[^"]*wyrd-action-frame--secondary[^"]*"[^>]*data-action="hook-open-path"/,
+  "Single-card continuation must use the same Secondary frame as the three-card continuation",
+);
+assert.match(
+  runtimeHtml,
+  /hook-block[\s\S]*?reading-new-question-link[\s\S]*?data-action="new-question"[\s\S]*?>\s*Новый вопрос\s*<\/button>/,
+  "Single-card Result must expose New question as a quiet unframed action beneath its continuation",
+);
+assert.match(
+  runtimeHtml,
+  /spread-continuation-link reading-new-question-link ui-action ui-action--quiet" data-action="new-question"/,
+  "Three-card Result must expose New question as a quiet unframed action",
+);
+assert.match(
+  runtimeSpread,
+  /copy\.textContent = "Пять карт откроют то, что три не сказали\.";/,
+  "Three-card continuation must use the approved concise bridge copy",
+);
+assert.match(
+  actionButtonCss,
+  /\.reading-new-question-link\s*\{[\s\S]*?min-height:\s*var\(--control-touch-min\);[\s\S]*?background:\s*transparent;[\s\S]*?color:\s*rgba\(225, 228, 225, 0\.58\);/,
+  "Quiet New question links must remain unframed while preserving a full touch target",
+);
+assert.match(
+  kitHtml,
+  /Reading completion contract[\s\S]*?Одна карта[\s\S]*?Раскрыть три карты[\s\S]*?Три карты[\s\S]*?Раскрыть пять карт[\s\S]*?Пять карт[\s\S]*?Продолжения расклада нет\.[\s\S]*?Новый вопрос/,
+  "Silver UI Kit must publish the exact one-, three-, and five-card completion hierarchy",
+);
+assert.match(
+  runtimeSpread,
+  /if \(lastSpread\.length === 5\)[\s\S]*?button\.hidden = true;[\s\S]*?link\.hidden = false;[\s\S]*?return;/,
+  "Five-card completion must hide the framed continuation and expose only the quiet reset",
+);
+assert.match(
+  readingSilver,
+  /#spread-result \.spread-continuation-btn\[hidden\]\s*\{\s*display:\s*none;/,
+  "Five-card hidden continuation must remain visually removed after Action Button display styles",
+);
+assert.doesNotMatch(
+  runtimeSpread,
+  /button\.classList\.add\("ui-action--quiet", "wyrd-action-frame--quiet"\)/,
+  "Five-card completion must not morph its continuation into an ornamented reset",
+);
 assert.doesNotMatch(
   runtimeHtml,
   /Духи леса услышали твой вопрос/,
@@ -672,6 +790,41 @@ assert.match(
   readingSilver,
   /#spread-result\s*\{[\s\S]*?animation:\s*none;/,
   "Spread must not recreate a transformed containing block around the fixed Sheet",
+);
+assert.match(
+  runtimeSpread,
+  /spread-card-caption[\s\S]*?spread-card-role[\s\S]*?spread-card-name[\s\S]*?item\.append\(image, caption\)/,
+  "Spread cards must expose their canonical role and card identity beneath the authored image",
+);
+assert.match(
+  runtimeSpread,
+  /if \(question\)[\s\S]*?spreadQuestionLabel\.textContent = "Твой вопрос"[\s\S]*?spreadQuestionLabel\.hidden = false[\s\S]*?spreadQuestionLabel\.hidden = true[\s\S]*?Тайна приоткроется сама/,
+  "Spread question context must match the Result hierarchy and hide its label for the empty-question whisper",
+);
+assert.match(
+  readingSilver,
+  /#spread-result \.spread-grid--three\.spread-grid--archetype-a\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0, 12rem\);/,
+  "The vertical three-card topology must use the Kit Quiet card width",
+);
+assert.match(
+  readingSilver,
+  /#spread-result \.spread-card\s*\{[\s\S]*?gap:\s*0\.65rem;[\s\S]*?background:\s*transparent;[\s\S]*?filter:\s*none;[\s\S]*?transform:\s*none;/,
+  "Spread buttons must keep the Kit Quiet transparent surface and remove legacy blur/scale positioning",
+);
+assert.match(
+  readingSilver,
+  /#spread-result \.spread-card img\s*\{[\s\S]*?aspect-ratio:\s*3 \/ 4;[\s\S]*?border:\s*1px solid rgba\(225, 228, 225, 0\.22\);[\s\S]*?box-shadow:\s*0 12px 26px rgba\(0, 0, 0, 0\.3\);/,
+  "Spread artwork must use the Kit Quiet 3:4 material edge and contact shadow",
+);
+assert.match(
+  readingSilver,
+  /#spread-result \.spread-card-name\s*\{[\s\S]*?font-size:\s*1\.08rem;/,
+  "Spread card identity must use the Kit Quiet title size",
+);
+assert.match(
+  readingSilver,
+  /@keyframes wyrd-spread-card-reveal\s*\{[\s\S]*?opacity:\s*0;[\s\S]*?opacity:\s*1;[\s\S]*?\}/,
+  "Spread reveal order must remain calm and must not add flip, blur, scale, or translation",
 );
 assert.match(
   readingSilver,

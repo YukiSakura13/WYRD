@@ -1,288 +1,435 @@
-const PARTICLE_TARGET_IDLE = 18;
-const PARTICLE_TARGET_HOVER = 30;
+const MAGNETIC_CONFIG = Object.freeze({
+  damping: 42,
+  stiffness: 420,
+  rangeX: 28,
+  rangeY: 14,
+  actionableArea: 42,
+  attraction: 64,
+  attractionRadius: 0.52,
+  curl: 9,
+  particleDamping: 31,
+  particleStiffness: 240,
+  touchPulse: 520,
+  hoverParticleCeiling: 34,
+  idleParticleCeiling: 12,
+});
 
-function rand(min, max) {
+function random(min, max) {
   return min + Math.random() * (max - min);
 }
 
-function drawRoundedClip(ctx, width, height) {
-  const x = 18;
-  const y = 22;
-  const w = width - 36;
-  const h = height - 47;
-  const r = 18;
-
-  ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.lineTo(x + w - r, y);
-  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-  ctx.lineTo(x + w, y + h - r);
-  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-  ctx.lineTo(x + r, y + h);
-  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-  ctx.lineTo(x, y + r);
-  ctx.quadraticCurveTo(x, y, x + r, y);
-  ctx.clip();
-}
-
-function drawEmberGlow(ctx, width, height, time, activeLevel) {
-  const breath = 0.5 + Math.sin((time * Math.PI * 2) / 4.8) * 0.5;
-  const baseAlpha = 0.024 + activeLevel * 0.026;
-  const glowAlpha = baseAlpha + breath * (0.014 + activeLevel * 0.012);
-  const glow = ctx.createRadialGradient(width * 0.5, height * 0.56, 2, width * 0.5, height * 0.56, width * 0.48);
-
-  glow.addColorStop(0, `rgba(206,218,230,${glowAlpha})`);
-  glow.addColorStop(0.46, `rgba(176,190,204,${glowAlpha * 0.42})`);
-  glow.addColorStop(1, "rgba(208,216,226,0)");
-
-  ctx.save();
-  ctx.globalCompositeOperation = "screen";
-  ctx.fillStyle = glow;
-  ctx.fillRect(18, 22, width - 36, height - 47);
-  ctx.restore();
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
 }
 
 export function createCoverCtaAnimation(button) {
   const canvas = button?.querySelector(".cover-cta-canvas");
-  const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const context = canvas?.getContext("2d");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
 
-  if (!button || !canvas || prefersReduced) {
+  if (!button || !canvas || !context || reduceMotion.matches || canvas.dataset.glowMounted === "true") {
     return;
   }
 
-  const ctx = canvas.getContext("2d");
+  canvas.dataset.glowMounted = "true";
+  button.dataset.magneticDust = "ready";
+
   const state = {
-    particles: [],
-    ornamentSparks: [],
+    active: 0,
     hover: false,
-    exiting: false,
-    exitElapsed: 0,
-    activeLevel: 0,
-    last: performance.now(),
-    emberClock: 0,
+    touchUntil: 0,
+    particles: [],
+    spawnClock: 0,
+    lastTime: performance.now(),
+    magnet: {
+      engaged: false,
+      touch: false,
+      pointerX: 0,
+      pointerY: 0,
+      focusX: 0,
+      focusY: 0,
+      targetX: 0,
+      targetY: 0,
+      x: 0,
+      y: 0,
+      velocityX: 0,
+      velocityY: 0,
+      strength: 0,
+    },
   };
+
+  canvas.dataset.magneticState = "idle";
 
   function resize() {
     const rect = canvas.getBoundingClientRect();
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = Math.round(rect.width * dpr);
-    canvas.height = Math.round(rect.height * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const ratio = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.max(1, Math.round(rect.width * ratio));
+    canvas.height = Math.max(1, Math.round(rect.height * ratio));
+    context.setTransform(ratio, 0, 0, ratio, 0, 0);
   }
 
-  function spawnParticle(force = false) {
-    const rect = canvas.getBoundingClientRect();
-    const target = state.hover ? PARTICLE_TARGET_HOVER : PARTICLE_TARGET_IDLE;
-    if (!force && state.particles.length >= target) return;
+  function setMagneticState(engaged) {
+    if (state.magnet.engaged === engaged) return;
+    state.magnet.engaged = engaged;
+    canvas.dataset.magneticState = engaged ? "active" : "idle";
+    button.classList.toggle("is-magnetic", engaged);
+  }
 
-    const kindRoll = Math.random();
-    const kind = kindRoll < 0.11 ? "star" : kindRoll < 0.82 ? "spark" : "dust";
-    const leftStream = Math.random() < 0.5;
-    const x = leftStream
-      ? rand(rect.width * 0.12, rect.width * 0.36)
-      : rand(rect.width * 0.64, rect.width * 0.88);
-    const hoverBoost = state.hover ? 1.12 : 1;
+  function releaseMagnet() {
+    setMagneticState(false);
+    state.magnet.targetX = 0;
+    state.magnet.targetY = 0;
+  }
 
-    const style = kind === "star"
-      ? {
-          alpha: rand(0.76, 0.94),
-          halo: rand(8, 12),
-          maxLife: rand(3.4, 4.6),
-          size: rand(1.7, 2.6),
-          speed: rand(10, 17),
-        }
-      : kind === "spark"
-        ? {
-            alpha: rand(0.5, 0.76),
-            halo: rand(5, 8),
-            maxLife: rand(3.2, 5),
-            size: rand(1.4, 2.5),
-            speed: rand(10, state.hover ? 28 : 20),
-          }
-        : {
-            alpha: rand(0.2, 0.36),
-            halo: rand(2.5, 4),
-            maxLife: rand(4.2, 6.2),
-            size: rand(0.65, 1.2),
-            speed: rand(5, 11),
-          };
+  function updateMagnetFromPoint(clientX, clientY, allowExpandedArea) {
+    const rect = button.getBoundingClientRect();
+    const area = allowExpandedArea ? MAGNETIC_CONFIG.actionableArea : 0;
+    const withinBounds =
+      clientX >= rect.left - area &&
+      clientX <= rect.right + area &&
+      clientY >= rect.top - area &&
+      clientY <= rect.bottom + area;
 
-    const particle = {
+    if (!withinBounds) {
+      releaseMagnet();
+      return false;
+    }
+
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const normalizedX = clamp((clientX - centerX) / Math.max(1, rect.width / 2), -1, 1);
+    const normalizedY = clamp((clientY - centerY) / Math.max(1, rect.height / 2), -1, 1);
+
+    state.magnet.pointerX = clamp(clientX - rect.left, 0, rect.width);
+    state.magnet.pointerY = clamp(clientY - rect.top, 0, rect.height);
+    if (!state.magnet.engaged) {
+      state.magnet.focusX = state.magnet.pointerX;
+      state.magnet.focusY = state.magnet.pointerY;
+    }
+
+    setMagneticState(true);
+    state.magnet.targetX = normalizedX * MAGNETIC_CONFIG.rangeX;
+    state.magnet.targetY = normalizedY * MAGNETIC_CONFIG.rangeY;
+    return true;
+  }
+
+  function stepMagnet(delta) {
+    const steps = Math.max(1, Math.ceil(delta / (1 / 120)));
+    const step = delta / steps;
+
+    for (let index = 0; index < steps; index += 1) {
+      const accelerationX =
+        (state.magnet.targetX - state.magnet.x) * MAGNETIC_CONFIG.stiffness -
+        state.magnet.velocityX * MAGNETIC_CONFIG.damping;
+      const accelerationY =
+        (state.magnet.targetY - state.magnet.y) * MAGNETIC_CONFIG.stiffness -
+        state.magnet.velocityY * MAGNETIC_CONFIG.damping;
+
+      state.magnet.velocityX += accelerationX * step;
+      state.magnet.velocityY += accelerationY * step;
+      state.magnet.x += state.magnet.velocityX * step;
+      state.magnet.y += state.magnet.velocityY * step;
+    }
+
+    const strengthTarget = state.magnet.engaged ? 1 : 0;
+    const response = strengthTarget ? 8 : 4.8;
+    state.magnet.strength +=
+      (strengthTarget - state.magnet.strength) * Math.min(1, delta * response);
+
+    const focusResponse = 1 - Math.exp(-delta * 12);
+    state.magnet.focusX +=
+      (state.magnet.pointerX - state.magnet.focusX) * focusResponse;
+    state.magnet.focusY +=
+      (state.magnet.pointerY - state.magnet.focusY) * focusResponse;
+
+    if (
+      !state.magnet.engaged &&
+      Math.abs(state.magnet.x) < 0.01 &&
+      Math.abs(state.magnet.y) < 0.01 &&
+      Math.abs(state.magnet.velocityX) < 0.01 &&
+      Math.abs(state.magnet.velocityY) < 0.01
+    ) {
+      state.magnet.x = 0;
+      state.magnet.y = 0;
+      state.magnet.velocityX = 0;
+      state.magnet.velocityY = 0;
+    }
+  }
+
+  function spawn(width, height) {
+    const fromLeft = Math.random() < 0.5;
+    const x = fromLeft
+      ? random(width * 0.12, width * 0.35)
+      : random(width * 0.65, width * 0.88);
+    const bright = Math.random() < 0.18 + state.active * 0.08;
+
+    state.particles.push({
       x,
-      y: rect.height - rand(18, 34),
       baseX: x,
-      targetX: rect.width * 0.5 + rand(-26, 26),
-      kind,
-      size: style.size * hoverBoost,
-      halo: style.halo * hoverBoost,
-      speed: style.speed * hoverBoost,
-      drift: rand(3, state.hover ? 14 : 9),
-      phase: rand(0, Math.PI * 2),
+      targetX: width * 0.5 + random(-width * 0.05, width * 0.05),
+      y: random(height * 0.64, height * 0.82),
+      size: bright ? random(1.25, 1.9) : random(0.55, 1.15),
+      halo: bright ? random(5.5, 8) : random(2.8, 5),
+      speed: random(5, 11) * (1 + state.active * 0.68),
+      drift: random(2, 7),
+      phase: random(0, Math.PI * 2),
+      alpha: bright ? random(0.5, 0.78) : random(0.18, 0.44),
       life: 0,
-      maxLife: style.maxLife,
-      alpha: Math.min(0.94, style.alpha * hoverBoost),
-    };
-    state.particles.push(particle);
-  }
-
-  function spawnOrnamentSpark(width, height) {
-    state.ornamentSparks.push({
-      x: width * 0.5 + rand(-9, 9),
-      y: height * 0.18 + rand(-2, 3),
-      size: rand(0.9, state.hover ? 1.8 : 1.5),
-      life: 0,
-      maxLife: rand(0.9, 1.4),
-      drift: rand(-1.5, 1.5),
-      phase: rand(0, Math.PI * 2),
-      alpha: rand(0.34, state.hover ? 0.68 : 0.54),
+      maxLife: random(3.2, 5.3),
+      depth: random(0.56, 1.16),
+      magnetX: 0,
+      magnetY: 0,
+      magnetVelocityX: 0,
+      magnetVelocityY: 0,
+      magnetStiffness: MAGNETIC_CONFIG.particleStiffness * random(0.82, 1.18),
+      magnetDamping: MAGNETIC_CONFIG.particleDamping * random(0.9, 1.12),
+      curlDirection: Math.random() < 0.5 ? -1 : 1,
     });
   }
 
-  function drawParticles(width, height, dt) {
-    const exitLift = state.exiting ? Math.min(1, state.exitElapsed / 0.24) : 0;
+  function drawMagneticWell(width, height) {
+    if (state.magnet.strength < 0.01) return;
 
-    ctx.save();
-    ctx.globalCompositeOperation = "screen";
+    const radius = Math.max(58, Math.min(108, width * 0.14, height * 1.05));
+    const alpha = 0.082 * state.magnet.strength;
+    const glow = context.createRadialGradient(
+      state.magnet.focusX,
+      state.magnet.focusY,
+      0,
+      state.magnet.focusX,
+      state.magnet.focusY,
+      radius,
+    );
+    glow.addColorStop(0, `rgba(238,244,248,${alpha})`);
+    glow.addColorStop(0.28, `rgba(196,211,222,${alpha * 0.48})`);
+    glow.addColorStop(1, "rgba(160,178,196,0)");
 
-    for (let i = state.particles.length - 1; i >= 0; i -= 1) {
-      const p = state.particles[i];
-      p.life += dt;
-      p.y -= p.speed * (1 + exitLift * 0.18) * dt;
-      const steerRate = state.exiting ? 1.8 : p.y < height * 0.4 ? 0.58 : 0.07;
-      p.baseX += (p.targetX - p.baseX) * Math.min(1, dt * steerRate);
-      p.x = p.baseX + Math.sin(p.phase + p.life * 2.2) * p.drift;
+    context.fillStyle = glow;
+    context.fillRect(0, 0, width, height);
+  }
 
-      const fadeIn = Math.min(1, p.life / 0.35);
-      const fadeOut = Math.min(1, Math.max(0, (p.maxLife - p.life) / 0.8));
-      const exitBrightness = state.exiting ? 1.12 : 1;
-      const twinkle = p.kind === "star" ? 0.76 + Math.sin(p.phase + p.life * 4.2) * 0.24 : 1;
-      const topEdgeFade = Math.min(1, Math.max(0, (p.y - 22) / 10));
-      const alpha = Math.min(1, p.alpha * fadeIn * fadeOut * exitBrightness * twinkle * topEdgeFade);
+  function drawField(width, height, time) {
+    const breath = 0.5 + Math.sin((time * Math.PI * 2) / 6.8) * 0.5;
+    const alpha = 0.026 + breath * 0.018 + state.active * 0.052;
+    const fieldX = width * 0.5 + state.magnet.x * 0.58;
+    const fieldY = height * 0.53 + state.magnet.y * 0.58;
+    const glow = context.createRadialGradient(fieldX, fieldY, 1, fieldX, fieldY, width * 0.43);
+    glow.addColorStop(0, `rgba(226,234,240,${alpha})`);
+    glow.addColorStop(0.44, `rgba(177,194,208,${alpha * 0.42})`);
+    glow.addColorStop(1, "rgba(160,178,196,0)");
 
-      const halo = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.halo);
-      halo.addColorStop(0, `rgba(236,242,247,${alpha * 0.5})`);
-      halo.addColorStop(0.32, `rgba(190,205,219,${alpha * 0.24})`);
+    context.save();
+    context.globalCompositeOperation = "screen";
+    context.fillStyle = glow;
+    context.fillRect(0, 0, width, height);
+    drawMagneticWell(width, height);
+    context.restore();
+  }
+
+  function stepParticleMagnet(particle, targetX, targetY, delta) {
+    const steps = Math.max(1, Math.ceil(delta / (1 / 120)));
+    const step = delta / steps;
+
+    for (let index = 0; index < steps; index += 1) {
+      const accelerationX =
+        (targetX - particle.magnetX) * particle.magnetStiffness -
+        particle.magnetVelocityX * particle.magnetDamping;
+      const accelerationY =
+        (targetY - particle.magnetY) * particle.magnetStiffness -
+        particle.magnetVelocityY * particle.magnetDamping;
+
+      particle.magnetVelocityX += accelerationX * step;
+      particle.magnetVelocityY += accelerationY * step;
+      particle.magnetX += particle.magnetVelocityX * step;
+      particle.magnetY += particle.magnetVelocityY * step;
+    }
+  }
+
+  function drawParticles(width, height, delta) {
+    context.save();
+    context.globalCompositeOperation = "screen";
+
+    for (let index = state.particles.length - 1; index >= 0; index -= 1) {
+      const particle = state.particles[index];
+      particle.life += delta;
+      particle.y -= particle.speed * delta;
+      particle.baseX +=
+        (particle.targetX - particle.baseX) *
+        Math.min(1, delta * (particle.y < height * 0.42 ? 0.5 : 0.08));
+      particle.x =
+        particle.baseX + Math.sin(particle.phase + particle.life * 2.1) * particle.drift;
+
+      let targetMagnetX = state.magnet.x * particle.depth;
+      let targetMagnetY = state.magnet.y * particle.depth;
+      const attractionX = state.magnet.focusX - particle.x;
+      const attractionY = state.magnet.focusY - particle.y;
+      const attractionDistance = Math.hypot(attractionX, attractionY);
+      const attractionRadius = Math.max(
+        150,
+        Math.min(420, width * MAGNETIC_CONFIG.attractionRadius),
+      );
+      let magneticInfluence = 0;
+
+      if (attractionDistance < attractionRadius && state.magnet.strength > 0.001) {
+        const distance = Math.max(1, attractionDistance);
+        const directionX = attractionX / distance;
+        const directionY = attractionY / distance;
+        const falloff = Math.pow(1 - attractionDistance / attractionRadius, 1.35);
+        magneticInfluence = falloff * state.magnet.strength;
+        const pull =
+          MAGNETIC_CONFIG.attraction *
+          magneticInfluence *
+          (0.72 + particle.depth * 0.28);
+        const curl =
+          MAGNETIC_CONFIG.curl *
+          magneticInfluence *
+          particle.curlDirection *
+          Math.sin(particle.phase + particle.life * 1.25);
+
+        targetMagnetX += directionX * pull - directionY * curl;
+        targetMagnetY += directionY * pull + directionX * curl;
+      }
+
+      stepParticleMagnet(particle, targetMagnetX, targetMagnetY, delta);
+      const drawX = particle.x + particle.magnetX;
+      const drawY = particle.y + particle.magnetY;
+      const horizontalFade = clamp(
+        (Math.min(drawX, width - drawX) - width * 0.08) / 12,
+        0,
+        1,
+      );
+      const verticalFade = clamp(
+        (Math.min(drawY, height - drawY) - height * 0.1) / 6,
+        0,
+        1,
+      );
+      const edgeFade = horizontalFade * verticalFade;
+      const fadeIn = Math.min(1, particle.life / 0.4);
+      const fadeOut = Math.min(1, Math.max(0, (particle.maxLife - particle.life) / 0.85));
+      const alpha =
+        particle.alpha *
+        fadeIn *
+        fadeOut *
+        edgeFade *
+        (0.72 + state.active * 0.5 + magneticInfluence * 0.62);
+      const haloSize = particle.halo * (1 + magneticInfluence * 0.4);
+      const particleSize = particle.size * (1 + magneticInfluence * 0.24);
+      const halo = context.createRadialGradient(drawX, drawY, 0, drawX, drawY, haloSize);
+      halo.addColorStop(0, `rgba(241,246,249,${alpha * 0.56})`);
+      halo.addColorStop(0.35, `rgba(189,205,218,${alpha * 0.24})`);
       halo.addColorStop(1, "rgba(160,178,196,0)");
-      ctx.beginPath();
-      ctx.fillStyle = halo;
-      ctx.arc(p.x, p.y, p.halo, 0, Math.PI * 2);
-      ctx.fill();
 
-      ctx.beginPath();
-      ctx.fillStyle = p.kind === "dust"
-        ? `rgba(205,216,226,${alpha})`
-        : `rgba(242,246,249,${alpha})`;
-      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      ctx.fill();
+      context.fillStyle = halo;
+      context.beginPath();
+      context.arc(drawX, drawY, haloSize, 0, Math.PI * 2);
+      context.fill();
 
-      if (p.kind === "star" && alpha > 0.18) {
-        const ray = p.halo * (0.38 + twinkle * 0.18);
-        ctx.strokeStyle = `rgba(237,243,248,${alpha * 0.62})`;
-        ctx.lineWidth = 0.7;
-        ctx.beginPath();
-        ctx.moveTo(p.x - ray, p.y);
-        ctx.lineTo(p.x + ray, p.y);
-        ctx.moveTo(p.x, p.y - ray);
-        ctx.lineTo(p.x, p.y + ray);
-        ctx.stroke();
-      }
+      context.fillStyle = `rgba(239,244,247,${alpha})`;
+      context.beginPath();
+      context.arc(drawX, drawY, particleSize, 0, Math.PI * 2);
+      context.fill();
 
-      if (p.life > p.maxLife || p.y < 20) {
-        state.particles.splice(i, 1);
+      if (particle.life >= particle.maxLife || particle.y < height * 0.12) {
+        state.particles.splice(index, 1);
       }
     }
 
-    ctx.restore();
+    context.restore();
   }
 
-  function drawOrnamentSparks(dt) {
-    for (let i = state.ornamentSparks.length - 1; i >= 0; i -= 1) {
-      const p = state.ornamentSparks[i];
-      p.life += dt;
-      p.x += p.drift * dt;
-      p.y -= 2.2 * dt;
-
-      const fadeIn = Math.min(1, p.life / 0.45);
-      const fadeOut = Math.max(0, 1 - p.life / p.maxLife);
-      const alpha = p.alpha * fadeIn * fadeOut;
-
-      ctx.beginPath();
-      ctx.fillStyle = `rgba(234,239,245,${alpha})`;
-      ctx.arc(p.x + Math.sin(p.phase + p.life * 3) * 2.5, p.y, p.size, 0, Math.PI * 2);
-      ctx.fill();
-
-      if (p.life > p.maxLife) {
-        state.ornamentSparks.splice(i, 1);
-      }
-    }
-  }
-
-  function frame(now) {
+  function render(now) {
     const rect = canvas.getBoundingClientRect();
     const width = rect.width;
     const height = rect.height;
-    const dt = Math.min(0.05, (now - state.last) / 1000);
-    state.last = now;
-    state.emberClock += dt;
-    if (state.exiting) state.exitElapsed += dt;
+    const delta = Math.min(0.05, (now - state.lastTime) / 1000);
+    state.lastTime = now;
 
-    const targetActive = state.hover ? 1 : 0;
-    const activeSpeed = targetActive > state.activeLevel ? 5.5 : 3.2;
-    state.activeLevel += (targetActive - state.activeLevel) * Math.min(1, dt * activeSpeed);
+    const touchActive = now < state.touchUntil;
+    if (!touchActive && state.magnet.touch) {
+      state.magnet.touch = false;
+      releaseMagnet();
+    }
 
-    ctx.clearRect(0, 0, width, height);
+    const target = state.hover || touchActive ? 1 : 0;
+    state.active += (target - state.active) * Math.min(1, delta * (target ? 5.6 : 2.8));
+    stepMagnet(delta);
+    context.clearRect(0, 0, width, height);
 
-    if (!state.exiting) {
-      const spawnCount = state.hover ? 4 : 1;
-      for (let i = 0; i < spawnCount; i += 1) {
-        if (Math.random() < (state.hover ? 0.34 : 0.08)) spawnParticle();
+    if (width > 0 && height > 0 && !document.hidden) {
+      state.spawnClock += delta;
+      const interval = state.active > 0.2 ? 0.06 : 0.24;
+      const limit =
+        state.active > 0.2
+          ? MAGNETIC_CONFIG.hoverParticleCeiling
+          : MAGNETIC_CONFIG.idleParticleCeiling;
+
+      if (state.spawnClock >= interval && state.particles.length < limit) {
+        state.spawnClock = 0;
+        spawn(width, height);
       }
+
+      drawField(width, height, now / 1000);
+      drawParticles(width, height, delta);
     }
 
-    if (state.ornamentSparks.length < 1 && Math.random() < (state.hover ? 0.012 : 0.004)) {
-      spawnOrnamentSpark(width, height);
-    }
-
-    ctx.save();
-    drawRoundedClip(ctx, width, height);
-    drawEmberGlow(ctx, width, height, state.emberClock, state.activeLevel);
-    drawParticles(width, height, dt);
-    ctx.restore();
-
-    drawOrnamentSparks(dt);
-
-    requestAnimationFrame(frame);
+    window.requestAnimationFrame(render);
   }
 
-  button.addEventListener("pointerenter", function handlePointerEnter() {
+  function handlePointerMove(event) {
+    if (!finePointer.matches || event.pointerType !== "mouse") return;
+    updateMagnetFromPoint(event.clientX, event.clientY, true);
+  }
+
+  window.addEventListener("pointermove", handlePointerMove, { passive: true });
+  window.addEventListener("blur", releaseMagnet);
+  document.addEventListener("visibilitychange", function handleVisibilityChange() {
+    if (document.hidden) releaseMagnet();
+  });
+
+  button.addEventListener("pointerenter", function handlePointerEnter(event) {
+    if (!finePointer.matches || event.pointerType !== "mouse") return;
     state.hover = true;
-    for (let i = 0; i < 14; i += 1) spawnParticle(true);
+    updateMagnetFromPoint(event.clientX, event.clientY, true);
   });
 
-  button.addEventListener("pointerleave", function handlePointerLeave() {
-    state.hover = false;
+  button.addEventListener("pointerleave", function handlePointerLeave(event) {
+    if (event.pointerType === "mouse") state.hover = false;
   });
 
-  button.addEventListener("focus", function handleFocus() {
-    state.hover = true;
-    for (let i = 0; i < 10; i += 1) spawnParticle(true);
+  button.addEventListener("pointerdown", function handlePointerDown(event) {
+    if (event.pointerType === "mouse") return;
+    state.touchUntil = performance.now() + MAGNETIC_CONFIG.touchPulse;
+    state.magnet.touch = true;
+    updateMagnetFromPoint(event.clientX, event.clientY, false);
   });
 
-  button.addEventListener("blur", function handleBlur() {
-    state.hover = false;
+  button.addEventListener("pointermove", function handleTouchMove(event) {
+    if (!state.magnet.touch || event.pointerType === "mouse") return;
+    updateMagnetFromPoint(event.clientX, event.clientY, false);
   });
 
-  button.addEventListener("click", function handleActivation() {
-    state.exiting = true;
-    state.exitElapsed = 0;
-    state.hover = false;
+  button.addEventListener("pointerup", function handlePointerUp(event) {
+    if (event.pointerType === "mouse") return;
+    state.touchUntil = Math.max(state.touchUntil, performance.now() + 220);
+  });
+
+  button.addEventListener("pointercancel", function handlePointerCancel() {
+    state.touchUntil = 0;
+    state.magnet.touch = false;
+    releaseMagnet();
   });
 
   resize();
-  for (let i = 0; i < PARTICLE_TARGET_IDLE; i += 1) spawnParticle(true);
-  window.addEventListener("resize", resize);
-  requestAnimationFrame(function start(time) {
-    state.last = time;
-    frame(time);
+  if ("ResizeObserver" in window) {
+    const observer = new ResizeObserver(resize);
+    observer.observe(button);
+  } else {
+    window.addEventListener("resize", resize);
+  }
+
+  window.requestAnimationFrame(function start(time) {
+    state.lastTime = time;
+    render(time);
   });
 }

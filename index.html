@@ -29,7 +29,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <meta name="wyrd-build" content="silver-20260803-yuk139-result-artifact-share-corrective" />
+    <meta name="wyrd-build" content="silver-20260804-yuk139-cover-motion-preview" />
     <title>WYRD — Оракул духов леса</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -38,7 +38,7 @@
       rel="stylesheet"
     />
     <link rel="manifest" href="./manifest.webmanifest?v=silver-20260710-forest" />
-    <link rel="stylesheet" href="./assets/css/styles.css?v=silver-20260803-yuk139-result-artifact-share-corrective" />
+    <link rel="stylesheet" href="./assets/css/styles.css?v=silver-20260804-yuk139-cover-motion-preview" />
   </head>
   <body>
     <div class="scene-fog scene-fog--back" aria-hidden="true"></div>
@@ -148,16 +148,27 @@
             <h1 class="wyrd-brand__word">WYRD</h1>
             <p class="wyrd-brand__subtitle">Оракул духов леса</p>
           </div>
-          <button class="cover-btn cover-cta-button ui-action ui-action--primary" data-action="enter" type="button">
-            <span class="cover-cta-fill" aria-hidden="true"></span>
+            <button class="cover-btn cover-cta-button wyrd-cover-invitation ui-action ui-action--primary" data-cover-invitation data-action="enter" type="button">
             <canvas class="cover-cta-canvas" aria-hidden="true"></canvas>
-            <span class="cover-cta-label">Войти в лес</span>
             <img
-              class="cover-cta-frame"
-              src="./assets/images/cover/cta-frame-forest-seal-silver.png"
+              class="cover-cta-frame cover-cta-frame--halo"
+              src="./assets/ui/action-buttons/continuous/wyrd-action-hero.svg"
               alt=""
               decoding="async"
             />
+            <img
+              class="cover-cta-frame cover-cta-frame--main"
+              src="./assets/ui/action-buttons/continuous/wyrd-action-hero.svg"
+              alt=""
+              decoding="async"
+            />
+            <img
+              class="cover-cta-frame cover-cta-frame--trace"
+              src="./assets/ui/action-buttons/continuous/wyrd-action-hero.svg"
+              alt=""
+              decoding="async"
+            />
+            <span class="cover-cta-label">Войти в лес</span>
           </button>
 
         </div>
@@ -724,10 +735,13 @@
             Три карты покажут то, что скрыто.
           </p>
           <div class="hook-cta-wrap">
-            <button class="cover-btn hook-btn ui-action ui-action--primary wyrd-action-frame wyrd-action-frame--hero" data-action="hook-open-path" type="button">
+            <button class="cover-btn hook-btn ui-action ui-action--primary wyrd-action-frame wyrd-action-frame--secondary" data-action="hook-open-path" type="button">
               Раскрыть три карты
             </button>
           </div>
+          <button class="reading-new-question-link ui-action ui-action--quiet" data-action="new-question" type="button">
+            Новый вопрос
+          </button>
         </div>
         </div>
       </section>
@@ -740,7 +754,7 @@
         </div>
         <div class="ui-scene-content ui-scene-content--oracle">
         <div class="result-question spread-question" id="spread-question" aria-live="polite">
-          <p class="result-question-label" id="spread-question-label">ТВОЙ ВОПРОС</p>
+          <p class="result-question-label" id="spread-question-label">Твой вопрос</p>
           <p class="result-question-text" id="spread-question-text"></p>
         </div>
         <div class="spread-grid" id="spread-grid"></div>
@@ -763,7 +777,7 @@
         <div class="spread-continuation" id="spread-continuation" hidden>
           <p class="spread-continuation-copy">История уже открылась. Следующий слой ждёт твоего шага.</p>
           <button class="cover-btn spread-continuation-btn ui-action ui-action--primary wyrd-action-frame wyrd-action-frame--secondary" data-action="spread-5" type="button">Продолжить путь</button>
-          <button class="spread-continuation-link ui-action ui-action--quiet wyrd-action-frame wyrd-action-frame--quiet" data-action="new-question" type="button">Новый вопрос</button>
+          <button class="spread-continuation-link reading-new-question-link ui-action ui-action--quiet" data-action="new-question" type="button">Новый вопрос</button>
         </div>
         <div class="spread-card-modal" id="spread-card-modal" data-dialog-layer hidden>
           <div class="spread-card-modal-backdrop" id="spread-card-modal-backdrop" data-dialog-backdrop aria-hidden="true"></div>
@@ -993,6 +1007,6 @@
       window.WYRD_BUILD_ID =
         document.querySelector('meta[name="wyrd-build"]')?.content || "dev";
     </script>
-    <script type="module" src="./assets/js/main.js?v=silver-20260803-yuk139-result-artifact-share-corrective"></script>
+    <script type="module" src="./assets/js/main.js?v=silver-20260804-yuk139-cover-motion-preview"></script>
   </body>
 </html>
