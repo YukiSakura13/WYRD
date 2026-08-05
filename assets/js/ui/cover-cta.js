@@ -9,9 +9,10 @@ const MAGNETIC_CONFIG = Object.freeze({
   curl: 9,
   particleDamping: 31,
   particleStiffness: 240,
-  touchPulse: 520,
+  touchPulse: 880,
   hoverParticleCeiling: 34,
   idleParticleCeiling: 12,
+  touchIdleParticleCeiling: 18,
 });
 
 function random(min, max) {
@@ -27,6 +28,8 @@ export function createCoverCtaAnimation(button) {
   const context = canvas?.getContext("2d");
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+  const coarsePointer = window.matchMedia("(hover: none), (pointer: coarse)");
+  const touchPresentation = coarsePointer.matches || window.innerWidth < 560;
 
   if (!button || !canvas || !context || reduceMotion.matches || canvas.dataset.glowMounted === "true") {
     return;
@@ -162,7 +165,7 @@ export function createCoverCtaAnimation(button) {
     const x = fromLeft
       ? random(width * 0.12, width * 0.35)
       : random(width * 0.65, width * 0.88);
-    const bright = Math.random() < 0.18 + state.active * 0.08;
+    const bright = Math.random() < 0.18 + state.active * 0.08 + (touchPresentation ? 0.05 : 0);
 
     state.particles.push({
       x,
@@ -174,7 +177,9 @@ export function createCoverCtaAnimation(button) {
       speed: random(5, 11) * (1 + state.active * 0.68),
       drift: random(2, 7),
       phase: random(0, Math.PI * 2),
-      alpha: bright ? random(0.5, 0.78) : random(0.18, 0.44),
+      alpha: bright
+        ? random(touchPresentation ? 0.58 : 0.5, touchPresentation ? 0.84 : 0.78)
+        : random(touchPresentation ? 0.24 : 0.18, touchPresentation ? 0.5 : 0.44),
       life: 0,
       maxLife: random(3.2, 5.3),
       depth: random(0.56, 1.16),
@@ -211,7 +216,9 @@ export function createCoverCtaAnimation(button) {
 
   function drawField(width, height, time) {
     const breath = 0.5 + Math.sin((time * Math.PI * 2) / 6.8) * 0.5;
-    const alpha = 0.026 + breath * 0.018 + state.active * 0.052;
+    const idleAlpha = touchPresentation ? 0.036 : 0.026;
+    const breathAlpha = touchPresentation ? 0.024 : 0.018;
+    const alpha = idleAlpha + breath * breathAlpha + state.active * 0.052;
     const fieldX = width * 0.5 + state.magnet.x * 0.58;
     const fieldY = height * 0.53 + state.magnet.y * 0.58;
     const glow = context.createRadialGradient(fieldX, fieldY, 1, fieldX, fieldY, width * 0.43);
@@ -358,11 +365,13 @@ export function createCoverCtaAnimation(button) {
 
     if (width > 0 && height > 0 && !document.hidden) {
       state.spawnClock += delta;
-      const interval = state.active > 0.2 ? 0.06 : 0.24;
+      const interval = state.active > 0.2 ? 0.06 : touchPresentation ? 0.17 : 0.24;
       const limit =
         state.active > 0.2
           ? MAGNETIC_CONFIG.hoverParticleCeiling
-          : MAGNETIC_CONFIG.idleParticleCeiling;
+          : touchPresentation
+            ? MAGNETIC_CONFIG.touchIdleParticleCeiling
+            : MAGNETIC_CONFIG.idleParticleCeiling;
 
       if (state.spawnClock >= interval && state.particles.length < limit) {
         state.spawnClock = 0;
@@ -411,7 +420,7 @@ export function createCoverCtaAnimation(button) {
 
   button.addEventListener("pointerup", function handlePointerUp(event) {
     if (event.pointerType === "mouse") return;
-    state.touchUntil = Math.max(state.touchUntil, performance.now() + 220);
+    state.touchUntil = Math.max(state.touchUntil, performance.now() + 520);
   });
 
   button.addEventListener("pointercancel", function handlePointerCancel() {

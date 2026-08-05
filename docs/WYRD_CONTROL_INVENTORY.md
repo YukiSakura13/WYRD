@@ -31,7 +31,7 @@ The saved layer is architecture only: semantic family, target geometry, layout o
 | Notifications | Back, time row, day choices, toggles, sheet actions | renderer + actions | Day controls are 44px and wrap to `4 + 3` below 410px. |
 | Spirit Book | Back, previous/next, chapter dots | renderer + actions | Pager uses SVG chevrons; first/last disabled states are explicit. |
 | Deck | Back, deck artifact, quiet draw action | `data-action="draw"` | Artifact and text affordance share the route but keep separate accessible names. |
-| Result/Spread | Back, share/continue/reset actions, spread cards, modal Close | renderer + actions | 1→3 and 3→5 use the same Secondary frame. «Новый вопрос» is an unframed quiet 44px action; after five cards it is the only completion action. Header axis and cold scene background are shared across the reading flow. |
+| Result/Spread | Back, share/continue/reset actions, spread cards, modal Close | renderer + actions | 1→3 and 3→5 use the same Secondary frame. «Новый вопрос» is an unframed quiet 44px action on the one- and three-card results; after five cards it becomes the only completion action and uses the Quiet / Minimal frame. Header axis and cold scene background are shared across the reading flow. |
 | Traces/Gifts | Back, history traces, gift cards, sheet Close | renderer + actions | History traces are native buttons, not `role="button"` articles. |
 
 ## Interaction Contract

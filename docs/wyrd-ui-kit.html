@@ -13,7 +13,7 @@
     />
     <link rel="stylesheet" href="../assets/css/tokens.css?v=20260728-1" />
     <link rel="stylesheet" href="../assets/css/components/control-language.css?v=20260728-1" />
-    <link rel="stylesheet" href="../assets/css/components/action-buttons.css?v=20260804-1" />
+    <link rel="stylesheet" href="../assets/css/components/action-buttons.css?v=20260805-1" />
     <link rel="stylesheet" href="../assets/css/components/silver-components.css?v=20260728-1" />
     <link rel="stylesheet" href="wyrd-ui-kit.css?v=20260728-1" />
   </head>
@@ -567,10 +567,10 @@
           <article class="action-sample" data-action-sample="quiet">
             <div class="action-sample__meta">
               <strong>Quiet / Minimal</strong>
-              <span>зарезервированный орнамент; не используется для сброса чтения</span>
+              <span>финальный сброс после пяти карт; без огоньков и магнитной механики</span>
             </div>
             <button class="ui-action wyrd-action-frame wyrd-action-frame--quiet" type="button">
-              Остаться
+              Новый вопрос
             </button>
           </article>
         </div>
@@ -602,7 +602,10 @@
             <section>
               <p class="component-label">Пять карт</p>
               <p class="component-note">Продолжения расклада нет.</p>
-              <button class="reading-new-question-link ui-action ui-action--quiet" type="button">
+              <button
+                class="ui-action ui-action--quiet wyrd-action-frame wyrd-action-frame--quiet"
+                type="button"
+              >
                 Новый вопрос
               </button>
             </section>

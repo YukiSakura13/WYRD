@@ -158,11 +158,15 @@ export function createSpreadRenderer(elements) {
       }
 
       if (button) {
-        button.hidden = true;
+        button.hidden = false;
+        button.dataset.action = "new-question";
+        button.textContent = "Новый вопрос";
+        button.classList.remove("ui-action--primary", "wyrd-action-frame--secondary");
+        button.classList.add("ui-action--quiet", "wyrd-action-frame--quiet");
       }
 
       if (link) {
-        link.hidden = false;
+        link.hidden = true;
       }
       return;
     }

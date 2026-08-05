@@ -1,3 +1,183 @@
+# YUK-139 physical-phone corrective — final acceptance
+
+Date: 2026-08-05
+
+Scope: user-approved mobile corrective pass for the Cover invitation and the
+reading completion actions. This checkpoint synchronizes the approved runtime
+with the canonical Silver UI Kit before publication.
+
+## Accepted result
+
+- Cover keeps the approved `60px` geometry while restoring readable mobile
+  contrast, contained fireflies and the calmer touch gather/release.
+- The canvas light field is feathered to transparency at every edge, so hover
+  cannot expose a rectangular compositing boundary.
+- Legacy `.cover-btn:hover` gold background and shadow are explicitly neutralized
+  in the canonical silver hover, magnetic, focus and pressed states.
+- Safari overscroll uses the reading `#050608` backing color and cannot reveal a
+  white strip beneath a scene.
+- One- and three-card continuation actions retain the same Secondary frame and
+  their separate unframed reset.
+- Five cards end with one Quiet / Minimal framed `Новый вопрос`; the duplicate
+  unframed reset is hidden. The final reset has no fireflies, magnetism or idle
+  trace.
+
+## Canonical synchronization
+
+- Runtime and Kit reuse `assets/css/components/action-buttons.css` for the same
+  Cover, Secondary and Quiet states.
+- The Kit completion contract, Foundations, Component Mapping, Control Inventory
+  and Product Surface Map now record the approved five-card final action.
+- The UI interaction smoke asserts the same Kit/runtime hierarchy.
+
+## Final verification
+
+- Domain, state and UI interaction smoke; control-language, product-scope,
+  lore-canon and responsive-strategy validators; Pages artifact validation and
+  whitespace check passed.
+- Cover → Forest → Deck → Result → three cards → five cards completed at
+  `393 × 852`.
+- The spread-card Sheet opens with focus on Close and returns focus to its card.
+- `320 × 568`, `375 × 812`, `393 × 852`, `430 × 932`, `768 × 1024` and
+  landscape `852 × 393` have `0px` horizontal overflow and the same `#050608`
+  root backing.
+- The final Quiet reset is `52px` high at every checked viewport; the duplicate
+  text reset remains hidden.
+
+## Acceptance boundary
+
+- The user approved the physical-phone and local results and explicitly
+  authorized commit and push.
+- YUK-139 remains `In Progress` until its full issue-level acceptance matrix is
+  complete; this checkpoint does not claim platform checks that were not run.
+
+final result: approved for publication
+
+---
+
+# YUK-139 Cover hover cascade corrective — Design QA
+
+Date: 2026-08-05
+
+Scope: local correction of the gold rectangular hover regression reported on
+the first ritual Cover. Geometry, resting mobile contrast, particles, magnetic
+motion, Kit, Linear, commit, push, and published build are unchanged.
+
+## Source and corrected evidence
+
+- Reported hover regression: user-provided Retina capture from the local Cover.
+- Corrected hover: the same `496 × 627` CSS composition captured locally.
+
+The source is a `992 × 1254` Retina capture of the same visual viewport. Both
+states were inspected together. The gold rectangle is gone; only the approved
+silver contour, contained fireflies, cold halo, white label, and `-1px` lift
+remain.
+
+## Root cause and correction
+
+- Legacy `.cover-btn:hover` still supplied `background: var(--gold-light)` and
+  a gold shadow to every control carrying the compatibility class.
+- The canonical Cover and reading action selectors now explicitly reset hover,
+  focus, pressed, and magnetic states to `background: transparent` and
+  `box-shadow: none`.
+- The existing `is-magnetic` runtime state shares the same silver hover rules,
+  so the attraction zone cannot expose the legacy gold paint before the cursor
+  reaches the visible SVG contour.
+
+## Verification
+
+- Hover computed state: transparent background, no background image, no box
+  shadow, main frame opacity `0.96`, halo opacity `0.34`, white label, `-1px`
+  lift.
+- The original Hero asset, `480 × 60` wide-screen box, composition, and motion
+  timing are unchanged.
+- `git diff --check` and JavaScript syntax checks passed.
+- Genuine physical-device revalidation is not claimed by this local pass.
+
+## Review boundary
+
+- Canonical Kit: no changes.
+- Linear: no changes.
+- Git commit/push: not performed.
+
+final result: passed
+
+---
+
+# YUK-139 physical-phone corrective preview — Design QA
+
+Date: 2026-08-05
+
+Scope: local runtime correction from the physical iPhone review. The canonical
+Silver UI Kit, Linear, commit, push, and published build remain unchanged until
+the user reviews this preview.
+
+## Source and implementation evidence
+
+- User-provided physical iPhone captures: Cover and final five-card reading.
+- Local comparison: Cover at `360 × 782` and five-card result at `393 × 852`.
+
+The physical and local captures were inspected together. The local Cover keeps
+the approved `60px` geometry while restoring readable silver contrast, a
+contained resting light field, and a calmer touch gather/release. The final
+five-card scene now ends with one Quiet/Minimal framed `Новый вопрос`; the
+duplicate unframed reset is hidden.
+
+## Corrective implementation
+
+- The document root and body now own the same `#050608` backing color, dynamic
+  viewport minimum height, and vertical overscroll containment. Safari
+  rubber-band can no longer reveal a white page canvas behind reading scenes.
+- Compact/touch presentation raises the Cover main contour to `0.98`, keeps the
+  label readable, uses the existing breathing/trace language at a restrained
+  amplitude, and raises the internal firefly ceiling from `12` to `18`.
+- Touch response lasts `880ms`; the frame gathers and releases instead of
+  dimming on press. Fine-pointer magnetic hover remains unchanged.
+- Reading Secondary actions keep their approved geometry and gain one partial
+  silver edge pass per `8.2s`; compact/touch resting contrast is `0.98`.
+- The five-card terminal action reuses the existing Quiet ornament at `70%`
+  resting contour opacity. It has no fireflies, magnetism, or idle trace.
+
+## Responsive verification
+
+| Viewport | Five-card CTA | Horizontal overflow | Root backing |
+| --- | --- | --- | --- |
+| `360 × 782` | `249 × 52` | `0px` | `#050608` |
+| `393 × 852` | `267 × 52` | `0px` | `#050608` |
+| `430 × 932` | `295 × 52` | `0px` | `#050608` |
+| `852 × 393` | `296 × 52` | `0px` | `#050608` |
+
+At `393 × 852`, Cover is `322 × 60` with `35px` side space. Its document
+height equals the dynamic viewport height, so there is no latent page strip
+below the fixed Cover.
+
+## Interaction and verification
+
+- Cover → Forest → Deck → Result → three cards → five cards completed in the
+  local browser.
+- Cover press exposes `is-activating` before the scene transition; the new
+  gather/release remains inside the existing transition timing.
+- Three-card continuation is Secondary and exposes the rare trace; five-card
+  continuation is one Quiet framed `Новый вопрос` with the unframed duplicate
+  hidden.
+- Domain and state smoke tests, control language, responsive strategy, product
+  scope, Pages artifact validation, JavaScript syntax, and `git diff --check`
+  passed.
+- The canonical UI-interaction smoke intentionally remains red because it
+  still asserts the pre-review Kit rule that five cards must hide the frame.
+  That assertion and the Kit must change together only after user approval.
+- Genuine physical-device revalidation is not claimed by this local pass.
+
+## Review boundary
+
+- Canonical Kit: no changes.
+- Linear: no changes.
+- Git commit/push: not performed.
+
+final result: local preview passed; canonical synchronization pending approval
+
+---
+
 # YUK-139 Cover CTA height and motion correction — Design QA
 
 Date: 2026-08-04

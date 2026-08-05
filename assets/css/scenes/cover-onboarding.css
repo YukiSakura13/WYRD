@@ -701,6 +701,7 @@
   z-index: 10;
   min-height: 100vh;
   min-height: var(--layout-viewport-min);
+  min-height: var(--layout-viewport-dynamic);
   padding:
     var(--layout-page-padding-block-start)
     max(var(--layout-gutter-inline), var(--layout-safe-inline-end))

@@ -85,6 +85,18 @@
   font-size: clamp(18px, 4.4vw, 20px);
 }
 
+:is(#result, #spread-result) .wyrd-action-frame--secondary::after {
+  -webkit-mask-image: linear-gradient(102deg, transparent 0 34%, #000 46% 54%, transparent 66% 100%);
+  mask-image: linear-gradient(102deg, transparent 0 34%, #000 46% 54%, transparent 66% 100%);
+  -webkit-mask-position: 165% 50%;
+  mask-position: 165% 50%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 42% 100%;
+  mask-size: 42% 100%;
+  animation: wyrdReadingSecondaryTrace 8.2s var(--ease-in-out-strong) infinite;
+}
+
 :is(#result, #spread-result) .wyrd-action-frame--compact {
   --wyrd-action-frame-image: url("../../ui/action-buttons/continuous/wyrd-action-compact.svg");
   --wyrd-action-frame-width: 83%;
@@ -95,6 +107,7 @@
 
 :is(#result, #spread-result) .wyrd-action-frame--quiet {
   --wyrd-action-frame-image: url("../../ui/action-buttons/continuous/wyrd-action-quiet.svg");
+  --wyrd-action-frame-opacity: 0.7;
   --wyrd-action-frame-width: 74%;
   --wyrd-action-frame-max: 25.75rem;
   padding-inline: 30px;
@@ -110,6 +123,8 @@
 :is(#result, #spread-result) .wyrd-action-frame.is-demo-hover {
   --wyrd-action-frame-opacity: 1;
   --wyrd-action-state-light: rgba(225, 228, 225, 0.16);
+  background: transparent;
+  box-shadow: none;
   color: var(--wyrd-text-action-active);
   text-shadow:
     0 1px 8px rgba(0, 0, 0, 0.9),
@@ -118,6 +133,9 @@
 
 :is(#result, #spread-result) .wyrd-action-frame:hover:not(:disabled)::after,
 :is(#result, #spread-result) .wyrd-action-frame.is-demo-hover::after {
+  -webkit-mask-image: none;
+  mask-image: none;
+  animation: none;
   opacity: 0.32;
 }
 
@@ -126,6 +144,7 @@
   --wyrd-action-frame-opacity: 1;
   --wyrd-action-state-light: rgba(225, 228, 225, 0.22);
   outline: none;
+  background: transparent;
   box-shadow: none;
   color: var(--wyrd-text-action-active);
   text-shadow:
@@ -135,6 +154,9 @@
 
 :is(#result, #spread-result) .wyrd-action-frame:focus-visible::after,
 :is(#result, #spread-result) .wyrd-action-frame.is-demo-focus::after {
+  -webkit-mask-image: none;
+  mask-image: none;
+  animation: none;
   opacity: 0.58;
 }
 
@@ -142,6 +164,8 @@
 :is(#result, #spread-result) .wyrd-action-frame.is-demo-pressed {
   --wyrd-action-frame-opacity: 1;
   --wyrd-action-state-light: rgba(225, 228, 225, 0.2);
+  background: transparent;
+  box-shadow: none;
   color: var(--wyrd-text-action-active);
   text-shadow:
     0 1px 8px rgba(0, 0, 0, 0.9),
@@ -151,7 +175,46 @@
 
 :is(#result, #spread-result) .wyrd-action-frame:active:not(:disabled)::after,
 :is(#result, #spread-result) .wyrd-action-frame.is-demo-pressed::after {
+  -webkit-mask-image: none;
+  mask-image: none;
+  animation: none;
   opacity: 0.46;
+}
+
+@keyframes wyrdReadingSecondaryTrace {
+  0%,
+  68%,
+  100% {
+    opacity: 0;
+    -webkit-mask-position: 165% 50%;
+    mask-position: 165% 50%;
+  }
+
+  73% {
+    opacity: 0.22;
+  }
+
+  84% {
+    opacity: 0.08;
+    -webkit-mask-position: -65% 50%;
+    mask-position: -65% 50%;
+  }
+
+  88% {
+    opacity: 0;
+    -webkit-mask-position: -65% 50%;
+    mask-position: -65% 50%;
+  }
+}
+
+@media (hover: none), (pointer: coarse), (max-width: 559px) {
+  :is(#result, #spread-result) .wyrd-action-frame--secondary {
+    --wyrd-action-frame-opacity: 0.98;
+    color: rgba(241, 244, 241, 0.94);
+    text-shadow:
+      0 1px 8px rgba(0, 0, 0, 0.9),
+      0 0 10px rgba(225, 228, 225, 0.12);
+  }
 }
 
 :is(#result, #spread-result) .wyrd-action-frame:disabled,
@@ -186,6 +249,7 @@
   :is(#result, #spread-result) .wyrd-action-frame,
   :is(#result, #spread-result) .wyrd-action-frame::before,
   :is(#result, #spread-result) .wyrd-action-frame::after {
+    animation: none;
     transition: none;
   }
 
@@ -245,6 +309,22 @@
   height: 100%;
   padding: 0;
   mix-blend-mode: screen;
+  -webkit-mask-image: radial-gradient(
+    ellipse 50% 50% at 50% 50%,
+    #000 0 48%,
+    rgba(0, 0, 0, 0.96) 60%,
+    rgba(0, 0, 0, 0.55) 78%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 50% 50% at 50% 50%,
+    #000 0 48%,
+    rgba(0, 0, 0, 0.96) 60%,
+    rgba(0, 0, 0, 0.55) 78%,
+    transparent 100%
+  );
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
   pointer-events: none;
 }
 
@@ -354,8 +434,12 @@
 
 .wyrd-cover-invitation:active,
 .wyrd-cover-invitation.is-activating {
-  color: #aeb4b5;
-  filter: none;
+  background: transparent;
+  box-shadow: none;
+  color: #fff;
+  filter:
+    drop-shadow(0 0 7px rgba(231, 239, 242, 0.3))
+    drop-shadow(0 0 22px rgba(176, 197, 212, 0.18));
   transform: translateY(1px) scale(0.995);
 }
 
@@ -367,14 +451,68 @@
   transform: translateY(1px);
 }
 
-.wyrd-cover-invitation:is(:active, .is-activating) :is(.cover-cta-frame--halo, .cover-cta-frame--trace) {
+.wyrd-cover-invitation:active :is(.cover-cta-frame--halo, .cover-cta-frame--trace) {
   animation: none;
-  opacity: 0.06;
+  opacity: 0.2;
 }
 
-.wyrd-cover-invitation:is(:active, .is-activating) .cover-cta-frame--main {
-  opacity: 0.84;
-  filter: none;
+.wyrd-cover-invitation:active .cover-cta-frame--main {
+  opacity: 1;
+  filter:
+    brightness(1.06)
+    drop-shadow(0 0 7px rgba(231, 239, 242, 0.24));
+}
+
+.wyrd-cover-invitation.is-activating .cover-cta-frame--halo {
+  animation: wyrdCoverTouchGather 820ms var(--ease-out-strong) both;
+}
+
+.wyrd-cover-invitation.is-activating .cover-cta-frame--trace {
+  animation: wyrdCoverTouchTrace 820ms var(--ease-out-strong) both;
+}
+
+.wyrd-cover-invitation.is-activating .cover-cta-frame--main {
+  opacity: 1;
+  filter:
+    brightness(1.08)
+    drop-shadow(0 0 7px rgba(231, 239, 242, 0.28))
+    drop-shadow(0 0 20px rgba(176, 197, 212, 0.18));
+}
+
+@keyframes wyrdCoverTouchGather {
+  0% {
+    opacity: 0.16;
+  }
+
+  32% {
+    opacity: 0.42;
+  }
+
+  72% {
+    opacity: 0.24;
+  }
+
+  100% {
+    opacity: 0.12;
+  }
+}
+
+@keyframes wyrdCoverTouchTrace {
+  0% {
+    opacity: 0.08;
+    -webkit-mask-position: 120% 50%;
+    mask-position: 120% 50%;
+  }
+
+  38% {
+    opacity: 0.34;
+  }
+
+  100% {
+    opacity: 0;
+    -webkit-mask-position: -45% 50%;
+    mask-position: -45% 50%;
+  }
 }
 
 @keyframes wyrdCoverPrimaryBreath {
@@ -413,6 +551,48 @@
   }
 
   83% {
+    opacity: 0;
+    -webkit-mask-position: -65% 50%;
+    mask-position: -65% 50%;
+  }
+}
+
+@keyframes wyrdCoverPrimaryBreathTouch {
+  0%,
+  44%,
+  100% {
+    opacity: 0.15;
+  }
+
+  60% {
+    opacity: 0.32;
+  }
+
+  76% {
+    opacity: 0.2;
+  }
+}
+
+@keyframes wyrdCoverFrameTraceTouch {
+  0%,
+  44%,
+  100% {
+    opacity: 0;
+    -webkit-mask-position: 165% 50%;
+    mask-position: 165% 50%;
+  }
+
+  55% {
+    opacity: 0.3;
+  }
+
+  76% {
+    opacity: 0.09;
+    -webkit-mask-position: -65% 50%;
+    mask-position: -65% 50%;
+  }
+
+  82% {
     opacity: 0;
     -webkit-mask-position: -65% 50%;
     mask-position: -65% 50%;
@@ -464,8 +644,43 @@
   }
 }
 
+@media (hover: none), (pointer: coarse), (max-width: 559px) {
+  .wyrd-cover-invitation {
+    color: rgba(247, 247, 241, 0.96);
+    filter:
+      drop-shadow(0 0 6px rgba(231, 239, 242, 0.22))
+      drop-shadow(0 0 20px rgba(176, 197, 212, 0.13));
+  }
+
+  .wyrd-cover-invitation .cover-cta-frame--main {
+    opacity: 0.98;
+    filter:
+      brightness(1.05)
+      drop-shadow(0 0 6px rgba(231, 239, 242, 0.22))
+      drop-shadow(0 0 18px rgba(176, 197, 212, 0.13));
+  }
+
+  .wyrd-cover-invitation .cover-cta-frame--halo {
+    opacity: 0.15;
+    animation-name: wyrdCoverPrimaryBreathTouch;
+  }
+
+  .wyrd-cover-invitation .cover-cta-frame--trace {
+    animation-name: wyrdCoverFrameTraceTouch;
+  }
+
+  .wyrd-cover-invitation .cover-cta-label {
+    text-shadow:
+      0 1px 0 rgba(0, 0, 0, 0.96),
+      0 0 9px rgba(243, 236, 221, 0.26),
+      0 0 18px rgba(194, 208, 220, 0.14);
+  }
+}
+
 @media (hover: hover) and (pointer: fine) {
-  .wyrd-cover-invitation:hover {
+  .wyrd-cover-invitation:is(:hover, .is-magnetic) {
+    background: transparent;
+    box-shadow: none;
     color: #fff;
     filter:
       drop-shadow(0 0 7px rgba(231, 239, 242, 0.28))
@@ -474,12 +689,12 @@
     transform: translateY(-1px);
   }
 
-  .wyrd-cover-invitation:hover .cover-cta-frame--halo {
+  .wyrd-cover-invitation:is(:hover, .is-magnetic) .cover-cta-frame--halo {
     animation: none;
     opacity: 0.34;
   }
 
-  .wyrd-cover-invitation:hover .cover-cta-frame--main {
+  .wyrd-cover-invitation:is(:hover, .is-magnetic) .cover-cta-frame--main {
     opacity: 0.96;
     filter:
       brightness(1.04)
@@ -487,14 +702,14 @@
       drop-shadow(0 0 20px rgba(176, 197, 212, 0.14));
   }
 
-  .wyrd-cover-invitation:hover .cover-cta-frame--trace {
+  .wyrd-cover-invitation:is(:hover, .is-magnetic) .cover-cta-frame--trace {
     animation: none;
     opacity: 0.26;
     -webkit-mask-position: 50% 50%;
     mask-position: 50% 50%;
   }
 
-  .wyrd-cover-invitation:hover .cover-cta-label {
+  .wyrd-cover-invitation:is(:hover, .is-magnetic) .cover-cta-label {
     color: #fff;
     text-shadow:
       0 1px 0 rgba(0, 0, 0, 0.96),

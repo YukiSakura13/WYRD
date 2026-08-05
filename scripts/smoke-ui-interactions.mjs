@@ -557,8 +557,8 @@ assert.match(
 );
 assert.match(
   actionButtonCss,
-  /\.wyrd-cover-invitation:hover\s*\{[\s\S]*?translateY\(-1px\)/,
-  "Cover invitation must preserve the source hover mechanic",
+  /\.wyrd-cover-invitation:is\(:hover, \.is-magnetic\)\s*\{[\s\S]*?background:\s*transparent;[\s\S]*?box-shadow:\s*none;[\s\S]*?translateY\(-1px\)/,
+  "Cover invitation must preserve one silver hover mechanic across visible hover and magnetic attraction",
 );
 assert.match(
   coverCta,
@@ -718,23 +718,18 @@ assert.match(
 );
 assert.match(
   kitHtml,
-  /Reading completion contract[\s\S]*?Одна карта[\s\S]*?Раскрыть три карты[\s\S]*?Три карты[\s\S]*?Раскрыть пять карт[\s\S]*?Пять карт[\s\S]*?Продолжения расклада нет\.[\s\S]*?Новый вопрос/,
+  /Reading completion contract[\s\S]*?Одна карта[\s\S]*?Раскрыть три карты[\s\S]*?Три карты[\s\S]*?Раскрыть пять карт[\s\S]*?Пять карт[\s\S]*?Продолжения расклада нет\.[\s\S]*?wyrd-action-frame--quiet[\s\S]*?Новый вопрос/,
   "Silver UI Kit must publish the exact one-, three-, and five-card completion hierarchy",
 );
 assert.match(
   runtimeSpread,
-  /if \(lastSpread\.length === 5\)[\s\S]*?button\.hidden = true;[\s\S]*?link\.hidden = false;[\s\S]*?return;/,
-  "Five-card completion must hide the framed continuation and expose only the quiet reset",
+  /if \(lastSpread\.length === 5\)[\s\S]*?button\.hidden = false;[\s\S]*?button\.dataset\.action = "new-question";[\s\S]*?button\.textContent = "Новый вопрос";[\s\S]*?button\.classList\.remove\("ui-action--primary", "wyrd-action-frame--secondary"\);[\s\S]*?button\.classList\.add\("ui-action--quiet", "wyrd-action-frame--quiet"\);[\s\S]*?link\.hidden = true;[\s\S]*?return;/,
+  "Five-card completion must expose one Quiet framed reset and hide the duplicate text reset",
 );
 assert.match(
-  readingSilver,
-  /#spread-result \.spread-continuation-btn\[hidden\]\s*\{\s*display:\s*none;/,
-  "Five-card hidden continuation must remain visually removed after Action Button display styles",
-);
-assert.doesNotMatch(
-  runtimeSpread,
-  /button\.classList\.add\("ui-action--quiet", "wyrd-action-frame--quiet"\)/,
-  "Five-card completion must not morph its continuation into an ornamented reset",
+  actionButtonCss,
+  /wyrd-action-frame--quiet\s*\{[\s\S]*?--wyrd-action-frame-opacity:\s*0\.7;/,
+  "Five-card Quiet reset must retain its approved restrained resting contour",
 );
 assert.doesNotMatch(
   runtimeHtml,

@@ -9,15 +9,24 @@ body {
   min-height: 100%;
 }
 
+html {
+  background: #050608;
+  color-scheme: dark;
+  overscroll-behavior-y: none;
+}
+
 body {
   background: var(--ink);
+  background-color: #050608;
   color: var(--text-default);
   font-family: var(--ui-font);
   font-size: var(--text-md);
   line-height: var(--leading-relaxed);
   min-height: 100vh;
   min-height: var(--layout-viewport-min);
+  min-height: var(--layout-viewport-dynamic);
   overflow-x: hidden;
+  overscroll-behavior-y: none;
   background-image:
     radial-gradient(circle at top, var(--accent-10), transparent 30%),
     radial-gradient(circle at 18% 18%, var(--parchment-03), transparent 24%),
@@ -63,6 +72,7 @@ body[data-scene="profile"] #main {
   max-width: none;
   min-height: 100vh;
   min-height: var(--layout-viewport-min);
+  min-height: var(--layout-viewport-dynamic);
   padding: 0;
 }
 

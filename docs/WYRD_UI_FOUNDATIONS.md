@@ -193,8 +193,8 @@ The reading completion hierarchy is fixed:
 
 - single-card result → Secondary / Reduced «Раскрыть три карты» + unframed quiet «Новый вопрос»;
 - three-card result → the same Secondary / Reduced visual for «Раскрыть пять карт» + unframed quiet «Новый вопрос»;
-- five-card result → only the unframed quiet «Новый вопрос»;
-- the ornamented Quiet / Minimal frame remains in the family for future contextual actions, but it does not own the reading reset.
+- five-card result → only Quiet / Minimal framed «Новый вопрос»;
+- the final Quiet / Minimal frame has no fireflies, magnetism or idle trace and does not compete with a continuation CTA.
 
 The visual ladder uses one continuous frame and one mirrored side construction:
 
