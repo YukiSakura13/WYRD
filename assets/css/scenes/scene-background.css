@@ -1,0 +1,85 @@
+/*
+ * Shared runtime Scene Shell background.
+ *
+ * The first moon Cover keeps its authored forest image. Every other scene
+ * consumes the exact Silver UI Kit night recipe. Atmospheric particles stay
+ * separate from this layer so they cannot redefine the scene color.
+ */
+
+html {
+  background: var(--wyrd-scene-background-base);
+}
+
+body {
+  position: relative;
+  isolation: isolate;
+}
+
+body:not([data-scene="cover"]) {
+  background: transparent;
+}
+
+body:not([data-scene="cover"])::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--wyrd-scene-background);
+}
+
+body:not([data-scene="cover"]) #main,
+body:is(
+    [data-scene="forest"],
+    [data-scene="lunar-day"],
+    [data-scene="yes-no"],
+    [data-scene="night-images"],
+    [data-scene="settings"],
+    [data-scene="about-you"],
+    [data-scene="reminders"],
+    [data-scene="app-info"],
+    [data-scene="spirit-book"]
+  ) {
+  background: transparent;
+}
+
+:is(#deck-wrap, #result, #spread-result).ui-scene-shell--oracle {
+  background: transparent;
+}
+
+/* Legacy fixed texture must not tint one inner scene differently.
+   Atmospheric motion remains controlled by each scene's existing contract. */
+body:not([data-scene="cover"])::after {
+  display: none;
+}
+
+/* Forest stars remain a separate atmospheric layer over the shared night. */
+.forest-home,
+.forest-placeholder,
+.forest-atmosphere {
+  --forest-bg: var(--wyrd-depth);
+  background: transparent;
+}
+
+/* Settings-family shells no longer paint a competing full-page gradient. */
+.settings-screen::before,
+.about-you-screen::before {
+  background: transparent;
+}
+
+/* The book keeps object-level mist and art depth, not a separate page color. */
+.spirit-book::before,
+.spirit-book::after {
+  background: transparent;
+}
+
+@media (forced-colors: active) {
+  html,
+  body:not([data-scene="cover"]) {
+    background: Canvas;
+  }
+
+  body:not([data-scene="cover"])::before {
+    display: none;
+  }
+}

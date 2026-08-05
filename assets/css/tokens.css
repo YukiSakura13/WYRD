@@ -43,6 +43,12 @@
   --wyrd-control-surface: rgba(12, 14, 20, 0.86);
   --wyrd-sheet-surface: rgba(10, 12, 17, 0.96);
 
+  /* Canonical non-Cover scene background from the approved Silver UI Kit. */
+  --wyrd-scene-background-base: #050608;
+  --wyrd-scene-background:
+    radial-gradient(circle at 50% -10%, rgba(225, 228, 225, 0.075), transparent 34rem),
+    linear-gradient(180deg, #0b0d12 0%, var(--wyrd-depth) 48%, var(--wyrd-scene-background-base) 100%);
+
   /* Shared silver control roles. */
   --control-touch-min: 44px;
   --control-icon-hit-size: 48px;
