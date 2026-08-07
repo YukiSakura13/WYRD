@@ -52,6 +52,7 @@ const [
   runtimeSpread,
   runtimeShare,
   settingsCss,
+  notificationsCss,
   stateModel,
   stateStorage,
   runtimeAudio,
@@ -75,6 +76,7 @@ const [
     readFile(new URL("../assets/js/ui/render-spread.js", import.meta.url), "utf8"),
     readFile(new URL("../assets/js/ui/share.js", import.meta.url), "utf8"),
     readFile(new URL("../assets/css/scenes/settings.css", import.meta.url), "utf8"),
+    readFile(new URL("../assets/css/components/notifications.css", import.meta.url), "utf8"),
     readFile(new URL("../assets/js/state/model.js", import.meta.url), "utf8"),
     readFile(new URL("../assets/js/state/storage.js", import.meta.url), "utf8"),
     readFile(new URL("../assets/js/audio.js", import.meta.url), "utf8"),
@@ -931,6 +933,73 @@ assert.match(
   runtimeRender,
   /dialogs\.sync\(elements\.soundSettingsSheet[\s\S]*?initialFocus:\s*"\[data-action='toggle-music'\]"[\s\S]*?returnFocus:\s*"#setting-sound-entry"/,
   "Sound Sheet must move focus inside and return it to the disclosure row",
+);
+
+const profileHtml = runtimeHtml.split('<section class="about-you-screen')[1]?.split('<section class="settings-screen reminders-screen"')[0] || "";
+assert.match(
+  profileHtml,
+  /ui-scene-shell[\s\S]*?<header class="settings-header about-you-header ui-app-header">[\s\S]*?class="ui-icon-button ui-icon-button--back btn-back-circle settings-back"[\s\S]*?<h1 class="ui-app-header__identity" id="about-you-title">Профиль<\/h1>/,
+  "Profile must reuse the canonical Silver Scene Shell and App Header",
+);
+assert.doesNotMatch(
+  profileHtml,
+  /wyrd-scene-stars|settings-brand|settings-rule|settings-kicker/,
+  "Profile must not retain legacy stars or the rejected gold lockup hierarchy",
+);
+assert.equal(
+  (profileHtml.match(/class="about-segment ui-choice"/g) || []).length,
+  3,
+  "Profile must preserve exactly three accessible pronoun radio choices",
+);
+assert.match(
+  profileHtml,
+  /class="about-unsaved-backdrop"[\s\S]*?type="button"[\s\S]*?aria-label="Остаться в Профиле"[\s\S]*?data-dialog-motion="sheet"[\s\S]*?aria-describedby="about-unsaved-description"/,
+  "Profile unsaved warning must use the canonical dismissible Sheet contract",
+);
+assert.match(
+  settingsCss,
+  /#about-you-screen \.about-avatar\.is-selected[\s\S]*?border-color:\s*rgba\(225, 228, 225, 0\.86\);[\s\S]*?inset 0 0 0 1px rgba\(225, 228, 225, 0\.13\)/,
+  "Profile selected avatar must use one clear silver contour and a quiet inset cue",
+);
+assert.doesNotMatch(
+  settingsCss,
+  /#about-you-screen \.about-avatar\.is-selected[\s\S]*?0 0 0 3px/,
+  "Profile selected avatar must not restore the rejected double outer ring",
+);
+assert.match(
+  runtimeActions,
+  /event\.target\?\.id === "about-name-input" \|\| event\.target\?\.id === "about-zodiac-select"/,
+  "Profile zodiac changes must update the draft and enable Save",
+);
+assert.match(
+  settingsCss,
+  /#about-you-screen \.about-select-row select\s*\{[\s\S]*?padding-inline:\s*0\.75rem 1\.25rem;/,
+  "Profile zodiac select must preserve breathing room around the native chevron",
+);
+assert.match(
+  notificationsCss,
+  /\.wyrd-notification--success\s*\{[\s\S]*?border-color:\s*rgba\(225, 228, 225, 0\.52\);/,
+  "Profile save feedback must use the shared silver success surface",
+);
+assert.doesNotMatch(
+  notificationsCss,
+  /201,\s*(?:161|168),\s*(?:74|76)/,
+  "Global notifications must not restore the legacy gold accent",
+);
+assert.match(
+  settingsCss,
+  /#about-you-screen \.about-segment\[aria-checked="true"\][\s\S]*?background:\s*linear-gradient\(145deg, #e1e4e1, #aeb4b2\);[\s\S]*?color:\s*#111318;/,
+  "Profile selected pronoun must restore the canonical high-contrast Choice state",
+);
+assert.match(
+  settingsCss,
+  /#about-you-screen \.about-unsaved-panel\s*\{[\s\S]*?width:\s*min\([\s\S]*?42rem\);[\s\S]*?max-height:\s*min\(84vh, 44rem\);/,
+  "Profile unsaved Sheet must preserve the canonical responsive envelope",
+);
+assert.match(
+  settingsCss,
+  /@media \(forced-colors: active\)[\s\S]*?#about-you-screen \.about-avatar\.is-selected[\s\S]*?outline:\s*2px solid Highlight;/,
+  "Profile selected controls must remain explicit in forced colors",
 );
 
 console.log("WYRD UI interaction smoke tests passed");

@@ -18,15 +18,16 @@
   width: min(100%, 390px);
   min-height: 52px;
   padding: 6px 6px 6px 16px;
-  border: 1px solid rgba(201, 161, 74, 0.38);
+  border: 1px solid rgba(205, 209, 207, 0.3);
   border-radius: 12px;
   background:
-    linear-gradient(180deg, rgba(25, 25, 34, 0.98), rgba(10, 10, 16, 0.98)),
-    var(--panel-default);
-  color: var(--text-default);
+    linear-gradient(180deg, rgba(25, 27, 36, 0.98), rgba(9, 10, 15, 0.98)),
+    var(--wyrd-control-surface);
+  color: var(--wyrd-text-action);
   box-shadow:
     0 16px 44px rgba(0, 0, 0, 0.5),
-    0 0 24px rgba(201, 161, 74, 0.08);
+    inset 0 1px 0 rgba(225, 228, 225, 0.045),
+    0 0 22px rgba(225, 228, 225, 0.055);
   opacity: 0;
   pointer-events: auto;
   transform: translateY(-8px) scale(0.98);
@@ -45,12 +46,12 @@
 }
 
 .wyrd-notification--success {
-  border-color: rgba(201, 168, 76, 0.62);
+  border-color: rgba(225, 228, 225, 0.52);
 }
 
 .wyrd-notification__message {
   margin: 0;
-  color: rgba(244, 236, 220, 0.94);
+  color: var(--wyrd-bone-text);
   font-family: var(--ui-font);
   font-size: 1rem;
   line-height: 1.4;
@@ -62,7 +63,7 @@
   min-height: 44px;
   border: 0;
   background: transparent;
-  color: var(--text-accent);
+  color: var(--wyrd-text-action);
   cursor: pointer;
 }
 
@@ -86,7 +87,7 @@
 
 .wyrd-notification__action:focus-visible,
 .wyrd-notification__close:focus-visible {
-  outline: 2px solid var(--text-accent);
+  outline: 2px solid var(--control-focus-ring);
   outline-offset: -2px;
 }
 

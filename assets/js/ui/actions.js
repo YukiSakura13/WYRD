@@ -830,7 +830,7 @@ export function createInputChangeHandler(deps) {
   const { audio, renderApp, store, uiState } = deps;
 
   return function onInputChange(event) {
-    if (event.target?.id === "about-name-input") {
+    if (event.target?.id === "about-name-input" || event.target?.id === "about-zodiac-select") {
       uiState.aboutDraft = readAboutDraftFromForm(store, uiState);
       renderApp();
       return;
