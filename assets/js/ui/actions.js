@@ -116,9 +116,45 @@ export function createActionHandler(deps) {
     }
 
     if (action === "toggle-sound") {
+      const nextState = store.toggleAudio();
+      const audioEnabled = nextState.soundEnabled || nextState.musicEnabled;
+      updatePressedSoundControl(trigger, audioEnabled);
+      audio.sync({ enabled: audioEnabled, scene: getAudioScene(uiState.activeScene) });
+      renderApp();
+      return;
+    }
+
+    if (action === "open-sound-settings") {
+      audio.playSelect(store.getState().soundEnabled);
+      uiState.soundSettingsOpen = true;
+      renderApp();
+      return;
+    }
+
+    if (action === "close-sound-settings") {
+      audio.playSelect(store.getState().soundEnabled);
+      uiState.soundSettingsOpen = false;
+      renderApp();
+      return;
+    }
+
+    if (action === "toggle-music") {
+      audio.playSelect(store.getState().soundEnabled);
+      const nextState = store.toggleMusic();
+      audio.sync({
+        allowInit: nextState.musicEnabled,
+        enabled: nextState.musicEnabled,
+        scene: getAudioScene(uiState.activeScene),
+      });
+      renderApp();
+      return;
+    }
+
+    if (action === "toggle-sound-effects") {
       const nextState = store.toggleSound();
-      updatePressedSoundControl(trigger, nextState.soundEnabled);
-      audio.sync({ enabled: nextState.soundEnabled, scene: getAudioScene(uiState.activeScene) });
+      if (nextState.soundEnabled) {
+        audio.playSelect(true);
+      }
       renderApp();
       return;
     }
@@ -132,6 +168,7 @@ export function createActionHandler(deps) {
     if (action === "open-settings") {
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function openSettings() {
+        uiState.soundSettingsOpen = false;
         setScene(SCENES.SETTINGS);
         audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.SETTINGS });
         renderer.scrollTo(SCENES.SETTINGS);
@@ -436,6 +473,7 @@ export function createActionHandler(deps) {
     if (action === "back-to-forest") {
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function returnToForest() {
+        uiState.soundSettingsOpen = false;
         setScene(SCENES.FOREST);
         audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.FOREST });
         renderer.scrollTo(SCENES.FOREST);
@@ -789,7 +827,7 @@ function updateRemindersStatus(message) {
 }
 
 export function createInputChangeHandler(deps) {
-  const { renderApp, store, uiState } = deps;
+  const { audio, renderApp, store, uiState } = deps;
 
   return function onInputChange(event) {
     if (event.target?.id === "about-name-input") {
@@ -805,6 +843,18 @@ export function createInputChangeHandler(deps) {
 
     if (event.target?.id === "reminders-time-hour" || event.target?.id === "reminders-time-minute") {
       uiState.timePickerDraft = normalizeReminderTime(readTimePickerValue(), uiState.timePickerDraft || "11:00");
+      renderApp();
+      return;
+    }
+
+    if (event.target?.id === "settings-music-volume") {
+      const volume = Math.max(0, Math.min(100, Number(event.target.value))) / 100;
+      const nextState = store.setAmbienceVolume(volume);
+      audio?.sync({
+        enabled: nextState.musicEnabled,
+        scene: getAudioScene(uiState.activeScene),
+        volume: nextState.ambienceVolume,
+      });
       renderApp();
     }
   };
@@ -995,6 +1045,7 @@ export function createInitialUIState(state) {
     profileReturnScene: getReturnScene(null, state),
     rawQuestion: "",
     remindersDraft: null,
+    soundSettingsOpen: false,
     timePickerOpen: false,
     timePickerDraft: null,
     spiritBookPage: 0,

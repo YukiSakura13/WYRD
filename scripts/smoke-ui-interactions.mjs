@@ -51,6 +51,10 @@ const [
   runtimeRender,
   runtimeSpread,
   runtimeShare,
+  settingsCss,
+  stateModel,
+  stateStorage,
+  runtimeAudio,
 ] =
   await Promise.all([
     readFile(new URL("../docs/wyrd-ui-kit.html", import.meta.url), "utf8"),
@@ -70,6 +74,10 @@ const [
     readFile(new URL("../assets/js/ui/render.js", import.meta.url), "utf8"),
     readFile(new URL("../assets/js/ui/render-spread.js", import.meta.url), "utf8"),
     readFile(new URL("../assets/js/ui/share.js", import.meta.url), "utf8"),
+    readFile(new URL("../assets/css/scenes/settings.css", import.meta.url), "utf8"),
+    readFile(new URL("../assets/js/state/model.js", import.meta.url), "utf8"),
+    readFile(new URL("../assets/js/state/storage.js", import.meta.url), "utf8"),
+    readFile(new URL("../assets/js/audio.js", import.meta.url), "utf8"),
   ]);
 
 assert.match(
@@ -846,6 +854,83 @@ assert.match(
   readingSilver,
   /@media \(prefers-reduced-motion: reduce\)[\s\S]*?#spread-result \.spread-card\s*\{[\s\S]*?animation:\s*none;/,
   "YUK-139 card meaning must remain visible in reduced motion",
+);
+
+assert.match(
+  runtimeHtml,
+  /id="setting-sound-entry"[\s\S]{0,260}data-action="open-sound-settings"[\s\S]{0,260}aria-haspopup="dialog"/,
+  "Settings Sound must be a disclosure row that opens a dialog rather than a direct switch",
+);
+assert.match(
+  runtimeHtml,
+  /id="settings-sound-sheet"[^>]*data-dialog-layer[\s\S]*?role="dialog"[\s\S]*?aria-modal="true"/,
+  "Sound settings must use the canonical accessible dialog layer",
+);
+assert.equal(
+  (runtimeHtml.match(/class="settings-audio-toggle ui-choice"/g) || []).length,
+  2,
+  "Sound settings must expose exactly two full-row switches for music and interface sounds",
+);
+assert.match(
+  runtimeHtml,
+  /id="settings-music-volume"[\s\S]{0,180}type="range"[\s\S]{0,220}aria-label="Громкость музыки"/,
+  "Sound settings must expose a real accessible music volume range",
+);
+assert.doesNotMatch(
+  runtimeHtml.match(/<section class="settings-screen[\s\S]*?<section class="about-you-screen"/)?.[0] || "",
+  /Вибрация/,
+  "Settings must not advertise vibration before Telegram HapticFeedback is implemented and tested",
+);
+assert.doesNotMatch(
+  runtimeHtml.match(/id="settings-sound-sheet"[\s\S]*?<\/section>\s*<\/div>\s*<\/div>\s*<\/section>/)?.[0] || "",
+  /композици|мелоди|трек/i,
+  "Sound sheet must not invent melody names or a track list before the authored Suno tracks exist",
+);
+assert.match(
+  runtimeHtml,
+  /<header class="settings-header ui-app-header">[\s\S]*?class="ui-icon-button ui-icon-button--back btn-back-circle settings-back"[\s\S]*?<h1 class="ui-app-header__identity" id="settings-title">Настройки<\/h1>/,
+  "Settings Back and title must share the canonical App Header without shifting the centered identity",
+);
+assert.match(
+  settingsCss,
+  /#settings-screen \.settings-header h1\s*\{[\s\S]*?min-height:\s*var\(--control-icon-hit-size\);[\s\S]*?font-size:\s*2rem;[\s\S]*?line-height:\s*1;/,
+  "Settings title must stay on the 48px navigation axis at the approved 32px title size",
+);
+assert.match(
+  settingsCss,
+  /#settings-screen \.settings-row\s*\{[\s\S]*?min-height:\s*var\(--control-row-min-height\);[\s\S]*?background:\s*var\(--wyrd-control-surface\);/,
+  "Settings rows must consume the canonical Row touch-height and surface tokens",
+);
+assert.match(
+  settingsCss,
+  /\.settings-audio-sheet__panel\s*\{[\s\S]*?width:\s*min\([\s\S]*?42rem\);[\s\S]*?max-height:\s*min\(84vh, 44rem\);/,
+  "Sound settings must preserve the canonical responsive Sheet envelope",
+);
+assert.match(
+  settingsCss,
+  /\.settings-audio-toggle\s*\{[\s\S]*?min-height:\s*78px;[\s\S]*?\.settings-audio-toggle__mechanism\s*\{[\s\S]*?width:\s*64px;[\s\S]*?height:\s*44px;/,
+  "Sound switches must preserve the Kit full-row and mechanism geometry",
+);
+assert.match(
+  settingsCss,
+  /@media \(forced-colors: active\)[\s\S]*?\.settings-audio-toggle:focus-visible[\s\S]*?outline:\s*2px solid Highlight;/,
+  "Settings controls must retain a system-visible forced-colors focus state",
+);
+assert.match(
+  stateModel,
+  /musicEnabled:\s*true[\s\S]*?typeof value\?\.musicEnabled === "boolean" \? value\.musicEnabled : next\.soundEnabled/,
+  "Persisted legacy sound preference must migrate to the separate music preference",
+);
+assert.match(stateStorage, /toggleMusic\(\)[\s\S]*?musicEnabled:\s*!state\.musicEnabled/, "Music must have a real persisted toggle");
+assert.match(
+  runtimeAudio,
+  /preferences\.musicEnabled[\s\S]*?preferences\.ambienceVolume[\s\S]*?SCENE_LEVELS\[scene\][\s\S]*?\* ambienceVolume/,
+  "Forest ambience must obey the persisted music switch and volume",
+);
+assert.match(
+  runtimeRender,
+  /dialogs\.sync\(elements\.soundSettingsSheet[\s\S]*?initialFocus:\s*"\[data-action='toggle-music'\]"[\s\S]*?returnFocus:\s*"#setting-sound-entry"/,
+  "Sound Sheet must move focus inside and return it to the disclosure row",
 );
 
 console.log("WYRD UI interaction smoke tests passed");

@@ -23,6 +23,7 @@ export const DEFAULT_STATE = Object.freeze({
     },
   },
   soundEnabled: true,
+  musicEnabled: true,
   vibrationEnabled: true,
   ambienceVolume: 0.58,
   onboardingSeen: false,
@@ -77,6 +78,8 @@ export function normalizeState(value) {
   next.userProfile = normalizeUserProfile(next.userProfile, base.userProfile, next.profileName);
   next.reminders = normalizeReminders(next.reminders, base.reminders);
   next.soundEnabled = Boolean(next.soundEnabled);
+  next.musicEnabled =
+    typeof value?.musicEnabled === "boolean" ? value.musicEnabled : next.soundEnabled;
   next.vibrationEnabled = typeof next.vibrationEnabled === "boolean" ? next.vibrationEnabled : base.vibrationEnabled;
   next.ambienceVolume = normalizeAmbienceVolume(next.ambienceVolume, base.ambienceVolume);
   next.onboardingSeen = Boolean(next.onboardingSeen);

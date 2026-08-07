@@ -38,8 +38,12 @@ export function getElements(doc = document) {
     spiritBookPrev: doc.querySelector("[data-action='spirit-book-prev']"),
     spiritBookNext: doc.querySelector("[data-action='spirit-book-next']"),
     settingsProfileSummary: doc.getElementById("settings-profile-summary"),
-    settingSoundToggle: doc.getElementById("setting-sound-toggle"),
-    settingVibrationToggle: doc.getElementById("setting-vibration-toggle"),
+    settingsSoundSummary: doc.getElementById("settings-sound-summary"),
+    soundSettingsSheet: doc.getElementById("settings-sound-sheet"),
+    settingMusicToggle: doc.getElementById("setting-music-toggle"),
+    settingSoundEffectsToggle: doc.getElementById("setting-sound-effects-toggle"),
+    settingsMusicVolume: doc.getElementById("settings-music-volume"),
+    settingsMusicVolumeValue: doc.getElementById("settings-music-volume-value"),
     aboutYouSection: doc.getElementById("about-you-screen"),
     aboutAvatarTrack: doc.getElementById("about-avatar-track"),
     aboutAvatarUpload: doc.getElementById("about-avatar-upload"),
@@ -163,7 +167,7 @@ export function createRenderer(elements) {
     renderShell(uiState);
     renderForestAvatar(state);
     renderForestPlaceholder(uiState);
-    renderSettings(state);
+    renderSettings(state, uiState);
     renderAboutYou(state, uiState);
     renderReminders(state, uiState);
     renderSpiritBook(uiState);
@@ -262,12 +266,14 @@ export function createRenderer(elements) {
   }
 
   function renderProfile(state) {
+    const audioEnabled = state.soundEnabled || state.musicEnabled;
+
     if (elements.soundButton) {
-      elements.soundButton.textContent = state.soundEnabled ? "Звук леса: вкл" : "Звук леса: выкл";
-      elements.soundButton.setAttribute("aria-pressed", String(state.soundEnabled));
+      elements.soundButton.textContent = audioEnabled ? "Звук леса: вкл" : "Звук леса: выкл";
+      elements.soundButton.setAttribute("aria-pressed", String(audioEnabled));
     }
     if (elements.coverSoundButton) {
-      updateCoverSoundButton(!state.soundEnabled);
+      updateCoverSoundButton(!audioEnabled);
     }
     elements.historyEmptyState.hidden = state.history.length > 0;
     if (elements.historyTrailsHeading) {
@@ -275,9 +281,32 @@ export function createRenderer(elements) {
     }
   }
 
-  function renderSettings(state) {
-    syncSettingsToggle(elements.settingSoundToggle, state.soundEnabled, "Звук леса");
-    syncSettingsToggle(elements.settingVibrationToggle, state.vibrationEnabled, "Тихий отклик");
+  function renderSettings(state, uiState) {
+    syncSettingsSwitch(elements.settingMusicToggle, state.musicEnabled, "Музыка");
+    syncSettingsSwitch(elements.settingSoundEffectsToggle, state.soundEnabled, "Звуки интерфейса");
+
+    const volumePercent = Math.round(state.ambienceVolume * 100);
+    if (elements.settingsMusicVolume && Number(elements.settingsMusicVolume.value) !== volumePercent) {
+      elements.settingsMusicVolume.value = String(volumePercent);
+    }
+    if (elements.settingsMusicVolumeValue) {
+      elements.settingsMusicVolumeValue.value = `${volumePercent}%`;
+      elements.settingsMusicVolumeValue.textContent = `${volumePercent}%`;
+    }
+    if (elements.settingsSoundSummary) {
+      const enabledParts = [];
+      if (state.musicEnabled) enabledParts.push("музыка");
+      if (state.soundEnabled) enabledParts.push("эффекты");
+      elements.settingsSoundSummary.textContent = enabledParts.length
+        ? `${enabledParts.join(" и ")} · ${volumePercent}%`
+        : "Звук выключен";
+    }
+    if (elements.soundSettingsSheet) {
+      dialogs.sync(elements.soundSettingsSheet, uiState.soundSettingsOpen, {
+        initialFocus: "[data-action='toggle-music']",
+        returnFocus: "#setting-sound-entry",
+      });
+    }
 
     if (!elements.settingsProfileSummary) {
       return;
@@ -334,6 +363,15 @@ export function createRenderer(elements) {
 
     button.classList.toggle("is-on", Boolean(enabled));
     button.setAttribute("aria-pressed", String(Boolean(enabled)));
+    button.setAttribute("aria-label", `${title}: ${enabled ? "включено" : "выключено"}`);
+  }
+
+  function syncSettingsSwitch(button, enabled, title) {
+    if (!button) {
+      return;
+    }
+
+    button.setAttribute("aria-checked", String(Boolean(enabled)));
     button.setAttribute("aria-label", `${title}: ${enabled ? "включено" : "выключено"}`);
   }
 

@@ -29,7 +29,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <meta name="wyrd-build" content="silver-20260805-scene-background" />
+    <meta name="wyrd-build" content="silver-20260807-yuk140-settings" />
     <title>WYRD — Оракул духов леса</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -38,7 +38,7 @@
       rel="stylesheet"
     />
     <link rel="manifest" href="./manifest.webmanifest?v=silver-20260710-forest" />
-    <link rel="stylesheet" href="./assets/css/styles.css?v=silver-20260805-scene-background" />
+    <link rel="stylesheet" href="./assets/css/styles.css?v=silver-20260807-yuk140-settings" />
   </head>
   <body>
     <div class="scene-fog scene-fog--back" aria-hidden="true"></div>
@@ -323,17 +323,13 @@
         </article>
       </section>
 
-      <section class="settings-screen" id="settings-screen" hidden aria-labelledby="settings-title">
-        <div class="wyrd-scene-stars" aria-hidden="true"></div>
+      <section class="settings-screen ui-scene-shell" id="settings-screen" hidden aria-labelledby="settings-title">
         <div class="settings-shell">
-          <button class="ui-icon-button ui-icon-button--back btn-back-circle settings-back" data-action="back-to-forest" type="button" aria-label="Вернуться в Лес">
-            <svg class="ui-icon-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12H2M10 4l-8 8 8 8" /></svg>
-          </button>
-          <header class="settings-header">
-            <p class="settings-brand" aria-label="WYRD">WYRD</p>
-            <div class="settings-rule" aria-hidden="true"></div>
-            <p class="settings-kicker">Оракул духов леса</p>
-            <h1 id="settings-title">Настройки</h1>
+          <header class="settings-header ui-app-header">
+            <button class="ui-icon-button ui-icon-button--back btn-back-circle settings-back" data-action="back-to-forest" type="button" aria-label="Вернуться в Лес">
+              <svg class="ui-icon-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12H2M10 4l-8 8 8 8" /></svg>
+            </button>
+            <h1 class="ui-app-header__identity" id="settings-title">Настройки</h1>
           </header>
 
           <div class="settings-list" aria-label="Параметры WYRD">
@@ -353,20 +349,19 @@
               <span class="settings-row-arrow" aria-hidden="true">›</span>
             </button>
 
-            <button class="settings-row settings-row--toggle ui-row-action ui-choice" id="setting-sound-toggle" data-action="toggle-sound" type="button" aria-pressed="true">
+            <button
+              class="settings-row settings-row--entry ui-row-action"
+              id="setting-sound-entry"
+              data-action="open-sound-settings"
+              type="button"
+              aria-haspopup="dialog"
+              aria-controls="settings-sound-sheet"
+            >
               <span class="settings-row-copy">
                 <span class="settings-row-title">Звук</span>
-                <span class="settings-row-value">Звуки интерфейса</span>
+                <span class="settings-row-value" id="settings-sound-summary">Музыка, эффекты и громкость</span>
               </span>
-              <span class="settings-toggle" aria-hidden="true"></span>
-            </button>
-
-            <button class="settings-row settings-row--toggle ui-row-action ui-choice" id="setting-vibration-toggle" data-action="toggle-vibration" type="button" aria-pressed="true">
-              <span class="settings-row-copy">
-                <span class="settings-row-title">Вибрация</span>
-                <span class="settings-row-value">Отклик при касании</span>
-              </span>
-              <span class="settings-toggle" aria-hidden="true"></span>
+              <span class="settings-row-arrow" aria-hidden="true">›</span>
             </button>
 
             <button class="settings-row settings-row--entry ui-row-action" data-action="open-app-info" type="button">
@@ -376,6 +371,90 @@
               </span>
               <span class="settings-row-arrow" aria-hidden="true">›</span>
             </button>
+          </div>
+
+          <div class="settings-audio-sheet" id="settings-sound-sheet" data-dialog-layer hidden>
+            <button
+              class="settings-audio-sheet__backdrop"
+              data-action="close-sound-settings"
+              data-dialog-backdrop
+              type="button"
+              aria-label="Закрыть настройки звука"
+            ></button>
+            <section
+              class="settings-audio-sheet__panel"
+              data-dialog-panel
+              data-dialog-motion="sheet"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="settings-sound-title"
+            >
+              <span class="settings-audio-sheet__handle" aria-hidden="true"></span>
+              <button
+                class="ui-icon-button ui-icon-button--close settings-audio-sheet__close"
+                data-action="close-sound-settings"
+                data-dialog-dismiss-primary
+                type="button"
+                aria-label="Закрыть"
+              >
+                <svg class="ui-icon-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19" /></svg>
+              </button>
+              <h2 id="settings-sound-title">Звук</h2>
+              <p class="settings-audio-sheet__intro">Музыка леса и звуки действий настраиваются отдельно.</p>
+
+              <div class="settings-audio-controls">
+                <button
+                  class="settings-audio-toggle ui-choice"
+                  id="setting-music-toggle"
+                  data-action="toggle-music"
+                  type="button"
+                  role="switch"
+                  aria-checked="true"
+                >
+                  <span class="settings-audio-toggle__copy">
+                    <strong>Музыка</strong>
+                    <span>Атмосфера леса</span>
+                  </span>
+                  <span class="settings-audio-toggle__mechanism" aria-hidden="true">
+                    <img src="./assets/ui/action-buttons/continuous/wyrd-diamond-big-small.svg" alt="" />
+                  </span>
+                </button>
+
+                <button
+                  class="settings-audio-toggle ui-choice"
+                  id="setting-sound-effects-toggle"
+                  data-action="toggle-sound-effects"
+                  type="button"
+                  role="switch"
+                  aria-checked="true"
+                >
+                  <span class="settings-audio-toggle__copy">
+                    <strong>Звуки интерфейса</strong>
+                    <span>Касания и раскрытие карт</span>
+                  </span>
+                  <span class="settings-audio-toggle__mechanism" aria-hidden="true">
+                    <img src="./assets/ui/action-buttons/continuous/wyrd-diamond-big-small.svg" alt="" />
+                  </span>
+                </button>
+
+                <label class="settings-volume-control" for="settings-music-volume">
+                  <span class="settings-volume-control__copy">
+                    <strong>Громкость музыки</strong>
+                    <span>Сохраняется на этом устройстве</span>
+                  </span>
+                  <output class="settings-volume-control__value" id="settings-music-volume-value" for="settings-music-volume">58%</output>
+                  <input
+                    id="settings-music-volume"
+                    type="range"
+                    min="0"
+                    max="100"
+                    step="1"
+                    value="58"
+                    aria-label="Громкость музыки"
+                  />
+                </label>
+              </div>
+            </section>
           </div>
         </div>
       </section>
@@ -1007,6 +1086,6 @@
       window.WYRD_BUILD_ID =
         document.querySelector('meta[name="wyrd-build"]')?.content || "dev";
     </script>
-    <script type="module" src="./assets/js/main.js?v=silver-20260805-scene-background"></script>
+    <script type="module" src="./assets/js/main.js?v=silver-20260807-yuk140-settings"></script>
   </body>
 </html>

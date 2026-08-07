@@ -48,6 +48,21 @@ export function createStateStore(storage = getSafeStorage()) {
         soundEnabled: !state.soundEnabled,
       });
     },
+    toggleMusic() {
+      return commit({
+        ...state,
+        musicEnabled: !state.musicEnabled,
+      });
+    },
+    toggleAudio() {
+      const enabled = !(state.soundEnabled || state.musicEnabled);
+
+      return commit({
+        ...state,
+        soundEnabled: enabled,
+        musicEnabled: enabled,
+      });
+    },
     toggleVibration() {
       return commit({
         ...state,

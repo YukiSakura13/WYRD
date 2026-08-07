@@ -19,7 +19,7 @@ const store = createStateStore();
 const uiState = createInitialUIState(store.getState());
 const elements = getElements();
 const renderer = createRenderer(elements);
-const audio = createForestAudioController();
+const audio = createForestAudioController(() => store.getState());
 const deckQuestionGuidance = createDeckQuestionGuidance();
 window.debugRoute = function debugRoute(question) {
   const route = detectQuestionRoute(question);
@@ -126,9 +126,10 @@ document.addEventListener(
     event.preventDefault();
     event.stopPropagation();
 
-    const nextState = store.toggleSound();
-    renderCoverSoundState(nextState.soundEnabled);
-    audio.sync({ enabled: nextState.soundEnabled, scene: SCENES.DECK });
+    const nextState = store.toggleAudio();
+    const audioEnabled = nextState.soundEnabled || nextState.musicEnabled;
+    renderCoverSoundState(audioEnabled);
+    audio.sync({ enabled: audioEnabled, scene: SCENES.DECK });
     renderApp();
   },
   { capture: true },
@@ -150,6 +151,7 @@ document.addEventListener(
 document.addEventListener(
   "change",
   createInputChangeHandler({
+    audio,
     renderApp,
     store,
     uiState,
@@ -159,6 +161,7 @@ document.addEventListener(
 document.addEventListener(
   "input",
   createInputChangeHandler({
+    audio,
     renderApp,
     store,
     uiState,

@@ -104,6 +104,60 @@ final result: passed
 
 ---
 
+# YUK-140 Settings App Header correction — Design QA
+
+Date: 2026-08-07
+
+Scope: local correction of the parent Settings header only. The shared scene
+background, Settings rows, list spacing, Sound Sheet, child routes, canonical
+Kit, Linear evidence, commit and push remain unchanged pending user review.
+
+## Source and implementation evidence
+
+- Source: user-provided `1014 × 1302` Retina capture of the pre-correction
+  Settings screen, normalized to `507 × 651` CSS pixels.
+- Implementation: browser-rendered `507 × 651` capture of the corrected screen
+  in the same state and density-normalized viewport.
+- Full-view comparison: `/tmp/yuk140-settings-header-comparison-v2.jpg`.
+- Focused mobile evidence: `/tmp/yuk140-settings-header-393x852-viewport.jpg`.
+
+The side-by-side comparison confirms that the previous centered hero title is
+gone. Back and the title now share the same top navigation band; the list keeps
+its existing top-anchored utility layout and the scene background is unchanged.
+
+## Required fidelity surfaces
+
+- Layout: Settings reuses `.ui-app-header`; Back and the independently centered
+  identity both occupy the same `16–64px` vertical axis at `393 × 852`.
+- Typography: the title uses the approved Forum face at `32px` and `line-height:
+  1`, without introducing a new local header variant.
+- Navigation: Back remains the canonical `48 × 48px` Icon Control at the shared
+  `18px` header inset and keeps its visible keyboard focus ring.
+- Density: the list still begins at `132px`; row height remains `70.55px` and no
+  row, copy, border, background, or gap was changed.
+- Color: Settings continues to consume the shared Silver scene background; the
+  correction adds no local gradient, fog, glow, or color override.
+
+## Responsive and interaction verification
+
+- `320 × 568`, `360 × 800`, `375 × 812`, `393 × 852`, `430 × 932`,
+  `768 × 1024`, and landscape `852 × 393`: `0px` horizontal overflow.
+- In every viewport, title center equals the shell center and title/Back center
+  Y equals `40px`.
+- Back focus-visible: `2px` solid outline with `3px` offset.
+- Browser console: no warnings or errors.
+- Domain, state and UI interaction smoke tests passed.
+- Control-language, product-scope, lore-canon and responsive-strategy validators
+  passed; `git diff --check` passed.
+
+## Final result
+
+No actionable P0/P1/P2 differences remain in the approved correction scope.
+
+final result: passed
+
+---
+
 # YUK-139 physical-phone corrective preview — Design QA
 
 Date: 2026-08-05

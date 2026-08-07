@@ -6,14 +6,20 @@ const SCENE_LEVELS = {
   profile: 0.02,
 };
 
-export function createForestAudioController() {
+export function createForestAudioController(getPreferences = null) {
   let audioContext = null;
   let forestMasterGain = null;
   let noiseSource = null;
   let ambienceTimers = [];
+  let ambienceVolume = 1;
 
   function sync(options = {}) {
-    const { enabled, allowInit = false, scene = "deck" } = options;
+    const preferences = typeof getPreferences === "function" ? getPreferences() || {} : {};
+    const enabled =
+      typeof preferences.musicEnabled === "boolean" ? preferences.musicEnabled : Boolean(options.enabled);
+    const allowInit = Boolean(options.allowInit);
+    const scene = options.scene || "deck";
+    ambienceVolume = normalizeVolume(preferences.ambienceVolume ?? options.volume, ambienceVolume);
 
     if (!enabled) {
       stop();
@@ -250,7 +256,7 @@ export function createForestAudioController() {
     }
 
     const now = audioContext.currentTime;
-    const target = SCENE_LEVELS[scene] ?? SCENE_LEVELS.deck;
+    const target = Math.max((SCENE_LEVELS[scene] ?? SCENE_LEVELS.deck) * ambienceVolume, 0.0001);
     forestMasterGain.gain.cancelScheduledValues(now);
     forestMasterGain.gain.setValueAtTime(Math.max(forestMasterGain.gain.value, 0.0001), now);
     forestMasterGain.gain.exponentialRampToValueAtTime(target, now + 0.8);
@@ -333,6 +339,16 @@ export function createForestAudioController() {
       }, 900);
     }
   }
+}
+
+function normalizeVolume(value, fallback = 1) {
+  const numericValue = Number(value);
+
+  if (!Number.isFinite(numericValue)) {
+    return fallback;
+  }
+
+  return Math.max(0, Math.min(1, numericValue));
 }
 
 function createNoiseBuffer(context, seconds) {

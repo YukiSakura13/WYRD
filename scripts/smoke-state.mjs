@@ -38,6 +38,21 @@ async function main() {
   const initialState = emptyStore.getState();
   assert.equal(initialState.currentReading, null, "default state should start without current reading");
   assert.deepEqual(initialState.lastSpread, [], "default state should start without spread");
+  assert.equal(initialState.soundEnabled, true, "default state should enable interface sounds");
+  assert.equal(initialState.musicEnabled, true, "default state should enable music");
+
+  const legacyAudioStore = createStateStore(
+    createMemoryStorage(
+      JSON.stringify({
+        soundEnabled: false,
+      }),
+    ),
+  );
+  assert.equal(
+    legacyAudioStore.getState().musicEnabled,
+    false,
+    "legacy sound preference should migrate to music without unexpectedly enabling audio",
+  );
 
   emptyStore.saveReading({
     id: "reading-1",
@@ -104,12 +119,30 @@ async function main() {
 
   emptyStore.toggleSound();
   assert.equal(emptyStore.getState().soundEnabled, false, "toggleSound should invert soundEnabled");
+  assert.equal(emptyStore.getState().musicEnabled, true, "toggleSound should not change musicEnabled");
+
+  emptyStore.toggleMusic();
+  assert.equal(emptyStore.getState().musicEnabled, false, "toggleMusic should invert musicEnabled");
+  assert.equal(emptyStore.getState().soundEnabled, false, "toggleMusic should not change interface sounds");
+
+  emptyStore.toggleAudio();
+  assert.equal(emptyStore.getState().soundEnabled, true, "toggleAudio should enable interface sounds together");
+  assert.equal(emptyStore.getState().musicEnabled, true, "toggleAudio should enable music together");
+  emptyStore.toggleAudio();
+  assert.equal(emptyStore.getState().soundEnabled, false, "toggleAudio should disable interface sounds together");
+  assert.equal(emptyStore.getState().musicEnabled, false, "toggleAudio should disable music together");
+
+  emptyStore.setAmbienceVolume(4);
+  assert.equal(emptyStore.getState().ambienceVolume, 1, "music volume should clamp to 100 percent");
+  emptyStore.setAmbienceVolume(-2);
+  assert.equal(emptyStore.getState().ambienceVolume, 0, "music volume should clamp to zero");
 
   emptyStore.reset();
   const afterReset = emptyStore.getState();
   assert.equal(afterReset.currentReading, null, "reset should clear currentReading");
   assert.deepEqual(afterReset.lastSpread, [], "reset should clear spread");
   assert.equal(afterReset.soundEnabled, true, "reset should restore default soundEnabled");
+  assert.equal(afterReset.musicEnabled, true, "reset should restore default musicEnabled");
 
   console.log("WYRD state smoke tests passed");
 }
