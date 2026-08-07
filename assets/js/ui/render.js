@@ -362,7 +362,12 @@ export function createRenderer(elements) {
     }
 
     button.classList.toggle("is-on", Boolean(enabled));
-    button.setAttribute("aria-pressed", String(Boolean(enabled)));
+    if (button.getAttribute("role") === "switch") {
+      button.setAttribute("aria-checked", String(Boolean(enabled)));
+      button.removeAttribute("aria-pressed");
+    } else {
+      button.setAttribute("aria-pressed", String(Boolean(enabled)));
+    }
     button.setAttribute("aria-label", `${title}: ${enabled ? "включено" : "выключено"}`);
   }
 

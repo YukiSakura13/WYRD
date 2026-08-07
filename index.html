@@ -38,7 +38,7 @@
       rel="stylesheet"
     />
     <link rel="manifest" href="./manifest.webmanifest?v=silver-20260710-forest" />
-    <link rel="stylesheet" href="./assets/css/styles.css?v=silver-20260807-yuk140-settings" />
+    <link rel="stylesheet" href="./assets/css/styles.css?v=silver-20260807-yuk142-notifications-preview" />
   </head>
   <body>
     <div class="scene-fog scene-fog--back" aria-hidden="true"></div>
@@ -551,17 +551,13 @@
         </div>
       </section>
 
-      <section class="settings-screen reminders-screen" id="reminders-screen" hidden aria-labelledby="reminders-title">
-        <div class="wyrd-scene-stars" aria-hidden="true"></div>
+      <section class="settings-screen reminders-screen ui-scene-shell" id="reminders-screen" hidden aria-labelledby="reminders-title">
         <div class="settings-shell">
-          <button class="ui-icon-button ui-icon-button--back btn-back-circle settings-back" data-action="back-to-settings" type="button" aria-label="Вернуться в настройки">
-            <svg class="ui-icon-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12H2M10 4l-8 8 8 8" /></svg>
-          </button>
-          <header class="settings-header">
-            <p class="settings-brand" aria-label="WYRD">WYRD</p>
-            <div class="settings-rule" aria-hidden="true"></div>
-            <p class="settings-kicker">Оракул духов леса</p>
-            <h1 id="reminders-title">Уведомления</h1>
+          <header class="settings-header reminders-header ui-app-header">
+            <button class="ui-icon-button ui-icon-button--back btn-back-circle settings-back" data-action="back-to-settings" type="button" aria-label="Вернуться в настройки">
+              <svg class="ui-icon-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12H2M10 4l-8 8 8 8" /></svg>
+            </button>
+            <h1 class="ui-app-header__identity" id="reminders-title">Уведомления</h1>
           </header>
           <form class="reminders-form" id="reminders-form">
             <section class="reminders-list" aria-label="Расписание уведомлений">
@@ -595,12 +591,14 @@
 
             <p class="reminders-section-label">Ежемесячно</p>
             <section class="reminders-list" aria-label="Ежемесячные уведомления">
-              <button class="reminders-row reminders-row--toggle ui-row-action ui-choice" id="reminders-monthly-toggle" data-action="toggle-monthly-reminder" type="button" aria-pressed="false">
+              <button class="reminders-row reminders-row--toggle ui-row-action ui-choice" id="reminders-monthly-toggle" data-action="toggle-monthly-reminder" type="button" role="switch" aria-checked="false">
                 <span class="reminders-row-copy">
                   <span class="reminders-row-title">Первое число месяца</span>
                   <span class="reminders-row-value">Напоминать раз в месяц</span>
                 </span>
-                <span class="settings-toggle" aria-hidden="true"></span>
+                <span class="settings-toggle" aria-hidden="true">
+                  <img src="./assets/ui/action-buttons/continuous/wyrd-diamond-big-small.svg" alt="" />
+                </span>
               </button>
             </section>
 
@@ -609,17 +607,21 @@
                 <h2>Фазы луны</h2>
                 <p>Напоминать в 19:00</p>
               </div>
-              <button class="reminders-row reminders-row--toggle ui-row-action ui-choice" id="reminders-new-moon-toggle" data-action="toggle-moon-phase-reminder" data-phase="newMoon" type="button" aria-pressed="false">
+              <button class="reminders-row reminders-row--toggle ui-row-action ui-choice" id="reminders-new-moon-toggle" data-action="toggle-moon-phase-reminder" data-phase="newMoon" type="button" role="switch" aria-checked="false">
                 <span class="reminders-row-copy">
                   <span class="reminders-row-title">Новолуние</span>
                 </span>
-                <span class="settings-toggle" aria-hidden="true"></span>
+                <span class="settings-toggle" aria-hidden="true">
+                  <img src="./assets/ui/action-buttons/continuous/wyrd-diamond-big-small.svg" alt="" />
+                </span>
               </button>
-              <button class="reminders-row reminders-row--toggle ui-row-action ui-choice" id="reminders-full-moon-toggle" data-action="toggle-moon-phase-reminder" data-phase="fullMoon" type="button" aria-pressed="false">
+              <button class="reminders-row reminders-row--toggle ui-row-action ui-choice" id="reminders-full-moon-toggle" data-action="toggle-moon-phase-reminder" data-phase="fullMoon" type="button" role="switch" aria-checked="false">
                 <span class="reminders-row-copy">
                   <span class="reminders-row-title">Полнолуние</span>
                 </span>
-                <span class="settings-toggle" aria-hidden="true"></span>
+                <span class="settings-toggle" aria-hidden="true">
+                  <img src="./assets/ui/action-buttons/continuous/wyrd-diamond-big-small.svg" alt="" />
+                </span>
               </button>
             </section>
 
@@ -630,8 +632,9 @@
             </div>
           </form>
           <div class="reminders-sheet" id="reminders-time-sheet" data-dialog-layer hidden>
-            <div class="reminders-sheet-backdrop" data-action="cancel-time-picker" data-dialog-backdrop aria-hidden="true"></div>
-            <section class="reminders-sheet-panel" data-dialog-panel role="dialog" aria-modal="true" aria-labelledby="reminders-time-sheet-title">
+            <button class="reminders-sheet-backdrop" data-action="cancel-time-picker" data-dialog-backdrop type="button" aria-label="Отменить выбор времени"></button>
+            <section class="reminders-sheet-panel" data-dialog-panel data-dialog-motion="sheet" role="dialog" aria-modal="true" aria-labelledby="reminders-time-sheet-title">
+              <span class="reminders-sheet-handle" aria-hidden="true"></span>
               <h2 id="reminders-time-sheet-title">Время</h2>
               <div class="reminders-time-picker" role="group" aria-label="Выбрать время уведомления">
                 <label>

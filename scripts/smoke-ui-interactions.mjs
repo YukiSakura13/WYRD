@@ -935,7 +935,7 @@ assert.match(
   "Sound Sheet must move focus inside and return it to the disclosure row",
 );
 
-const profileHtml = runtimeHtml.split('<section class="about-you-screen')[1]?.split('<section class="settings-screen reminders-screen"')[0] || "";
+const profileHtml = runtimeHtml.split('<section class="about-you-screen')[1]?.split('<section class="settings-screen reminders-screen')[0] || "";
 assert.match(
   profileHtml,
   /ui-scene-shell[\s\S]*?<header class="settings-header about-you-header ui-app-header">[\s\S]*?class="ui-icon-button ui-icon-button--back btn-back-circle settings-back"[\s\S]*?<h1 class="ui-app-header__identity" id="about-you-title">Профиль<\/h1>/,
@@ -1000,6 +1000,48 @@ assert.match(
   settingsCss,
   /@media \(forced-colors: active\)[\s\S]*?#about-you-screen \.about-avatar\.is-selected[\s\S]*?outline:\s*2px solid Highlight;/,
   "Profile selected controls must remain explicit in forced colors",
+);
+
+const remindersHtml = runtimeHtml.split('<section class="settings-screen reminders-screen')[1]?.split('<section class="settings-screen app-info-screen')[0] || "";
+assert.match(
+  remindersHtml,
+  /ui-scene-shell[\s\S]*?<header class="settings-header reminders-header ui-app-header">[\s\S]*?<h1 class="ui-app-header__identity" id="reminders-title">Уведомления<\/h1>/,
+  "Notifications must reuse the canonical Silver Scene Shell and App Header",
+);
+assert.doesNotMatch(
+  remindersHtml,
+  /wyrd-scene-stars|settings-brand|settings-rule|settings-kicker/,
+  "Notifications must not retain legacy stars or the rejected gold lockup hierarchy",
+);
+assert.equal(
+  (remindersHtml.match(/role="switch" aria-checked="false"/g) || []).length,
+  3,
+  "Notifications must expose the three persisted options as accessible switches",
+);
+assert.match(
+  remindersHtml,
+  /class="reminders-sheet-backdrop"[\s\S]*?type="button"[\s\S]*?aria-label="Отменить выбор времени"[\s\S]*?data-dialog-motion="sheet"/,
+  "Notifications time picker must use the canonical dismissible Sheet contract",
+);
+assert.match(
+  runtimeRender,
+  /button\.getAttribute\("role"\) === "switch"[\s\S]*?aria-checked[\s\S]*?removeAttribute\("aria-pressed"\)/,
+  "Notifications switches must synchronize aria-checked without a conflicting pressed state",
+);
+assert.match(
+  settingsCss,
+  /#reminders-screen \.settings-toggle\s*\{[\s\S]*?width:\s*64px;[\s\S]*?height:\s*44px;[\s\S]*?#reminders-screen \.settings-toggle img\s*\{[\s\S]*?width:\s*24px;[\s\S]*?transform:\s*translateX\(28px\);/,
+  "Notifications switches must preserve the exact Silver UI Kit geometry",
+);
+assert.match(
+  settingsCss,
+  /@media \(max-width: 410px\)[\s\S]*?#reminders-screen \.reminders-days\s*\{[\s\S]*?grid-template-columns:\s*repeat\(4, 44px\);/,
+  "Notifications weekdays must restore the approved 4 plus 3 compact layout",
+);
+assert.match(
+  settingsCss,
+  /@media \(forced-colors: active\)[\s\S]*?#reminders-screen \.reminders-day\.is-selected[\s\S]*?outline:\s*2px solid Highlight;/,
+  "Notifications selected states must remain explicit in forced colors",
 );
 
 console.log("WYRD UI interaction smoke tests passed");
