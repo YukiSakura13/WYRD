@@ -5,7 +5,7 @@
 @import "./components/notifications.css";
 @import "./scenes/cover-onboarding.css";
 @import "./scenes/forest.css";
-@import "./scenes/settings.css";
+@import "./scenes/settings.css?v=silver-20260808-yuk143-app-info-preview-2";
 @import "./scenes/spirit-book.css";
 @import "./scenes/deck.css";
 @import "./components/reading.css";

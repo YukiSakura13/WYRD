@@ -1044,4 +1044,55 @@ assert.match(
   "Notifications selected states must remain explicit in forced colors",
 );
 
+const appInfoHtml = runtimeHtml.split('<section class="settings-screen app-info-screen')[1]?.split('<section class="spirit-book"')[0] || "";
+assert.match(
+  appInfoHtml,
+  /ui-scene-shell[\s\S]*?<header class="settings-header app-info-header ui-app-header">[\s\S]*?class="ui-icon-button ui-icon-button--back btn-back-circle settings-back"[\s\S]*?<h1 class="ui-app-header__identity" id="app-info-title">О приложении<\/h1>/,
+  "About App must reuse the canonical Silver Scene Shell and App Header",
+);
+assert.doesNotMatch(
+  appInfoHtml,
+  /wyrd-scene-stars|settings-brand|settings-rule|settings-kicker/,
+  "About App must not retain legacy stars or the rejected gold lockup hierarchy",
+);
+assert.equal(
+  (appInfoHtml.match(/class="settings-row app-info-row"/g) || []).length,
+  5,
+  "About App must preserve exactly five honest placeholder rows",
+);
+for (const label of [
+  "Версия",
+  "Связаться с нами",
+  "Сообщить об ошибке",
+  "Политика конфиденциальности",
+  "Условия использования",
+]) {
+  assert.match(appInfoHtml, new RegExp(`>${label}<`), `About App must preserve the ${label} row`);
+}
+assert.equal(
+  (appInfoHtml.match(/<button\b/g) || []).length,
+  1,
+  "About App static placeholders must leave Back as the only button",
+);
+assert.doesNotMatch(
+  appInfoHtml,
+  /<a\b|tabindex=|settings-row-arrow/,
+  "About App unavailable destinations must not masquerade as interactive controls",
+);
+assert.match(
+  settingsCss,
+  /#app-info-screen \.app-info-row\s*\{[\s\S]*?min-width:\s*0;[\s\S]*?min-height:\s*var\(--control-row-min-height\);[\s\S]*?background:\s*var\(--wyrd-control-surface\);/,
+  "About App rows must consume the canonical static Row geometry and Silver surface",
+);
+assert.match(
+  settingsCss,
+  /#app-info-screen \.settings-row-title,[\s\S]*?overflow-wrap:\s*anywhere;/,
+  "About App long Russian labels must wrap instead of causing the known 393px overflow",
+);
+assert.match(
+  settingsCss,
+  /@media \(forced-colors: active\)[\s\S]*?#app-info-screen \.app-info-row\s*\{[\s\S]*?border-color:\s*CanvasText;[\s\S]*?background:\s*Canvas;/,
+  "About App static rows must remain legible in forced colors",
+);
+
 console.log("WYRD UI interaction smoke tests passed");
