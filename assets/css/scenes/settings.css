@@ -1037,11 +1037,11 @@ body[data-scene="app-info"] .footer {
 .settings-audio-sheet__panel {
   position: absolute;
   right: var(--layout-safe-inline-end);
-  bottom: 0;
+  bottom: var(--dialog-viewport-bottom, 0px);
   left: var(--layout-safe-inline-start);
   z-index: 1;
   width: min(calc(100% - var(--layout-safe-inline-start) - var(--layout-safe-inline-end)), 42rem);
-  max-height: min(84vh, 44rem);
+  max-height: min(84dvh, calc(var(--dialog-viewport-height, 100dvh) - 12px), 44rem);
   margin-inline: auto;
   overflow-y: auto;
   padding: 2.25rem clamp(1rem, 4vw, 2rem) calc(1.5rem + var(--layout-safe-bottom));
@@ -1304,12 +1304,15 @@ body[data-scene="app-info"] .footer {
 
 @media (prefers-reduced-motion: reduce) {
   #settings-screen .settings-row,
-  .settings-audio-sheet__backdrop,
-  .settings-audio-sheet__panel,
   .settings-audio-toggle,
   .settings-audio-toggle__mechanism::before,
   .settings-audio-toggle__mechanism img {
     transition-duration: 1ms !important;
+  }
+
+  .settings-audio-sheet__backdrop,
+  .settings-audio-sheet__panel {
+    transition: opacity var(--dur-fast) var(--ease-out-strong) !important;
   }
 
   .settings-audio-sheet__panel {
@@ -1615,11 +1618,11 @@ body[data-scene="app-info"] .footer {
 #about-you-screen .about-unsaved-panel {
   position: absolute;
   right: var(--layout-safe-inline-end);
-  bottom: 0;
+  bottom: var(--dialog-viewport-bottom, 0px);
   left: var(--layout-safe-inline-start);
   z-index: 1;
   width: min(calc(100% - var(--layout-safe-inline-start) - var(--layout-safe-inline-end)), 42rem);
-  max-height: min(84vh, 44rem);
+  max-height: min(84dvh, calc(var(--dialog-viewport-height, 100dvh) - 12px), 44rem);
   margin-inline: auto;
   overflow-y: auto;
   padding: 2.25rem clamp(1rem, 4vw, 2rem) calc(1.5rem + var(--layout-safe-bottom));
@@ -1785,12 +1788,15 @@ body[data-scene="app-info"] .footer {
   #about-you-screen .about-field input,
   #about-you-screen .about-select-row,
   #about-you-screen .about-save,
-  #about-you-screen .about-unsaved-backdrop,
-  #about-you-screen .about-unsaved-panel,
   #about-you-screen .about-unsaved-primary,
   #about-you-screen .about-unsaved-secondary,
   #about-you-screen .about-unsaved-quiet {
     transition-duration: 1ms !important;
+  }
+
+  #about-you-screen .about-unsaved-backdrop,
+  #about-you-screen .about-unsaved-panel {
+    transition: opacity var(--dur-fast) var(--ease-out-strong) !important;
   }
 
   #about-you-screen .about-unsaved-panel {
@@ -2175,11 +2181,11 @@ body[data-scene="app-info"] .footer {
 #reminders-screen .reminders-sheet-panel {
   position: absolute;
   right: var(--layout-safe-inline-end);
-  bottom: 0;
+  bottom: var(--dialog-viewport-bottom, 0px);
   left: var(--layout-safe-inline-start);
   z-index: 1;
   width: min(calc(100% - var(--layout-safe-inline-start) - var(--layout-safe-inline-end)), 42rem);
-  max-height: min(84vh, 44rem);
+  max-height: min(84dvh, calc(var(--dialog-viewport-height, 100dvh) - 12px), 44rem);
   margin-inline: auto;
   overflow-y: auto;
   padding: 2.25rem clamp(1rem, 4vw, 2rem) calc(1.5rem + var(--layout-safe-bottom));
@@ -2334,11 +2340,14 @@ body[data-scene="app-info"] .footer {
   #reminders-screen .settings-toggle::before,
   #reminders-screen .settings-toggle img,
   #reminders-screen .about-save,
-  #reminders-screen .reminders-sheet-backdrop,
-  #reminders-screen .reminders-sheet-panel,
   #reminders-screen .reminders-sheet-secondary,
   #reminders-screen .reminders-sheet-primary {
     transition-duration: 1ms !important;
+  }
+
+  #reminders-screen .reminders-sheet-backdrop,
+  #reminders-screen .reminders-sheet-panel {
+    transition: opacity var(--dur-fast) var(--ease-out-strong) !important;
   }
 
   #reminders-screen .reminders-sheet-panel {

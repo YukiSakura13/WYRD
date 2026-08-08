@@ -1873,10 +1873,10 @@
 .history-sheet {
   position: fixed;
   right: 0;
-  bottom: 0;
+  bottom: var(--dialog-viewport-bottom, 0px);
   left: 0;
   z-index: 1;
-  height: min(92svh, 720px);
+  height: min(92svh, calc(var(--dialog-viewport-height, 100dvh) - 12px), 720px);
   overflow-y: auto;
   border-top: 1px solid var(--accent-18);
   border-radius: 18px 18px 0 0;

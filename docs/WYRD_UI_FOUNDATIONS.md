@@ -292,6 +292,11 @@ Rules:
 - border is quiet oxidized silver, validated against the active scene surface;
 - bottom sheets use top radius `18-22px`;
 - sheets contain Control Frame actions, not new button styles.
+- one controller owns `inert`, Escape, focus trap, focus return and page scroll lock;
+- closing completes on the actual exit `transitionend`; a measured timeout exists only as a failure fallback;
+- iOS and Telegram WebView keep the original page position while the sheet is open;
+- keyboard-facing sheets consume `visualViewport` height and bottom occlusion without changing their approved geometry;
+- history drag begins only after a `10px` direction lock, cancels horizontal intent and permits at most `8px` of resisted upward travel.
 
 Current relatives:
 - unsaved changes sheet;
@@ -478,8 +483,10 @@ Rules:
 - no jumpy bounce;
 - no attention-grabbing neon glow;
 - prefer `transform`, `opacity`, and `clip-path`; exit is shorter than enter;
+- never use `transition: all`, `ease-in`, or `scale(0)` for interface state changes;
+- hover motion is gated by `@media (hover: hover) and (pointer: fine)`;
 - all decorative motion must stop under `prefers-reduced-motion: reduce`;
-- reduced motion keeps state changes visible through color, outline, position, and text.
+- reduced motion removes spatial travel but keeps a `140ms` opacity state change visible.
 
 ## Material Language
 
@@ -644,6 +651,7 @@ Remove or merge these patterns over time:
 - Inputs have real labels or accessible names.
 - Interactive examples must be keyboard-friendly where relevant.
 - Sheets/modals use `role="dialog"`, focus trap/return, and a clear close path.
+- Short notifications own their live-region semantics per item: Info/Success are polite `status`; Error is assertive `alert`; replacing the same ID updates message, kind, action, duration and dismissibility atomically.
 - Reduced motion stops decorative loops and keeps functional state visible.
 
 ## Five Visual Signatures

@@ -36,10 +36,10 @@ body.has-open-dialog {
 @media (prefers-reduced-motion: reduce) {
   [data-dialog-layer] [data-dialog-backdrop],
   [data-dialog-layer] [data-dialog-panel] {
-    transition-duration: 1ms !important;
+    transition: opacity var(--dur-fast) var(--ease-out-strong) !important;
   }
 
-  [data-dialog-layer] [data-dialog-panel]:not([data-dialog-motion="sheet"]) {
+  [data-dialog-layer] [data-dialog-panel] {
     transform: none;
   }
 }

@@ -1,6 +1,23 @@
 const DRAG_THRESHOLD_PX = 10;
 const FLICK_MIN_DISTANCE_PX = 40;
 const DISMISS_VELOCITY_PX_MS = 0.45;
+const MAX_UPWARD_RESISTANCE_PX = 8;
+
+export function resolveHistoryDragAxis({ deltaX, deltaY, threshold = DRAG_THRESHOLD_PX }) {
+  const horizontal = Math.abs(deltaX);
+  const vertical = Math.abs(deltaY);
+
+  if (Math.max(horizontal, vertical) < threshold) {
+    return null;
+  }
+
+  return vertical >= horizontal ? "vertical" : "horizontal";
+}
+
+export function getHistoryUpwardResistance(distance) {
+  const normalized = Math.max(0, distance);
+  return MAX_UPWARD_RESISTANCE_PX * (1 - Math.exp(-normalized / 32));
+}
 
 export function shouldDismissHistoryDrag({ distance, elapsed, panelHeight }) {
   const velocity = distance / Math.max(elapsed, 1);
@@ -35,14 +52,24 @@ export function createHistorySheetDrag(doc = document) {
   }
 
   function startDrag(event) {
-    if (layer.hidden || panel.scrollTop > 0 || reducedMotion?.matches || event.button > 0) {
+    if (
+      drag ||
+      layer.hidden ||
+      panel.scrollTop > 0 ||
+      reducedMotion?.matches ||
+      event.isPrimary === false ||
+      event.button > 0
+    ) {
       return;
     }
 
     drag = {
       active: false,
+      axis: null,
+      panelHeight: panel.offsetHeight,
       pointerId: event.pointerId,
       startTime: performance.now(),
+      startX: event.clientX,
       startY: event.clientY,
       y: 0,
     };
@@ -54,18 +81,35 @@ export function createHistorySheetDrag(doc = document) {
       return;
     }
 
-    const distance = Math.max(0, event.clientY - drag.startY);
-    if (!drag.active && distance < DRAG_THRESHOLD_PX) {
+    const deltaX = event.clientX - drag.startX;
+    const deltaY = event.clientY - drag.startY;
+    if (!drag.axis) {
+      drag.axis = resolveHistoryDragAxis({ deltaX, deltaY });
+    }
+
+    if (!drag.axis) {
+      return;
+    }
+
+    if (drag.axis === "horizontal") {
+      releasePointer(event.pointerId);
+      drag = null;
       return;
     }
 
     drag.active = true;
-    drag.y = distance;
+    drag.y = Math.max(0, deltaY);
     event.preventDefault();
     layer.classList.add("is-dragging");
     panel.classList.add("is-dragging");
-    panel.style.setProperty("--history-drag-y", `${distance}px`);
-    layer.style.setProperty("--history-drag-progress", String(Math.min(distance / Math.max(panel.offsetHeight, 1), 1)));
+    panel.style.setProperty(
+      "--history-drag-y",
+      `${deltaY >= 0 ? drag.y : -getHistoryUpwardResistance(-deltaY)}px`,
+    );
+    layer.style.setProperty(
+      "--history-drag-progress",
+      String(Math.min(drag.y / Math.max(drag.panelHeight, 1), 1)),
+    );
   }
 
   function finishDrag(event) {
@@ -78,7 +122,7 @@ export function createHistorySheetDrag(doc = document) {
       shouldDismissHistoryDrag({
         distance: drag.y,
         elapsed: performance.now() - drag.startTime,
-        panelHeight: panel.offsetHeight,
+        panelHeight: drag.panelHeight,
       });
     releasePointer(event.pointerId);
 

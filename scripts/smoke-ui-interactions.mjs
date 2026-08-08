@@ -1,6 +1,11 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { shouldDismissHistoryDrag } from "../assets/js/ui/history-sheet-drag.js";
+import {
+  getHistoryUpwardResistance,
+  resolveHistoryDragAxis,
+  shouldDismissHistoryDrag,
+} from "../assets/js/ui/history-sheet-drag.js";
+import { getNotificationSemantics } from "../assets/js/ui/notification-center.js";
 import { formatFullTraceDate } from "../assets/js/ui/moon.js";
 
 assert.equal(
@@ -33,6 +38,37 @@ assert.equal(
   "a slow drag over the distance threshold should dismiss",
 );
 
+assert.equal(
+  resolveHistoryDragAxis({ deltaX: 6, deltaY: 8 }),
+  null,
+  "history drag must wait for the 10px direction threshold",
+);
+assert.equal(
+  resolveHistoryDragAxis({ deltaX: 14, deltaY: 4 }),
+  "horizontal",
+  "horizontal history intent must be cancelled rather than dismissed",
+);
+assert.equal(
+  resolveHistoryDragAxis({ deltaX: 4, deltaY: 14 }),
+  "vertical",
+  "vertical history intent must activate the sheet drag",
+);
+assert.equal(getHistoryUpwardResistance(0), 0, "upward resistance must start at zero");
+assert.ok(
+  getHistoryUpwardResistance(320) <= 8,
+  "history sheet upward resistance must never exceed eight pixels",
+);
+assert.deepEqual(
+  getNotificationSemantics("success"),
+  { role: "status", live: "polite" },
+  "success feedback must remain polite",
+);
+assert.deepEqual(
+  getNotificationSemantics("error"),
+  { role: "alert", live: "assertive" },
+  "error feedback must be assertive",
+);
+
 const [
   kitHtml,
   kitCss,
@@ -52,7 +88,11 @@ const [
   runtimeSpread,
   runtimeShare,
   settingsCss,
+  dialogsCss,
   notificationsCss,
+  dialogController,
+  notificationCenter,
+  historySheetDrag,
   stateModel,
   stateStorage,
   runtimeAudio,
@@ -76,7 +116,11 @@ const [
     readFile(new URL("../assets/js/ui/render-spread.js", import.meta.url), "utf8"),
     readFile(new URL("../assets/js/ui/share.js", import.meta.url), "utf8"),
     readFile(new URL("../assets/css/scenes/settings.css", import.meta.url), "utf8"),
+    readFile(new URL("../assets/css/components/dialogs.css", import.meta.url), "utf8"),
     readFile(new URL("../assets/css/components/notifications.css", import.meta.url), "utf8"),
+    readFile(new URL("../assets/js/ui/dialog-controller.js", import.meta.url), "utf8"),
+    readFile(new URL("../assets/js/ui/notification-center.js", import.meta.url), "utf8"),
+    readFile(new URL("../assets/js/ui/history-sheet-drag.js", import.meta.url), "utf8"),
     readFile(new URL("../assets/js/state/model.js", import.meta.url), "utf8"),
     readFile(new URL("../assets/js/state/storage.js", import.meta.url), "utf8"),
     readFile(new URL("../assets/js/audio.js", import.meta.url), "utf8"),
@@ -378,13 +422,28 @@ assert.match(
 );
 assert.match(
   kitJs,
-  /sheetReturnFocus\?\.focus\(\)/,
+  /sheetReturnFocus\?\.focus\(\{ preventScroll: true \}\)/,
   "Closing the sheet must restore focus to its opener",
 );
 assert.match(
   kitJs,
   /event\.key === "Escape"/,
   "The sheet must close from the Escape key",
+);
+assert.match(
+  kitJs,
+  /addEventListener\("transitionend", sheetTransitionHandler\)[\s\S]*?transition\.total \+ 80/,
+  "The canonical Sheet must close from its real transition with a measured fallback",
+);
+assert.match(
+  kitJs,
+  /visualViewport[\s\S]*?--dialog-viewport-height[\s\S]*?--dialog-viewport-bottom/,
+  "The canonical Sheet must adapt to the visible keyboard viewport",
+);
+assert.match(
+  kitJs,
+  /position", "fixed"[\s\S]*?window\.scrollTo\(snapshot\.scrollX, snapshot\.scrollY\)/,
+  "The canonical Sheet must preserve iOS and Telegram WebView page position",
 );
 assert.match(
   kitHtml,
@@ -905,7 +964,7 @@ assert.match(
 );
 assert.match(
   settingsCss,
-  /\.settings-audio-sheet__panel\s*\{[\s\S]*?width:\s*min\([\s\S]*?42rem\);[\s\S]*?max-height:\s*min\(84vh, 44rem\);/,
+  /\.settings-audio-sheet__panel\s*\{[\s\S]*?width:\s*min\([\s\S]*?42rem\);[\s\S]*?max-height:\s*min\(84dvh, calc\(var\(--dialog-viewport-height, 100dvh\) - 12px\), 44rem\);/,
   "Sound settings must preserve the canonical responsive Sheet envelope",
 );
 assert.match(
@@ -987,13 +1046,67 @@ assert.doesNotMatch(
   "Global notifications must not restore the legacy gold accent",
 );
 assert.match(
+  dialogController,
+  /addEventListener\("transitionend"[\s\S]*?transition\.total \+ 80/,
+  "Runtime dialogs must close from the real transition with a measured fallback",
+);
+assert.match(
+  dialogController,
+  /position", "fixed"[\s\S]*?scrollTo\(snapshot\.scrollX, snapshot\.scrollY\)/,
+  "Runtime dialogs must preserve page position with fixed-body iOS scroll lock",
+);
+assert.match(
+  dialogController,
+  /visualViewport[\s\S]*?--dialog-viewport-height[\s\S]*?--dialog-viewport-bottom/,
+  "Runtime sheets must adapt to the visible keyboard viewport",
+);
+assert.match(
+  notificationCenter,
+  /applyOptions\(existing, options\)[\s\S]*?syncAction\(record, options\.action\)[\s\S]*?transitionend/,
+  "Same-ID notifications must update atomically and leave on their actual transition",
+);
+assert.match(
+  notificationCenter,
+  /kind === "error"[\s\S]*?role: "alert", live: "assertive"[\s\S]*?role: "status", live: "polite"/,
+  "Notifications must own correct per-item live-region semantics",
+);
+assert.match(
+  dialogsCss,
+  /prefers-reduced-motion: reduce[\s\S]*?transition:\s*opacity var\(--dur-fast\) var\(--ease-out-strong\) !important;/,
+  "Reduced-motion dialogs must retain a visible 140ms opacity state without spatial travel",
+);
+assert.match(
+  notificationsCss,
+  /prefers-reduced-motion: reduce[\s\S]*?transition:\s*opacity var\(--dur-fast\) var\(--ease-out-strong\);/,
+  "Reduced-motion notifications must retain a visible 140ms opacity state",
+);
+for (const [name, source] of [
+  ["dialog primitives", dialogsCss],
+  ["notification primitives", notificationsCss],
+]) {
+  assert.doesNotMatch(source, /transition:\s*all\b/, `${name} must not animate every CSS property`);
+  assert.doesNotMatch(source, /\bease-in\b/, `${name} must not use sluggish ease-in motion`);
+  assert.doesNotMatch(source, /scale\(0\)/, `${name} must not collapse controls to zero scale`);
+}
+assert.match(
+  historySheetDrag,
+  /resolveHistoryDragAxis[\s\S]*?axis === "horizontal"[\s\S]*?getHistoryUpwardResistance/,
+  "History Sheet must direction-lock, cancel horizontal intent, and resist upward drag",
+);
+const notificationRoot = runtimeHtml.match(/<section\s+class="wyrd-notifications"[\s\S]*?>/)?.[0] || "";
+assert.doesNotMatch(
+  notificationRoot,
+  /aria-live|aria-relevant/,
+  "The shared notification root must not duplicate the live region owned by each item",
+);
+assert.match(
   settingsCss,
   /#about-you-screen \.about-segment\[aria-checked="true"\][\s\S]*?background:\s*linear-gradient\(145deg, #e1e4e1, #aeb4b2\);[\s\S]*?color:\s*#111318;/,
   "Profile selected pronoun must restore the canonical high-contrast Choice state",
 );
 assert.match(
   settingsCss,
-  /#about-you-screen \.about-unsaved-panel\s*\{[\s\S]*?width:\s*min\([\s\S]*?42rem\);[\s\S]*?max-height:\s*min\(84vh, 44rem\);/,
+  /#about-you-screen \.about-unsaved-panel\s*\{[\s\S]*?width:\s*min\([\s\S]*?42rem\);[\s\S]*?max-height:\s*min\(84dvh, calc\(var\(--dialog-viewport-height, 100dvh\) - 12px\), 44rem\);/,
   "Profile unsaved Sheet must preserve the canonical responsive envelope",
 );
 assert.match(

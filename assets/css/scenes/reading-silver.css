@@ -1459,8 +1459,8 @@
   position: relative;
   z-index: 1;
   width: min(calc(100% - var(--layout-safe-inline-start) - var(--layout-safe-inline-end)), 42rem);
-  max-height: min(84dvh, 44rem);
-  margin-inline: auto;
+  max-height: min(84dvh, calc(var(--dialog-viewport-height, 100dvh) - 12px), 44rem);
+  margin: 0 auto var(--dialog-viewport-bottom, 0px);
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: 2.25rem clamp(1rem, 4vw, 2rem) calc(1.5rem + var(--layout-safe-bottom));
@@ -1785,10 +1785,17 @@ body.has-open-dialog {
   #result .card-box,
   #result .card-msg,
   #result .card-shd-wrap,
-  #spread-result .spread-card,
+  #spread-result .spread-card {
+    transition: none;
+  }
+
   .spread-card-modal-backdrop,
   .spread-card-modal-panel {
-    transition: none;
+    transition: opacity var(--dur-fast) var(--ease-out-strong);
+  }
+
+  .spread-card-modal-panel {
+    transform: none;
   }
 
   #result .card-box,

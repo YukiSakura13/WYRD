@@ -1853,11 +1853,11 @@ a {
 .kit-sheet {
   position: fixed;
   right: var(--layout-safe-inline-end);
-  bottom: 0;
+  bottom: var(--dialog-viewport-bottom, 0px);
   left: var(--layout-safe-inline-start);
   z-index: 91;
   width: min(calc(100% - var(--layout-safe-inline-start) - var(--layout-safe-inline-end)), 42rem);
-  max-height: min(84vh, 44rem);
+  max-height: min(84dvh, calc(var(--dialog-viewport-height, 100dvh) - 12px), 44rem);
   margin-inline: auto;
   overflow-y: auto;
   padding: 2.25rem clamp(1rem, 4vw, 2rem) calc(1.5rem + var(--layout-safe-bottom));
@@ -2922,14 +2922,21 @@ body.has-kit-sheet-open {
   .card-context-action,
   .wyrd-deck-artifact,
   .wyrd-deck-composition__touch,
-  .kit-sheet,
-  .kit-sheet-backdrop,
   .feedback-panel__oracle,
   .frequent-action-list button,
   .row-sheet-list button,
   .motion-lab__controls button,
   .page-indicators button::before {
     transition: none !important;
+  }
+
+  .kit-sheet,
+  .kit-sheet-backdrop {
+    transition: opacity 140ms var(--ease-out-strong) !important;
+  }
+
+  .kit-sheet {
+    transform: none;
   }
 
   .kit-day-choice:active,

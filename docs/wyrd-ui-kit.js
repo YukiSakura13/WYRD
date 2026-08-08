@@ -372,9 +372,11 @@ function createMoonIcon(type) {
   const sheet = document.querySelector("[data-kit-sheet]");
   const sheetBackdrop = document.querySelector("[data-sheet-backdrop]");
   const sheetClose = document.querySelector("[data-sheet-close]");
-  const sheetMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let sheetReturnFocus = null;
   let sheetHideTimer = 0;
+  let sheetTransitionHandler = null;
+  let sheetScrollSnapshot = null;
+  let sheetViewportCleanup = null;
 
   function sheetFocusableElements() {
     if (!sheet) return [];
@@ -385,10 +387,12 @@ function createMoonIcon(type) {
   function openSheet() {
     if (!sheet || !sheetBackdrop) return;
 
-    window.clearTimeout(sheetHideTimer);
+    cancelSheetClose();
     sheetReturnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : sheetOpen;
     sheet.hidden = false;
     sheetBackdrop.hidden = false;
+    lockKitScroll();
+    attachKitViewportAdapter();
     document.body.classList.add("has-kit-sheet-open");
 
     window.requestAnimationFrame(() => {
@@ -403,20 +407,172 @@ function createMoonIcon(type) {
 
     sheet.classList.remove("is-open");
     sheetBackdrop.classList.remove("is-open");
-    document.body.classList.remove("has-kit-sheet-open");
 
     const finishClose = () => {
+      cancelSheetClose();
       sheet.hidden = true;
       sheetBackdrop.hidden = true;
-      sheetReturnFocus?.focus();
+      document.body.classList.remove("has-kit-sheet-open");
+      detachKitViewportAdapter();
+      unlockKitScroll();
+      sheetReturnFocus?.focus({ preventScroll: true });
     };
 
-    if (sheetMotion.matches) {
-      finishClose();
+    const transition = getLongestSheetTransition(sheet);
+    if (transition.total <= 0) {
+      sheetHideTimer = window.setTimeout(finishClose, 0);
       return;
     }
 
-    sheetHideTimer = window.setTimeout(finishClose, 320);
+    sheetTransitionHandler = (event) => {
+      if (
+        event.target === sheet &&
+        (transition.property === "all" || event.propertyName === transition.property)
+      ) {
+        finishClose();
+      }
+    };
+    sheet.addEventListener("transitionend", sheetTransitionHandler);
+    sheetHideTimer = window.setTimeout(finishClose, transition.total + 80);
+  }
+
+  function cancelSheetClose() {
+    window.clearTimeout(sheetHideTimer);
+    sheetHideTimer = 0;
+    if (sheet && sheetTransitionHandler) {
+      sheet.removeEventListener("transitionend", sheetTransitionHandler);
+    }
+    sheetTransitionHandler = null;
+  }
+
+  function getLongestSheetTransition(element) {
+    const style = window.getComputedStyle(element);
+    const properties = style.transitionProperty.split(",").map((value) => value.trim());
+    const durations = style.transitionDuration.split(",").map(parseSheetTime);
+    const delays = style.transitionDelay.split(",").map(parseSheetTime);
+    const count = Math.max(properties.length, durations.length, delays.length);
+    let longest = { property: "all", total: 0 };
+
+    for (let index = 0; index < count; index += 1) {
+      const property = properties[index % properties.length] || "all";
+      const total = (durations[index % durations.length] || 0) + (delays[index % delays.length] || 0);
+      if (property !== "none" && total > longest.total) {
+        longest = { property, total };
+      }
+    }
+
+    return longest;
+  }
+
+  function parseSheetTime(value) {
+    const duration = Number.parseFloat(value) || 0;
+    return value.trim().endsWith("ms") ? duration : duration * 1000;
+  }
+
+  function lockKitScroll() {
+    if (sheetScrollSnapshot) return;
+
+    const bodyStyle = document.body.style;
+    const rootStyle = document.documentElement.style;
+    const scrollX = window.scrollX || 0;
+    const scrollY = window.scrollY || 0;
+    const iosDevice =
+      /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    const standalone = window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+    const useFixedBody = iosDevice && !standalone;
+    const capture = (style, properties) =>
+      properties.map((property) => ({
+        property,
+        value: style.getPropertyValue(property),
+        priority: style.getPropertyPriority(property),
+      }));
+
+    sheetScrollSnapshot = {
+      scrollX,
+      scrollY,
+      useFixedBody,
+      body: capture(bodyStyle, ["position", "top", "left", "right", "width"]),
+      root: capture(rootStyle, ["padding-right"]),
+    };
+
+    if (useFixedBody) {
+      bodyStyle.setProperty("position", "fixed");
+      bodyStyle.setProperty("top", `${-scrollY}px`);
+      bodyStyle.setProperty("left", `${-scrollX}px`);
+      bodyStyle.setProperty("right", "0");
+      bodyStyle.setProperty("width", "100%");
+      return;
+    }
+
+    const scrollbarGap = Math.max(0, window.innerWidth - document.documentElement.clientWidth);
+    if (scrollbarGap > 0) {
+      const padding = Number.parseFloat(window.getComputedStyle(document.documentElement).paddingRight) || 0;
+      rootStyle.setProperty("padding-right", `${padding + scrollbarGap}px`);
+    }
+  }
+
+  function unlockKitScroll() {
+    const snapshot = sheetScrollSnapshot;
+    if (!snapshot) return;
+
+    const restore = (style, entries) => {
+      entries.forEach(({ property, value, priority }) => {
+        if (value) style.setProperty(property, value, priority);
+        else style.removeProperty(property);
+      });
+    };
+    restore(document.body.style, snapshot.body);
+    restore(document.documentElement.style, snapshot.root);
+    sheetScrollSnapshot = null;
+
+    if (snapshot.useFixedBody) {
+      window.requestAnimationFrame(() => window.scrollTo(snapshot.scrollX, snapshot.scrollY));
+    }
+  }
+
+  function attachKitViewportAdapter() {
+    if (!sheet || sheetViewportCleanup) return;
+
+    const viewport = window.visualViewport;
+    const update = () => {
+      const viewportHeight = Math.max(1, Math.round(viewport?.height || window.innerHeight));
+      const viewportTop = Math.max(0, Math.round(viewport?.offsetTop || 0));
+      const occludedBottom = Math.max(0, Math.round(window.innerHeight - viewportHeight - viewportTop));
+      const focused = document.activeElement;
+      const keyboardInput = focused?.matches?.(
+        "textarea, input:not([type='checkbox']):not([type='radio']):not([type='range']), [contenteditable]:not([contenteditable='false'])",
+      );
+
+      sheet.style.setProperty("--dialog-viewport-height", `${viewportHeight}px`);
+      sheet.style.setProperty(
+        "--dialog-viewport-bottom",
+        `${keyboardInput && occludedBottom > 80 ? occludedBottom : 0}px`,
+      );
+    };
+    const updateAfterFocus = () => window.requestAnimationFrame(update);
+
+    viewport?.addEventListener("resize", update);
+    viewport?.addEventListener("scroll", update);
+    sheet.addEventListener("focusin", updateAfterFocus);
+    sheet.addEventListener("focusout", updateAfterFocus);
+    window.addEventListener("resize", update);
+    update();
+
+    sheetViewportCleanup = () => {
+      viewport?.removeEventListener("resize", update);
+      viewport?.removeEventListener("scroll", update);
+      sheet.removeEventListener("focusin", updateAfterFocus);
+      sheet.removeEventListener("focusout", updateAfterFocus);
+      window.removeEventListener("resize", update);
+      sheet.style.removeProperty("--dialog-viewport-height");
+      sheet.style.removeProperty("--dialog-viewport-bottom");
+    };
+  }
+
+  function detachKitViewportAdapter() {
+    sheetViewportCleanup?.();
+    sheetViewportCleanup = null;
   }
 
   sheetOpen?.addEventListener("click", openSheet);
