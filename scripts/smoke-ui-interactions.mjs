@@ -5,7 +5,10 @@ import {
   resolveHistoryDragAxis,
   shouldDismissHistoryDrag,
 } from "../assets/js/ui/history-sheet-drag.js";
-import { getNotificationSemantics } from "../assets/js/ui/notification-center.js";
+import {
+  getNotificationPolicy,
+  getNotificationSemantics,
+} from "../assets/js/ui/notification-center.js";
 import { formatFullTraceDate } from "../assets/js/ui/moon.js";
 
 assert.equal(
@@ -1037,8 +1040,53 @@ assert.match(
 );
 assert.match(
   notificationsCss,
-  /\.wyrd-notification--success\s*\{[\s\S]*?border-color:\s*rgba\(225, 228, 225, 0\.52\);/,
-  "Profile save feedback must use the shared silver success surface",
+  /\.wyrd-notification--success\s*\{[\s\S]*?border-color:\s*rgba\(225, 228, 225, 0\.2\);/,
+  "Local notification preview must keep the success contour quietly silver",
+);
+assert.match(
+  notificationsCss,
+  /top:\s*max\(8px, calc\(var\(--layout-safe-top\) \+ 6px\)\);[\s\S]*?width:\s*min\(100%, 22\.5rem\);[\s\S]*?min-height:\s*58px;[\s\S]*?border:\s*1px solid[\s\S]*?border-radius:\s*16px;[\s\S]*?translate3d\(0, calc\(-100% - 12px\), 0\)/,
+  "Local notification preview must stay compact, safe-area aware, and fully above-screen before entry",
+);
+assert.match(
+  notificationsCss,
+  /transform 320ms cubic-bezier\(0\.22, 1, 0\.36, 1\)[\s\S]*?\.wyrd-notification\.is-leaving[\s\S]*?transition-duration:\s*180ms, 220ms;/,
+  "Local notification preview must enter smoothly and leave upward on the same path",
+);
+assert.match(
+  notificationsCss,
+  /\.wyrd-notification__message::before\s*\{[\s\S]*?color:\s*rgba\(205, 209, 207, 0\.68\);/,
+  "The compact WYRD label must retain readable contrast",
+);
+assert.match(
+  notificationsCss,
+  /\.wyrd-notification::before[\s\S]*?background:\s*currentColor;[\s\S]*?mask:[\s\S]*?wyrd-diamond-big-small\.svg/,
+  "The WYRD status mark must inherit system color through a mask",
+);
+assert.match(
+  notificationsCss,
+  /\.wyrd-notification__close::before[\s\S]*?background:\s*currentColor;[\s\S]*?mask:[\s\S]*?tabler-x\.svg/,
+  "The Close icon must inherit system color through a mask",
+);
+assert.equal(
+  (runtimeActions.match(/id:\s*"profile-saved"[\s\S]*?dismissible:\s*true/g) || []).length,
+  2,
+  "Both Profile save paths must expose the same dismissible notification contract",
+);
+assert.deepEqual(
+  getNotificationPolicy({ kind: "success" }),
+  { kind: "success", duration: 4000, dismissible: false },
+  "Short Success feedback must auto-dismiss after four seconds without Close",
+);
+assert.deepEqual(
+  getNotificationPolicy({ kind: "info" }),
+  { kind: "info", duration: 4000, dismissible: false },
+  "Short Info feedback must auto-dismiss after four seconds without Close",
+);
+assert.deepEqual(
+  getNotificationPolicy({ kind: "error" }),
+  { kind: "error", duration: Number.POSITIVE_INFINITY, dismissible: true },
+  "Error feedback must stay persistent and closeable by default",
 );
 assert.doesNotMatch(
   notificationsCss,

@@ -1,7 +1,7 @@
 .wyrd-notifications {
   position: fixed;
   z-index: 120;
-  top: max(12px, calc(var(--layout-safe-top) + 8px));
+  top: max(8px, calc(var(--layout-safe-top) + 6px));
   right: max(12px, var(--layout-safe-inline-end));
   left: max(12px, var(--layout-safe-inline-start));
   display: grid;
@@ -12,28 +12,42 @@
 
 .wyrd-notification {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: 28px minmax(0, 1fr);
   align-items: center;
-  gap: 6px 10px;
-  width: min(100%, 390px);
-  min-height: 52px;
-  padding: 6px 6px 6px 16px;
-  border: 1px solid rgba(205, 209, 207, 0.3);
-  border-radius: 12px;
+  gap: 8px;
+  width: min(100%, 22.5rem);
+  min-height: 58px;
+  padding: 7px 12px 7px 10px;
+  border: 1px solid rgba(205, 209, 207, 0.16);
+  border-radius: 16px;
   background:
-    linear-gradient(180deg, rgba(25, 27, 36, 0.98), rgba(9, 10, 15, 0.98)),
-    var(--wyrd-control-surface);
+    linear-gradient(145deg, rgba(31, 33, 42, 0.88), rgba(13, 15, 21, 0.9)),
+    rgba(13, 15, 21, 0.88);
   color: var(--wyrd-text-action);
   box-shadow:
-    0 16px 44px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(225, 228, 225, 0.045),
-    0 0 22px rgba(225, 228, 225, 0.055);
+    0 10px 28px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(243, 246, 244, 0.045);
+  -webkit-backdrop-filter: blur(18px) saturate(112%);
+  backdrop-filter: blur(18px) saturate(112%);
   opacity: 0;
   pointer-events: auto;
-  transform: translateY(-8px) scale(0.98);
+  transform: translate3d(0, calc(-100% - 12px), 0);
   transition:
-    opacity var(--dur-fast) var(--ease-out-strong),
-    transform var(--dur-fast) var(--ease-out-strong);
+    opacity 220ms ease-out,
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.wyrd-notification::before {
+  content: "";
+  grid-column: 1;
+  grid-row: 1;
+  width: 22px;
+  height: 22px;
+  justify-self: center;
+  background: currentColor;
+  color: rgba(205, 209, 207, 0.68);
+  -webkit-mask: url("../../ui/action-buttons/continuous/wyrd-diamond-big-small.svg") center / 20px 20px no-repeat;
+  mask: url("../../ui/action-buttons/continuous/wyrd-diamond-big-small.svg") center / 20px 20px no-repeat;
 }
 
 .wyrd-notification.is-visible {
@@ -43,18 +57,39 @@
 
 .wyrd-notification.is-leaving {
   pointer-events: none;
+  transition-duration: 180ms, 220ms;
+}
+
+.wyrd-notification.is-dismissible {
+  grid-template-columns: 28px minmax(0, 1fr) 44px;
+  padding: 7px 4px 7px 10px;
 }
 
 .wyrd-notification--success {
-  border-color: rgba(225, 228, 225, 0.52);
+  border-color: rgba(225, 228, 225, 0.2);
 }
 
 .wyrd-notification__message {
+  grid-column: 2;
+  grid-row: 1;
   margin: 0;
-  color: var(--wyrd-bone-text);
+  color: rgba(243, 240, 232, 0.92);
   font-family: var(--ui-font);
-  font-size: 1rem;
-  line-height: 1.4;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.25;
+  text-align: left;
+}
+
+.wyrd-notification__message::before {
+  content: "WYRD";
+  display: block;
+  margin-bottom: 1px;
+  color: rgba(205, 209, 207, 0.68);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  line-height: 1.1;
 }
 
 .wyrd-notification__action,
@@ -78,11 +113,43 @@
 }
 
 .wyrd-notification__close {
-  grid-column: 2;
+  grid-column: 3;
   grid-row: 1;
-  border-radius: 999px;
-  font-size: 1.75rem;
-  line-height: 1;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  position: relative;
+  background: transparent;
+  color: rgba(205, 209, 207, 0.62);
+  font-size: 0;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    transform 100ms ease-out;
+}
+
+.wyrd-notification__close::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 17px;
+  height: 17px;
+  background: currentColor;
+  transform: translate(-50%, -50%);
+  -webkit-mask: url("../../ui/icons/tabler-x.svg") center / 17px 17px no-repeat;
+  mask: url("../../ui/icons/tabler-x.svg") center / 17px 17px no-repeat;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .wyrd-notification__close:hover {
+    background-color: rgba(225, 228, 225, 0.055);
+    color: rgba(225, 228, 225, 0.9);
+  }
+}
+
+.wyrd-notification__close:active {
+  transform: scale(0.94);
 }
 
 .wyrd-notification__action:focus-visible,
@@ -95,5 +162,39 @@
   .wyrd-notification {
     transform: none;
     transition: opacity var(--dur-fast) var(--ease-out-strong);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .wyrd-notification {
+    background: rgba(13, 15, 21, 0.98);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+@media (prefers-contrast: more), (forced-colors: active) {
+  .wyrd-notification {
+    border-color: currentColor;
+    background: Canvas;
+    color: CanvasText;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .wyrd-notification::before,
+  .wyrd-notification__message,
+  .wyrd-notification__message::before {
+    color: CanvasText;
+  }
+
+  .wyrd-notification__close {
+    color: ButtonText;
+  }
+
+  .wyrd-notification__close:focus-visible {
+    outline-color: Highlight;
   }
 }

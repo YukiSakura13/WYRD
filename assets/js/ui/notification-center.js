@@ -1,5 +1,5 @@
 const MAX_VISIBLE = 3;
-const DEFAULT_DURATION = 4200;
+const DEFAULT_DURATION = 4000;
 const NOTIFICATION_KINDS = ["info", "success", "warning", "error"];
 let sequence = 0;
 let center = null;
@@ -8,6 +8,23 @@ export function getNotificationSemantics(kind = "info") {
   return kind === "error"
     ? { role: "alert", live: "assertive" }
     : { role: "status", live: "polite" };
+}
+
+export function getNotificationPolicy(options = {}) {
+  const kind = NOTIFICATION_KINDS.includes(options.kind) ? options.kind : "info";
+  const hasAction = Boolean(options.action?.label && typeof options.action.onClick === "function");
+  const persistentByDefault = kind === "error" || hasAction;
+
+  return {
+    kind,
+    duration:
+      options.duration === undefined
+        ? persistentByDefault
+          ? Number.POSITIVE_INFINITY
+          : DEFAULT_DURATION
+        : normalizeDuration(options.duration),
+    dismissible: options.dismissible ?? persistentByDefault,
+  };
 }
 
 export function notify(options) {
@@ -49,8 +66,7 @@ function createNotificationCenter(doc) {
     const existing = records.find((record) => record.id === id);
     if (existing) {
       pause(existing);
-      applyOptions(existing, options);
-      existing.remaining = normalizeDuration(options.duration);
+      existing.remaining = applyOptions(existing, options);
       resume(existing);
       return id;
     }
@@ -81,7 +97,7 @@ function createNotificationCenter(doc) {
       message,
       close,
       action: null,
-      remaining: normalizeDuration(options.duration),
+      remaining: 0,
       startedAt: 0,
       timer: 0,
       removalTimer: 0,
@@ -91,7 +107,7 @@ function createNotificationCenter(doc) {
       pausedByHover: false,
       dismissed: false,
     };
-    applyOptions(record, options);
+    record.remaining = applyOptions(record, options);
     records.push(record);
 
     close.addEventListener("click", () => dismiss(record));
@@ -123,21 +139,24 @@ function createNotificationCenter(doc) {
   }
 
   function applyOptions(record, options) {
-    const kind = NOTIFICATION_KINDS.includes(options.kind) ? options.kind : "info";
-    const semantics = getNotificationSemantics(kind);
+    const policy = getNotificationPolicy(options);
+    const semantics = getNotificationSemantics(policy.kind);
 
     NOTIFICATION_KINDS.forEach((name) => record.item.classList.remove(`wyrd-notification--${name}`));
-    record.item.classList.add(`wyrd-notification--${kind}`);
+    record.item.classList.add(`wyrd-notification--${policy.kind}`);
     record.item.setAttribute("role", semantics.role);
     record.item.setAttribute("aria-live", semantics.live);
     record.message.textContent = options.message;
-    record.close.hidden = options.dismissible === false;
+    record.close.hidden = !policy.dismissible;
+    record.item.classList.toggle("is-dismissible", policy.dismissible);
     syncAction(record, options.action);
+    return policy.duration;
   }
 
   function syncAction(record, actionOptions) {
     record.action?.remove();
     record.action = null;
+    record.item.classList.remove("has-action");
 
     if (!actionOptions?.label || typeof actionOptions.onClick !== "function") {
       return;
@@ -153,6 +172,7 @@ function createNotificationCenter(doc) {
     });
     record.item.insertBefore(action, record.close);
     record.action = action;
+    record.item.classList.add("has-action");
   }
 
   function pause(record) {

@@ -268,7 +268,12 @@ export function createActionHandler(deps) {
       uiState.aboutDraft = { ...nextState.userProfile };
       uiState.aboutUnsavedSheetOpen = false;
       updateAboutStatus("Сохранено.");
-      notify({ id: "profile-saved", kind: "success", message: "Профиль сохранён." });
+      notify({
+        id: "profile-saved",
+        kind: "success",
+        message: "Профиль сохранён.",
+        dismissible: true,
+      });
       window.setTimeout(function closeAfterSheetSave() {
         closeAboutYouScreen({ audio, renderer, setScene, store, uiState, renderApp, runTransition });
       }, 120);
@@ -311,7 +316,12 @@ export function createActionHandler(deps) {
       uiState.aboutDraft = { ...nextState.userProfile };
       uiState.aboutUnsavedSheetOpen = false;
       updateAboutStatus("Сохранено.");
-      notify({ id: "profile-saved", kind: "success", message: "Профиль сохранён." });
+      notify({
+        id: "profile-saved",
+        kind: "success",
+        message: "Профиль сохранён.",
+        dismissible: true,
+      });
       window.setTimeout(function returnAfterSave() {
         const returnScene = uiState.aboutReturnScene || SCENES.FOREST;
         uiState.aboutDraft = null;
@@ -439,7 +449,12 @@ export function createActionHandler(deps) {
       };
       store.saveReminders(uiState.remindersDraft);
       updateRemindersStatus("Уведомления сохранены.");
-      notify({ id: "reminders-status", kind: "success", message: "Уведомления сохранены." });
+      notify({
+        id: "reminders-status",
+        kind: "success",
+        message: "Уведомления сохранены.",
+        dismissible: true,
+      });
       renderApp();
       return;
     }
@@ -452,7 +467,12 @@ export function createActionHandler(deps) {
       };
       store.saveReminders(uiState.remindersDraft);
       updateRemindersStatus("Уведомления отключены.");
-      notify({ id: "reminders-status", kind: "info", message: "Уведомления отключены." });
+      notify({
+        id: "reminders-status",
+        kind: "info",
+        message: "Уведомления отключены.",
+        dismissible: true,
+      });
       renderApp();
       return;
     }
