@@ -6,6 +6,7 @@ import { createTransitionRunner, getAudioScene, getReturnScene, playSpreadSequen
 import { SCENES } from "./scenes.js";
 import { closeSaveScreen, saveCurrentCard, shareCurrentCard } from "./share.js";
 import { notify } from "./notification-center.js";
+import { acceptSpiritBookNavigation } from "./spirit-book-navigation.js";
 
 const REMINDER_DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 
@@ -190,6 +191,7 @@ export function createActionHandler(deps) {
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function openSpiritBook() {
         uiState.spiritBookPage = 0;
+        uiState.spiritBookNavigationLockedUntil = 0;
         setScene(SCENES.SPIRIT_BOOK);
         audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.FOREST });
         renderer.scrollTo(SCENES.SPIRIT_BOOK);
@@ -198,6 +200,9 @@ export function createActionHandler(deps) {
     }
 
     if (action === "spirit-book-prev") {
+      if (!acceptSpiritBookNavigation(uiState)) {
+        return;
+      }
       audio.playSelect(store.getState().soundEnabled);
       uiState.spiritBookPage = Math.max(0, (uiState.spiritBookPage || 0) - 1);
       renderApp();
@@ -205,6 +210,9 @@ export function createActionHandler(deps) {
     }
 
     if (action === "spirit-book-next") {
+      if (!acceptSpiritBookNavigation(uiState)) {
+        return;
+      }
       audio.playSelect(store.getState().soundEnabled);
       uiState.spiritBookPage = Math.min(SPIRIT_BOOK_PAGES.length - 1, (uiState.spiritBookPage || 0) + 1);
       renderApp();
@@ -214,6 +222,9 @@ export function createActionHandler(deps) {
     if (action === "spirit-book-page") {
       const page = Number(trigger.dataset.page);
       if (!Number.isInteger(page)) {
+        return;
+      }
+      if (!acceptSpiritBookNavigation(uiState)) {
         return;
       }
       audio.playSelect(store.getState().soundEnabled);
@@ -1069,6 +1080,7 @@ export function createInitialUIState(state) {
     timePickerOpen: false,
     timePickerDraft: null,
     spiritBookPage: 0,
+    spiritBookNavigationLockedUntil: 0,
     onboardingReturn: SCENES.COVER,
     activeHistoryTraceId: null,
     pinCurrentReadingForSpread: false,

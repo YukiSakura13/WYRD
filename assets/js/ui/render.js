@@ -137,6 +137,7 @@ export function getElements(doc = document) {
 
 export function createRenderer(elements) {
   let readingRevealTimers = [];
+  let spiritBookMotionFrames = [];
   let lastReadingId = null;
   let previousScene = null;
   const readingMotionPreference = elements.body?.ownerDocument?.defaultView?.matchMedia?.(
@@ -625,6 +626,7 @@ export function createRenderer(elements) {
 
     if (elements.spiritBookArt) {
       elements.spiritBookArt.dataset.page = String(pageIndex + 1);
+      restartSpiritBookMotion(pageIndex, uiState.activeScene === SCENES.SPIRIT_BOOK);
     }
 
     elements.spiritBookImage.hidden = !page.image;
@@ -657,6 +659,37 @@ export function createRenderer(elements) {
     renderSpiritBookDots(pageIndex);
   }
 
+  function restartSpiritBookMotion(pageIndex, isVisible) {
+    if (!elements.spiritBookArt) {
+      return;
+    }
+
+    spiritBookMotionFrames.forEach(function cancelMotionFrame(frameId) {
+      window.cancelAnimationFrame(frameId);
+    });
+    spiritBookMotionFrames = [];
+    elements.spiritBookArt.classList.remove("is-motion-ready");
+
+    if (!isVisible) {
+      return;
+    }
+
+    const expectedPage = String(pageIndex + 1);
+    const resetFrame = window.requestAnimationFrame(function waitForMotionReset() {
+      const startFrame = window.requestAnimationFrame(function startSpiritBookMotion() {
+        spiritBookMotionFrames = [];
+        if (
+          elements.spiritBookArt?.dataset.page === expectedPage &&
+          !elements.spiritBookSection?.hidden
+        ) {
+          elements.spiritBookArt.classList.add("is-motion-ready");
+        }
+      });
+      spiritBookMotionFrames.push(startFrame);
+    });
+    spiritBookMotionFrames.push(resetFrame);
+  }
+
   function renderSpiritBookDots(activeIndex) {
     if (!elements.spiritBookDots) {
       return;
@@ -670,6 +703,7 @@ export function createRenderer(elements) {
         dot.dataset.action = "spirit-book-page";
         dot.dataset.page = String(index);
         dot.setAttribute("aria-label", `Открыть главу ${index + 1}: ${page.title}`);
+        dot.setAttribute("aria-pressed", index === activeIndex ? "true" : "false");
         dot.setAttribute("aria-current", index === activeIndex ? "page" : "false");
         return dot;
       }),

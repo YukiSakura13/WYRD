@@ -10,11 +10,32 @@ import {
   getNotificationSemantics,
 } from "../assets/js/ui/notification-center.js";
 import { formatFullTraceDate } from "../assets/js/ui/moon.js";
+import {
+  acceptSpiritBookNavigation,
+  SPIRIT_BOOK_NAVIGATION_LOCK_MS,
+} from "../assets/js/ui/spirit-book-navigation.js";
 
 assert.equal(
   formatFullTraceDate(new Date(2026, 7, 3, 12)),
   "3\u00a0августа",
   "Result metadata must use the full lowercase month name",
+);
+
+const spiritBookNavigationState = {};
+assert.equal(
+  acceptSpiritBookNavigation(spiritBookNavigationState, 1_000),
+  true,
+  "the first Spirit Book navigation gesture must be accepted",
+);
+assert.equal(
+  acceptSpiritBookNavigation(spiritBookNavigationState, 1_000 + SPIRIT_BOOK_NAVIGATION_LOCK_MS - 1),
+  false,
+  "a duplicate activation inside the Spirit Book lock must not skip a chapter",
+);
+assert.equal(
+  acceptSpiritBookNavigation(spiritBookNavigationState, 1_000 + SPIRIT_BOOK_NAVIGATION_LOCK_MS),
+  true,
+  "Spirit Book navigation must unlock after 280ms",
 );
 
 assert.equal(
@@ -91,6 +112,7 @@ const [
   runtimeSpread,
   runtimeShare,
   settingsCss,
+  spiritBookCss,
   dialogsCss,
   notificationsCss,
   dialogController,
@@ -119,6 +141,7 @@ const [
     readFile(new URL("../assets/js/ui/render-spread.js", import.meta.url), "utf8"),
     readFile(new URL("../assets/js/ui/share.js", import.meta.url), "utf8"),
     readFile(new URL("../assets/css/scenes/settings.css", import.meta.url), "utf8"),
+    readFile(new URL("../assets/css/scenes/spirit-book.css", import.meta.url), "utf8"),
     readFile(new URL("../assets/css/components/dialogs.css", import.meta.url), "utf8"),
     readFile(new URL("../assets/css/components/notifications.css", import.meta.url), "utf8"),
     readFile(new URL("../assets/js/ui/dialog-controller.js", import.meta.url), "utf8"),
@@ -1205,7 +1228,7 @@ assert.match(
   "Notifications selected states must remain explicit in forced colors",
 );
 
-const appInfoHtml = runtimeHtml.split('<section class="settings-screen app-info-screen')[1]?.split('<section class="spirit-book"')[0] || "";
+const appInfoHtml = runtimeHtml.split('<section class="settings-screen app-info-screen')[1]?.split('<section class="spirit-book')[0] || "";
 assert.match(
   appInfoHtml,
   /ui-scene-shell[\s\S]*?<header class="settings-header app-info-header ui-app-header">[\s\S]*?class="ui-icon-button ui-icon-button--back btn-back-circle settings-back"[\s\S]*?<h1 class="ui-app-header__identity" id="app-info-title">О приложении<\/h1>/,
@@ -1249,6 +1272,98 @@ assert.match(
   settingsCss,
   /#app-info-screen \.settings-row-title,[\s\S]*?overflow-wrap:\s*anywhere;/,
   "About App long Russian labels must wrap instead of causing the known 393px overflow",
+);
+
+const spiritBookHtml = runtimeHtml.split('<section class="spirit-book')[1]?.split('<section class="ritual-onboarding"')[0] || "";
+assert.match(
+  spiritBookHtml,
+  /ui-scene-shell[\s\S]*?class="spirit-book-art"/,
+  "Spirit Book must reuse the Silver Scene Shell and its dedicated Media Frame",
+);
+assert.doesNotMatch(
+  spiritBookHtml,
+  /wyrd-card-frame-artifact\.svg|spirit-book-frame/,
+  "Spirit Book Media Frame must not reuse the result-card Artifact frame",
+);
+assert.doesNotMatch(
+  spiritBookHtml,
+  /wyrd-scene-stars/,
+  "Spirit Book must keep the canonical Scene Shell quiet and place atmosphere inside authored media only",
+);
+assert.match(
+  spiritBookHtml,
+  /spirit-book-dots[\s\S]*?role="group"[\s\S]*?aria-label="Выбор главы"/,
+  "Spirit Book chapter choices must expose the canonical grouped Pager semantics",
+);
+assert.match(
+  spiritBookHtml,
+  /spirit-book-mist--rear[\s\S]*?spirit-book-mist--front[\s\S]*?spirit-book-light--one[\s\S]*?spirit-book-light--two[\s\S]*?spirit-book-light--three/,
+  "Spirit Book must expose dedicated atmospheric layers for its five authored micro-scenes",
+);
+assert.match(
+  runtimeRender,
+  /dot\.setAttribute\("aria-pressed", index === activeIndex \? "true" : "false"\)/,
+  "Spirit Book must synchronize the selected chapter with the Kit pressed-state contract",
+);
+assert.match(
+  spiritBookCss,
+  /\.spirit-book-art > #spirit-book-image\s*\{[\s\S]*?aspect-ratio|\.spirit-book-art\s*\{[\s\S]*?aspect-ratio:\s*3 \/ 4;/,
+  "Spirit Book must preserve the authored 3:4 story artwork proportion",
+);
+assert.match(
+  spiritBookCss,
+  /\.spirit-book-art > #spirit-book-image\s*\{[\s\S]*?filter:\s*none;/,
+  "Spirit Book must not recolor or desaturate authored story artwork",
+);
+assert.doesNotMatch(
+  spiritBookCss,
+  /rgba\((?:201, 161, 74|216, 177, 90|242, 200, 96|238, 226, 196|239, 226, 196)/,
+  "Spirit Book must not retain legacy gold chrome",
+);
+assert.match(
+  spiritBookCss,
+  /\.spirit-book-controls\s*\{[\s\S]*?grid-template-columns:\s*var\(--control-pager-hit-size\) minmax\(0, 1fr\) var\(--control-pager-hit-size\);/,
+  "Spirit Book Pager must use the canonical 48px end-control geometry",
+);
+assert.match(
+  spiritBookCss,
+  /@media \(max-width: 22\.5rem\)[\s\S]*?\.spirit-book-dots\s*\{[\s\S]*?grid-row:\s*2;/,
+  "Spirit Book Pager must move its five choices to row two at the compact breakpoint",
+);
+assert.match(
+  spiritBookCss,
+  /@media \(forced-colors: active\)[\s\S]*?\.spirit-book-dot\[aria-pressed="true"\]::before[\s\S]*?background:\s*Highlight;/,
+  "Spirit Book selected chapter must remain visible in forced colors",
+);
+assert.match(
+  spiritBookCss,
+  /@media \(prefers-reduced-motion: reduce\)[\s\S]*?\.spirit-book-art::before,[\s\S]*?\.spirit-book-mist,[\s\S]*?\.spirit-book-light,[\s\S]*?animation:\s*none;/,
+  "Spirit Book living effects must stop in reduced motion",
+);
+assert.match(
+  spiritBookCss,
+  /\.spirit-book-copy h1\s*\{[\s\S]*?font-size:\s*clamp\(2rem, 8\.5vw, 2\.25rem\);[\s\S]*?line-height:\s*1\.08;/,
+  "Spirit Book chapter headings must use the approved quieter mobile scale",
+);
+assert.doesNotMatch(
+  spiritBookCss,
+  /spiritBookImageBreath|spiritBookFernSway/,
+  "Spirit Book must keep figures, cards, clothing, wings, and authored foliage static",
+);
+assert.match(
+  spiritBookCss,
+  /@keyframes spiritBookStarTwinkle\s*\{[\s\S]*?8%[\s\S]*?21%,[\s\S]*?27%\s*\{[\s\S]*?opacity:\s*0\.78;/,
+  "Spirit Book chapter glints must become clearly perceptible within the first third of their cycle",
+);
+assert.match(
+  runtimeRender,
+  /classList\.remove\("is-motion-ready"\)[\s\S]*?requestAnimationFrame[\s\S]*?classList\.add\("is-motion-ready"\)/,
+  "Spirit Book must restart its authored micro-scene whenever the chapter changes",
+);
+assert.match(
+  runtimeActions,
+  /acceptSpiritBookNavigation\(uiState\)[\s\S]*?spirit-book-next/,
+  "Spirit Book navigation must reject duplicate activations instead of skipping chapters",
 );
 assert.match(
   settingsCss,

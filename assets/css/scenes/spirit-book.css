@@ -1,12 +1,17 @@
+/*
+ * Spirit Book — Silver restoration (YUK-144).
+ * Scene Shell + featured Media Frame + canonical Pager/Indicator.
+ */
+
 body[data-scene="spirit-book"] {
-  background: #070709;
+  background: transparent;
 }
 
 body[data-scene="spirit-book"] #main {
   max-width: none;
   min-height: 100svh;
   padding: 0;
-  background: #070709;
+  background: transparent;
 }
 
 body[data-scene="spirit-book"] .hdr,
@@ -19,15 +24,17 @@ body[data-scene="spirit-book"] .footer {
 .spirit-book {
   position: relative;
   isolation: isolate;
+  box-sizing: border-box;
+  width: 100%;
   min-height: 100svh;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-x: clip;
   padding:
-    max(26px, calc(var(--layout-safe-top) + 16px))
-    max(18px, var(--layout-safe-inline-end))
-    max(28px, calc(var(--layout-safe-bottom) + 20px))
-    max(18px, var(--layout-safe-inline-start));
-  color: rgba(239, 226, 196, 0.94);
+    max(18px, calc(var(--layout-safe-top) + 12px))
+    max(16px, var(--layout-safe-inline-end))
+    max(24px, calc(var(--layout-safe-bottom) + 16px))
+    max(16px, var(--layout-safe-inline-start));
+  color: var(--wyrd-text-secondary);
   font-family: "Cormorant Garamond", Georgia, serif;
 }
 
@@ -35,74 +42,44 @@ body[data-scene="spirit-book"] .footer {
   display: none !important;
 }
 
-.spirit-book::before,
-.spirit-book::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.spirit-book::before {
-  z-index: -2;
-  background:
-    radial-gradient(115% 70% at 50% -8%, rgba(42, 46, 60, 0.32), rgba(7, 7, 9, 0) 55%),
-    radial-gradient(90% 50% at 50% 34%, rgba(16, 18, 26, 0.5), transparent 72%),
-    linear-gradient(180deg, #0c0d11 0%, #08090c 100%);
-}
-
-.spirit-book::after {
-  z-index: -1;
-  background:
-    radial-gradient(90% 48% at 50% 0%, rgba(32, 35, 45, 0.16), transparent 62%),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.5));
-}
-
 .spirit-book-back {
-  position: absolute;
-  top: max(1rem, calc(var(--layout-safe-top) + 0.38rem));
-  left: max(1rem, calc(var(--layout-safe-inline-start) + 0.38rem));
-  z-index: 3;
+  z-index: 5;
 }
 
 .spirit-book-page,
 .spirit-book-controls {
   position: relative;
   z-index: 1;
+  box-sizing: border-box;
   width: min(100%, 430px);
+  min-width: 0;
   margin-inline: auto;
 }
 
 .spirit-book-page {
   display: grid;
-  gap: 16px;
-  padding-top: 48px;
+  gap: 12px;
+  padding-top: 56px;
 }
 
+/* Featured story image: authored art remains unfiltered beneath the approved frame. */
 .spirit-book-art {
   position: relative;
-  min-height: clamp(17rem, 43svh, 24rem);
-  border: 1px solid rgba(201, 161, 74, 0.16);
-  border-radius: 12px;
+  isolation: isolate;
+  width: 100%;
+  min-width: 0;
+  aspect-ratio: 3 / 4;
   overflow: hidden;
-  background: rgba(5, 6, 7, 0.82);
+  border: 1px solid rgba(205, 209, 207, 0.1);
+  border-radius: var(--radius-card);
+  background: var(--wyrd-artifact-surface);
+  box-shadow:
+    0 22px 58px rgba(0, 0, 0, 0.42),
+    0 0 0 1px rgba(225, 228, 225, 0.035);
   --book-image-x: 50%;
   --book-image-y: 50%;
   --book-image-origin-x: 50%;
   --book-image-origin-y: 50%;
-  --book-glow-x: 50%;
-  --book-glow-y: 18%;
-  --book-glow-size: 16rem;
-  --book-glow-color: rgba(238, 231, 214, 0.09);
-  --book-glow-opacity: 0.8;
-  --book-glow-min-opacity: 0.58;
-  --book-spark-x: 72%;
-  --book-spark-y: 16%;
-  --book-spark-opacity: 0.34;
-  --book-mist-opacity: 0.34;
-  --book-rear-mist-opacity: 0.18;
-  --book-fern-opacity: 0.16;
-  box-shadow: none;
 }
 
 .spirit-book-art[data-page="1"] {
@@ -110,13 +87,6 @@ body[data-scene="spirit-book"] .footer {
   --book-image-y: 50%;
   --book-image-origin-x: 33%;
   --book-image-origin-y: 30%;
-  --book-glow-x: 32%;
-  --book-glow-y: 30%;
-  --book-glow-size: 13rem;
-  --book-glow-color: rgba(245, 245, 235, 0.12);
-  --book-glow-min-opacity: 0.62;
-  --book-spark-x: 76%;
-  --book-spark-y: 17%;
 }
 
 .spirit-book-art[data-page="2"] {
@@ -124,13 +94,6 @@ body[data-scene="spirit-book"] .footer {
   --book-image-y: 58%;
   --book-image-origin-x: 50%;
   --book-image-origin-y: 58%;
-  --book-glow-x: 52%;
-  --book-glow-y: 62%;
-  --book-glow-size: 17rem;
-  --book-glow-color: rgba(245, 245, 235, 0.1);
-  --book-glow-min-opacity: 0.54;
-  --book-spark-x: 57%;
-  --book-spark-y: 20%;
 }
 
 .spirit-book-art[data-page="3"] {
@@ -138,13 +101,6 @@ body[data-scene="spirit-book"] .footer {
   --book-image-y: 50%;
   --book-image-origin-x: 36%;
   --book-image-origin-y: 78%;
-  --book-glow-x: 36%;
-  --book-glow-y: 78%;
-  --book-glow-size: 12rem;
-  --book-glow-color: rgba(240, 232, 198, 0.1);
-  --book-glow-min-opacity: 0.52;
-  --book-spark-x: 80%;
-  --book-spark-y: 20%;
 }
 
 .spirit-book-art[data-page="4"] {
@@ -152,13 +108,6 @@ body[data-scene="spirit-book"] .footer {
   --book-image-y: 45%;
   --book-image-origin-x: 50%;
   --book-image-origin-y: 43%;
-  --book-glow-x: 50%;
-  --book-glow-y: 44%;
-  --book-glow-size: 12rem;
-  --book-glow-color: rgba(242, 200, 96, 0.13);
-  --book-glow-min-opacity: 0.62;
-  --book-spark-x: 67%;
-  --book-spark-y: 18%;
 }
 
 .spirit-book-art[data-page="5"] {
@@ -166,15 +115,6 @@ body[data-scene="spirit-book"] .footer {
   --book-image-y: 46%;
   --book-image-origin-x: 50%;
   --book-image-origin-y: 32%;
-  --book-glow-x: 48%;
-  --book-glow-y: 32%;
-  --book-glow-size: 14rem;
-  --book-glow-color: rgba(245, 245, 235, 0.08);
-  --book-glow-min-opacity: 0.48;
-  --book-spark-x: 51%;
-  --book-spark-y: 15%;
-  --book-mist-opacity: 0.42;
-  --book-rear-mist-opacity: 0.24;
 }
 
 .spirit-book-art::before,
@@ -187,40 +127,35 @@ body[data-scene="spirit-book"] .footer {
 }
 
 .spirit-book-art::before {
-  background:
-    radial-gradient(circle var(--book-glow-size) at var(--book-glow-x) var(--book-glow-y), var(--book-glow-color), transparent 62%),
-    radial-gradient(circle at 50% 18%, rgba(255, 244, 215, 0.045), transparent 24%),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.08), transparent 42%, rgba(0, 0, 0, 0.54));
-  opacity: var(--book-glow-opacity);
-  animation: spiritBookAuraPulse 9s ease-in-out infinite alternate;
+  opacity: 0;
 }
 
 .spirit-book-art::after {
-  inset: 0.55rem;
-  border: 1px solid rgba(201, 161, 74, 0.13);
-  border-radius: 6px 6px 14px 14px;
-  background:
-    radial-gradient(circle at var(--book-spark-x) var(--book-spark-y), rgba(250, 246, 229, var(--book-spark-opacity)), transparent 0.2rem),
-    radial-gradient(circle at calc(var(--book-spark-x) - 8%) calc(var(--book-spark-y) + 7%), rgba(216, 177, 90, 0.16), transparent 0.16rem),
-    radial-gradient(circle at calc(var(--book-spark-x) + 6%) calc(var(--book-spark-y) + 10%), rgba(250, 246, 229, 0.13), transparent 0.14rem);
-  animation: spiritBookGlintDrift 12s ease-in-out infinite alternate;
+  background: linear-gradient(180deg, rgba(5, 6, 9, 0.025), transparent 52%, rgba(0, 0, 0, 0.22));
 }
 
-.spirit-book-art img {
+.spirit-book-art[data-page="1"]::before {
+  background: radial-gradient(circle 7.25rem at 58.2% 16.6%, rgba(225, 228, 225, 0.24), transparent 64%);
+  opacity: 0.46;
+  animation: spiritBookMoonHalo 4.8s ease-in-out infinite alternate;
+}
+
+.spirit-book-art > #spirit-book-image {
+  position: relative;
+  z-index: 1;
   width: 100%;
   height: 100%;
-  min-height: inherit;
   display: block;
   object-fit: cover;
   object-position: var(--book-image-x) var(--book-image-y);
-  filter: brightness(0.84) contrast(1.08) saturate(0.88);
-  transform: scale(1.018);
+  background: var(--wyrd-artifact-surface);
+  filter: none;
+  transform: scale(1.004);
   transform-origin: var(--book-image-origin-x) var(--book-image-origin-y);
-  animation: spiritBookImageBreath 18s ease-in-out infinite alternate;
 }
 
 .spirit-book-mist,
-.spirit-book-fern {
+.spirit-book-light {
   position: absolute;
   z-index: 3;
   pointer-events: none;
@@ -229,61 +164,192 @@ body[data-scene="spirit-book"] .footer {
 .spirit-book-mist {
   left: -18%;
   right: -18%;
-  height: 42%;
-  bottom: -14%;
+  bottom: 0;
+  height: 36%;
   background:
-    radial-gradient(ellipse at 22% 52%, rgba(215, 215, 205, 0.22), transparent 38%),
-    radial-gradient(ellipse at 64% 45%, rgba(215, 215, 205, 0.16), transparent 44%),
-    radial-gradient(ellipse at 92% 58%, rgba(215, 215, 205, 0.12), transparent 36%);
-  filter: blur(18px);
-  opacity: var(--book-mist-opacity);
-  animation: spiritBookMistDrift 20s ease-in-out infinite alternate;
+    radial-gradient(ellipse at 22% 52%, rgba(205, 209, 207, 0.2), transparent 38%),
+    radial-gradient(ellipse at 64% 45%, rgba(205, 209, 207, 0.14), transparent 44%),
+    radial-gradient(ellipse at 92% 58%, rgba(205, 209, 207, 0.1), transparent 36%);
+  filter: blur(12px);
+  opacity: 0;
 }
 
 .spirit-book-mist--rear {
+  animation-direction: alternate-reverse;
+}
+
+.spirit-book-art[data-page="1"] .spirit-book-mist {
+  bottom: 10%;
+  height: 40%;
+  opacity: 0.38;
+  animation: spiritBookMistWide 7.2s ease-in-out infinite alternate;
+}
+
+.spirit-book-art[data-page="1"] .spirit-book-mist--rear {
+  bottom: 18%;
+  opacity: 0.22;
+  animation-duration: 8.6s;
+}
+
+.spirit-book-art[data-page="2"] .spirit-book-mist {
+  right: -26%;
+  bottom: 14%;
+  height: 38%;
+  background:
+    radial-gradient(ellipse at 72% 50%, rgba(205, 209, 207, 0.18), transparent 38%),
+    radial-gradient(ellipse at 92% 64%, rgba(205, 209, 207, 0.12), transparent 36%);
+  opacity: 0.34;
+  animation: spiritBookMistCardEdge 8.2s ease-in-out infinite alternate;
+}
+
+.spirit-book-art[data-page="2"] .spirit-book-mist--rear {
+  bottom: 20%;
+  opacity: 0.16;
+  animation-direction: alternate-reverse;
+}
+
+.spirit-book-art[data-page="4"] .spirit-book-mist {
   bottom: 4%;
-  opacity: var(--book-rear-mist-opacity);
-  animation-duration: 26s;
+  height: 28%;
+  opacity: 0.22;
+  animation: spiritBookGroundMist 11.2s ease-in-out infinite alternate;
+}
+
+.spirit-book-art[data-page="4"] .spirit-book-mist--rear {
+  bottom: 10%;
+  opacity: 0.12;
   animation-direction: alternate-reverse;
 }
 
-.spirit-book-fern {
-  width: 44%;
-  height: 62%;
-  bottom: -16%;
-  opacity: var(--book-fern-opacity);
-  background: radial-gradient(ellipse at center bottom, rgba(201, 161, 74, 0.08), transparent 68%);
-  mix-blend-mode: screen;
-  filter: grayscale(1) brightness(1.25) contrast(1.15);
-  animation: spiritBookFernSway 16s ease-in-out infinite alternate;
+.spirit-book-art[data-page="5"] .spirit-book-mist {
+  bottom: -3%;
+  height: 22%;
+  opacity: 0.38;
+  animation: spiritBookGroundMist 8.2s ease-in-out infinite alternate;
 }
 
-.spirit-book-fern--left {
-  left: -22%;
-  transform-origin: 15% 92%;
-}
-
-.spirit-book-fern--right {
-  right: -22%;
-  transform-origin: 85% 92%;
+.spirit-book-art[data-page="5"] .spirit-book-mist--rear {
+  bottom: 2%;
+  opacity: 0.22;
   animation-direction: alternate-reverse;
+}
+
+.spirit-book-light {
+  z-index: 4;
+  display: none;
+  width: 3%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(244, 246, 245, 0.82) 0 18%, rgba(225, 228, 225, 0.26) 36%, transparent 72%);
+  opacity: 0;
+  transform: translate(-50%, -50%);
+}
+
+.spirit-book-art[data-page="2"] .spirit-book-light--one,
+.spirit-book-art[data-page="2"] .spirit-book-light--two,
+.spirit-book-art[data-page="3"] .spirit-book-light--one,
+.spirit-book-art[data-page="3"] .spirit-book-light--two,
+.spirit-book-art[data-page="4"] .spirit-book-light,
+.spirit-book-art[data-page="5"] .spirit-book-light {
+  display: block;
+}
+
+.spirit-book-art[data-page="2"] .spirit-book-light--one {
+  top: 7%;
+  left: 61.2%;
+  width: 4%;
+  animation: spiritBookStarTwinkle 4.8s ease-in-out infinite;
+}
+
+.spirit-book-art[data-page="2"] .spirit-book-light--two {
+  top: 13.1%;
+  left: 45.9%;
+  width: 4%;
+  animation: spiritBookStarTwinkle 4.8s 1.45s ease-in-out infinite;
+}
+
+.spirit-book-art[data-page="3"] .spirit-book-light {
+  width: 5.4%;
+  background: radial-gradient(ellipse, rgba(250, 251, 250, 0.88) 0 20%, rgba(225, 228, 225, 0.3) 42%, transparent 74%);
+  animation: spiritBookEyesAnswer 5.4s ease-in-out infinite;
+}
+
+.spirit-book-art[data-page="3"] .spirit-book-light--one {
+  top: 73.8%;
+  left: 20.8%;
+}
+
+.spirit-book-art[data-page="3"] .spirit-book-light--two {
+  top: 74%;
+  left: 30%;
+}
+
+.spirit-book-art[data-page="4"] .spirit-book-light {
+  width: 3%;
+  background: radial-gradient(circle, rgba(255, 244, 205, 0.74) 0 18%, rgba(240, 209, 125, 0.3) 40%, transparent 74%);
+}
+
+.spirit-book-art[data-page="4"] .spirit-book-light--one {
+  top: 43.4%;
+  left: 48.5%;
+  animation: spiritBookChestLight 5.2s ease-in-out infinite;
+}
+
+.spirit-book-art[data-page="4"] .spirit-book-light--two {
+  top: 45.8%;
+  left: 46.7%;
+  animation: spiritBookChestLight 5.2s 0.36s ease-in-out infinite;
+}
+
+.spirit-book-art[data-page="4"] .spirit-book-light--three {
+  top: 46.3%;
+  left: 50.5%;
+  animation: spiritBookChestLight 5.2s 0.72s ease-in-out infinite;
+}
+
+.spirit-book-art[data-page="5"] .spirit-book-light--one {
+  top: 5.9%;
+  left: 59.1%;
+  width: 4%;
+  animation: spiritBookStarTwinkle 4.8s ease-in-out infinite;
+}
+
+.spirit-book-art[data-page="5"] .spirit-book-light--two {
+  top: 52.2%;
+  left: 52.8%;
+  width: 3.8%;
+  animation: spiritBookStarTwinkle 4.8s 0.55s ease-in-out infinite;
+}
+
+.spirit-book-art[data-page="5"] .spirit-book-light--three {
+  top: 61.8%;
+  left: 59.8%;
+  width: 4.4%;
+  animation: spiritBookStarTwinkle 4.8s 0.95s ease-in-out infinite;
+}
+
+.spirit-book-art:not(.is-motion-ready)::before,
+.spirit-book-art:not(.is-motion-ready) .spirit-book-mist,
+.spirit-book-art:not(.is-motion-ready) .spirit-book-light {
+  animation: none !important;
 }
 
 .spirit-book-copy {
-  padding: 24px 22px 26px;
-  border: 1px solid rgba(168, 140, 84, 0.26);
-  border-radius: 12px;
+  min-width: 0;
+  padding: 22px 20px 24px;
+  border: 1px solid rgba(205, 209, 207, 0.13);
+  border-radius: var(--radius-card);
   background:
-    radial-gradient(circle at 50% 0%, rgba(216, 177, 90, 0.045), transparent 28%),
-    rgba(9, 10, 14, 0.42);
-  box-shadow: none;
+    radial-gradient(circle at 50% 0%, rgba(225, 228, 225, 0.028), transparent 32%),
+    rgba(5, 6, 9, 0.72);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.2);
 }
 
 .spirit-book-kicker {
   margin: 0 0 0.55rem;
-  color: rgba(201, 161, 74, 0.72);
-  font-family: "Forum", Georgia, serif;
-  font-size: 12px;
+  color: rgba(205, 209, 207, 0.7);
+  font-family: Forum, Georgia, serif;
+  font-size: 13px;
   font-weight: 400;
   letter-spacing: 0.16em;
   line-height: 1.25;
@@ -292,19 +358,20 @@ body[data-scene="spirit-book"] .footer {
 
 .spirit-book-copy h1 {
   margin: 0;
-  color: rgba(239, 226, 196, 0.94);
+  color: var(--wyrd-text-heading);
   font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: clamp(38px, 10vw, 48px);
-  font-weight: 600;
-  line-height: 1.05;
+  font-size: clamp(2rem, 8.5vw, 2.25rem);
+  font-weight: 500;
+  line-height: 1.08;
 }
 
 .spirit-book-text {
-  margin-top: 0.9rem;
-  color: rgba(217, 206, 184, 0.78);
+  margin-top: 0.95rem;
+  color: rgba(232, 222, 203, 0.8);
   font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: 21px;
-  line-height: 1.44;
+  font-size: clamp(1.18rem, 5.1vw, 1.31rem);
+  font-weight: 400;
+  line-height: 1.5;
 }
 
 .spirit-book-text p {
@@ -312,188 +379,179 @@ body[data-scene="spirit-book"] .footer {
 }
 
 .spirit-book-text p + p {
-  margin-top: 0.72rem;
+  margin-top: 0.8rem;
 }
 
+/* Canonical Pager / Indicator: 48 px arrows, five 44 px page choices. */
 .spirit-book-controls {
-  margin-top: clamp(1rem, 3.7vh, 1.4rem);
-  display: flex;
+  display: grid;
+  grid-template-columns: var(--control-pager-hit-size) minmax(0, 1fr) var(--control-pager-hit-size);
   align-items: center;
-  justify-content: center;
-  gap: 0.8rem;
+  gap: 0.75rem;
+  margin-top: 16px;
   padding-bottom: 0.2rem;
 }
 
-.spirit-book-arrow,
-.spirit-book-dot::before {
-  border: 1px solid rgba(201, 161, 74, 0.22);
-  background: rgba(8, 9, 12, 0.42);
-  color: rgba(238, 222, 178, 0.82);
+.spirit-book-arrow {
+  border: 1px solid rgba(205, 209, 207, 0.22);
+  border-radius: 0;
+  background: rgba(8, 10, 14, 0.24);
+  color: var(--wyrd-silver);
   transition:
-    border-color var(--dur-medium) var(--ease-out-strong),
-    background-color var(--dur-medium) var(--ease-out-strong),
-    color var(--dur-medium) var(--ease-out-strong),
+    border-color var(--dur-fast) var(--ease-out-strong),
+    background-color var(--dur-fast) var(--ease-out-strong),
+    color var(--dur-fast) var(--ease-out-strong),
+    opacity var(--dur-fast) var(--ease-out-strong),
     transform var(--dur-fast) var(--ease-out-strong);
 }
 
-.spirit-book-arrow {
-  width: 2.65rem;
-  height: 2.65rem;
-  border-radius: 50%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.45rem;
-  line-height: 1;
-  cursor: pointer;
-}
-
 .spirit-book-dots {
-  display: inline-flex;
+  min-width: 0;
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: clamp(0.25rem, 2vw, 0.85rem);
 }
 
 .spirit-book-dot {
-  width: var(--control-choice-hit-size);
-  height: var(--control-choice-hit-size);
-  padding: 0;
+  position: relative;
   border: 0;
   background: transparent;
-  display: inline-grid;
-  place-items: center;
-  cursor: pointer;
+  color: var(--wyrd-silver);
 }
 
 .spirit-book-dot::before {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  border: 1px solid rgba(205, 209, 207, 0.38);
+  background: transparent;
   content: "";
-  width: 0.72rem;
-  height: 0.72rem;
-  border-radius: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  transition:
+    background-color var(--dur-fast) var(--ease-out-strong),
+    border-color var(--dur-fast) var(--ease-out-strong),
+    box-shadow var(--dur-medium) var(--ease-out-strong),
+    transform var(--dur-fast) var(--ease-out-strong);
 }
 
-.spirit-book-dot[aria-current="page"]::before {
-  background: rgba(216, 177, 90, 0.78);
-  border-color: rgba(216, 177, 90, 0.92);
-  box-shadow: 0 0 18px rgba(216, 177, 90, 0.28);
-}
-
-.spirit-book-arrow:focus-visible {
-  border-color: rgba(216, 177, 90, 0.62);
-  background-color: rgba(20, 20, 25, 0.78);
-  color: rgba(246, 237, 214, 0.96);
-  transform: translateY(-1px);
-  outline: none;
-}
-
-.spirit-book-dot:focus-visible::before {
-  border-color: rgba(216, 177, 90, 0.62);
-  background-color: rgba(20, 20, 25, 0.78);
-  color: rgba(246, 237, 214, 0.96);
-  transform: translateY(-1px);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .spirit-book-arrow:hover {
-    border-color: rgba(216, 177, 90, 0.62);
-    background-color: rgba(20, 20, 25, 0.78);
-    color: rgba(246, 237, 214, 0.96);
-    transform: translateY(-1px);
-    outline: none;
-  }
-
-  .spirit-book-dot:hover::before {
-    border-color: rgba(216, 177, 90, 0.62);
-    background-color: rgba(20, 20, 25, 0.78);
-    color: rgba(246, 237, 214, 0.96);
-    transform: translateY(-1px);
-  }
-}
-
-.spirit-book-arrow:focus-visible,
-.spirit-book-back:focus-visible {
-  box-shadow:
-    0 0 0 3px rgba(201, 161, 74, 0.18),
-    0 0 0 1px rgba(216, 177, 90, 0.8);
-}
-
-.spirit-book-dot:focus-visible {
-  outline: 2px solid rgba(216, 177, 90, 0.8);
-  outline-offset: -7px;
+.spirit-book-dot[aria-pressed="true"]::before {
+  border-color: var(--wyrd-silver-bright);
+  background: var(--wyrd-silver);
+  box-shadow: 0 0 10px rgba(205, 214, 220, 0.2);
+  transform: translate(-50%, -50%) rotate(45deg) scale(1.45);
 }
 
 .spirit-book-arrow:disabled {
   opacity: 0.32;
-  cursor: default;
-  transform: none;
 }
 
-@keyframes spiritBookImageBreath {
-  0% {
-    transform: scale(1.018);
+@media (hover: hover) and (pointer: fine) {
+  .spirit-book-arrow:hover:not(:disabled) {
+    border-color: rgba(225, 228, 225, 0.42);
+    background: rgba(205, 209, 207, 0.035);
+    color: var(--wyrd-silver-bright);
   }
 
-  100% {
-    transform: scale(1.045) translate3d(0.35%, -0.35%, 0);
-  }
-}
-
-@keyframes spiritBookAuraPulse {
-  0% {
-    opacity: var(--book-glow-min-opacity);
-    transform: translate3d(0, 0, 0);
-  }
-
-  100% {
-    opacity: var(--book-glow-opacity);
-    transform: translate3d(0, -1.2%, 0);
+  .spirit-book-dot:hover::before {
+    border-color: rgba(225, 228, 225, 0.58);
+    background: rgba(205, 209, 207, 0.12);
   }
 }
 
-@keyframes spiritBookGlintDrift {
+@keyframes spiritBookMoonHalo {
   0% {
-    opacity: 0.62;
-    transform: translate3d(-0.45%, 0.35%, 0);
+    opacity: 0.46;
   }
 
   100% {
-    opacity: 1;
-    transform: translate3d(0.45%, -0.35%, 0);
+    opacity: 0.8;
   }
 }
 
-@keyframes spiritBookMistDrift {
+@keyframes spiritBookMistWide {
   0% {
-    transform: translate3d(-4%, 0, 0);
+    transform: translate3d(-12%, 0, 0);
   }
 
   100% {
-    transform: translate3d(4%, -3%, 0);
+    transform: translate3d(12%, 0, 0);
   }
 }
 
-@keyframes spiritBookFernSway {
+@keyframes spiritBookMistCardEdge {
   0% {
-    transform: rotate(-1deg) translate3d(0, 0, 0);
+    transform: translate3d(10%, 0, 0);
   }
 
   100% {
-    transform: rotate(1.6deg) translate3d(1%, -1%, 0);
+    transform: translate3d(-10%, 0, 0);
+  }
+}
+
+@keyframes spiritBookGroundMist {
+  0% {
+    transform: translate3d(-10%, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(10%, 0, 0);
+  }
+}
+
+@keyframes spiritBookStarTwinkle {
+  0%,
+  8%,
+  42%,
+  100% {
+    opacity: 0;
+  }
+
+  21%,
+  27% {
+    opacity: 0.78;
+  }
+}
+
+@keyframes spiritBookEyesAnswer {
+  0%,
+  10%,
+  38%,
+  100% {
+    opacity: 0;
+  }
+
+  22%,
+  27% {
+    opacity: 0.48;
+  }
+}
+
+@keyframes spiritBookChestLight {
+  0%,
+  8%,
+  46%,
+  100% {
+    opacity: 0;
+  }
+
+  22%,
+  32% {
+    opacity: 0.76;
   }
 }
 
 @media (max-width: 22.5rem) {
-  .spirit-book-controls {
-    display: grid;
-    grid-template-columns: var(--control-pager-hit-size) minmax(0, 1fr) var(--control-pager-hit-size);
+  .spirit-book-controls,
+  .spirit-book-dots {
     gap: 0.25rem;
   }
 
   .spirit-book-dots {
     grid-column: 1 / -1;
     grid-row: 2;
-    justify-self: center;
   }
 
   .spirit-book-arrow[data-action="spirit-book-prev"] {
@@ -507,11 +565,23 @@ body[data-scene="spirit-book"] .footer {
   }
 }
 
+@media (min-width: 431px) {
+  .spirit-book {
+    padding-inline:
+      max(24px, var(--layout-safe-inline-start))
+      max(24px, var(--layout-safe-inline-end));
+  }
+}
+
 @media (min-width: 780px) {
   .spirit-book {
     display: grid;
     align-content: center;
-    padding-top: max(1.4rem, calc(var(--layout-safe-top) + 1rem));
+    padding:
+      max(24px, calc(var(--layout-safe-top) + 16px))
+      max(32px, var(--layout-safe-inline-end))
+      max(28px, calc(var(--layout-safe-bottom) + 20px))
+      max(32px, var(--layout-safe-inline-start));
   }
 
   .spirit-book-page,
@@ -522,36 +592,82 @@ body[data-scene="spirit-book"] .footer {
   .spirit-book-page {
     grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
     align-items: stretch;
-    padding-top: 1.7rem;
+    gap: 18px;
+    padding-top: 28px;
   }
 
   .spirit-book-art {
-    min-height: min(68svh, 37rem);
-    border-radius: 12px;
-  }
-
-  .spirit-book-art::after {
-    border-radius: 9px;
+    align-self: center;
   }
 
   .spirit-book-copy {
     align-self: center;
     max-height: min(68svh, 37rem);
     overflow-y: auto;
-    border-radius: 12px;
+    padding: 26px 24px 28px;
   }
 
-  .spirit-book-controls {
-    margin-top: 1.05rem;
+  .spirit-book-copy h1 {
+    font-size: 2.5rem;
+  }
+}
+
+@media (forced-colors: active) {
+  .spirit-book-art,
+  .spirit-book-copy,
+  .spirit-book-arrow {
+    border-color: CanvasText;
+    background: Canvas;
+    color: CanvasText;
+    box-shadow: none;
+  }
+
+  .spirit-book-art::before,
+  .spirit-book-art::after,
+  .spirit-book-mist,
+  .spirit-book-light {
+    display: none;
+  }
+
+  .spirit-book-dot::before {
+    border-color: ButtonText;
+  }
+
+  .spirit-book-dot[aria-pressed="true"]::before {
+    border-color: Highlight;
+    background: Highlight;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .spirit-book-art img,
   .spirit-book-art::before,
   .spirit-book-art::after,
   .spirit-book-mist,
-  .spirit-book-fern {
+  .spirit-book-light,
+  .spirit-book-arrow,
+  .spirit-book-dot::before {
     animation: none;
+    transition: none;
   }
+
+  .spirit-book-art[data-page="1"]::before {
+    opacity: 0.6;
+  }
+
+  .spirit-book-art[data-page="2"] .spirit-book-light {
+    opacity: 0.22;
+  }
+
+  .spirit-book-art[data-page="3"] .spirit-book-light {
+    opacity: 0.18;
+  }
+
+  .spirit-book-art[data-page="4"] .spirit-book-light {
+    opacity: 0.24;
+  }
+
+  .spirit-book-art[data-page="5"] .spirit-book-light {
+    opacity: 0.22;
+  }
+
 }
