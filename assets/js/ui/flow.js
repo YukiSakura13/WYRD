@@ -5,7 +5,7 @@ export function getAudioScene(scene) {
     return scene;
   }
 
-  if (scene === SCENES.RESULT || scene === SCENES.SPREAD || scene === SCENES.ONBOARDING || scene === SCENES.PROFILE) {
+  if (scene === SCENES.RESULT || scene === SCENES.SPREAD || scene === SCENES.ONBOARDING || scene === SCENES.TRACES) {
     return scene;
   }
 

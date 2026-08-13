@@ -3,7 +3,7 @@ const SCENE_LEVELS = {
   deck: 0.028,
   result: 0.034,
   spread: 0.038,
-  profile: 0.02,
+  traces: 0.02,
 };
 
 export function createForestAudioController(getPreferences = null) {

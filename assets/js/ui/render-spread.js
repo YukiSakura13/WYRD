@@ -1,5 +1,4 @@
 import { SCENES } from "./scenes.js";
-import { createMoonIcon, formatTraceDate, getMoonPhase } from "./moon.js";
 import { getCardImage, getSpreadDelay, layerLabel } from "./render-helpers.js";
 import { getDialogController } from "./dialog-controller.js";
 
@@ -250,7 +249,7 @@ export function createSpreadRenderer(elements) {
 
     history.forEach(function renderHistoryItem(trace) {
       const item = document.createElement("button");
-      item.className = "history-item ui-card-action";
+      item.className = "history-item history-card-specimen card-context-action ui-card-action";
       item.type = "button";
       item.dataset.action = "open-history-entry";
       item.dataset.traceId = trace.id;
@@ -267,48 +266,11 @@ export function createSpreadRenderer(elements) {
       const title = document.createElement("h3");
       title.textContent = trace.snapshot.cardTitle;
 
-      const meta = document.createElement("div");
-      meta.className = "history-item-meta";
-      const date = new Date(trace.date);
-      const moon = getStoredMoon(trace, date);
-      const moonText = document.createElement("span");
-      moonText.className = "history-item-moon-label";
-      moonText.textContent = `${formatTraceDate(date)} · ${formatCompactMoonName(moon.name)}`;
-      meta.append(createMoonIcon(moon.type), moonText);
-
-      content.append(title, meta);
+      content.append(title);
       item.append(image, content);
       elements.historyList.appendChild(item);
     });
   }
-}
-
-function formatCompactMoonName(name) {
-  const compactNames = {
-    "растущий серп": "раст. серп",
-    "растущая луна": "раст. луна",
-    "убывающая луна": "убыв. луна",
-    "убывающий серп": "убыв. серп",
-    "первая четверть": "1 четверть",
-    "последняя четверть": "посл. четверть",
-  };
-
-  return compactNames[name] || name;
-}
-
-function getStoredMoon(trace, fallbackDate) {
-  const names = {
-    nm: "новолуние",
-    wc: "растущий серп",
-    fq: "первая четверть",
-    wg: "растущая луна",
-    fm: "полнолуние",
-    wag: "убывающая луна",
-    lq: "последняя четверть",
-    wac: "убывающий серп",
-  };
-
-  return names[trace.moonPhase] ? { type: trace.moonPhase, name: names[trace.moonPhase] } : getMoonPhase(fallbackDate);
 }
 
 function getArchetypeId(oracleReading) {

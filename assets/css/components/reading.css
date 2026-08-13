@@ -25,7 +25,7 @@
 #result,
 #spread-result,
 #paywall,
-#profile {
+#traces {
   animation: reveal 0.8s ease forwards;
 }
 
@@ -98,10 +98,10 @@
     var(--layout-safe-inline-start);
 }
 
-#profile {
+#traces {
   position: relative;
   width: 100%;
-  animation-name: profileReveal;
+  animation-name: tracesReveal;
   padding:
     max(1.05rem, calc(var(--layout-safe-top) + 0.4rem))
     var(--layout-safe-inline-end)
@@ -109,7 +109,7 @@
     var(--layout-safe-inline-start);
 }
 
-@keyframes profileReveal {
+@keyframes tracesReveal {
   from {
     opacity: 0;
   }
@@ -193,15 +193,6 @@
   position: absolute;
   top: 0;
   left: max(0.9rem, calc(var(--layout-safe-inline-start) + 0.08rem));
-}
-
-#profile .screen-nav {
-  min-height: 132px;
-  padding-top: 1.25rem;
-}
-
-#profile .screen-nav .btn-back-circle {
-  top: 1.25rem;
 }
 
 #result .result-question {

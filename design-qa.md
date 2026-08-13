@@ -1,3 +1,81 @@
+# YUK-145 Gifts backside and Trace metadata corrective — Design QA
+
+Date: 2026-08-13
+
+Scope: local restoration of the approved Gift backside and the metadata grid
+for Traces in the Forest. Kit, Linear, commit and push remain unchanged pending
+user review.
+
+## Source and implementation evidence
+
+- Source visual truth: user-provided approved Gift-back capture
+  `/var/folders/bp/pzbghfvd7pjg61djny2r6sg80000gn/T/TemporaryItems/NSIRD_screencaptureui_5rAeZ2/Снимок экрана — 2026-08-13 в 12.36.35.png`
+  (`882 × 654px`) plus the approved historical implementation in commits
+  `a9d8921` and `7fafbb1`.
+- Source Trace defect capture:
+  `/var/folders/bp/pzbghfvd7pjg61djny2r6sg80000gn/T/TemporaryItems/NSIRD_screencaptureui_SigR0I/Снимок экрана — 2026-08-13 в 12.37.46.png`.
+- Browser-rendered implementation: `/tmp/yuk145-final-393.png`, captured at
+  `393 × 852` CSS pixels, device scale factor `1`; full page is `393 × 1674px`.
+- Normalized source/implementation comparison: `/tmp/yuk145-gifts-side-by-side.png`.
+- State: three preview Gifts flipped to their backs; five stored Traces visible.
+- Full-view comparison: the source and implementation were normalized around
+  the Gift-card region. A focused measurement pass verified the separate star,
+  title and date bands and the Trace metadata horizontals.
+
+## Required fidelity surfaces
+
+- Typography: Gift names reuse Forum in their approved central band. Trace
+  names, phases and full dates remain readable; compact `авг` is removed from
+  both the cards and their detail sheet.
+- Spacing and layout: the main Gift star stays at `16.5%`, the name at `46%`,
+  with a measured `49.7–59.3px` gap across tested widths. Gift date remains a
+  two-line bottom band. Trace cards use equal reserved title, phase and date
+  zones; the approved Gold three-card row is preserved at every width.
+- Colors and tokens: all restored elements consume Silver tokens; no gold or
+  local background variant was added.
+- Image fidelity: Gift fronts preserve authored assets without new frames or
+  overlays. The approved star asset and nine original small-star coordinates
+  are reused on the back.
+- Copy and content: backs contain only the Gift name and `Обретено` plus a full
+  acquisition date. No rejected message, quote, divider or extra illustration
+  is present.
+
+## Responsive and interaction verification
+
+- `320 × 568`, `360 × 800`, `375 × 812`, `393 × 852`, `430 × 932`, and
+  `1024 × 900`: `0px` horizontal overflow.
+- In each shared Trace row, phase and date top coordinates match exactly.
+- Each Gift back contains one central star, nine small stars, one name and a
+  complete two-line acquisition date.
+- Native Gift controls keep one tab stop, `aria-pressed`, click flip and visible
+  focus behavior. The history detail opens with focus on Close and returns focus
+  to its originating Trace card.
+- Reduced motion leaves all ten Gift stars statically readable.
+- Browser console: no warnings or errors.
+- UI interaction, domain and state smoke tests; control-language, product-scope
+  and responsive-strategy validators; JavaScript syntax and whitespace checks
+  passed.
+
+## Comparison history
+
+- Earlier P1: the Gift title/date were absent and the main star occupied the
+  title band. Fixed by restoring the approved three-band back composition.
+- Earlier P1: Trace icon, phase and compact date occupied independent cells and
+  drifted vertically. Fixed with one phase row, a separate full-date row and
+  equal reserved heights.
+- A two-column mobile corrective was briefly tested for legibility, then removed
+  because it changed the accepted Gold composition. The final implementation
+  restores three cards in every row and keeps alignment inside fixed zones.
+- Gift preview dates now demonstrate the complete Russian month with
+  `13 августа`, `14 августа`, and `15 августа`. The central star begins its
+  first visible breath within `0.9–1.6s` and then settles into a quiet cycle.
+
+No actionable P0/P1/P2 mismatch remains in the approved corrective scope.
+
+final result: passed
+
+---
+
 # YUK-139 physical-phone corrective — final acceptance
 
 Date: 2026-08-05
@@ -1306,3 +1384,49 @@ as the exact Silver UI Kit contract, without changing the accepted visual result
 ## Final result
 
 final result: passed
+# YUK-145 Trace and Gift hierarchy corrective — local design QA
+
+- Source visual truth:
+  - `/var/folders/bp/pzbghfvd7pjg61djny2r6sg80000gn/T/TemporaryItems/NSIRD_screencaptureui_JIzNrr/Снимок экрана — 2026-08-13 в 14.20.13.png`
+  - `/var/folders/bp/pzbghfvd7pjg61djny2r6sg80000gn/T/TemporaryItems/NSIRD_screencaptureui_LA6jyr/Снимок экрана — 2026-08-13 в 14.20.25.png`
+- Implementation: `http://127.0.0.1:4174/?previewGift=moon,free,ammonite&v=silver-20260813-yuk145-trace-gift-hierarchy-preview`
+- Implementation screenshots:
+  - `/tmp/wyrd-yuk145-full-final.png`
+  - `/tmp/wyrd-yuk145-trace-implementation.png`
+  - `/tmp/wyrd-yuk145-gift-back-implementation.png`
+- State: Traces catalog, three preview Gifts, flipped Gift `Вольная`, open Trace detail sheet.
+- Viewports: 320×852, 360×852, 375×852, 393×852, 430×852, 768×1024; DPR 1.
+- Source pixels: Trace 306×498; Gift back 440×576. Focused implementation pixels at 393 CSS px / DPR 1: Trace 112×203; Gift back 157×210. Comparisons use equivalent component crops rather than asserting equal source density.
+
+## Full-view comparison
+
+- Trace catalog now keeps only the authored 3:4 illustration and visible name. Moon phase and acquisition date remain in the detail sheet rather than being duplicated in each three-column tile.
+- Gift back retains the approved main star, nine surrounding points, name and two-line full Russian date.
+- Gift name moved from 46% to 42% and its computed scale reduced by about 9%, matching the approved optical correction without overlapping the main star.
+- All nine small points remain, but central text-safe zones are clear; no point reads as punctuation beside `Вольная` or `14 августа`.
+
+## Focused-region comparison
+
+- 393px Trace grid: three columns; no metadata nodes; title remains visible and wraps naturally.
+- 393px Gift back: `Вольная`, `Обретено`, `14 августа` are distinct bands; main star remains the primary mark.
+- Trace detail sheet: title, authored image, Message, Shadow, moon phase and full date remain present; sheet has zero horizontal overflow.
+
+## Findings and iteration history
+
+- Earlier P1: catalog tiles repeated phase/date already present in the detail sheet, creating excessive compact metadata. Fixed by reducing the tile to image + name.
+- Earlier P2: Gift title and star points collided optically with the text bands. Fixed by lifting/reducing the title and moving only the five conflicting small points to the periphery while keeping nine total points.
+- Post-fix: no actionable P0/P1/P2 mismatch remains in the reviewed scope.
+
+## Verification
+
+- 320/360/375/393/430/768: no page-level horizontal overflow.
+- 320–430: Trace grid remains exactly three columns.
+- Detail sheet content and zero-overflow verified.
+- Browser console: no warnings or errors.
+- `node scripts/smoke-ui-interactions.mjs`: passed.
+- `python3 scripts/validate_control_language.py`: passed.
+- Kit, Linear, commit and push were not changed.
+
+final result: passed
+
+---

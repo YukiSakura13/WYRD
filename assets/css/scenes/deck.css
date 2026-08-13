@@ -16,7 +16,7 @@
 .deck-scene[hidden],
 #result[hidden],
 #spread-result[hidden],
-#profile[hidden] {
+#traces[hidden] {
   display: none !important;
 }
 

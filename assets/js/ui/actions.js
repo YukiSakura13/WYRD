@@ -634,12 +634,12 @@ export function createActionHandler(deps) {
       return;
     }
 
-    if (action === "open-profile") {
+    if (action === "open-traces") {
       audio.playSelect(store.getState().soundEnabled);
-      uiState.profileReturnScene = getReturnScene(uiState.activeScene, store.getState());
-      setScene(SCENES.PROFILE);
-      audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.PROFILE });
-      renderer.scrollTo(SCENES.PROFILE);
+      uiState.tracesReturnScene = getReturnScene(uiState.activeScene, store.getState());
+      setScene(SCENES.TRACES);
+      audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.TRACES });
+      renderer.scrollTo(SCENES.TRACES);
       revealPendingGiftsAfterAnimation(store, renderApp);
       return;
     }
@@ -651,9 +651,9 @@ export function createActionHandler(deps) {
       return;
     }
 
-    if (action === "close-profile") {
+    if (action === "close-traces") {
       audio.playSelect(store.getState().soundEnabled);
-      const returnScene = getReturnScene(uiState.profileReturnScene, store.getState());
+      const returnScene = getReturnScene(uiState.tracesReturnScene, store.getState());
       setScene(returnScene);
       audio.sync({ enabled: store.getState().soundEnabled, scene: getAudioScene(returnScene) });
       return;
@@ -1073,7 +1073,7 @@ export function createInitialUIState(state) {
     aboutUnsavedSheetOpen: false,
     continuationOffer: null,
     currentQuestion: "",
-    profileReturnScene: getReturnScene(null, state),
+    tracesReturnScene: getReturnScene(null, state),
     rawQuestion: "",
     remindersDraft: null,
     soundSettingsOpen: false,

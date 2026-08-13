@@ -82,7 +82,11 @@ def main():
     require('dot.className = "spirit-book-dot ui-page-choice"' in render, "Dynamic chapter dots must use ui-page-choice", errors)
     require('card.className = "gift-card ui-card-action"' in render, "Dynamic gift cards must use ui-card-action", errors)
     require('item.className = "spread-card ui-card-action"' in render_spread, "Dynamic spread cards must use ui-card-action", errors)
-    require('item.className = "history-item ui-card-action"' in render_spread, "Dynamic history traces must use ui-card-action", errors)
+    require(
+        'item.className = "history-item history-card-specimen card-context-action ui-card-action"' in render_spread,
+        "Dynamic history traces must restore the canonical History Trace and ui-card-action contracts",
+        errors,
+    )
     require(":focus-visible" in controls, "Control language must define a keyboard focus state", errors)
     require(
         "@media (prefers-reduced-motion: reduce)" in controls,

@@ -783,7 +783,7 @@ body[data-scene="onboarding"] .ornament {
 body[data-scene="onboarding"] #deck-wrap,
 body[data-scene="onboarding"] #result,
 body[data-scene="onboarding"] #spread-result,
-body[data-scene="onboarding"] #profile {
+body[data-scene="onboarding"] #traces {
   display: none !important;
 }
 

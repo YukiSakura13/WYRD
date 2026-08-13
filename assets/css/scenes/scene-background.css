@@ -38,7 +38,8 @@ body:is(
     [data-scene="about-you"],
     [data-scene="reminders"],
     [data-scene="app-info"],
-    [data-scene="spirit-book"]
+    [data-scene="spirit-book"],
+    [data-scene="traces"]
   ) {
   background: transparent;
 }

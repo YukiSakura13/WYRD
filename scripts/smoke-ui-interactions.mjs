@@ -121,6 +121,7 @@ const [
   stateModel,
   stateStorage,
   runtimeAudio,
+  runtimeMoon,
 ] =
   await Promise.all([
     readFile(new URL("../docs/wyrd-ui-kit.html", import.meta.url), "utf8"),
@@ -150,7 +151,19 @@ const [
     readFile(new URL("../assets/js/state/model.js", import.meta.url), "utf8"),
     readFile(new URL("../assets/js/state/storage.js", import.meta.url), "utf8"),
     readFile(new URL("../assets/js/audio.js", import.meta.url), "utf8"),
+    readFile(new URL("../assets/js/ui/moon.js", import.meta.url), "utf8"),
   ]);
+
+assert.match(
+  runtimeMoon,
+  /const SILVER = "#cdd1cf";/,
+  "Shared moon icons must use the approved Silver tone",
+);
+assert.doesNotMatch(
+  runtimeMoon,
+  /#c9a14a|\bGOLD\b/,
+  "Shared moon icons must not reintroduce the legacy gold tone",
+);
 
 assert.match(
   kitHtml,
@@ -607,7 +620,7 @@ for (const scene of ["result", "spread"]) {
 }
 assert.match(
   runtimeBase,
-  /body:is\(\[data-scene="deck"\], \[data-scene="result"\], \[data-scene="spread"\]\) :is\(\.scene-fog, \.wyrd-scene-stars\)\s*\{\s*display:\s*none;/,
+  /body:is\(\[data-scene="deck"\], \[data-scene="result"\], \[data-scene="spread"\], \[data-scene="traces"\]\) :is\(\.scene-fog, \.wyrd-scene-stars\)\s*\{\s*display:\s*none;/,
   "All reading surfaces must suppress the legacy fog and stars layers",
 );
 assert.match(
@@ -727,6 +740,26 @@ assert.match(
   "Runtime Result must use the full date formatter rather than the compact history formatter",
 );
 assert.match(
+  runtimeRender,
+  /back\.append\(starField, mainStar, backTitle, date\);/,
+  "Gift backs must preserve the approved star, title and acquisition-date bands",
+);
+assert.match(
+  runtimeRender,
+  /scheduleGiftStarBreath\(mainStar, true\);[\s\S]*?isInitial \? randomBetween\(900, 1600\) : randomBetween\(5200, 7800\)/,
+  "The Gift main star must begin its visible breathing cycle promptly",
+);
+assert.match(
+  runtimeRender,
+  /receivedAt: new Date\(2026, 7, 13 \+ index, 12, 0, 0\)\.toISOString\(\)/,
+  "Gift preview dates must demonstrate the full Russian month format from 13 August",
+);
+assert.doesNotMatch(
+  runtimeSpread,
+  /history-item-meta|history-item-phase|traceDate/,
+  "Trace catalog cards must not duplicate moon phase or acquisition date from the detail sheet",
+);
+assert.match(
   readingSilver,
   /#result \.card-moon-date\s*\{[\s\S]*?grid-row:\s*2;[\s\S]*?font-family:\s*"Cormorant Garamond"[\s\S]*?font-style:\s*italic;[\s\S]*?text-align:\s*left;/,
   "Runtime Result date must preserve the canonical second-row typography and alignment",
@@ -805,6 +838,11 @@ assert.match(
   runtimeSpread,
   /copy\.textContent = "Пять карт откроют то, что три не сказали\.";/,
   "Three-card continuation must use the approved concise bridge copy",
+);
+assert.match(
+  runtimeSpread,
+  /content\.append\(title\);[\s\S]*?item\.append\(image, content\);/,
+  "Trace catalog cards must keep the approved image-and-name-only hierarchy",
 );
 assert.match(
   actionButtonCss,
@@ -1233,6 +1271,48 @@ assert.match(
   appInfoHtml,
   /ui-scene-shell[\s\S]*?<header class="settings-header app-info-header ui-app-header">[\s\S]*?class="ui-icon-button ui-icon-button--back btn-back-circle settings-back"[\s\S]*?<h1 class="ui-app-header__identity" id="app-info-title">О приложении<\/h1>/,
   "About App must reuse the canonical Silver Scene Shell and App Header",
+);
+
+const tracesHtml = runtimeHtml.split('<section class="traces-screen ui-scene-shell"')[1]?.split('<div class="save-screen-layer"')[0] || "";
+assert.match(
+  tracesHtml,
+  /id="traces"[\s\S]*?<header class="traces-header ui-app-header">[\s\S]*?data-action="close-traces"[\s\S]*?<h1 class="ui-app-header__identity" id="traces-title">Следы в лесу<\/h1>/,
+  "Traces must reuse the canonical Silver Scene Shell and App Header",
+);
+assert.doesNotMatch(
+  tracesHtml,
+  /screen-brand-word|screen-brand-line|screen-brand-subtitle/,
+  "Traces must not duplicate the WYRD brand lockup beneath its App Header",
+);
+assert.match(
+  tracesHtml,
+  /history-empty-state feedback-panel[\s\S]*?data-state="empty"/,
+  "Traces empty history must use the canonical Feedback Empty component",
+);
+assert.match(
+  runtimeHtml,
+  /data-action="open-traces"/,
+  "Forest must route to the semantically named Traces scene",
+);
+assert.doesNotMatch(
+  runtimeHtml,
+  /data-action="(?:open|close)-profile"|id="profile"/,
+  "Legacy Profile scene naming must not conflict with the real Profile settings screen",
+);
+assert.match(
+  runtimeSpread,
+  /history-item history-card-specimen card-context-action ui-card-action/,
+  "Runtime history rows must restore the canonical History Trace component",
+);
+assert.doesNotMatch(
+  runtimeSpread,
+  /moonPhase\.append\(createMoonIcon\(moon\.type\), moonText\)[\s\S]*?meta\.append\(moonPhase, traceDate\)/,
+  "Runtime History Trace catalog cards must defer moon phase and date to the detail sheet",
+);
+assert.match(
+  runtimeBase,
+  /\[data-scene="traces"\][\s\S]*?:is\(\.scene-fog, \.wyrd-scene-stars\)[\s\S]*?display:\s*none/,
+  "Traces must use the shared cold Silver scene background without legacy stars or fog",
 );
 assert.doesNotMatch(
   appInfoHtml,

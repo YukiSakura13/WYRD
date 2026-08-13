@@ -1,4 +1,4 @@
-const GOLD = "#c9a14a";
+const SILVER = "#cdd1cf";
 const COMPACT_MONTHS = ["янв", "фев", "мар", "апр", "мая", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"];
 const FULL_MONTHS = [
   "января",
@@ -73,14 +73,14 @@ export function createMoonIcon(type) {
   svg.append(defs);
 
   if (type === "fm") {
-    svg.append(createMoonCircle({ fill: GOLD }));
+    svg.append(createMoonCircle({ fill: SILVER }));
     return svg;
   }
 
   if (type === "fq" || type === "lq") {
     const group = createSvgNode("g", { "clip-path": `url(#${id})` });
-    group.append(createSvgNode("rect", { x: type === "fq" ? "9" : "2", y: "2", width: "7", height: "14", fill: GOLD }));
-    group.append(createMoonCircle({ fill: "none", stroke: GOLD, "stroke-width": "0.9" }));
+    group.append(createSvgNode("rect", { x: type === "fq" ? "9" : "2", y: "2", width: "7", height: "14", fill: SILVER }));
+    group.append(createMoonCircle({ fill: "none", stroke: SILVER, "stroke-width": "0.9" }));
     svg.append(group);
     return svg;
   }
@@ -93,17 +93,17 @@ export function createMoonIcon(type) {
         cy: "9",
         rx: "5.4",
         ry: "7",
-        fill: GOLD,
+        fill: SILVER,
       }),
     );
-    group.append(createMoonCircle({ fill: "none", stroke: GOLD, "stroke-width": "0.9" }));
+    group.append(createMoonCircle({ fill: "none", stroke: SILVER, "stroke-width": "0.9" }));
     svg.append(group);
     return svg;
   }
 
   if (type === "wg" || type === "wag") {
     const group = createSvgNode("g", { "clip-path": `url(#${id})` });
-    group.append(createMoonCircle({ fill: GOLD }));
+    group.append(createMoonCircle({ fill: SILVER }));
     group.append(
       createSvgNode("ellipse", {
         cx: type === "wg" ? "5.2" : "12.8",
@@ -113,12 +113,12 @@ export function createMoonIcon(type) {
         fill: "#12121c",
       }),
     );
-    group.append(createMoonCircle({ fill: "none", stroke: GOLD, "stroke-width": "0.9" }));
+    group.append(createMoonCircle({ fill: "none", stroke: SILVER, "stroke-width": "0.9" }));
     svg.append(group);
     return svg;
   }
 
-  svg.append(createMoonCircle({ fill: "none", stroke: GOLD, "stroke-width": "1.1" }));
+  svg.append(createMoonCircle({ fill: "none", stroke: SILVER, "stroke-width": "1.1" }));
   return svg;
 }
 

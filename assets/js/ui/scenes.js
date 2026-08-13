@@ -13,7 +13,7 @@ export const SCENES = Object.freeze({
   DECK: "deck",
   RESULT: "result",
   SPREAD: "spread",
-  PROFILE: "profile",
+  TRACES: "traces",
 });
 
 export function isKnownScene(scene) {

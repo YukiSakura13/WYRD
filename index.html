@@ -29,7 +29,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <meta name="wyrd-build" content="silver-20260812-yuk144-spirit-book-final" />
+    <meta name="wyrd-build" content="silver-20260813-yuk145-trace-gift-hierarchy-preview" />
     <title>WYRD — Оракул духов леса</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -38,7 +38,7 @@
       rel="stylesheet"
     />
     <link rel="manifest" href="./manifest.webmanifest?v=silver-20260710-forest" />
-    <link rel="stylesheet" href="./assets/css/styles.css?v=silver-20260812-yuk144-spirit-book-final" />
+    <link rel="stylesheet" href="./assets/css/styles.css?v=silver-20260813-yuk145-trace-gift-hierarchy-preview" />
   </head>
   <body>
     <div class="scene-fog scene-fog--back" aria-hidden="true"></div>
@@ -184,7 +184,7 @@
 
       <div class="top-actions">
         <button class="text-btn" data-action="toggle-sound" type="button" aria-pressed="true">Звук леса: вкл</button>
-        <button class="text-btn" data-action="open-profile" type="button">Профиль / история</button>
+        <button class="text-btn" data-action="open-traces" type="button">Следы в лесу</button>
       </div>
 
       <div class="forest-atmosphere" aria-hidden="true">
@@ -284,7 +284,7 @@
             <article class="forest-path forest-path--wide" aria-labelledby="forest-traces-title">
               <h2 class="sr-only" id="forest-traces-title">Следы в лесу</h2>
               <p class="sr-only" id="forest-traces-copy">твоя история и дары</p>
-              <button class="forest-path-action ui-card-action" data-action="open-profile" type="button" aria-labelledby="forest-traces-title" aria-describedby="forest-traces-copy">
+              <button class="forest-path-action ui-card-action" data-action="open-traces" type="button" aria-labelledby="forest-traces-title" aria-describedby="forest-traces-copy">
                 <span class="forest-art-card forest-art-card--wide forest-art-card--traces">
                   <img src="./assets/images/forest-home/silver/hare-forest.jpg" alt="" loading="lazy" decoding="async" />
                 </span>
@@ -972,18 +972,13 @@
 
       <!-- free beta launch: all reading modes stay open -->
 
-      <section id="profile" hidden aria-labelledby="profile-name">
-        <div class="screen-nav">
-          <button class="ui-icon-button ui-icon-button--back btn-back-circle" data-action="back-to-forest" type="button" aria-label="Вернуться в Лес">
+      <section class="traces-screen ui-scene-shell" id="traces" hidden aria-labelledby="traces-title">
+        <header class="traces-header ui-app-header">
+          <button class="ui-icon-button ui-icon-button--back btn-back-circle traces-back" data-action="close-traces" type="button" aria-label="Вернуться в Лес">
             <svg class="ui-icon-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12H2M10 4l-8 8 8 8" /></svg>
           </button>
-          <div class="screen-nav-title" aria-label="WYRD">
-            <p class="screen-brand-word">WYRD</p>
-            <div class="screen-brand-line" aria-hidden="true"></div>
-            <p class="screen-brand-subtitle">Оракул духов леса</p>
-          </div>
-          <div class="screen-nav-spacer" aria-hidden="true"></div>
-        </div>
+          <h1 class="ui-app-header__identity" id="traces-title">Следы в лесу</h1>
+        </header>
 
         <div class="history-gift-reveal" id="history-gift-reveal" aria-hidden="true" hidden>
           <span></span>
@@ -992,12 +987,15 @@
           <span></span>
         </div>
 
-        <div class="history-empty-state" id="history-empty-state" hidden>
-          <p>Ты только вступаешь в лес.</p>
-          <p>Первый след появится здесь после первого послания.</p>
-          <button class="reset-btn profile-primary-action ui-action ui-action--primary" data-action="back-to-deck" type="button">
-            Перейти к колоде
-          </button>
+        <div class="history-empty-state feedback-panel" id="history-empty-state" data-state="empty" hidden>
+          <img class="feedback-panel__oracle" src="./public/apple-touch-icon-wyrd-owl-symbol.png" alt="" loading="lazy" decoding="async" />
+          <div class="history-empty-copy">
+            <strong>Ты только вступаешь в лес.</strong>
+            <p>Первый след появится здесь после первого послания.</p>
+            <button class="traces-primary-action ui-action ui-action--primary" data-action="back-to-deck" type="button">
+              Перейти к колоде
+            </button>
+          </div>
         </div>
 
         <section class="gift-shelf" id="gift-shelf" aria-label="Дары леса" hidden>
@@ -1009,7 +1007,6 @@
         </section>
 
         <div class="history-intro" id="history-trails-heading">
-          <h1 id="profile-name">Следы в лесу</h1>
           <p>Один день — один след.</p>
           <p>Здесь остаётся первое послание дня.</p>
         </div>
@@ -1036,21 +1033,17 @@
                 </button>
               </div>
               <div class="history-sheet-question" id="history-sheet-question">
-                <p>ТВОЙ ВОПРОС</p>
+                <p>Твой вопрос</p>
                 <blockquote id="history-sheet-question-text"></blockquote>
               </div>
               <div class="history-sheet-card">
                 <img id="history-sheet-image" src="" alt="" loading="lazy" decoding="async" />
               </div>
               <h2 id="history-sheet-title"></h2>
-              <div class="history-sheet-divider" aria-hidden="true">
-                <span></span>
-                <p>ПОСЛАНИЕ</p>
-                <span></span>
-              </div>
+              <p class="history-sheet-section-label">Послание</p>
               <p class="history-sheet-message" id="history-sheet-message"></p>
               <div class="history-sheet-shadow" id="history-sheet-shadow">
-                <p>ТЕНЬ</p>
+                <p>Тень</p>
                 <blockquote id="history-sheet-shadow-text"></blockquote>
               </div>
               <div class="history-sheet-footer" id="history-sheet-footer"></div>
@@ -1095,6 +1088,6 @@
       window.WYRD_BUILD_ID =
         document.querySelector('meta[name="wyrd-build"]')?.content || "dev";
     </script>
-    <script type="module" src="./assets/js/main.js?v=silver-20260812-yuk144-spirit-book-final"></script>
+    <script type="module" src="./assets/js/main.js?v=silver-20260813-yuk145-trace-gift-hierarchy-preview"></script>
   </body>
 </html>

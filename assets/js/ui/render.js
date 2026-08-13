@@ -4,7 +4,7 @@ import { AVATAR_OPTIONS, PRONOUN_OPTIONS, ZODIAC_OPTIONS } from "../data/persona
 import { SPIRIT_BOOK_PAGES } from "../data/spirit-book.js";
 import { createSpreadRenderer } from "./render-spread.js";
 import { getCardImage } from "./render-helpers.js";
-import { createMoonIcon, formatFullTraceDate, formatTraceDate, getMoonPhase } from "./moon.js";
+import { createMoonIcon, formatFullTraceDate, getMoonPhase } from "./moon.js";
 import { primeShareCard } from "./share.js";
 import { getDialogController } from "./dialog-controller.js";
 
@@ -71,7 +71,7 @@ export function getElements(doc = document) {
     resultQuestionText: doc.getElementById("result-question-text"),
     resultSection: doc.getElementById("result"),
     spreadResultSection: doc.getElementById("spread-result"),
-    profileSection: doc.getElementById("profile"),
+    tracesSection: doc.getElementById("traces"),
     cardBox: doc.getElementById("share-card"),
     cardMedia: doc.querySelector("#share-card .share-card-media"),
     cardImage: doc.getElementById("card-image"),
@@ -89,7 +89,6 @@ export function getElements(doc = document) {
     actionsPanel: doc.querySelector(".actions-panel"),
     deckTop: doc.querySelector(".deck-card-face"),
     soundButton: doc.querySelector('.top-actions [data-action="toggle-sound"]'),
-    profileName: doc.getElementById("profile-name"),
     historyEmptyState: doc.getElementById("history-empty-state"),
     giftShelf: doc.getElementById("gift-shelf"),
     giftShelfTrack: doc.getElementById("gift-shelf-track"),
@@ -146,6 +145,17 @@ export function createRenderer(elements) {
   const dialogs = getDialogController();
   const spreadRenderer = createSpreadRenderer(elements);
   const cardsById = new Map(CARDS.map((card) => [card.id, card]));
+  const giftStarPoints = [
+    { x: 23, y: 17 },
+    { x: 75, y: 14 },
+    { x: 18, y: 38 },
+    { x: 83, y: 34 },
+    { x: 16, y: 61 },
+    { x: 84, y: 58 },
+    { x: 18, y: 84 },
+    { x: 82, y: 76 },
+    { x: 78, y: 89 },
+  ];
   const forestPlaceholderContent = {
     [SCENES.LUNAR_DAY]: {
       kicker: "Лунный день",
@@ -172,7 +182,7 @@ export function createRenderer(elements) {
     renderAboutYou(state, uiState);
     renderReminders(state, uiState);
     renderSpiritBook(uiState);
-    renderProfile(state);
+    renderTraces(state);
     renderCurrentReading(state.currentReading, uiState.currentQuestion);
     renderHook(state, uiState);
     spreadRenderer.renderSpread(state.lastSpread, state.lastOracleReading, uiState.currentQuestion);
@@ -198,7 +208,7 @@ export function createRenderer(elements) {
       "app-info": elements.appInfoSection,
       "spirit-book": elements.spiritBookSection,
       deck: elements.deckWrap,
-      profile: elements.profileSection,
+      traces: elements.tracesSection,
       onboarding: elements.onboardingSection,
       result: elements.resultSection,
       spread: elements.spreadResultSection,
@@ -266,7 +276,7 @@ export function createRenderer(elements) {
     elements.forestPlaceholderCopy.textContent = content.copy;
   }
 
-  function renderProfile(state) {
+  function renderTraces(state) {
     const audioEnabled = state.soundEnabled || state.musicEnabled;
 
     if (elements.soundButton) {
@@ -752,7 +762,16 @@ export function createRenderer(elements) {
     elements.historySheetShadow.hidden = !trace.snapshot.shadowMessage;
     elements.historySheetShadowText.textContent = trace.snapshot.shadowMessage || "";
     elements.historySheetFooter.replaceChildren();
-    elements.historySheetFooter.append(createMoonIcon(moon.type), document.createTextNode(`${formatTraceDate(date)} · ${moon.name}`));
+    const sheetMoonPhase = document.createElement("span");
+    sheetMoonPhase.className = "history-sheet-footer-phase";
+    const sheetMoonName = document.createElement("span");
+    sheetMoonName.textContent = moon.name;
+    sheetMoonPhase.append(createMoonIcon(moon.type), sheetMoonName);
+    const sheetDate = document.createElement("time");
+    sheetDate.dateTime = date.toISOString();
+    sheetDate.title = formatFullTraceDate(date);
+    sheetDate.textContent = formatFullTraceDate(date);
+    elements.historySheetFooter.append(sheetMoonPhase, sheetDate);
     dialogs.sync(elements.historySheetLayer, true, {
       initialFocus: "[data-action='close-history-entry']",
       returnFocus: () =>
@@ -800,48 +819,114 @@ export function createRenderer(elements) {
       } else {
         symbol.textContent = giftMeta.symbol;
       }
-      const title = document.createElement("span");
-      title.className = "gift-title";
-      title.textContent = giftMeta.title;
-      front.append(symbol, title);
+      front.append(symbol);
 
       const back = document.createElement("span");
       back.className = "gift-card-face gift-card-back";
-      const backImprint = giftMeta.image ? document.createElement("img") : document.createElement("span");
-      backImprint.className = giftMeta.image ? "gift-back-imprint" : "gift-back-symbol";
-      if (giftMeta.image) {
-        backImprint.src = giftMeta.image;
-        backImprint.alt = "";
-        backImprint.loading = "lazy";
-        backImprint.decoding = "async";
-      } else {
-        backImprint.textContent = giftMeta.symbol;
-      }
+      const starField = createGiftStarField();
+      const mainStar = createGiftMainStar();
       const backTitle = document.createElement("span");
-      backTitle.className = "gift-title";
+      backTitle.className = "gift-title gift-title-back";
       backTitle.textContent = giftMeta.title;
-      const divider = document.createElement("span");
-      divider.className = "gift-divider";
-      const caption = document.createElement("span");
-      caption.className = "gift-caption";
-      const captionLines = giftMeta.captionLines || (giftMeta.caption ? [giftMeta.caption] : []);
-      captionLines.forEach(function appendCaptionLine(line, index) {
-        const lineNode = document.createElement("span");
-        lineNode.className = index === captionLines.length - 1 ? "gift-caption-line gift-caption-line--closing" : "gift-caption-line";
-        lineNode.textContent = line;
-        caption.appendChild(lineNode);
-      });
+      backTitle.style.setProperty("--gift-title-size", `${getGiftTitleSize(giftMeta.title)}rem`);
       const date = document.createElement("span");
       date.className = "gift-date";
-      date.textContent = `Обретено ${formatTraceDate(receivedAt)}`;
-      back.append(backImprint, backTitle, divider, caption, date);
+      const dateLabel = document.createElement("span");
+      dateLabel.className = "gift-date-label";
+      dateLabel.textContent = "Обретено";
+      const dateValue = document.createElement("span");
+      dateValue.className = "gift-date-value";
+      dateValue.textContent = formatFullTraceDate(receivedAt);
+      date.append(dateLabel, dateValue);
+      back.append(starField, mainStar, backTitle, date);
 
       inner.append(front, back);
       card.append(inner);
       elements.giftShelfTrack.appendChild(card);
+      startGiftTwinkle(back);
     });
 
     renderGiftRevealRitual(gifts);
+  }
+
+  function createGiftStarField() {
+    const starField = document.createElement("span");
+    starField.className = "gift-star-field";
+    starField.setAttribute("aria-hidden", "true");
+
+    giftStarPoints.forEach(function appendStarPoint(point) {
+      const star = document.createElement("span");
+      star.className = "gift-star-point";
+      star.style.setProperty("--x", `${point.x}%`);
+      star.style.setProperty("--y", `${point.y}%`);
+      starField.appendChild(star);
+    });
+
+    return starField;
+  }
+
+  function createGiftMainStar() {
+    const mainStar = document.createElement("span");
+    mainStar.className = "gift-main-star";
+    mainStar.setAttribute("aria-hidden", "true");
+    return mainStar;
+  }
+
+  function getGiftTitleSize(title) {
+    const length = Array.from(title || "").length;
+    return Math.max(1.24, Math.min(1.7, 1.93 - length * 0.064));
+  }
+
+  function startGiftTwinkle(container) {
+    if (!container || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+
+    const mainStar = container.querySelector(".gift-main-star");
+    const starPoints = Array.from(container.querySelectorAll(".gift-star-point"));
+    scheduleGiftStarBreath(mainStar, true);
+
+    starPoints.forEach(function twinkleStarPoint(star, index) {
+      window.setTimeout(function startPointTwinkle() {
+        scheduleGiftStarTwinkle(star);
+      }, index * 260 + Math.random() * 1200);
+    });
+  }
+
+  function scheduleGiftStarTwinkle(star) {
+    if (!star || !document.contains(star)) {
+      return;
+    }
+
+    window.setTimeout(function updateTwinkle() {
+      if (!star || !document.contains(star)) {
+        return;
+      }
+      star.style.opacity = randomBetween(0.46, 0.78).toFixed(2);
+      scheduleGiftStarTwinkle(star);
+    }, randomBetween(3000, 6000));
+  }
+
+  function scheduleGiftStarBreath(star, isInitial = false) {
+    if (!star || !document.contains(star)) {
+      return;
+    }
+
+    const delay = isInitial ? randomBetween(900, 1600) : randomBetween(5200, 7800);
+    window.setTimeout(function breatheGiftStar() {
+      if (!star || !document.contains(star)) {
+        return;
+      }
+      star.classList.add("is-lit");
+      window.setTimeout(function dimGiftStar() {
+        star.classList.remove("is-lit");
+        scheduleGiftStarBreath(star);
+      }, randomBetween(1600, 2200));
+    }, delay);
+  }
+
+  function randomBetween(min, max) {
+    return min + Math.random() * (max - min);
   }
 
   function renderGiftRevealRitual(gifts) {
@@ -1032,7 +1117,7 @@ export function createRenderer(elements) {
     return giftKeys.map(function createPreviewGift(giftKey, index) {
       return {
         id: `gift-${giftKey}-preview`,
-        receivedAt: new Date(2026, 4, 29 + index, 12, 0, 0).toISOString(),
+        receivedAt: new Date(2026, 7, 13 + index, 12, 0, 0).toISOString(),
         giftKey,
         pendingReveal: giftKey === previewRevealGiftKey && !isPreviewGiftRevealShown(giftKey),
         schemaVersion: 1,
@@ -1370,7 +1455,7 @@ export function createRenderer(elements) {
     elements.remindersSection.hidden = scene !== SCENES.REMINDERS;
     elements.appInfoSection.hidden = scene !== SCENES.APP_INFO;
     elements.spiritBookSection.hidden = scene !== SCENES.SPIRIT_BOOK;
-    elements.profileSection.hidden = scene !== SCENES.PROFILE;
+    elements.tracesSection.hidden = scene !== SCENES.TRACES;
     elements.onboardingSection.hidden = !isOnboarding;
     elements.onboardingSection.classList.toggle("is-visible", isOnboarding);
     elements.deckWrap.hidden = scene !== SCENES.DECK;
