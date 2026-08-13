@@ -519,6 +519,7 @@ export function createActionHandler(deps) {
       }
       audio.playSelect(store.getState().soundEnabled);
       uiState.activeHistoryTraceId = traceId;
+      uiState.historySheetOpenedWithKeyboard = event.detail === 0;
       renderApp();
       return;
     }
@@ -1083,6 +1084,7 @@ export function createInitialUIState(state) {
     spiritBookNavigationLockedUntil: 0,
     onboardingReturn: SCENES.COVER,
     activeHistoryTraceId: null,
+    historySheetOpenedWithKeyboard: false,
     pinCurrentReadingForSpread: false,
     recentCardNames: [],
     transitioning: false,
@@ -1265,5 +1267,6 @@ function getPreviousTraceReading(state, cards) {
 
 function closeHistoryEntry(uiState, renderApp) {
   uiState.activeHistoryTraceId = null;
+  uiState.historySheetOpenedWithKeyboard = false;
   renderApp();
 }

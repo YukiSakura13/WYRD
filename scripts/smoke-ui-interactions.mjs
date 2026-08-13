@@ -154,6 +154,37 @@ const [
     readFile(new URL("../assets/js/ui/moon.js", import.meta.url), "utf8"),
   ]);
 
+const spreadProfileCss = await readFile(
+  new URL("../assets/css/components/spread-profile.css", import.meta.url),
+  "utf8",
+);
+
+assert.doesNotMatch(
+  runtimeHtml,
+  /ui-icon-button ui-icon-button--close btn-back-circle history-sheet-close/,
+  "History Close must not combine the Silver icon-button and legacy gold circle families",
+);
+assert.match(
+  runtimeActions,
+  /historySheetOpenedWithKeyboard = event\.detail === 0/,
+  "History sheet must distinguish pointer opening from keyboard or assistive activation",
+);
+assert.match(
+  runtimeRender,
+  /historySheetOpenedWithKeyboard[\s\S]*?\[data-action='close-history-entry'\][\s\S]*?elements\.historySheet/,
+  "History sheet must expose Close focus for keyboard opening without drawing it on pointer opening",
+);
+assert.match(
+  spreadProfileCss,
+  /\.history-sheet-card img\s*\{[\s\S]*?width:\s*clamp\(9\.375rem, 40vw, 10\.625rem\);/,
+  "History detail artwork must preserve the approved compact 150-170px range",
+);
+assert.match(
+  spreadProfileCss,
+  /@media \(min-width: 30rem\) and \(max-height: 48rem\)[\s\S]*?grid-template-columns:\s*minmax\(9\.375rem, 10\.625rem\) minmax\(0, 1fr\);/,
+  "Short wide history sheets must use the compact two-column fallback",
+);
+
 assert.match(
   runtimeMoon,
   /const SILVER = "#cdd1cf";/,

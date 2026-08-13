@@ -773,7 +773,9 @@ export function createRenderer(elements) {
     sheetDate.textContent = formatFullTraceDate(date);
     elements.historySheetFooter.append(sheetMoonPhase, sheetDate);
     dialogs.sync(elements.historySheetLayer, true, {
-      initialFocus: "[data-action='close-history-entry']",
+      initialFocus: uiState.historySheetOpenedWithKeyboard
+        ? "[data-action='close-history-entry']"
+        : elements.historySheet,
       returnFocus: () =>
         Array.from(document.querySelectorAll("[data-trace-id]")).find(
           (button) => button.dataset.traceId === trace.id,

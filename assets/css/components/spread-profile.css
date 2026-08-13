@@ -3093,12 +3093,13 @@ body[data-scene="traces"] #main {
 }
 
 .history-sheet-inner {
+  position: relative;
   width: min(100%, 36rem);
   margin-inline: auto;
   padding:
-    2.25rem
+    3.5rem
     clamp(1rem, 4vw, 2rem)
-    calc(1.5rem + var(--layout-safe-bottom));
+    calc(1.15rem + var(--layout-safe-bottom));
 }
 
 .history-sheet-handle-target {
@@ -3118,8 +3119,12 @@ body[data-scene="traces"] #main {
 }
 
 .history-sheet-close-row {
+  position: absolute;
+  top: 0.75rem;
+  right: clamp(0.75rem, 3vw, 1.25rem);
+  z-index: 2;
   min-height: var(--control-icon-hit-size);
-  margin: -1.25rem -0.75rem 0.25rem 0;
+  margin: 0;
 }
 
 .history-sheet-close {
@@ -3127,8 +3132,12 @@ body[data-scene="traces"] #main {
   height: var(--control-icon-hit-size);
 }
 
+.history-sheet:focus {
+  outline: none;
+}
+
 .history-sheet-question {
-  margin: 0 0 1.25rem;
+  margin: 0 0 0.85rem;
   padding: 0 0 0 1rem;
   border-left: 1px solid rgba(225, 228, 225, 0.32);
   border-radius: 0;
@@ -3150,16 +3159,20 @@ body[data-scene="traces"] #main {
 .history-sheet-question blockquote {
   color: var(--wyrd-bone-muted);
   font-family: Forum, Georgia, serif;
-  font-size: 1.2rem;
-  line-height: 1.45;
+  font-size: 1.0625rem;
+  line-height: 1.42;
+}
+
+.history-sheet-content {
+  min-width: 0;
 }
 
 .history-sheet-card {
-  margin-bottom: 1rem;
+  margin-bottom: 0.7rem;
 }
 
 .history-sheet-card img {
-  width: min(52vw, 13.75rem);
+  width: clamp(9.375rem, 40vw, 10.625rem);
   border: 1px solid rgba(225, 228, 225, 0.18);
   background: var(--wyrd-bone-card-surface);
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.32);
@@ -3167,29 +3180,32 @@ body[data-scene="traces"] #main {
 }
 
 .history-sheet h2 {
-  margin: 0 0 1.25rem;
+  max-width: 19ch;
+  margin: 0 auto 0.65rem;
   color: var(--wyrd-bone-text);
   font-family: Forum, Georgia, serif;
-  font-size: clamp(1.75rem, 6vw, 2.5rem);
+  font-size: clamp(1.625rem, 5vw, 1.875rem);
   font-weight: 400;
+  line-height: 1.08;
 }
 
 .history-sheet-section-label {
+  margin-bottom: 0.28rem;
   text-align: left;
 }
 
 .history-sheet-message {
-  margin: 0 0 1.5rem;
+  margin: 0 0 0.85rem;
   color: var(--wyrd-bone-text);
   font-family: Forum, Georgia, serif;
-  font-size: clamp(1.05rem, 3.4vw, 1.25rem);
-  line-height: 1.62;
+  font-size: 1.0625rem;
+  line-height: 1.42;
   text-align: left;
 }
 
 .history-sheet-shadow {
-  margin: 0 0 1.5rem;
-  padding-left: 1rem;
+  margin: 0 0 0.85rem;
+  padding-left: 0.75rem;
   border-left: 1px solid rgba(225, 228, 225, 0.22);
   text-align: left;
 }
@@ -3197,23 +3213,25 @@ body[data-scene="traces"] #main {
 .history-sheet-shadow blockquote {
   color: var(--wyrd-bone-muted);
   font-family: Forum, Georgia, serif;
-  font-size: 1.05rem;
-  line-height: 1.55;
+  font-size: 1rem;
+  line-height: 1.42;
 }
 
 .history-sheet-footer {
-  display: grid;
-  grid-template-columns: 1rem max-content;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: start;
-  gap: 0.12rem 0.4rem;
+  gap: 0.3rem 0.7rem;
   color: var(--wyrd-bone-muted);
   font-family: Manrope, Arial, sans-serif;
-  font-size: 0.88rem;
+  font-size: 0.8125rem;
 }
 
 .history-sheet-footer-phase {
-  display: contents;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 .history-sheet-footer svg {
@@ -3224,7 +3242,34 @@ body[data-scene="traces"] #main {
 }
 
 .history-sheet-footer time {
-  grid-column: 2;
+  white-space: nowrap;
+}
+
+@media (min-width: 30rem) and (max-height: 48rem) {
+  .history-sheet-inner {
+    width: min(100%, 40rem);
+  }
+
+  .history-sheet-content {
+    display: grid;
+    grid-template-columns: minmax(9.375rem, 10.625rem) minmax(0, 1fr);
+    align-items: start;
+    gap: 1.25rem;
+  }
+
+  .history-sheet-card {
+    justify-content: flex-start;
+    margin: 0;
+  }
+
+  .history-sheet-card img {
+    width: 100%;
+  }
+
+  .history-sheet h2 {
+    margin-inline: 0;
+    text-align: left;
+  }
 }
 
 .gift-reveal-veil {

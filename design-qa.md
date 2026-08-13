@@ -76,6 +76,81 @@ final result: passed
 
 ---
 
+# YUK-145 compact Trace detail sheet — local design QA
+
+Date: 2026-08-13
+
+Scope: local runtime corrective for the Trace detail sheet. The canonical Kit,
+Linear, commit and push remain unchanged pending user review.
+
+## Source and implementation evidence
+
+- Source visual truth: user-provided defect capture
+  `/var/folders/bp/pzbghfvd7pjg61djny2r6sg80000gn/T/TemporaryItems/NSIRD_screencaptureui_rzJElC/Снимок экрана — 2026-08-13 в 18.17.36.png`
+  (`998 × 1144px`).
+- Browser-rendered implementation:
+  `/tmp/wyrd-yuk145-history-sheet-393x852.png`, captured at `393 × 852` CSS
+  pixels and DPR `1`.
+- Short-height implementation:
+  `/tmp/wyrd-yuk145-history-sheet-500x572.png`, captured at `500 × 572` CSS
+  pixels and DPR `1`.
+- Normalized same-input comparison:
+  `/tmp/wyrd-yuk145-dqa/side-by-side.png` (`999 × 572px`). The source was
+  proportionally normalized to `499 × 572px`; the implementation uses the
+  equivalent `500 × 572px` CSS viewport. Both panels are shown together at
+  equal height and DPR `1`.
+- State: `Хранительница Лунной Вуали` Trace detail open from `Следы в лесу`.
+
+## Required fidelity surfaces
+
+- Fonts and typography: the approved Forum/Manrope split is unchanged. The
+  title is limited to `26–30px` and two readable lines; Message remains `17px`
+  at `1.42`, Shadow remains `16px` at `1.42`. No tiny metadata was introduced.
+- Spacing and layout rhythm: artwork is `150–170px`; content gaps are
+  `8–12px`; the 48px Close target is positioned independently of the content.
+  Portrait uses one compact column, while short wide viewports use an explicit
+  image/copy two-column fallback.
+- Colors and visual tokens: the existing Silver sheet surface, contrast and
+  shadows are preserved. No new color or glow was added.
+- Image quality and asset fidelity: the authored 3:4 card artwork is unchanged,
+  uncropped and rendered without recoloring.
+- Copy and content: title, Message, Shadow, moon phase and full Russian date are
+  all preserved; no copy was shortened or removed to force the fit.
+
+## Interaction and responsive evidence
+
+- Pointer opening focuses the dialog panel rather than drawing focus on Close;
+  the Close control now has one Silver border instead of a Silver border plus a
+  legacy gold-circle family. Its hit target remains `48 × 48px`.
+- Keyboard/assistive activation retains Close as the initial focus target;
+  Escape and the shared dialog controller remain unchanged.
+- All five stored Trace samples fit without internal scrolling at `360 × 800`,
+  `393 × 852`, `430 × 932`, and `500 × 572`.
+- `320 × 568` preserves the planned fallback scroll: maximum overflow is
+  `96px`, with no horizontal overflow or hidden controls.
+- Browser console: no errors.
+
+## Comparison history and findings
+
+- Earlier P1: Close displayed a second ring in ordinary pointer interaction.
+  Fixed by removing the legacy `.btn-back-circle` family and selecting initial
+  focus by input modality. Post-fix evidence shows one visible circle and no
+  pointer focus ring.
+- Earlier P1: the single-column sheet required scrolling on ordinary phones.
+  Fixed by reducing artwork/title scale, tightening only internal vertical
+  rhythm, placing phase/date on one row, and adding the short-wide two-column
+  fallback. Post-fix all five stored examples fit at the ordinary phone sizes.
+- No focused crop was required after the normalized full-panel comparison:
+  Close, title, body copy and footer are all legible at 1:1. CSS geometry and
+  bounding-box measurements supply the focused evidence for the 48px control,
+  150–170px artwork and zero horizontal overflow.
+
+No actionable P0/P1/P2 issue remains in this local corrective scope.
+
+final result: passed
+
+---
+
 # YUK-139 physical-phone corrective — final acceptance
 
 Date: 2026-08-05

@@ -29,7 +29,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <meta name="wyrd-build" content="silver-20260813-yuk145-trace-gift-hierarchy-preview" />
+    <meta name="wyrd-build" content="silver-20260813-yuk145-compact-detail-preview" />
     <title>WYRD — Оракул духов леса</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -38,7 +38,7 @@
       rel="stylesheet"
     />
     <link rel="manifest" href="./manifest.webmanifest?v=silver-20260710-forest" />
-    <link rel="stylesheet" href="./assets/css/styles.css?v=silver-20260813-yuk145-trace-gift-hierarchy-preview" />
+    <link rel="stylesheet" href="./assets/css/styles.css?v=silver-20260813-yuk145-compact-detail-preview" />
   </head>
   <body>
     <div class="scene-fog scene-fog--back" aria-hidden="true"></div>
@@ -1028,7 +1028,7 @@
                 <span class="history-sheet-handle"></span>
               </div>
               <div class="history-sheet-close-row">
-                <button class="ui-icon-button ui-icon-button--close btn-back-circle history-sheet-close" data-action="close-history-entry" data-dialog-dismiss-primary type="button" aria-label="Закрыть">
+                <button class="ui-icon-button ui-icon-button--close history-sheet-close" data-action="close-history-entry" data-dialog-dismiss-primary type="button" aria-label="Закрыть">
                   <svg class="ui-icon-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17" /></svg>
                 </button>
               </div>
@@ -1036,17 +1036,21 @@
                 <p>Твой вопрос</p>
                 <blockquote id="history-sheet-question-text"></blockquote>
               </div>
-              <div class="history-sheet-card">
-                <img id="history-sheet-image" src="" alt="" loading="lazy" decoding="async" />
+              <div class="history-sheet-content">
+                <div class="history-sheet-card">
+                  <img id="history-sheet-image" src="" alt="" loading="lazy" decoding="async" />
+                </div>
+                <div class="history-sheet-copy">
+                  <h2 id="history-sheet-title"></h2>
+                  <p class="history-sheet-section-label">Послание</p>
+                  <p class="history-sheet-message" id="history-sheet-message"></p>
+                  <div class="history-sheet-shadow" id="history-sheet-shadow">
+                    <p>Тень</p>
+                    <blockquote id="history-sheet-shadow-text"></blockquote>
+                  </div>
+                  <div class="history-sheet-footer" id="history-sheet-footer"></div>
+                </div>
               </div>
-              <h2 id="history-sheet-title"></h2>
-              <p class="history-sheet-section-label">Послание</p>
-              <p class="history-sheet-message" id="history-sheet-message"></p>
-              <div class="history-sheet-shadow" id="history-sheet-shadow">
-                <p>Тень</p>
-                <blockquote id="history-sheet-shadow-text"></blockquote>
-              </div>
-              <div class="history-sheet-footer" id="history-sheet-footer"></div>
             </div>
           </aside>
         </div>
@@ -1088,6 +1092,6 @@
       window.WYRD_BUILD_ID =
         document.querySelector('meta[name="wyrd-build"]')?.content || "dev";
     </script>
-    <script type="module" src="./assets/js/main.js?v=silver-20260813-yuk145-trace-gift-hierarchy-preview"></script>
+    <script type="module" src="./assets/js/main.js?v=silver-20260813-yuk145-compact-detail-preview"></script>
   </body>
 </html>
