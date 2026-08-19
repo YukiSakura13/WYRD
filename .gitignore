@@ -1,6 +1,8 @@
 .DS_Store
 Thumbs.db
 tmp/
+__pycache__/
+*.py[cod]
 *.xlsx
 .dist-pages/
 output/playwright/
