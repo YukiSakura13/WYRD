@@ -150,7 +150,7 @@
   --surface-panel-input: linear-gradient(180deg, rgba(27, 28, 43, 0.9), rgba(18, 19, 29, 0.94));
   --surface-panel-input-focus: linear-gradient(180deg, rgba(30, 31, 48, 0.96), rgba(20, 20, 31, 0.98));
   --surface-card-back: linear-gradient(145deg, var(--color-bg-card-top), var(--color-bg-card-bottom) 64%);
-  --image-card-back: url("../images/rubashka.webp");
+  --image-card-back: url("../images/forest-home/silver/raven-arch.jpg");
 
   /* Semantic UI tokens */
   --text-default: var(--color-text-primary);

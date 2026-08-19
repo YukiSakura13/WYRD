@@ -251,7 +251,7 @@ Moon caption не должна касаться, пересекать или в�
 2. Название карты
 3. Послание
 4. Тень
-+ PNG-рамка поверх всего (z-index 2)
++ серебряная SVG-рамка поверх всего (z-index 2)
 ```
 
 ### Контейнер карты
@@ -262,37 +262,40 @@ Moon caption не должна касаться, пересекать или в�
 - Overflow: hidden
 - Position: relative
 
-### Декоративная рамка карты (PNG overlay)
+### Декоративная рамка карты (Silver SVG overlay)
 
-Рамка — PNG-файл с прозрачным фоном, наложенный поверх карты.
+Рамка — утверждённый прозрачный SVG Artifact Frame, наложенный поверх карты.
+Один и тот же master используется в runtime, Silver UI Kit и Share-рендере.
 
-**Почему PNG, а не SVG:**
-`html2canvas` нестабильно рендерит SVG с тонкими линиями. На Share Card рамка может поплыть или исчезнуть. PNG overlay даёт 100% одинаковый результат и в приложении, и в экспортированном изображении.
+**Активный файл рамки:**
+`assets/ui/card-frames/approved/wyrd-card-frame-artifact.svg`
 
-**Файл рамки:** `assets/images/card-frame.png`
-- Экспортируется один раз в разрешении 2x (для retina)
-- Содержит: двойной прямоугольник, угловые звёзды-компасы, `WYRD` вверху по центру, крупная звезда внизу, ромбы по бокам
-- Цвет элементов: `#8b6914` на прозрачном фоне
+- Канонический viewBox: `1086×1448`.
+- Геометрия симметрична: правая половина является точным отражением левой.
+- Материал — холодное матовое серебро с тихими светлыми и тёмными гранями.
+- Углы используют утверждённое двухромбовое соединение Compact Action Button.
+- Рамка не изменяет и не фильтрует авторскую иллюстрацию карты.
+- Master собирается скриптом `scripts/build-wyrd-card-frame-recommended.mjs`.
 
-**Описание рамки для дизайна/экспорта:**
-- Внешний прямоугольник: stroke `#8b6914`, stroke-width 0.8, отступ от края 6px
-- Внутренний прямоугольник: stroke `#8b6914`, stroke-width 0.4, отступ от внешнего 5px
-- Угловые звёзды-компасы (все 4 угла): четырёхлучевые, длинные лучи ~11px, короткие ~7px, opacity 0.9
-- Верх центр: текст `WYRD` 7px + горизонтальные линии и точки по бокам
-- Низ центр: крупная звезда-компас ~14px + ромб под ней
-- Середины боковых сторон: ромб + точка сверху и снизу, opacity 0.6
+Share Card больше не зависит от нестабильного DOM-снимка SVG через
+`html2canvas`: `assets/js/ui/share.js` загружает этот же SVG и рисует его в
+канонический Canvas `1086×1448`. Поэтому приложение и экспорт используют одну
+геометрию без отдельной золотой PNG-копии.
+
+Старые `card-frame.png` и `card-frame-dark-hero.png` относятся к retired gold
+direction и хранятся только в `archive/brand-gold/card-frames/`.
 
 **CSS наложения:**
 ```css
-.card-frame {
+#result .card-frame {
   position: absolute;
   inset: 0;
+  z-index: 3;
   width: 100%;
   height: 100%;
   object-fit: fill;
-  mix-blend-mode: multiply;
+  opacity: 1;
   pointer-events: none;
-  z-index: 2;
 }
 ```
 
@@ -509,8 +512,10 @@ Padding: 10px 20px
 - `card.message` — текст послания
 - `card.shadow` — текст тени
 - `card.image` — путь к иллюстрации
-- `assets/images/card-frame.png` — PNG-рамка (2x, прозрачный фон)
-- `html2canvas` — для генерации PNG при шеринге
+- `assets/ui/card-frames/approved/wyrd-card-frame-artifact.svg` — активная
+  прозрачная Silver Artifact Frame
+- Canvas-рендер в `assets/js/ui/share.js` — генерация Share PNG из канонического
+  Artifact
 - `navigator.share` — Web Share API
 
 ---

@@ -49,7 +49,15 @@ SITE_DIRS = [
 
 
 def copy_tree(src: Path, dest: Path) -> None:
-    shutil.copytree(src, dest)
+    ignored_names = [".DS_Store", "Thumbs.db"]
+    if src == ROOT / "assets":
+        ignored_names.append("brand")
+
+    shutil.copytree(
+        src,
+        dest,
+        ignore=shutil.ignore_patterns(*ignored_names),
+    )
 
 
 def replace_build_markers(path: Path) -> None:

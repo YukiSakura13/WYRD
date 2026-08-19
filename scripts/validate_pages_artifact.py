@@ -20,6 +20,7 @@ REQUIRED_FILES = [
     DIST / "docs/wyrd-ui-kit.js",
     DIST / "assets/css/styles.css",
     DIST / "assets/js/main.js",
+    DIST / "assets/images/forest-home/silver/raven-arch.jpg",
     DIST / "public/social/og-wide-wyrd-hare-title.png",
     DIST / "public/social/og-square-wyrd-hare-title.png",
     DIST / "public/favicon-wyrd-thorn-seal.svg",
@@ -41,6 +42,21 @@ EXPECTED_MANIFEST_ICONS = {
     ("./public/icons/icon-512-wyrd-thorn-seal-maskable.png", "512x512", "maskable"),
     ("./public/icons/icon-192-wyrd-thorn-seal-monochrome.png", "192x192", "monochrome"),
     ("./public/icons/icon-512-wyrd-thorn-seal-monochrome.png", "512x512", "monochrome"),
+}
+
+EXPECTED_PUBLIC_FILES = {
+    "apple-touch-icon-wyrd-thorn-seal.png",
+    "favicon-16-wyrd-thorn-seal.png",
+    "favicon-32-wyrd-thorn-seal.png",
+    "favicon-wyrd-thorn-seal.svg",
+    "icons/icon-192-wyrd-thorn-seal-any.png",
+    "icons/icon-192-wyrd-thorn-seal-maskable.png",
+    "icons/icon-192-wyrd-thorn-seal-monochrome.png",
+    "icons/icon-512-wyrd-thorn-seal-any.png",
+    "icons/icon-512-wyrd-thorn-seal-maskable.png",
+    "icons/icon-512-wyrd-thorn-seal-monochrome.png",
+    "social/og-square-wyrd-hare-title.png",
+    "social/og-wide-wyrd-hare-title.png",
 }
 
 
@@ -70,9 +86,32 @@ def ensure_versioned_reference(text: str, reference: str, build_id: str) -> None
 
 def main() -> None:
     require(DIST.exists(), ".dist-pages does not exist; run scripts/prepare_pages.py first")
+    require(
+        not (DIST / "assets/brand").exists(),
+        "Brand source masters must not be included in the Pages artifact",
+    )
+    require(
+        not any(DIST.rglob(".DS_Store")),
+        "Finder metadata must not be included in the Pages artifact",
+    )
+
+    actual_public_files = {
+        path.relative_to(DIST / "public").as_posix()
+        for path in (DIST / "public").rglob("*")
+        if path.is_file()
+    }
+    require(
+        actual_public_files == EXPECTED_PUBLIC_FILES,
+        "Pages public/ must contain only the approved favicon, PWA, and social exports",
+    )
 
     for path in REQUIRED_FILES:
         require(path.exists(), f"Missing required artifact file: {path.relative_to(ROOT)}")
+
+    require(
+        not (DIST / "assets/images/rubashka.webp").exists(),
+        "Pages artifact still contains the retired gold card back",
+    )
 
     index_html = (DIST / "index.html").read_text(encoding="utf-8")
     build_id = extract_build_id(index_html)
@@ -126,6 +165,11 @@ def main() -> None:
     )
 
     kit_html = (DIST / "docs/wyrd-ui-kit.html").read_text(encoding="utf-8")
+    require(
+        "../assets/images/forest-home/silver/raven-arch.jpg" in kit_html
+        and "rubashka.webp" not in kit_html,
+        "Silver UI Kit reveal must use the approved Raven Arch card back",
+    )
     require(
         re.search(r'href=["\'](?:\./)?wyrd-ui-kit\.css(?:\?v=[^"\']+)?["\']', kit_html) is not None,
         "Silver UI Kit lost its local stylesheet reference",
