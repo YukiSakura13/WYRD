@@ -198,8 +198,8 @@ assert.doesNotMatch(
 
 assert.match(
   kitHtml,
-  /public\/apple-touch-icon-wyrd-owl-symbol\.png/,
-  "Feedback and Motion Success must use the canonical Oracle owl",
+  /public\/apple-touch-icon-wyrd-thorn-seal\.png/,
+  "Feedback and Motion Success must use the canonical Forest Seal",
 );
 
 for (const scenario of ["breath", "reveal", "drift", "success"]) {

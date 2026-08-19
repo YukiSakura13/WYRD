@@ -73,7 +73,7 @@ Before code changes, map every legacy element to a canonical component:
 | Text field / question | Field / Question Field | label, counter, focus, spark, reduced motion |
 | Toggle / choice / day | Toggle / Choice / Day Chip | full hit row, selection, glow, keyboard |
 | Page / chapter navigation | Pager | quiet nested diamonds, explicit ends, disabled state |
-| Loading / success / error / empty | Feedback | Oracle owl, state copy, border and calm motion |
+| Loading / success / error / empty | Feedback | Forest Seal, state copy, border and calm motion |
 | Card / history / supporting image | Artifact / Quiet / Trace | authored art, aspect ratio, metadata and action semantics |
 | Modal / sheet | Sheet | backdrop, focus trap, Escape, close and focus return |
 

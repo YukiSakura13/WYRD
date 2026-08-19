@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
 
@@ -21,14 +22,26 @@ REQUIRED_FILES = [
     DIST / "assets/js/main.js",
     DIST / "public/social/og-wide-wyrd-hare-title.png",
     DIST / "public/social/og-square-wyrd-hare-title.png",
-    DIST / "public/icons/icon-square-wyrd-owl-moon.png",
-    DIST / "public/icons/icon-source-wyrd-owl-symbol.png",
-    DIST / "public/icons/icon-512-wyrd-owl-symbol.png",
-    DIST / "public/icons/icon-192-wyrd-owl-symbol.png",
-    DIST / "public/apple-touch-icon-wyrd-owl-symbol.png",
-    DIST / "public/favicon-32-wyrd-owl-symbol.png",
-    DIST / "public/favicon-16-wyrd-owl-symbol.png",
+    DIST / "public/favicon-wyrd-thorn-seal.svg",
+    DIST / "public/favicon-32-wyrd-thorn-seal.png",
+    DIST / "public/favicon-16-wyrd-thorn-seal.png",
+    DIST / "public/apple-touch-icon-wyrd-thorn-seal.png",
+    DIST / "public/icons/icon-192-wyrd-thorn-seal-any.png",
+    DIST / "public/icons/icon-512-wyrd-thorn-seal-any.png",
+    DIST / "public/icons/icon-192-wyrd-thorn-seal-maskable.png",
+    DIST / "public/icons/icon-512-wyrd-thorn-seal-maskable.png",
+    DIST / "public/icons/icon-192-wyrd-thorn-seal-monochrome.png",
+    DIST / "public/icons/icon-512-wyrd-thorn-seal-monochrome.png",
 ]
+
+EXPECTED_MANIFEST_ICONS = {
+    ("./public/icons/icon-192-wyrd-thorn-seal-any.png", "192x192", "any"),
+    ("./public/icons/icon-512-wyrd-thorn-seal-any.png", "512x512", "any"),
+    ("./public/icons/icon-192-wyrd-thorn-seal-maskable.png", "192x192", "maskable"),
+    ("./public/icons/icon-512-wyrd-thorn-seal-maskable.png", "512x512", "maskable"),
+    ("./public/icons/icon-192-wyrd-thorn-seal-monochrome.png", "192x192", "monochrome"),
+    ("./public/icons/icon-512-wyrd-thorn-seal-monochrome.png", "512x512", "monochrome"),
+}
 
 
 def require(condition: bool, message: str) -> None:
@@ -63,6 +76,25 @@ def main() -> None:
 
     index_html = (DIST / "index.html").read_text(encoding="utf-8")
     build_id = extract_build_id(index_html)
+
+    for reference in (
+        "./public/favicon-wyrd-thorn-seal.svg",
+        "./public/favicon-32-wyrd-thorn-seal.png",
+        "./public/favicon-16-wyrd-thorn-seal.png",
+        "./public/apple-touch-icon-wyrd-thorn-seal.png",
+    ):
+        require(reference in index_html, f"Missing active Thorn Seal reference: {reference}")
+    require("wyrd-owl" not in index_html, "Active Pages HTML still references the archived owl identity")
+
+    manifest = json.loads((DIST / "manifest.webmanifest").read_text(encoding="utf-8"))
+    manifest_icons = {
+        (icon.get("src"), icon.get("sizes"), icon.get("purpose"))
+        for icon in manifest.get("icons", [])
+    }
+    require(
+        manifest_icons == EXPECTED_MANIFEST_ICONS,
+        "Manifest icon set does not match the approved Thorn Seal any/maskable/monochrome exports",
+    )
 
     ensure_versioned_reference(index_html, "manifest.webmanifest", build_id)
     ensure_versioned_reference(index_html, "assets/js/main.js", build_id)
@@ -114,8 +146,8 @@ def main() -> None:
         "Silver UI Kit canonical Artifact Frame is missing from the Pages artifact",
     )
     require(
-        "../public/apple-touch-icon-wyrd-owl-symbol.png" in kit_html,
-        "Silver UI Kit Feedback lost the canonical Oracle owl",
+        "../public/apple-touch-icon-wyrd-thorn-seal.png" in kit_html,
+        "Silver UI Kit Feedback lost the canonical Forest Seal",
     )
     for scenario in ("breath", "reveal", "drift", "success"):
         require(
