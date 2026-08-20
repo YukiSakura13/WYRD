@@ -17,6 +17,9 @@ jobs:
       - name: Test PR body validator
         run: python3 scripts/test_validate_pr_body.py
 
+      - name: Validate asset and content integrity
+        run: node scripts/validate_asset_integrity.mjs
+
       - name: Validate product scope
         run: python3 scripts/validate_product_scope.py
 

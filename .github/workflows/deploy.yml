@@ -31,6 +31,9 @@ jobs:
           node scripts/smoke-state.mjs
           node scripts/smoke-ui-interactions.mjs
 
+      - name: Validate asset and content integrity
+        run: node scripts/validate_asset_integrity.mjs
+
       - name: Validate control language
         run: python3 scripts/validate_control_language.py
 

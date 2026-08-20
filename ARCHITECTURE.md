@@ -178,7 +178,9 @@
 - `scripts/prepare_pages.py`
 - `scripts/validate_pages_artifact.py`
 - `scripts/smoke-ui-interactions.mjs`
+- `scripts/validate_asset_integrity.mjs`
 - `.github/workflows/deploy.yml`
+- `.github/workflows/pr-governance.yml`
 
 Ответственность:
 
@@ -188,6 +190,7 @@
 - PWA-обвязка
 - подготовка чистого Pages-артефакта
 - build-versioning для publish-ресурсов
+- проверка ссылок, asset/content mappings, размеров изображений, alt policy, дубликатов и public/PWA/OG contract
 - автоматические smoke-gates и валидация deploy-артефакта перед публикацией
 
 ### 4.6. Content/Data Layer

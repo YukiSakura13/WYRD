@@ -17,33 +17,34 @@
 1. `node scripts/smoke-domain.mjs`
 2. `node scripts/smoke-state.mjs`
 3. `node scripts/smoke-ui-interactions.mjs`
-4. `python3 scripts/validate_control_language.py`
-5. `python3 scripts/validate_product_scope.py`
-6. `python3 scripts/validate_lore_canon.py`
-7. `python3 scripts/validate_responsive_strategy.py`
-8. `python3 scripts/prepare_pages.py`
-9. `python3 scripts/validate_pages_artifact.py`
+4. `node scripts/validate_asset_integrity.mjs`
+5. `python3 scripts/validate_control_language.py`
+6. `python3 scripts/validate_product_scope.py`
+7. `python3 scripts/validate_lore_canon.py`
+8. `python3 scripts/validate_responsive_strategy.py`
+9. `python3 scripts/prepare_pages.py`
+10. `python3 scripts/validate_pages_artifact.py`
 
 Если затронут UI, стили, изображения или service worker, дополнительно полезно:
 
-10. `python3 -m http.server 4173`
-11. Открыть локально `http://localhost:4173`
-12. Проверить cover, «Лес», «Историю духов леса», draw, result, spreads, profile и sound toggle по [REFINEMENT_BASELINE.md](./REFINEMENT_BASELINE.md)
+11. `python3 -m http.server 4173`
+12. Открыть локально `http://localhost:4173`
+13. Проверить cover, «Лес», «Историю духов леса», draw, result, spreads, profile и sound toggle по [REFINEMENT_BASELINE.md](./REFINEMENT_BASELINE.md)
 
 Если затронута silver migration экрана, обязательно:
 
-13. Пройти per-screen restoration checklist из
+14. Пройти per-screen restoration checklist из
     [WYRD_SILVER_MIGRATION_PROTOCOL.md](./WYRD_SILVER_MIGRATION_PROTOCOL.md).
-14. Сравнить механику каждого перенесённого компонента с живым Silver UI Kit:
+15. Сравнить механику каждого перенесённого компонента с живым Silver UI Kit:
     pointer, keyboard, focus, pressed, disabled, reduced motion и responsive.
-15. Приложить side-by-side и interaction evidence к связанной Linear-задаче.
+16. Приложить side-by-side и interaction evidence к связанной Linear-задаче.
 
 ## GitHub Pages publish check
 
 После push нужно проверить:
 
 1. Workflow `Deploy Pages` завершился зелёным.
-2. Шаги `Run smoke tests`, `Prepare Pages Artifact`, `Validate Pages Artifact`, `Upload artifact` и `Deploy to GitHub Pages` прошли без ошибок.
+2. Шаги `Run smoke tests`, `Validate asset and content integrity`, `Prepare Pages Artifact`, `Validate Pages Artifact`, `Upload artifact` и `Deploy to GitHub Pages` прошли без ошибок.
 3. Сайт [https://yukisakura13.github.io/WYRD/](https://yukisakura13.github.io/WYRD/) открывается после hard refresh.
 4. В `index.html` на сайте есть актуальный `meta[name="wyrd-build"]`.
 5. `styles.css`, `main.js`, `manifest.webmanifest` и `sw.js` приходят с versioned query string.
