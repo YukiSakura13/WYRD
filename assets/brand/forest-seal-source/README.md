@@ -9,7 +9,9 @@ manual redraw.
 - `assets/brand/forest-seal-source/icon-source-wyrd-thorn-seal.png` — approved raster source;
 - `assets/brand/forest-seal-source/wyrd-thorn-seal-mark.svg` — transparent vector mark;
 - `assets/brand/forest-seal-source/icon-wyrd-thorn-seal-any.svg` — regular black-plate vector export;
-- `public/favicon-wyrd-thorn-seal.svg` — optically cropped browser favicon.
+- `public/favicon-wyrd-thorn-seal-dark.svg` — optically cropped dark browser favicon;
+- `public/favicon-wyrd-thorn-seal-light.svg` — optically cropped light browser favicon;
+- `scripts/build-wyrd-theme-favicons.mjs` — deterministic themed favicon export.
 
 Approved raster SHA-256:
 `3f2dc1ac19946d3ce168d56eadf0d71d3982485f21a2329afc28c26c4fb9edec`.
@@ -23,7 +25,12 @@ a guarantee that no similar mark exists.
 
 ## Export contract
 
-- Browser PNG chain: optical SVG → 32×32 → 16×16.
+- Browser favicon adaptation preserves the approved path coordinates and adds a
+  same-color solid core behind that path. The outer field stays transparent.
+- Dark and light SVG variants use `#070709` and `#F1EFE9`; each 16×16 and 32×32
+  PNG fallback is rasterized independently from its SVG, never from another PNG.
+- Runtime selects the contrasting dark/light set from
+  `prefers-color-scheme` and updates it if the system theme changes.
 - Apple/PWA regular chain: vector → 512×512 → 192×192 / 180×180.
 - Maskable exports use an opaque black plate and keep the bright mark within
   the 40% guaranteed safe radius.

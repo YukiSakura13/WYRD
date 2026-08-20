@@ -2,6 +2,14 @@
   display: none;
 }
 
+body[data-scene="cover"] {
+  overflow: hidden;
+}
+
+body[data-scene="cover"] #main {
+  display: none;
+}
+
 .cover-icon-sprite {
   position: absolute;
   width: 0;
@@ -13,6 +21,9 @@
 .cover-scene {
   position: relative;
   min-height: 100vh;
+  min-height: var(--layout-viewport-min);
+  height: 100vh;
+  height: var(--layout-viewport-dynamic);
   display: flex;
   align-items: stretch;
   justify-content: center;
@@ -88,6 +99,18 @@
   z-index: 1;
   transform-origin: bottom center;
   animation: none;
+}
+
+@media (orientation: landscape) {
+  .cover-art {
+    object-position: center 25%;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  .cover-art {
+    object-position: center 38%;
+  }
 }
 
 .fog-layer,

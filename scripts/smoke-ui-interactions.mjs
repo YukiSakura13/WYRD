@@ -202,6 +202,33 @@ assert.match(
   "Feedback and Motion Success must use the canonical Forest Seal",
 );
 
+for (const reference of [
+  "public/favicon-wyrd-thorn-seal-dark.svg",
+  "public/favicon-32-wyrd-thorn-seal-dark.png",
+  "public/favicon-16-wyrd-thorn-seal-dark.png",
+]) {
+  assert.match(
+    runtimeHtml,
+    new RegExp(reference.replace(".", "\\.")),
+    `Runtime must expose its default dark Forest Seal favicon: ${reference}`,
+  );
+}
+for (const reference of [
+  "favicon-wyrd-thorn-seal-${tone}.svg",
+  "favicon-32-wyrd-thorn-seal-${tone}.png",
+  "favicon-16-wyrd-thorn-seal-${tone}.png",
+]) {
+  assert.ok(
+    runtimeHtml.includes(reference),
+    `Runtime must switch the complete Forest Seal favicon family: ${reference}`,
+  );
+}
+assert.match(
+  runtimeHtml,
+  /matchMedia\("\(prefers-color-scheme: dark\)"\)/,
+  "Runtime must select the contrasting Forest Seal favicon for the active system theme",
+);
+
 for (const scenario of ["breath", "reveal", "drift", "success"]) {
   assert.match(
     kitHtml,

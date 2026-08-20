@@ -24,13 +24,31 @@
     <meta name="twitter:image" content="https://yukisakura13.github.io/WYRD/public/social/og-wide-wyrd-hare-title.png" />
     <meta name="twitter:image:alt" content="WYRD — Оракул духов леса" />
     <link rel="apple-touch-icon" sizes="180x180" href="./public/apple-touch-icon-wyrd-thorn-seal.png" />
-    <link rel="icon" type="image/svg+xml" sizes="any" href="./public/favicon-wyrd-thorn-seal.svg" />
-    <link rel="icon" type="image/png" sizes="32x32" href="./public/favicon-32-wyrd-thorn-seal.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="./public/favicon-16-wyrd-thorn-seal.png" />
+    <link id="wyrd-favicon-svg" rel="icon" type="image/svg+xml" sizes="any" href="./public/favicon-wyrd-thorn-seal-dark.svg" />
+    <link id="wyrd-favicon-32" rel="icon" type="image/png" sizes="32x32" href="./public/favicon-32-wyrd-thorn-seal-dark.png" />
+    <link id="wyrd-favicon-16" rel="icon" type="image/png" sizes="16x16" href="./public/favicon-16-wyrd-thorn-seal-dark.png" />
+    <script>
+      (() => {
+        const scheme = window.matchMedia("(prefers-color-scheme: dark)");
+        const applyFaviconScheme = () => {
+          const tone = scheme.matches ? "light" : "dark";
+          document.getElementById("wyrd-favicon-svg").href = `./public/favicon-wyrd-thorn-seal-${tone}.svg`;
+          document.getElementById("wyrd-favicon-32").href = `./public/favicon-32-wyrd-thorn-seal-${tone}.png`;
+          document.getElementById("wyrd-favicon-16").href = `./public/favicon-16-wyrd-thorn-seal-${tone}.png`;
+        };
+
+        applyFaviconScheme();
+        if (typeof scheme.addEventListener === "function") {
+          scheme.addEventListener("change", applyFaviconScheme);
+        } else {
+          scheme.addListener(applyFaviconScheme);
+        }
+      })();
+    </script>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <meta name="wyrd-build" content="silver-20260819-yuk138-thorn-seal" />
+    <meta name="wyrd-build" content="silver-20260820-yuk138-adaptive-seal-yuk49-cover" />
     <title>WYRD — Оракул духов леса</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -38,8 +56,8 @@
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Forum&family=IM+Fell+English:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="manifest" href="./manifest.webmanifest?v=silver-20260819-yuk138-thorn-seal" />
-    <link rel="stylesheet" href="./assets/css/styles.css?v=silver-20260819-yuk138-thorn-seal" />
+    <link rel="manifest" href="./manifest.webmanifest?v=silver-20260820-yuk138-adaptive-seal-yuk49-cover" />
+    <link rel="stylesheet" href="./assets/css/styles.css?v=silver-20260820-yuk138-adaptive-seal-yuk49-cover" />
   </head>
   <body>
     <div class="scene-fog scene-fog--back" aria-hidden="true"></div>
@@ -1093,6 +1111,6 @@
       window.WYRD_BUILD_ID =
         document.querySelector('meta[name="wyrd-build"]')?.content || "dev";
     </script>
-    <script type="module" src="./assets/js/main.js?v=silver-20260819-yuk138-thorn-seal"></script>
+    <script type="module" src="./assets/js/main.js?v=silver-20260820-yuk138-adaptive-seal-yuk49-cover"></script>
   </body>
 </html>

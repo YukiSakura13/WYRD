@@ -23,9 +23,12 @@ REQUIRED_FILES = [
     DIST / "assets/images/forest-home/silver/raven-arch.jpg",
     DIST / "public/social/og-wide-wyrd-hare-title.png",
     DIST / "public/social/og-square-wyrd-hare-title.png",
-    DIST / "public/favicon-wyrd-thorn-seal.svg",
-    DIST / "public/favicon-32-wyrd-thorn-seal.png",
-    DIST / "public/favicon-16-wyrd-thorn-seal.png",
+    DIST / "public/favicon-wyrd-thorn-seal-dark.svg",
+    DIST / "public/favicon-wyrd-thorn-seal-light.svg",
+    DIST / "public/favicon-32-wyrd-thorn-seal-dark.png",
+    DIST / "public/favicon-32-wyrd-thorn-seal-light.png",
+    DIST / "public/favicon-16-wyrd-thorn-seal-dark.png",
+    DIST / "public/favicon-16-wyrd-thorn-seal-light.png",
     DIST / "public/apple-touch-icon-wyrd-thorn-seal.png",
     DIST / "public/icons/icon-192-wyrd-thorn-seal-any.png",
     DIST / "public/icons/icon-512-wyrd-thorn-seal-any.png",
@@ -46,9 +49,12 @@ EXPECTED_MANIFEST_ICONS = {
 
 EXPECTED_PUBLIC_FILES = {
     "apple-touch-icon-wyrd-thorn-seal.png",
-    "favicon-16-wyrd-thorn-seal.png",
-    "favicon-32-wyrd-thorn-seal.png",
-    "favicon-wyrd-thorn-seal.svg",
+    "favicon-16-wyrd-thorn-seal-dark.png",
+    "favicon-16-wyrd-thorn-seal-light.png",
+    "favicon-32-wyrd-thorn-seal-dark.png",
+    "favicon-32-wyrd-thorn-seal-light.png",
+    "favicon-wyrd-thorn-seal-dark.svg",
+    "favicon-wyrd-thorn-seal-light.svg",
     "icons/icon-192-wyrd-thorn-seal-any.png",
     "icons/icon-192-wyrd-thorn-seal-maskable.png",
     "icons/icon-192-wyrd-thorn-seal-monochrome.png",
@@ -117,12 +123,23 @@ def main() -> None:
     build_id = extract_build_id(index_html)
 
     for reference in (
-        "./public/favicon-wyrd-thorn-seal.svg",
-        "./public/favicon-32-wyrd-thorn-seal.png",
-        "./public/favicon-16-wyrd-thorn-seal.png",
+        "./public/favicon-wyrd-thorn-seal-dark.svg",
+        "./public/favicon-32-wyrd-thorn-seal-dark.png",
+        "./public/favicon-16-wyrd-thorn-seal-dark.png",
         "./public/apple-touch-icon-wyrd-thorn-seal.png",
     ):
         require(reference in index_html, f"Missing active Thorn Seal reference: {reference}")
+    for reference in (
+        "favicon-wyrd-thorn-seal-${tone}.svg",
+        "favicon-32-wyrd-thorn-seal-${tone}.png",
+        "favicon-16-wyrd-thorn-seal-${tone}.png",
+    ):
+        require(reference in index_html, f"Missing themed Thorn Seal switch: {reference}")
+    require(
+        '(prefers-color-scheme: dark)' in index_html
+        and 'scheme.addEventListener("change", applyFaviconScheme)' in index_html,
+        "Theme-aware favicon switching is missing from Pages HTML",
+    )
     require("wyrd-owl" not in index_html, "Active Pages HTML still references the archived owl identity")
 
     manifest = json.loads((DIST / "manifest.webmanifest").read_text(encoding="utf-8"))

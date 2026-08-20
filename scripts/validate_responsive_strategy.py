@@ -57,12 +57,28 @@ def main() -> None:
 
     for phrase in (
         "min-height: var(--layout-viewport-min)",
+        "height: var(--layout-viewport-dynamic)",
         "max-width: var(--layout-content-reading)",
         "var(--layout-page-padding-block-start)",
         "var(--layout-gutter-inline)",
         "var(--layout-page-padding-block-end)",
     ):
         require(phrase in layout_css, f"Shared layout does not consume responsive token: {phrase}")
+
+    require(
+        "@media (orientation: landscape)" in layout_css
+        and "object-position: center 25%;" in layout_css
+        and "@media (orientation: landscape) and (max-height: 520px)" in layout_css
+        and "object-position: center 38%;" in layout_css,
+        "Cover landscape artwork must keep the approved moon focal point visible",
+    )
+    require(
+        'body[data-scene="cover"]' in layout_css
+        and "overflow: hidden;" in layout_css
+        and 'body[data-scene="cover"] #main' in layout_css
+        and "display: none;" in layout_css,
+        "Cover must own the viewport without exposing the inert page below it",
+    )
 
     for viewport in ("320×568", "390×844", "768×1024", "1280×720", "1440×900"):
         require(viewport in strategy, f"Responsive strategy is missing QA viewport: {viewport}")

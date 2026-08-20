@@ -2399,13 +2399,15 @@ body[data-scene="deck"] .footer {
     width: 100%;
     min-height: 100vh;
     min-height: var(--layout-viewport-min);
+    height: 100vh;
+    height: var(--layout-viewport-dynamic);
     max-height: none;
     border: 0;
     box-shadow: none;
   }
 
   .cover-art {
-    object-position: center center;
+    object-position: center 25%;
     transform: none;
   }
 
@@ -2427,6 +2429,12 @@ body[data-scene="deck"] .footer {
   .cover-nav {
     bottom: 2rem;
     width: min(100%, 24rem);
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  .cover-art {
+    object-position: center 38%;
   }
 }
 
