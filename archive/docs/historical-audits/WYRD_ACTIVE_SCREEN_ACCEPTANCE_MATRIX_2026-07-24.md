@@ -1,5 +1,11 @@
 # WYRD active-screen acceptance matrix
 
+> [!WARNING]
+> Исторический снимок проверки от 2026-07-24. Не использовать как текущую
+> release-матрицу; актуальные требования находятся в
+> [`REFINEMENT_BASELINE.md`](../../../docs/REFINEMENT_BASELINE.md) и Silver
+> Migration Protocol.
+
 Date: 2026-07-24
 
 Linear scope: YUK-135 design-system checkpoint.

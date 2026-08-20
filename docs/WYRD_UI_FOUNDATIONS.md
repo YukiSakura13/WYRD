@@ -14,8 +14,7 @@ The rule for future work:
 
 ## Canonical Sources
 
-- `docs/WYRD_BRANDBOOK.md`
-- `docs/WYRD_VISUAL_STYLE_GUIDE.html`
+- `docs/WYRD_MASTER_CARD_STYLE.md`
 - `docs/WYRD_UI_RULES.md`
 - `docs/WYRD_INTERACTION_QA.md`
 - `docs/WYRD_SILVER_MIGRATION_PROTOCOL.md` — mandatory restoration-first
@@ -24,6 +23,10 @@ The rule for future work:
 - `assets/ui/card-frames/approved/wyrd-card-frame-artifact.svg` — transparent symmetric Artifact Frame master
 - `assets/ui/action-buttons/continuous/` — approved four-level Action Button family
 - current runtime screens: Forest, Deck, Result, Spread, Profile, Settings, Notifications, Spirit Book
+
+The retired gold Brandbook and Visual Style Guide are preserved under
+`archive/brand-gold/docs/` as historical context only. They are not sources for
+new components or migration decisions.
 
 ## Mandatory Restoration Rule
 

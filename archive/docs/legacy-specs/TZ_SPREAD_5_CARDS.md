@@ -1,5 +1,10 @@
 # WYRD — ТЗ: Экран расклада на 5 карт
 
+> [!WARNING]
+> Архивная gold-era спецификация. Действующая логика расклада находится в
+> [`SPREAD_MODEL.md`](../../../docs/SPREAD_MODEL.md), а UI — в Silver UI Kit и
+> [`WYRD_UI_FOUNDATIONS.md`](../../../docs/WYRD_UI_FOUNDATIONS.md).
+
 **Версия:** 1.0  
 **Статус:** Готово к передаче в Codex  
 **Связанные документы:** `WYRD_LAYOUT_VISUAL.md`, `TZ_SPREAD_3_CARDS.md`, `archetype-config.js`

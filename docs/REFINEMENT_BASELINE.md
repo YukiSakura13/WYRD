@@ -49,7 +49,7 @@
 
 ### Доступность
 
-- Общая layout-проверка следует [RESPONSIVE_STRATEGY.md](/Users/marinamart/Desktop/Oracle_dev/docs/RESPONSIVE_STRATEGY.md).
+- Общая layout-проверка следует [RESPONSIVE_STRATEGY.md](./RESPONSIVE_STRATEGY.md).
 - Кнопки доступны с клавиатуры.
 - У интерактивных элементов есть видимый focus.
 - Текст читаем на мобильной и десктопной ширине.

@@ -1,5 +1,10 @@
 # YUK-145 Gifts backside and Trace metadata corrective — Design QA
 
+> [!WARNING]
+> Архивный накопительный QA-журнал. Он не является текущим acceptance baseline;
+> для новых проверок использовать [`REFINEMENT_BASELINE.md`](../../../docs/REFINEMENT_BASELINE.md)
+> и [`RELEASE_CHECKLIST.md`](../../../docs/RELEASE_CHECKLIST.md).
+
 Date: 2026-08-13
 
 Scope: local restoration of the approved Gift backside and the metadata grid
@@ -9,14 +14,14 @@ user review.
 ## Source and implementation evidence
 
 - Source visual truth: user-provided approved Gift-back capture
-  `/var/folders/bp/pzbghfvd7pjg61djny2r6sg80000gn/T/TemporaryItems/NSIRD_screencaptureui_5rAeZ2/Снимок экрана — 2026-08-13 в 12.36.35.png`
+  `[local evidence not preserved]`
   (`882 × 654px`) plus the approved historical implementation in commits
   `a9d8921` and `7fafbb1`.
 - Source Trace defect capture:
-  `/var/folders/bp/pzbghfvd7pjg61djny2r6sg80000gn/T/TemporaryItems/NSIRD_screencaptureui_SigR0I/Снимок экрана — 2026-08-13 в 12.37.46.png`.
-- Browser-rendered implementation: `/tmp/yuk145-final-393.png`, captured at
+  `[local evidence not preserved]`.
+- Browser-rendered implementation: `[local evidence not preserved]`, captured at
   `393 × 852` CSS pixels, device scale factor `1`; full page is `393 × 1674px`.
-- Normalized source/implementation comparison: `/tmp/yuk145-gifts-side-by-side.png`.
+- Normalized source/implementation comparison: `[local evidence not preserved]`.
 - State: three preview Gifts flipped to their backs; five stored Traces visible.
 - Full-view comparison: the source and implementation were normalized around
   the Gift-card region. A focused measurement pass verified the separate star,
@@ -86,16 +91,16 @@ Linear, commit and push remain unchanged pending user review.
 ## Source and implementation evidence
 
 - Source visual truth: user-provided defect capture
-  `/var/folders/bp/pzbghfvd7pjg61djny2r6sg80000gn/T/TemporaryItems/NSIRD_screencaptureui_rzJElC/Снимок экрана — 2026-08-13 в 18.17.36.png`
+  `[local evidence not preserved]`
   (`998 × 1144px`).
 - Browser-rendered implementation:
-  `/tmp/wyrd-yuk145-history-sheet-393x852.png`, captured at `393 × 852` CSS
+  `[local evidence not preserved]`, captured at `393 × 852` CSS
   pixels and DPR `1`.
 - Short-height implementation:
-  `/tmp/wyrd-yuk145-history-sheet-500x572.png`, captured at `500 × 572` CSS
+  `[local evidence not preserved]`, captured at `500 × 572` CSS
   pixels and DPR `1`.
 - Normalized same-input comparison:
-  `/tmp/wyrd-yuk145-dqa/side-by-side.png` (`999 × 572px`). The source was
+  `[local evidence not preserved]` (`999 × 572px`). The source was
   proportionally normalized to `499 × 572px`; the implementation uses the
   equivalent `500 × 572px` CSS viewport. Both panels are shown together at
   equal height and DPR `1`.
@@ -271,8 +276,8 @@ Kit, Linear evidence, commit and push remain unchanged pending user review.
   Settings screen, normalized to `507 × 651` CSS pixels.
 - Implementation: browser-rendered `507 × 651` capture of the corrected screen
   in the same state and density-normalized viewport.
-- Full-view comparison: `/tmp/yuk140-settings-header-comparison-v2.jpg`.
-- Focused mobile evidence: `/tmp/yuk140-settings-header-393x852-viewport.jpg`.
+- Full-view comparison: `[local evidence not preserved]`.
+- Focused mobile evidence: `[local evidence not preserved]`.
 
 The side-by-side comparison confirms that the previous centered hero title is
 gone. Back and the title now share the same top navigation band; the list keeps
@@ -411,7 +416,7 @@ unchanged.
 
 ## Visual evidence
 
-- Implementation screenshot: `/tmp/yuk139-cover-motion-wide.jpg`
+- Implementation screenshot: `[local evidence not preserved]`
 - State: resting Cover invitation after the initial reveal has settled.
 - The result reads as a taller ritual control rather than a flattened banner;
   its width and Moon → WYRD → invitation hierarchy remain unchanged.
@@ -460,12 +465,12 @@ Linear, and all other runtime screens are intentionally unchanged.
 ## Comparison evidence
 
 - Source visual truth:
-  `/var/folders/bp/pzbghfvd7pjg61djny2r6sg80000gn/T/TemporaryItems/NSIRD_screencaptureui_dfLSxB/Снимок экрана — 2026-08-04 в 14.17.38.png`
+  `[local evidence not preserved]`
 - Source pixels: `1008 × 1398` at Retina density; normalized to
   `504 × 699` CSS pixels for comparison.
-- Implementation screenshot: `/tmp/yuk139-cover-proportion-504x699-crop.jpg`
+- Implementation screenshot: `[local evidence not preserved]`
 - Implementation pixels/CSS viewport: `504 × 699`, density-normalized.
-- Full-view comparison: `/tmp/yuk139-cover-proportion-before-after.jpg`
+- Full-view comparison: `[local evidence not preserved]`
 - State: resting Cover invitation after the initial reveal has settled.
 
 The full view is sufficient for the reviewed change because the complete Hero
@@ -572,9 +577,9 @@ visual approval.
 
 ## Visual comparison evidence
 
-- Source invitation capture: `/tmp/yuk139-action-audit/01-source-hero-invitation.png`
-- WYRD Cover implementation: `/tmp/yuk139-cover-implementation.png`
-- Side-by-side comparison: `/tmp/yuk139-cover-source-comparison.jpg`
+- Source invitation capture: `[local evidence not preserved]`
+- WYRD Cover implementation: `[local evidence not preserved]`
+- Side-by-side comparison: `[local evidence not preserved]`
 
 The comparison confirms that the runtime keeps WYRD's own ornament artwork and
 Cover composition while restoring the source interaction language. It does not
@@ -876,10 +881,10 @@ five-card screen remains outside this local review slice.
 ## Combined visual evidence
 
 - Canonical source: the live Kit `Quiet` card at a `393 × 852` CSS viewport,
-  captured locally as `/tmp/yuk139-kit-quiet-393.png`.
+  captured locally as `[local evidence not preserved]`.
 - Runtime implementation: the three-card screen at the same `393 × 852` CSS
-  viewport, captured locally as `/tmp/yuk139-spread3-viewport-393.png`.
-- Side-by-side inspection: `/tmp/yuk139-spread3-comparison.png`.
+  viewport, captured locally as `[local evidence not preserved]`.
+- Side-by-side inspection: `[local evidence not preserved]`.
 
 The comparison confirms the same authored 3:4 artwork, unfiltered warm card
 surface, `192px` Quiet width, `1px` quiet silver material edge, contact shadow,
@@ -1462,13 +1467,13 @@ final result: passed
 # YUK-145 Trace and Gift hierarchy corrective — local design QA
 
 - Source visual truth:
-  - `/var/folders/bp/pzbghfvd7pjg61djny2r6sg80000gn/T/TemporaryItems/NSIRD_screencaptureui_JIzNrr/Снимок экрана — 2026-08-13 в 14.20.13.png`
-  - `/var/folders/bp/pzbghfvd7pjg61djny2r6sg80000gn/T/TemporaryItems/NSIRD_screencaptureui_LA6jyr/Снимок экрана — 2026-08-13 в 14.20.25.png`
+  - `[local evidence not preserved]`
+  - `[local evidence not preserved]`
 - Implementation: `http://127.0.0.1:4174/?previewGift=moon,free,ammonite&v=silver-20260813-yuk145-trace-gift-hierarchy-preview`
 - Implementation screenshots:
-  - `/tmp/wyrd-yuk145-full-final.png`
-  - `/tmp/wyrd-yuk145-trace-implementation.png`
-  - `/tmp/wyrd-yuk145-gift-back-implementation.png`
+  - `[local evidence not preserved]`
+  - `[local evidence not preserved]`
+  - `[local evidence not preserved]`
 - State: Traces catalog, three preview Gifts, flipped Gift `Вольная`, open Trace detail sheet.
 - Viewports: 320×852, 360×852, 375×852, 393×852, 430×852, 768×1024; DPR 1.
 - Source pixels: Trace 306×498; Gift back 440×576. Focused implementation pixels at 393 CSS px / DPR 1: Trace 112×203; Gift back 157×210. Comparisons use equivalent component crops rather than asserting equal source density.

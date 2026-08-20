@@ -17,8 +17,8 @@
 
 Этот документ не заменяет:
 - [LORE_CANON_RULES.md](LORE_CANON_RULES.md)
-- [SPREAD_MODEL.md](/Users/marinamart/Desktop/Oracle_dev/docs/SPREAD_MODEL.md)
-- [ORACLE_VOICE_GUIDE.md](/Users/marinamart/Desktop/Oracle_dev/docs/ORACLE_VOICE_GUIDE.md)
+- [SPREAD_MODEL.md](./SPREAD_MODEL.md)
+- [ORACLE_VOICE_GUIDE.md](./ORACLE_VOICE_GUIDE.md)
 
 Он задаёт именно **правила интерпретации**, а не только стиль текста.
 
@@ -102,7 +102,7 @@
 - `shadow`
 - или напряжение между ними
 
-Подробная модель позиций описана в [SPREAD_MODEL.md](/Users/marinamart/Desktop/Oracle_dev/docs/SPREAD_MODEL.md).
+Подробная модель позиций описана в [SPREAD_MODEL.md](./SPREAD_MODEL.md).
 Ниже зафиксировано, как это влияет именно на `Oracle Voice`.
 
 ---

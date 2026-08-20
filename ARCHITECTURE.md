@@ -81,10 +81,13 @@
             ├── notification-center.js # краткие системные подтверждения
             ├── render.js         # рендеринг DOM
             └── scenes.js         # канонический список сцен приложения
-├── docs/
-│   └── REFINEMENT_BASELINE.md    # baseline поведения и regression checklist
+├── docs/                         # активные продуктовые и технические контракты
+│   ├── README.md                 # индекс и правила актуальности
+│   ├── REFINEMENT_BASELINE.md    # baseline поведения и regression checklist
+│   └── TRACES_AND_GIFTS_MODEL.md # инварианты Следов и Даров
 └── archive/
-    └── ...                       # архивные прототипы, не участвующие в production
+    ├── docs/                     # исторические аудиты, QA и legacy-ТЗ
+    └── ...                       # архивные прототипы и brand-источники вне production
 ```
 
 ---

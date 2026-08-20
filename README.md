@@ -19,6 +19,7 @@
 - `docs/ROADMAP.md` — план развития
 - `docs/FEATURES.md` — текущие и будущие функции
 - `docs/CONTENT_MODEL.md` — модель контента
+- `docs/TRACES_AND_GIFTS_MODEL.md` — доменные правила Следов и Даров
 - `docs/ADR.md` — журнал архитектурных решений
 - `docs/WORKFLOW_WITH_CODEX.md` — правила совместной работы с Codex
 
@@ -29,7 +30,7 @@
 - `assets/css/tokens.css`, `assets/css/base.css` — токены и базовый слой
 - `assets/css/scenes/` — стили по сценам
 - `assets/css/components/` — компонентные стили
-- `archive/` — архивные прототипы и старые reference-артефакты, не участвующие в production
+- `archive/` — архивные прототипы, исторические аудиты, legacy-ТЗ и старые reference-артефакты, не участвующие в production
 - `assets/js/main.js` — тонкий entrypoint приложения
 - `assets/js/data/cards.js` — канонический источник данных карт
 - `assets/js/state/storage.js` — загрузка, сохранение и нормализация состояния

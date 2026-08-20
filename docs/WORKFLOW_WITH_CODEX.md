@@ -23,24 +23,25 @@ Codex должен опираться не только на код, но и н�
 
 ### Быстрый вход в контекст
 
-1. [README.md](/Users/marinamart/Desktop/Oracle_dev/README.md)
-2. [docs/README.md](/Users/marinamart/Desktop/Oracle_dev/docs/README.md)
-3. [docs/PROJECT_BRIEF.md](/Users/marinamart/Desktop/Oracle_dev/docs/PROJECT_BRIEF.md)
+1. [README.md](../README.md)
+2. [docs/README.md](./README.md)
+3. [docs/PROJECT_BRIEF.md](./PROJECT_BRIEF.md)
 
 ### Для продуктовых задач
 
-1. [docs/ROADMAP.md](/Users/marinamart/Desktop/Oracle_dev/docs/ROADMAP.md)
-2. [docs/FEATURES.md](/Users/marinamart/Desktop/Oracle_dev/docs/FEATURES.md)
-3. [docs/CONTENT_MODEL.md](/Users/marinamart/Desktop/Oracle_dev/docs/CONTENT_MODEL.md)
-4. [docs/WYRD_UI_RULES.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_UI_RULES.md) — если задача касается интерфейса, анимации, мобильного UX, раскладов или Голоса Оракула
-5. [docs/SPREAD_MODEL.md](/Users/marinamart/Desktop/Oracle_dev/docs/SPREAD_MODEL.md) — если задача касается раскладов, позиций карт, layer, spread logic или Голоса Оракула
-6. [docs/ORACLE_VOICE_RULES.md](/Users/marinamart/Desktop/Oracle_dev/docs/ORACLE_VOICE_RULES.md) — если задача касается Голоса Оракула, `message`, `shadow`, логики синтеза расклада или будущего `LLM`-промпта
-7. [docs/WYRD_MASTER_CARD_STYLE.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_MASTER_CARD_STYLE.md) — если задача касается генерации, замены, нормализации, фона, формата или визуального стиля карт
+1. [docs/ROADMAP.md](./ROADMAP.md)
+2. [docs/FEATURES.md](./FEATURES.md)
+3. [docs/CONTENT_MODEL.md](./CONTENT_MODEL.md)
+4. [docs/WYRD_UI_RULES.md](./WYRD_UI_RULES.md) — если задача касается интерфейса, анимации, мобильного UX, раскладов или Голоса Оракула
+5. [docs/SPREAD_MODEL.md](./SPREAD_MODEL.md) — если задача касается раскладов, позиций карт, layer, spread logic или Голоса Оракула
+6. [docs/ORACLE_VOICE_RULES.md](./ORACLE_VOICE_RULES.md) — если задача касается Голоса Оракула, `message`, `shadow`, логики синтеза расклада или будущего `LLM`-промпта
+7. [docs/WYRD_MASTER_CARD_STYLE.md](./WYRD_MASTER_CARD_STYLE.md) — если задача касается генерации, замены, нормализации, фона, формата или визуального стиля карт
+8. [docs/TRACES_AND_GIFTS_MODEL.md](./TRACES_AND_GIFTS_MODEL.md) — если задача касается локального дня, Следов, истории или Даров
 
 ### Для технических задач
 
-1. [ARCHITECTURE.md](/Users/marinamart/Desktop/Oracle_dev/ARCHITECTURE.md)
-2. [docs/ADR.md](/Users/marinamart/Desktop/Oracle_dev/docs/ADR.md)
+1. [ARCHITECTURE.md](../ARCHITECTURE.md)
+2. [docs/ADR.md](./ADR.md)
 
 ### Для silver migration каждого экрана
 
@@ -106,10 +107,10 @@ Silver UI Kit используется как исполняемый контр�
 
 ## Минимальный набор документов, который нужно держать актуальным
 
-- [ARCHITECTURE.md](/Users/marinamart/Desktop/Oracle_dev/ARCHITECTURE.md)
-- [docs/ROADMAP.md](/Users/marinamart/Desktop/Oracle_dev/docs/ROADMAP.md)
-- [docs/FEATURES.md](/Users/marinamart/Desktop/Oracle_dev/docs/FEATURES.md)
-- [docs/ADR.md](/Users/marinamart/Desktop/Oracle_dev/docs/ADR.md)
+- [ARCHITECTURE.md](../ARCHITECTURE.md)
+- [docs/ROADMAP.md](./ROADMAP.md)
+- [docs/FEATURES.md](./FEATURES.md)
+- [docs/ADR.md](./ADR.md)
 
 ---
 
@@ -123,7 +124,7 @@ Silver UI Kit используется как исполняемый контр�
 6. Проверяем deploy и публикуем completion report в Linear
 7. Создаём follow-ups, обновляем зависимости и только затем переводим задачу в `Done`
 
-Канонический процесс и репозиторные шаблоны: [DEFINITION_OF_READY_DONE.md](/Users/marinamart/Desktop/Oracle_dev/docs/DEFINITION_OF_READY_DONE.md).
+Канонический процесс и репозиторные шаблоны: [DEFINITION_OF_READY_DONE.md](./DEFINITION_OF_READY_DONE.md).
 
 ---
 
@@ -134,7 +135,7 @@ Silver UI Kit используется как исполняемый контр�
 Перед началом правок Codex обязан:
 
 1. Проверить `git status --short --branch`.
-2. Убедиться, что рабочая папка `/Users/marinamart/Desktop/Oracle_dev` находится на `main`.
+2. Убедиться, что репозиторий открыт из его корня и находится на `main`.
 3. Проверить, что есть связанная Linear-задача; если её нет, создать задачу до начала правок.
 4. Не мержить старые `codex/*` ветки в `main` без отдельного явного подтверждения пользователя.
 5. Для silver migration выполнить preflight из
@@ -143,7 +144,7 @@ Silver UI Kit используется как исполняемый контр�
 
 После завершения каждой законченной правки Codex обязан:
 
-1. Прогнать релевантные проверки из [RELEASE_CHECKLIST.md](/Users/marinamart/Desktop/Oracle_dev/docs/RELEASE_CHECKLIST.md).
+1. Прогнать релевантные проверки из [RELEASE_CHECKLIST.md](./RELEASE_CHECKLIST.md).
 2. Сделать коммит в `main`.
 3. Запушить `main` в GitHub.
 4. Обновить Linear-задачу итогом, ссылкой на коммит, проверками и остаточными рисками.
@@ -175,10 +176,10 @@ Silver UI Kit используется как исполняемый контр�
 - стараться не ломать текущую архитектуру без причины
 - если изменение заметное, обновлять документацию вместе с кодом
 - опираться на этот документ как на рабочее соглашение
-- для UI, motion и раскладов дополнительно сверяться с [docs/WYRD_UI_RULES.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_UI_RULES.md)
-- для моделей чтения и логики расклада дополнительно сверяться с [docs/SPREAD_MODEL.md](/Users/marinamart/Desktop/Oracle_dev/docs/SPREAD_MODEL.md)
-- для Голоса Оракула дополнительно сверяться с [docs/ORACLE_VOICE_RULES.md](/Users/marinamart/Desktop/Oracle_dev/docs/ORACLE_VOICE_RULES.md)
-- для работы с изображениями карт дополнительно сверяться с [docs/WYRD_MASTER_CARD_STYLE.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_MASTER_CARD_STYLE.md); визуальная сила карты важнее механической одинаковости фона, масштаба и кропа
+- для UI, motion и раскладов дополнительно сверяться с [docs/WYRD_UI_RULES.md](./WYRD_UI_RULES.md)
+- для моделей чтения и логики расклада дополнительно сверяться с [docs/SPREAD_MODEL.md](./SPREAD_MODEL.md)
+- для Голоса Оракула дополнительно сверяться с [docs/ORACLE_VOICE_RULES.md](./ORACLE_VOICE_RULES.md)
+- для работы с изображениями карт дополнительно сверяться с [docs/WYRD_MASTER_CARD_STYLE.md](./WYRD_MASTER_CARD_STYLE.md); визуальная сила карты важнее механической одинаковости фона, масштаба и кропа
 
 ---
 
@@ -214,7 +215,7 @@ Silver UI Kit используется как исполняемый контр�
 
 ### 2026-06-06
 
-- добавлен отдельный источник правил для арт-дирекшена и обработки изображений карт: [docs/WYRD_MASTER_CARD_STYLE.md](/Users/marinamart/Desktop/Oracle_dev/docs/WYRD_MASTER_CARD_STYLE.md)
+- добавлен отдельный источник правил для арт-дирекшена и обработки изображений карт: [docs/WYRD_MASTER_CARD_STYLE.md](./WYRD_MASTER_CARD_STYLE.md)
 
 ### 2026-07-03
 

@@ -94,7 +94,7 @@
 
 Главным архитектурным источником истины по текущей структуре считается:
 
-- [../ARCHITECTURE.md](/Users/marinamart/Desktop/Oracle_dev/ARCHITECTURE.md)
+- [../ARCHITECTURE.md](../ARCHITECTURE.md)
 
 ### Последствия
 

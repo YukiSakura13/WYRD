@@ -1,5 +1,10 @@
 # WYRD UI Kit release 10 — design audit
 
+> [!WARNING]
+> Исторический аудит superseded-релиза. Текущий исполняемый контракт —
+> [`docs/wyrd-ui-kit.html`](../../../../docs/wyrd-ui-kit.html) и связанные
+> Silver Foundations; этот пакет сохраняется только как evidence.
+
 Date: 2026-07-22
 Source: `https://runic-frame-kit-cr8v-2026.alexandername.chatgpt.site/?release=10-natural-magnet`
 

@@ -1,5 +1,11 @@
 # ТЗ: Редизайн экрана результата (одна карта)
 
+> [!WARNING]
+> Архивная gold-era спецификация. Текущими источниками являются
+> [`WYRD_UI_FOUNDATIONS.md`](../../../docs/WYRD_UI_FOUNDATIONS.md),
+> [`WYRD_UI_COMPONENT_MAPPING.md`](../../../docs/WYRD_UI_COMPONENT_MAPPING.md)
+> и живой Silver UI Kit. Не использовать этот файл для нового UI.
+
 ## Контекст
 
 Это полное описание нового экрана результата после получения одной карты.
