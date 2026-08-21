@@ -2,9 +2,17 @@ import { SCENES } from "./scenes.js";
 import { CARDS } from "../data/cards.js";
 import { AVATAR_OPTIONS, PRONOUN_OPTIONS, ZODIAC_OPTIONS } from "../data/personalization.js";
 import { SPIRIT_BOOK_PAGES } from "../data/spirit-book.js";
+import { LUNAR_DAY_READINGS } from "../data/lunar-days.js";
 import { createSpreadRenderer } from "./render-spread.js";
 import { getCardImage } from "./render-helpers.js";
-import { createMoonIcon, formatFullTraceDate, getMoonPhase } from "./moon.js";
+import {
+  createLunarPhaseImage,
+  createMoonIcon,
+  formatFullTraceDate,
+  getLunarDayPhaseLabel,
+  getLunarDayState,
+  getMoonPhase,
+} from "./moon.js";
 import { primeShareCard } from "./share.js";
 import { getDialogController } from "./dialog-controller.js";
 
@@ -25,6 +33,14 @@ export function getElements(doc = document) {
     forestPlaceholderKicker: doc.getElementById("forest-placeholder-kicker"),
     forestPlaceholderTitle: doc.getElementById("forest-placeholder-title"),
     forestPlaceholderCopy: doc.getElementById("forest-placeholder-copy"),
+    lunarDaySection: doc.getElementById("lunar-day-screen"),
+    lunarDayMoon: doc.getElementById("lunar-day-moon"),
+    lunarDayDate: doc.getElementById("lunar-day-date"),
+    lunarDayPhase: doc.getElementById("lunar-day-phase"),
+    lunarDayNumber: doc.getElementById("lunar-day-number"),
+    lunarDayReading: doc.getElementById("lunar-day-reading"),
+    lunarDayEasyList: doc.getElementById("lunar-day-easy-list"),
+    lunarDayWaitList: doc.getElementById("lunar-day-wait-list"),
     settingsSection: doc.getElementById("settings-screen"),
     remindersSection: doc.getElementById("reminders-screen"),
     appInfoSection: doc.getElementById("app-info-screen"),
@@ -157,11 +173,6 @@ export function createRenderer(elements) {
     { x: 78, y: 89 },
   ];
   const forestPlaceholderContent = {
-    [SCENES.LUNAR_DAY]: {
-      kicker: "Лунный день",
-      title: "День глазами духов леса",
-      copy: "Здесь появится полный текст лунного дня и тихий знак текущей Луны.",
-    },
     [SCENES.YES_NO]: {
       kicker: "Нет или Да",
       title: "Короткий ответ духов",
@@ -178,6 +189,7 @@ export function createRenderer(elements) {
     renderShell(uiState);
     renderForestAvatar(state);
     renderForestPlaceholder(uiState);
+    renderLunarDay();
     renderSettings(state, uiState);
     renderAboutYou(state, uiState);
     renderReminders(state, uiState);
@@ -199,7 +211,7 @@ export function createRenderer(elements) {
   function scrollTo(name) {
     const targetMap = {
       forest: elements.forestSection,
-      "lunar-day": elements.forestPlaceholder,
+      "lunar-day": elements.lunarDaySection,
       "yes-no": elements.forestPlaceholder,
       "night-images": elements.forestPlaceholder,
       settings: elements.settingsSection,
@@ -274,6 +286,25 @@ export function createRenderer(elements) {
     elements.forestPlaceholderKicker.textContent = content.kicker;
     elements.forestPlaceholderTitle.textContent = content.title;
     elements.forestPlaceholderCopy.textContent = content.copy;
+  }
+
+  function renderLunarDay(date = new Date()) {
+    if (!elements.lunarDaySection || !elements.lunarDayMoon) {
+      return;
+    }
+
+    const lunar = getLunarDayState(date);
+    const reading = LUNAR_DAY_READINGS[lunar.day - 1] || LUNAR_DAY_READINGS[0];
+
+    elements.lunarDayMoon.dataset.phase = lunar.phase.type;
+    elements.lunarDayMoon.replaceChildren(createLunarPhaseImage(lunar.phase.type));
+    elements.lunarDayDate.textContent = formatFullTraceDate(lunar.reference);
+    elements.lunarDayDate.dateTime = lunar.dateKey;
+    elements.lunarDayPhase.textContent = getLunarDayPhaseLabel(lunar.phase.type);
+    elements.lunarDayNumber.textContent = `${lunar.day}-й лунный день`;
+    renderLunarReading(elements.lunarDayReading, reading.text);
+    renderLunarGuidanceList(elements.lunarDayEasyList, reading.easy);
+    renderLunarGuidanceList(elements.lunarDayWaitList, reading.wait);
   }
 
   function renderTraces(state) {
@@ -1451,7 +1482,8 @@ export function createRenderer(elements) {
     const isOnboarding = scene === SCENES.ONBOARDING;
 
     elements.forestSection.hidden = scene !== SCENES.FOREST;
-    elements.forestPlaceholder.hidden = ![SCENES.LUNAR_DAY, SCENES.YES_NO, SCENES.NIGHT_IMAGES].includes(scene);
+    elements.lunarDaySection.hidden = scene !== SCENES.LUNAR_DAY;
+    elements.forestPlaceholder.hidden = ![SCENES.YES_NO, SCENES.NIGHT_IMAGES].includes(scene);
     elements.settingsSection.hidden = scene !== SCENES.SETTINGS;
     elements.aboutYouSection.hidden = scene !== SCENES.ABOUT_YOU;
     elements.remindersSection.hidden = scene !== SCENES.REMINDERS;
@@ -1463,6 +1495,37 @@ export function createRenderer(elements) {
     elements.deckWrap.hidden = scene !== SCENES.DECK;
     elements.resultSection.hidden = scene !== SCENES.RESULT;
     elements.spreadResultSection.hidden = scene !== SCENES.SPREAD;
+  }
+
+  function renderLunarGuidanceList(list, items) {
+    if (!list) {
+      return;
+    }
+
+    const fragment = document.createDocumentFragment();
+    items.forEach(function appendLunarGuidance(item) {
+      const listItem = document.createElement("li");
+      listItem.textContent = item;
+      fragment.append(listItem);
+    });
+    list.replaceChildren(fragment);
+  }
+
+  function renderLunarReading(container, text) {
+    if (!container) {
+      return;
+    }
+
+    const sentences = text.match(/[^.!?]+[.!?]+(?:\s|$)/g)?.map((sentence) => sentence.trim()) || [text];
+    const fragment = document.createDocumentFragment();
+
+    sentences.forEach(function appendLunarSentence(sentence) {
+      const paragraph = document.createElement("p");
+      paragraph.textContent = sentence;
+      fragment.append(paragraph);
+    });
+
+    container.replaceChildren(fragment);
   }
 
   function resetReadingReveal() {

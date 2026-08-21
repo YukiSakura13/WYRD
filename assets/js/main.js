@@ -168,6 +168,12 @@ document.addEventListener(
   }),
 );
 
+document.addEventListener("visibilitychange", function refreshLunarDayAfterReturn() {
+  if (!document.hidden && uiState.activeScene === SCENES.LUNAR_DAY) {
+    renderApp();
+  }
+});
+
 if (uiState.activeScene !== SCENES.COVER) {
   setScene(uiState.activeScene);
 } else {

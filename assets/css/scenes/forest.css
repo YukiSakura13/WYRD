@@ -108,7 +108,7 @@ body[data-scene="night-images"] .footer {
     linear-gradient(180deg, #050608 0%, #030407 58%, #020305 100%);
 }
 
-body[data-scene="forest"] .forest-atmosphere {
+body:is([data-scene="forest"], [data-scene="lunar-day"]) .forest-atmosphere {
   display: block;
 }
 
@@ -182,6 +182,61 @@ body[data-scene="forest"] .forest-atmosphere {
 .forest-atmosphere__glints i:nth-child(8) { left: 81%; top: 94%; --star-size: 2px; --star-duration: 11.4s; --star-delay: -7.1s; }
 .forest-atmosphere__glints i:nth-child(9) { left: 68%; top: 14%; --star-size: 1.4px; --star-duration: 7.6s; --star-delay: -3.8s; }
 .forest-atmosphere__glints i:nth-child(10) { left: 32%; top: 82%; --star-size: 1.8px; --star-duration: 9.8s; --star-delay: -5.1s; }
+
+.forest-atmosphere__lunar-comets {
+  display: none;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+body[data-scene="lunar-day"] .forest-atmosphere__lunar-comets {
+  display: block;
+}
+
+.forest-atmosphere__lunar-comet {
+  --comet-tail: 48px;
+  position: absolute;
+  width: var(--comet-tail);
+  height: 1px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent 0%, rgba(218, 223, 228, 0.08) 30%, rgba(238, 241, 243, 0.3) 100%);
+  filter: drop-shadow(0 0 3px rgba(215, 223, 232, 0.16));
+  opacity: 0;
+  transform: rotate(-24deg) translate3d(0, 0, 0);
+  transform-origin: 100% 50%;
+  will-change: opacity, transform;
+  animation: wyrdLunarComet 32s linear infinite;
+}
+
+.forest-atmosphere__lunar-comet::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -1px;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: rgba(242, 244, 244, 0.72);
+  box-shadow: 0 0 6px rgba(220, 228, 234, 0.34);
+  transform: translateY(-50%);
+}
+
+.forest-atmosphere__lunar-comet--one {
+  --comet-tail: 44px;
+  top: 18%;
+  left: 72%;
+  animation-delay: 2.8s;
+}
+
+.forest-atmosphere__lunar-comet--two {
+  --comet-tail: 54px;
+  top: 38%;
+  left: 10%;
+  transform: rotate(-18deg) translate3d(0, 0, 0);
+  animation-delay: 18.2s;
+}
 
 .forest-shell {
   position: relative;
@@ -817,6 +872,33 @@ body[data-scene="forest"] .forest-atmosphere {
 
   76% {
     opacity: 0.28;
+  }
+}
+
+@keyframes wyrdLunarComet {
+  0%,
+  100% {
+    opacity: 0;
+    translate: 0 0;
+  }
+
+  0.65% {
+    opacity: 0;
+  }
+
+  1.45% {
+    opacity: 0.3;
+  }
+
+  3.65% {
+    opacity: 0;
+    translate: 72px 34px;
+  }
+
+  3.66%,
+  99.99% {
+    opacity: 0;
+    translate: 72px 34px;
   }
 }
 

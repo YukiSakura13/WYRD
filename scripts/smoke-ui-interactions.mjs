@@ -9,7 +9,12 @@ import {
   getNotificationPolicy,
   getNotificationSemantics,
 } from "../assets/js/ui/notification-center.js";
-import { formatFullTraceDate } from "../assets/js/ui/moon.js";
+import {
+  formatFullTraceDate,
+  getLunarDayPhaseLabel,
+  getLunarDayState,
+} from "../assets/js/ui/moon.js";
+import { LUNAR_DAY_READINGS } from "../assets/js/data/lunar-days.js";
 import {
   acceptSpiritBookNavigation,
   SPIRIT_BOOK_NAVIGATION_LOCK_MS,
@@ -157,6 +162,69 @@ const [
 const spreadProfileCss = await readFile(
   new URL("../assets/css/components/spread-profile.css", import.meta.url),
   "utf8",
+);
+const lunarDayCss = await readFile(
+  new URL("../assets/css/scenes/lunar-day.css", import.meta.url),
+  "utf8",
+);
+
+assert.equal(LUNAR_DAY_READINGS.length, 30, "Lunar Day must ship all 30 editorial states");
+LUNAR_DAY_READINGS.forEach(function validateLunarDayReading(reading, index) {
+  assert.equal(reading.day, index + 1, "Lunar Day entries must stay sequential");
+  assert.equal(reading.easy.length, 3, `Lunar Day ${reading.day} must expose three easy anchors`);
+  assert.equal(reading.wait.length, 3, `Lunar Day ${reading.day} must expose three wait anchors`);
+  assert.equal(
+    reading.text.match(/[.!?](?:\s|$)/g)?.length,
+    3,
+    `Lunar Day ${reading.day} must keep the approved three-sentence structure`,
+  );
+});
+
+const lunarMorning = getLunarDayState(new Date(2026, 7, 21, 1, 0));
+const lunarEvening = getLunarDayState(new Date(2026, 7, 21, 23, 0));
+assert.equal(lunarMorning.day, lunarEvening.day, "Lunar Day must remain stable for the local calendar date");
+assert.equal(lunarMorning.dateKey, "2026-08-21", "Lunar Day must use the local date key");
+assert.equal(getLunarDayPhaseLabel("fq"), "растущая луна", "Lunar Day must use the approved public waxing label");
+assert.equal(getLunarDayPhaseLabel("lq"), "убывающая луна", "Lunar Day must use the approved public waning label");
+
+const lunarScreenMarkup = runtimeHtml.match(/<section class="lunar-day-screen[\s\S]*?<\/section>\s*<section class="forest-placeholder"/)?.[0] || "";
+assert.match(lunarScreenMarkup, /<h1[^>]*>Лунный день<\/h1>/, "Lunar Day must expose its own App Header heading");
+assert.doesNotMatch(lunarScreenMarkup, /wyrd-brand/, "Lunar Day must not repeat the Cover or Forest brand lockup");
+assert.match(lunarScreenMarkup, /data-action="ask-spirits"/, "Lunar Day must end with the Deck transition");
+assert.doesNotMatch(
+  lunarScreenMarkup,
+  /Духи леса смотрят на луну|lunar-day-cycle/,
+  "Lunar Day must not restore the rejected invocation and cycle copy block",
+);
+assert.match(
+  runtimeRender,
+  /elements\.lunarDayMoon\.replaceChildren\(createLunarPhaseImage\(lunar\.phase\.type\)\)/,
+  "Lunar Day must render the approved dimensional phase asset",
+);
+assert.equal(
+  (runtimeMoon.match(/moon-(?:new|waxing-crescent|first-quarter|waxing-gibbous|full|waning-gibbous|last-quarter|waning-crescent)\.webp/g) || []).length,
+  8,
+  "Lunar Day must retain eight distinct phase assets",
+);
+assert.match(
+  runtimeActions,
+  /action === "new-question" \|\| action === "ask-spirits"[\s\S]*?questionEl\.focus\(\)/,
+  "Lunar Day Ask Spirits must reuse the fresh Deck route and focus the question field",
+);
+assert.match(
+  runtimeRender,
+  /elements\.lunarDaySection\.hidden = scene !== SCENES\.LUNAR_DAY;[\s\S]*?elements\.forestPlaceholder\.hidden = !\[SCENES\.YES_NO, SCENES\.NIGHT_IMAGES\]/,
+  "Lunar Day must be a dedicated scene rather than the shared placeholder",
+);
+assert.match(
+  lunarDayCss,
+  /\.lunar-day-action\.reading-new-question-link\s*\{[\s\S]*?text-decoration-color:\s*currentColor;/,
+  "Lunar Day quiet action must keep its underline visible at rest",
+);
+assert.match(
+  lunarDayCss,
+  /@media \(forced-colors: active\)[\s\S]*?\.lunar-day-action\.reading-new-question-link/,
+  "Lunar Day must retain a visible action in forced colors",
 );
 
 assert.doesNotMatch(

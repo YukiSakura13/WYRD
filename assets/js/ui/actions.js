@@ -62,17 +62,17 @@ export function createActionHandler(deps) {
     }
 
     if (action === "open-lunar-day") {
-      openForestPlaceholder(SCENES.LUNAR_DAY, { audio, renderer, setScene, store, runTransition });
+      openForestPath(SCENES.LUNAR_DAY, { audio, renderer, setScene, store, runTransition });
       return;
     }
 
     if (action === "open-yes-no") {
-      openForestPlaceholder(SCENES.YES_NO, { audio, renderer, setScene, store, runTransition });
+      openForestPath(SCENES.YES_NO, { audio, renderer, setScene, store, runTransition });
       return;
     }
 
     if (action === "open-night-images") {
-      openForestPlaceholder(SCENES.NIGHT_IMAGES, { audio, renderer, setScene, store, runTransition });
+      openForestPath(SCENES.NIGHT_IMAGES, { audio, renderer, setScene, store, runTransition });
       return;
     }
 
@@ -589,7 +589,7 @@ export function createActionHandler(deps) {
       return;
     }
 
-    if (action === "new-question") {
+    if (action === "new-question" || action === "ask-spirits") {
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function backToDeck() {
         uiState.currentQuestion = "";
@@ -768,11 +768,11 @@ function normalizeProfileSnapshot(profile = {}) {
   };
 }
 
-function openForestPlaceholder(scene, deps) {
+function openForestPath(scene, deps) {
   const { audio, renderer, setScene, store, runTransition } = deps;
 
   audio.playSelect(store.getState().soundEnabled);
-  runTransition(function openPlaceholder() {
+  runTransition(function openPath() {
     setScene(scene);
     audio.sync({ enabled: store.getState().soundEnabled, scene: SCENES.FOREST });
     renderer.scrollTo(scene);

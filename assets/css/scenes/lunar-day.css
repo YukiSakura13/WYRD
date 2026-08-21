@@ -1,0 +1,308 @@
+/* YUK-146 · Lunar Day local review candidate.
+   Uses approved Silver typography, Message rail and quiet action. */
+
+.lunar-day-screen[hidden] {
+  display: none !important;
+}
+
+.lunar-day-screen {
+  width: 100%;
+  min-height: 100svh;
+  color: var(--wyrd-text-secondary);
+  background: transparent;
+}
+
+.lunar-day-shell {
+  position: relative;
+  width: min(100%, 48rem);
+  min-height: 100svh;
+  margin-inline: auto;
+  padding:
+    max(1rem, calc(var(--layout-safe-top) + 0.5rem))
+    max(1rem, var(--layout-safe-inline-end))
+    max(2.5rem, calc(var(--layout-safe-bottom) + 2rem))
+    max(1rem, var(--layout-safe-inline-start));
+}
+
+.lunar-day-header.ui-app-header {
+  min-height: 4.5rem;
+  padding-inline: 4.25rem;
+}
+
+.lunar-day-header .ui-app-header__identity {
+  min-height: var(--control-icon-hit-size);
+  margin: 0;
+  color: var(--wyrd-text-heading);
+  display: grid;
+  place-items: center;
+  font-family: Forum, Georgia, serif;
+  font-size: 1.19rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.lunar-day-content {
+  width: min(100%, 34rem);
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.lunar-day-phase-mark {
+  margin-top: calc(clamp(0.5rem, 1.25svh, 0.75rem) - 0.9375rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  text-align: center;
+  animation: lunar-copy-enter 320ms var(--ease-out-strong) 160ms both;
+}
+
+.lunar-day-moon {
+  --lunar-reveal-start: inset(0 50% 0 50%);
+  width: clamp(7.5rem, 34vw, 10rem);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  filter: drop-shadow(0 0 0.9rem rgba(205, 209, 207, 0.12));
+  animation: lunar-moon-reveal 720ms var(--ease-out-strong) 80ms both;
+}
+
+.lunar-day-moon:is([data-phase="wc"], [data-phase="fq"], [data-phase="wg"]) {
+  --lunar-reveal-start: inset(0 0 0 100%);
+}
+
+.lunar-day-moon:is([data-phase="wag"], [data-phase="lq"], [data-phase="wac"]) {
+  --lunar-reveal-start: inset(0 100% 0 0);
+}
+
+.lunar-day-moon__image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  clip-path: circle(50% at 50% 50%);
+  -webkit-mask-image: radial-gradient(
+    circle at 50% 50%,
+    #000 0 47%,
+    rgba(0, 0, 0, 0.92) 48%,
+    transparent 50%
+  );
+  mask-image: radial-gradient(
+    circle at 50% 50%,
+    #000 0 47%,
+    rgba(0, 0, 0, 0.92) 48%,
+    transparent 50%
+  );
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.lunar-day-meta {
+  min-width: 0;
+  margin-top: 0.72rem;
+  text-align: center;
+}
+
+.lunar-day-phase,
+.lunar-day-calendar-line,
+.lunar-day-number {
+  margin: 0;
+}
+
+.lunar-day-phase {
+  color: rgba(220, 223, 220, 0.66);
+  font-family: Forum, Georgia, serif;
+  font-size: 0.98rem;
+  font-weight: 400;
+  letter-spacing: 0.055em;
+  line-height: 1.22;
+  text-wrap: balance;
+}
+
+.lunar-day-calendar-line {
+  margin-top: 0.35rem;
+  color: var(--wyrd-text-quiet);
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.32rem;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 0.95rem;
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.25;
+}
+
+.lunar-day-voice {
+  width: 100%;
+  margin-top: clamp(1.7rem, 5svh, 2.5rem);
+  padding: 0.15rem 0 0.4rem clamp(1rem, 4.8vw, 1.5rem);
+  border-left: 1px solid rgba(205, 209, 207, 0.26);
+  text-align: left;
+  animation: lunar-copy-enter 320ms var(--ease-out-strong) 300ms both;
+}
+
+.lunar-day-reading {
+  margin-top: 0;
+  color: rgba(224, 226, 224, 0.8);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(1rem, 3.9vw, 1.08rem);
+  font-weight: 400;
+  line-height: 1.58;
+  text-wrap: pretty;
+}
+
+.lunar-day-reading p {
+  margin: 0;
+}
+
+.lunar-day-reading p + p {
+  margin-top: 0.58rem;
+}
+
+/* Guidance stays in the same single editorial flow at every breakpoint.
+   It deliberately avoids columns, cards and vertical separators. */
+.lunar-day-guidance {
+  width: 100%;
+  margin: clamp(2.35rem, 6svh, 3.4rem) auto 0;
+  display: grid;
+  gap: clamp(1.65rem, 5svh, 2.25rem);
+  animation: lunar-copy-enter 320ms var(--ease-out-strong) 460ms both;
+}
+
+.lunar-day-guidance-group {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+}
+
+.lunar-day-guidance-group h2 {
+  margin: 0 0 0.62rem;
+  color: rgba(220, 223, 220, 0.72);
+  font-family: Forum, Georgia, serif;
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.085em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.lunar-day-guidance-group ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.38rem;
+}
+
+.lunar-day-guidance-group li {
+  margin: 0;
+  color: rgba(224, 226, 224, 0.84);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(1.08rem, 4.7vw, 1.24rem);
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.42;
+  text-wrap: pretty;
+}
+
+.lunar-day-action.reading-new-question-link {
+  margin-top: clamp(2.8rem, 7svh, 4.2rem);
+  padding-inline: 0.5rem;
+  color: rgba(239, 241, 238, 0.92);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(1.14rem, 4.8vw, 1.28rem);
+  font-weight: 600;
+  letter-spacing: 0.045em;
+  text-decoration-color: currentColor;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.32em;
+  animation: lunar-copy-enter 320ms var(--ease-out-strong) 580ms both;
+}
+
+@keyframes lunar-moon-reveal {
+  from {
+    clip-path: var(--lunar-reveal-start);
+    opacity: 0.18;
+    transform: translateY(3px);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes lunar-copy-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (min-width: 560px) {
+  .lunar-day-shell {
+    padding-inline: max(2rem, var(--layout-safe-inline-end));
+  }
+}
+
+@media (max-height: 620px) and (orientation: landscape) {
+  .lunar-day-header {
+    min-height: 5.25rem;
+  }
+
+  .lunar-day-phase-mark {
+    margin-top: -0.1875rem;
+  }
+
+  .lunar-day-voice {
+    margin-top: 1.5rem;
+  }
+}
+
+@media (forced-colors: active) {
+  .lunar-day-screen {
+    color: CanvasText;
+    background: Canvas;
+  }
+
+  .lunar-day-voice {
+    border-color: CanvasText;
+  }
+
+  .lunar-day-moon {
+    color: CanvasText;
+    filter: none;
+  }
+
+  .lunar-day-action.reading-new-question-link {
+    color: LinkText;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lunar-day-phase-mark,
+  .lunar-day-moon,
+  .lunar-day-voice,
+  .lunar-day-guidance,
+  .lunar-day-action.reading-new-question-link {
+    animation: none;
+  }
+
+  .lunar-day-moon {
+    clip-path: none;
+    filter: none;
+  }
+}

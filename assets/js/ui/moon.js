@@ -14,14 +14,35 @@ const FULL_MONTHS = [
   "ноября",
   "декабря",
 ];
+const KNOWN_NEW_MOON = new Date(Date.UTC(2000, 0, 6, 18, 14, 0));
+const MS_PER_DAY = 86400000;
+const LUNAR_CYCLE = 29.53058770576;
 let moonIconId = 0;
 
+const LUNAR_PHASE_ASSETS = Object.freeze({
+  nm: "./assets/images/lunar-phases/moon-new.webp",
+  wc: "./assets/images/lunar-phases/moon-waxing-crescent.webp",
+  fq: "./assets/images/lunar-phases/moon-first-quarter.webp",
+  wg: "./assets/images/lunar-phases/moon-waxing-gibbous.webp",
+  fm: "./assets/images/lunar-phases/moon-full.webp",
+  wag: "./assets/images/lunar-phases/moon-waning-gibbous.webp",
+  lq: "./assets/images/lunar-phases/moon-last-quarter.webp",
+  wac: "./assets/images/lunar-phases/moon-waning-crescent.webp",
+});
+
+const LUNAR_DAY_PHASE_LABELS = Object.freeze({
+  nm: "новолуние",
+  wc: "растущая луна",
+  fq: "растущая луна",
+  wg: "растущая луна",
+  fm: "полнолуние",
+  wag: "убывающая луна",
+  lq: "убывающая луна",
+  wac: "убывающая луна",
+});
+
 export function getMoonPhase(date) {
-  const knownNewMoon = new Date(Date.UTC(2000, 0, 6, 18, 14, 0));
-  const msPerDay = 86400000;
-  const lunarCycle = 29.53058770576;
-  const daysSince = (date - knownNewMoon) / msPerDay;
-  const phase = ((daysSince % lunarCycle) + lunarCycle) % lunarCycle;
+  const phase = getMoonAge(date);
 
   if (phase < 1.85) {
     return { name: "новолуние", type: "nm" };
@@ -48,12 +69,54 @@ export function getMoonPhase(date) {
   return { name: "убывающий серп", type: "wac" };
 }
 
+export function getLunarDayState(date = new Date()) {
+  const reference = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0, 0);
+  const age = getMoonAge(reference);
+  const day = Math.min(30, Math.floor(age) + 1);
+
+  return {
+    age,
+    dateKey: formatLocalDateKey(reference),
+    day,
+    phase: getMoonPhase(reference),
+    reference,
+  };
+}
+
+export function getLunarDayPhaseLabel(type) {
+  return LUNAR_DAY_PHASE_LABELS[type] || LUNAR_DAY_PHASE_LABELS.nm;
+}
+
+export function createLunarPhaseImage(type) {
+  const image = document.createElement("img");
+  image.className = "lunar-day-moon__image";
+  image.src = LUNAR_PHASE_ASSETS[type] || LUNAR_PHASE_ASSETS.nm;
+  image.alt = "";
+  image.width = 512;
+  image.height = 512;
+  image.decoding = "async";
+  image.draggable = false;
+  return image;
+}
+
 export function formatTraceDate(date) {
   return `${date.getDate()}\u00a0${COMPACT_MONTHS[date.getMonth()]}`;
 }
 
 export function formatFullTraceDate(date) {
   return `${date.getDate()}\u00a0${FULL_MONTHS[date.getMonth()]}`;
+}
+
+function getMoonAge(date) {
+  const daysSince = (date - KNOWN_NEW_MOON) / MS_PER_DAY;
+  return ((daysSince % LUNAR_CYCLE) + LUNAR_CYCLE) % LUNAR_CYCLE;
+}
+
+function formatLocalDateKey(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 export function createMoonIcon(type) {

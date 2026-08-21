@@ -194,6 +194,10 @@
         <span class="forest-atmosphere__glints">
           <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
         </span>
+        <span class="forest-atmosphere__lunar-comets">
+          <i class="forest-atmosphere__lunar-comet forest-atmosphere__lunar-comet--one"></i>
+          <i class="forest-atmosphere__lunar-comet forest-atmosphere__lunar-comet--two"></i>
+        </span>
       </div>
 
       <section class="forest-home" id="forest-home" hidden aria-labelledby="forest-title">
@@ -309,6 +313,56 @@
                 </span>
               </button>
             </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="lunar-day-screen ui-scene-shell" id="lunar-day-screen" hidden aria-labelledby="lunar-day-title">
+        <div class="lunar-day-shell">
+          <header class="lunar-day-header ui-app-header">
+            <button class="ui-icon-button ui-icon-button--back btn-back-circle lunar-day-back" data-action="back-to-forest" type="button" aria-label="Вернуться в Лес">
+              <svg class="ui-icon-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12H2M10 4l-8 8 8 8" /></svg>
+            </button>
+            <h1 class="ui-app-header__identity" id="lunar-day-title">Лунный день</h1>
+          </header>
+
+          <div class="lunar-day-content ui-scene-content--oracle">
+            <div class="lunar-day-phase-mark">
+              <div class="lunar-day-moon" id="lunar-day-moon" aria-hidden="true"></div>
+              <div class="lunar-day-meta" aria-label="Лунные данные на сегодня">
+                <p class="lunar-day-phase" id="lunar-day-phase">фаза луны</p>
+                <p class="lunar-day-calendar-line">
+                  <time id="lunar-day-date" datetime="">Сегодня</time>
+                  <span aria-hidden="true">·</span>
+                  <span class="lunar-day-number" id="lunar-day-number">Лунный день</span>
+                </p>
+              </div>
+            </div>
+
+            <section class="lunar-day-voice" aria-label="Толкование лунного дня">
+              <div class="lunar-day-reading" id="lunar-day-reading"></div>
+            </section>
+
+            <div class="lunar-day-guidance" aria-label="Ориентиры лунного дня">
+              <section class="lunar-day-guidance-group" aria-labelledby="lunar-day-easy-title">
+                <h2 id="lunar-day-easy-title">Даётся легко</h2>
+                <ul id="lunar-day-easy-list"></ul>
+              </section>
+              <section class="lunar-day-guidance-group" aria-labelledby="lunar-day-wait-title">
+                <h2 id="lunar-day-wait-title">Лучше подождать</h2>
+                <ul id="lunar-day-wait-list"></ul>
+              </section>
+            </div>
+
+            <button
+              class="lunar-day-action reading-new-question-link ui-action ui-action--quiet"
+              data-action="ask-spirits"
+              type="button"
+              aria-describedby="lunar-day-action-description"
+            >
+              Спросить духов
+            </button>
+            <p class="sr-only" id="lunar-day-action-description">Открывает экран колоды и поле для вопроса.</p>
           </div>
         </div>
       </section>
