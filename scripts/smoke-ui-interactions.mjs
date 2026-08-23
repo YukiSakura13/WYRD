@@ -169,6 +169,10 @@ const lunarDayCss = await readFile(
   new URL("../assets/css/scenes/lunar-day.css", import.meta.url),
   "utf8",
 );
+const yesNoCss = await readFile(
+  new URL("../assets/css/scenes/yes-no.css", import.meta.url),
+  "utf8",
+);
 
 assert.equal(LUNAR_DAY_READINGS.length, 30, "Lunar Day must ship all 30 editorial states");
 LUNAR_DAY_READINGS.forEach(function validateLunarDayReading(reading, index) {
@@ -262,8 +266,8 @@ assert.match(
 );
 assert.match(
   runtimeRender,
-  /elements\.lunarDaySection\.hidden = scene !== SCENES\.LUNAR_DAY;[\s\S]*?elements\.forestPlaceholder\.hidden = !\[SCENES\.YES_NO, SCENES\.NIGHT_IMAGES\]/,
-  "Lunar Day must be a dedicated scene rather than the shared placeholder",
+  /elements\.lunarDaySection\.hidden = scene !== SCENES\.LUNAR_DAY;[\s\S]*?elements\.yesNoSection\.hidden = scene !== SCENES\.YES_NO;[\s\S]*?elements\.forestPlaceholder\.hidden = scene !== SCENES\.NIGHT_IMAGES;/,
+  "Lunar Day and Yes / No must remain dedicated scenes rather than shared placeholders",
 );
 assert.match(
   lunarDayCss,
@@ -274,6 +278,46 @@ assert.match(
   lunarDayCss,
   /@media \(forced-colors: active\)[\s\S]*?\.lunar-day-action\.reading-new-question-link/,
   "Lunar Day must retain a visible action in forced colors",
+);
+assert.match(
+  runtimeHtml,
+  /id="yes-no-screen"[\s\S]*?id="yes-no-context-tip"[\s\S]*?data-action="yes-no-draw"[\s\S]*?data-action="yes-no-reset"[\s\S]*?data-action="ask-spirits"/,
+  "Yes / No must preserve draw, repeat and Ask Spirits controls in one dedicated scene",
+);
+assert.match(
+  runtimeHtml,
+  /Задумай то, что хочешь сделать\.[\s\S]*?Духи Леса ответят через карту\.[\s\S]*?data-action="dismiss-context-tip"/,
+  "Yes / No must expose the approved dismissible first-use help",
+);
+assert.match(
+  runtimeActions,
+  /yes-no-draw[\s\S]*?markContextTipSeen\("yes-no-deck-v1"\)/,
+  "using the Yes / No deck must retire the versioned first-use help",
+);
+assert.match(
+  runtimeActions,
+  /yesNoStage = "folding"[\s\S]*?yesNoStage = "revealing"[\s\S]*?yesNoStage = "result"/,
+  "Yes / No must preserve the fan-close, Ritual Reveal and result sequence",
+);
+assert.match(
+  yesNoCss,
+  /#yes-no-screen:is\(\[data-stage="folding"\][\s\S]*?transform var\(--dur-ritual\) var\(--ease-in-out-strong\)/,
+  "Yes / No physical card plane must reuse the canonical 800ms Ritual Reveal duration",
+);
+assert.match(
+  runtimeActions,
+  /yesNoFace = "back"[\s\S]*?showYesNoCardFront[\s\S]*?yesNoFace = "front"/,
+  "Yes / No must swap the complete artwork only at the physical turn midpoint",
+);
+assert.match(
+  readingSilver,
+  /:is\(#deck-wrap, #yes-no-screen\) \.wyrd-deck-artifact__stack--left/,
+  "Yes / No must share the canonical runtime Deck fan geometry rather than copy it",
+);
+assert.match(
+  yesNoCss,
+  /@media \(prefers-reduced-motion: reduce\)/,
+  "Yes / No must provide a reduced-motion state",
 );
 
 assert.doesNotMatch(
@@ -476,17 +520,17 @@ assert.match(
 );
 assert.match(
   readingSilver,
-  /#deck-wrap \.wyrd-deck-artifact\s*\{[\s\S]*?69vw[\s\S]*?var\(--layout-deck-artifact-block-fit\)/,
+  /:is\(#deck-wrap, #yes-no-screen\) \.wyrd-deck-artifact\s*\{[\s\S]*?69vw[\s\S]*?var\(--layout-deck-artifact-block-fit\)/,
   "Runtime Deck must fit the complete three-card fan inside the mobile viewport",
 );
 assert.match(
   readingSilver,
-  /#deck-wrap \.wyrd-deck-artifact\s*\{[\s\S]*?--deck-spread:\s*1;/,
+  /:is\(#deck-wrap, #yes-no-screen\) \.wyrd-deck-artifact\s*\{[\s\S]*?--deck-spread:\s*1;/,
   "Runtime Deck must keep the exact reference fan as the default review value",
 );
 assert.match(
   readingSilver,
-  /#deck-wrap :is\(\.wyrd-deck-artifact__stack, \.wyrd-deck-artifact__face\)\s*\{[\s\S]*?transform-origin:\s*50% 50%/,
+  /:is\(#deck-wrap, #yes-no-screen\) :is\(\.wyrd-deck-artifact__stack, \.wyrd-deck-artifact__face\)\s*\{[\s\S]*?transform-origin:\s*50% 50%/,
   "Runtime Deck cards must use the measured centre-origin reference geometry",
 );
 assert.match(

@@ -393,7 +393,7 @@
   padding-block-start: min(2.5svh, 1.25rem);
 }
 
-#deck-wrap .deck-interaction {
+:is(#deck-wrap, #yes-no-screen) .deck-interaction {
   position: relative;
   width: 100%;
   min-width: 0;
@@ -410,7 +410,7 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-#deck-wrap .wyrd-deck-artifact {
+:is(#deck-wrap, #yes-no-screen) .wyrd-deck-artifact {
   /*
    * Review control only: 1 reproduces the measured reference geometry.
    * This is not a user-facing runtime setting.
@@ -434,7 +434,7 @@
  * belong to the complete scene. It stays narrow enough to read as vertical
  * depth rather than a circular halo.
  */
-#deck-wrap .wyrd-deck-artifact::before {
+:is(#deck-wrap, #yes-no-screen) .wyrd-deck-artifact::before {
   inset: 18% -22% -14%;
   z-index: -2;
   border-radius: 22% 22% 40% 40% / 12% 12% 38% 38%;
@@ -461,7 +461,7 @@
 }
 
 /* A narrow cold reflection grounds the stack without becoming a glow ring. */
-#deck-wrap .wyrd-deck-artifact::after {
+:is(#deck-wrap, #yes-no-screen) .wyrd-deck-artifact::after {
   top: auto;
   left: 50%;
   bottom: -5.8%;
@@ -482,7 +482,7 @@
   animation: wyrd-runtime-deck-reflection var(--motion-runtime-deck-idle) linear infinite;
 }
 
-#deck-wrap :is(.wyrd-deck-artifact__stack, .wyrd-deck-artifact__face) {
+:is(#deck-wrap, #yes-no-screen) :is(.wyrd-deck-artifact__stack, .wyrd-deck-artifact__face) {
   transform-origin: 50% 50%;
   opacity: 1;
 }
@@ -493,7 +493,7 @@
  * supplied reference. Static placement uses the individual transform
  * properties so the rare idle response can animate `transform` independently.
  */
-#deck-wrap .wyrd-deck-artifact__stack--left {
+:is(#deck-wrap, #yes-no-screen) .wyrd-deck-artifact__stack--left {
   z-index: 0;
   translate:
     calc(-10.66% * var(--deck-spread, 1))
@@ -506,7 +506,7 @@
   animation: wyrd-runtime-deck-fan-left var(--motion-runtime-deck-idle) linear infinite;
 }
 
-#deck-wrap .wyrd-deck-artifact__stack--mid {
+:is(#deck-wrap, #yes-no-screen) .wyrd-deck-artifact__stack--mid {
   z-index: 1;
   translate: 0 0;
   rotate: 1.4deg;
@@ -518,7 +518,7 @@
   animation: wyrd-runtime-deck-fan-mid var(--motion-runtime-deck-idle) linear infinite;
 }
 
-#deck-wrap .wyrd-deck-artifact__face {
+:is(#deck-wrap, #yes-no-screen) .wyrd-deck-artifact__face {
   z-index: 2;
   translate:
     calc(11.38% * var(--deck-spread, 1))
@@ -535,7 +535,7 @@
 }
 
 /* Rear cards stay opaque; only their internal Raven artwork is veiled. */
-#deck-wrap .wyrd-deck-artifact__stack::before {
+:is(#deck-wrap, #yes-no-screen) .wyrd-deck-artifact__stack::before {
   position: absolute;
   inset: 0;
   z-index: 1;
@@ -544,7 +544,7 @@
   pointer-events: none;
 }
 
-#deck-wrap .wyrd-deck-artifact__stack--left::before {
+:is(#deck-wrap, #yes-no-screen) .wyrd-deck-artifact__stack--left::before {
   background: rgba(4, 6, 10, 0.27);
 }
 
@@ -552,7 +552,7 @@
  * These local-coordinate edges remain hidden wherever the front card overlaps,
  * so silver is visible only on the physically exposed portions.
  */
-#deck-wrap .wyrd-deck-artifact__stack::after {
+:is(#deck-wrap, #yes-no-screen) .wyrd-deck-artifact__stack::after {
   position: absolute;
   inset: 0;
   z-index: 2;
@@ -568,7 +568,7 @@
 }
 
 /* The glint travels along only the exposed upper-right physical edge. */
-#deck-wrap .wyrd-deck-artifact__face::before {
+:is(#deck-wrap, #yes-no-screen) .wyrd-deck-artifact__face::before {
   top: -1px;
   right: 7%;
   left: auto;
@@ -744,6 +744,7 @@
   }
 }
 
+#yes-no-screen .deck-touch-copy,
 #deck-wrap .deck-touch-copy,
 #deck-wrap.deck-scene.is-question-ready .deck-touch-copy,
 #deck-wrap.deck-scene.is-intent-transferred .deck-touch-copy {
@@ -781,18 +782,18 @@
   transform: none;
 }
 
-#deck-wrap .deck-interaction:focus {
+:is(#deck-wrap, #yes-no-screen) .deck-interaction:focus {
   outline: none;
 }
 
-#deck-wrap .deck-interaction:focus-visible :is(
+:is(#deck-wrap, #yes-no-screen) .deck-interaction:focus-visible :is(
   .wyrd-deck-artifact__stack,
   .wyrd-deck-artifact__face
 ) {
   border-color: rgba(225, 228, 225, 0.66);
 }
 
-#deck-wrap .deck-interaction:focus-visible .wyrd-deck-artifact__face {
+:is(#deck-wrap, #yes-no-screen) .deck-interaction:focus-visible .wyrd-deck-artifact__face {
   box-shadow:
     3px 5px 13px rgba(0, 0, 0, 0.56),
     0 24px 50px rgba(0, 0, 0, 0.5),
@@ -801,21 +802,21 @@
     inset 0 1px 0 rgba(245, 247, 245, 0.14);
 }
 
-#deck-wrap .deck-interaction:active .wyrd-deck-artifact {
+:is(#deck-wrap, #yes-no-screen) .deck-interaction:active .wyrd-deck-artifact {
   transform: translateY(1px);
 }
 
-#deck-wrap .deck-interaction:active .wyrd-deck-artifact::after {
+:is(#deck-wrap, #yes-no-screen) .deck-interaction:active .wyrd-deck-artifact::after {
   animation: none;
   opacity: 0.38;
   transform: translateX(-50%) scaleX(0.9);
 }
 
-#deck-wrap .deck-interaction:active .wyrd-deck-artifact__face {
+:is(#deck-wrap, #yes-no-screen) .deck-interaction:active .wyrd-deck-artifact__face {
   border-color: rgba(225, 228, 225, 0.74);
 }
 
-#deck-wrap .deck-interaction:active .wyrd-deck-artifact__face::before {
+:is(#deck-wrap, #yes-no-screen) .deck-interaction:active .wyrd-deck-artifact__face::before {
   animation: none;
   opacity: 0.62;
   transform: translate3d(0, 0, 0);
@@ -1586,16 +1587,16 @@ body.has-open-dialog {
 }
 
 @media (hover: hover) and (pointer: fine) {
-  #deck-wrap .deck-interaction:hover .deck-touch-copy {
+  :is(#deck-wrap, #yes-no-screen) .deck-interaction:hover .deck-touch-copy {
     color: rgba(225, 228, 225, 0.66);
   }
 
-  #deck-wrap .deck-interaction:hover .wyrd-deck-artifact::before {
+  :is(#deck-wrap, #yes-no-screen) .deck-interaction:hover .wyrd-deck-artifact::before {
     animation: none;
     opacity: 1;
   }
 
-  #deck-wrap .deck-interaction:hover .wyrd-deck-artifact__face::before {
+  :is(#deck-wrap, #yes-no-screen) .deck-interaction:hover .wyrd-deck-artifact__face::before {
     animation: none;
     opacity: 0.38;
     transform: translate3d(0, 0, 0);
@@ -1695,18 +1696,18 @@ body.has-open-dialog {
     justify-self: start;
   }
 
-  #deck-wrap .wyrd-deck-artifact {
+  :is(#deck-wrap, #yes-no-screen) .wyrd-deck-artifact {
     width: min(26vw, 43svh, var(--layout-deck-artifact-short-max));
   }
 }
 
 @media (forced-colors: active) {
-  #deck-wrap .deck-interaction:focus-visible {
+  :is(#deck-wrap, #yes-no-screen) .deck-interaction:focus-visible {
     outline: 2px solid ButtonText;
     outline-offset: 4px;
   }
 
-  #deck-wrap .deck-interaction:focus-visible :is(
+  :is(#deck-wrap, #yes-no-screen) .deck-interaction:focus-visible :is(
     .wyrd-deck-artifact__stack,
     .wyrd-deck-artifact__face
   ) {
@@ -1714,9 +1715,9 @@ body.has-open-dialog {
   }
 
   #deck-wrap .deck-atmosphere,
-  #deck-wrap .wyrd-deck-artifact::before,
-  #deck-wrap .wyrd-deck-artifact::after,
-  #deck-wrap .wyrd-deck-artifact__face::before,
+  :is(#deck-wrap, #yes-no-screen) .wyrd-deck-artifact::before,
+  :is(#deck-wrap, #yes-no-screen) .wyrd-deck-artifact::after,
+  :is(#deck-wrap, #yes-no-screen) .wyrd-deck-artifact__face::before,
   #result .card-box::after {
     display: none;
   }
@@ -1741,17 +1742,17 @@ body.has-open-dialog {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #deck-wrap .wyrd-deck-artifact,
-  #deck-wrap .deck-touch-copy {
+  :is(#deck-wrap, #yes-no-screen) .wyrd-deck-artifact,
+  :is(#deck-wrap, #yes-no-screen) .deck-touch-copy {
     transition: none;
   }
 
-  #deck-wrap .wyrd-deck-artifact::before,
-  #deck-wrap .wyrd-deck-artifact::after,
+  :is(#deck-wrap, #yes-no-screen) .wyrd-deck-artifact::before,
+  :is(#deck-wrap, #yes-no-screen) .wyrd-deck-artifact::after,
   #deck-wrap .deck-atmosphere-mist,
   #deck-wrap .deck-fireflies i,
-  #deck-wrap :is(.wyrd-deck-artifact__stack, .wyrd-deck-artifact__face),
-  #deck-wrap .wyrd-deck-artifact__face::before {
+  :is(#deck-wrap, #yes-no-screen) :is(.wyrd-deck-artifact__stack, .wyrd-deck-artifact__face),
+  :is(#deck-wrap, #yes-no-screen) .wyrd-deck-artifact__face::before {
     animation: none !important;
   }
 
@@ -1764,21 +1765,21 @@ body.has-open-dialog {
     display: none;
   }
 
-  #deck-wrap .wyrd-deck-artifact::before {
+  :is(#deck-wrap, #yes-no-screen) .wyrd-deck-artifact::before {
     opacity: 0.88;
   }
 
-  #deck-wrap .wyrd-deck-artifact::after {
+  :is(#deck-wrap, #yes-no-screen) .wyrd-deck-artifact::after {
     display: block;
     opacity: 0.68;
     transform: translateX(-50%) scaleX(1);
   }
 
-  #deck-wrap .wyrd-deck-artifact__face::before {
+  :is(#deck-wrap, #yes-no-screen) .wyrd-deck-artifact__face::before {
     opacity: 0;
   }
 
-  #deck-wrap .deck-interaction:active .wyrd-deck-artifact {
+  :is(#deck-wrap, #yes-no-screen) .deck-interaction:active .wyrd-deck-artifact {
     transform: none;
   }
 

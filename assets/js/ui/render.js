@@ -42,6 +42,16 @@ export function getElements(doc = document) {
     lunarDayReading: doc.getElementById("lunar-day-reading"),
     lunarDayEasyList: doc.getElementById("lunar-day-easy-list"),
     lunarDayWaitList: doc.getElementById("lunar-day-wait-list"),
+    yesNoSection: doc.getElementById("yes-no-screen"),
+    yesNoDeck: doc.getElementById("yes-no-deck"),
+    yesNoTouch: doc.getElementById("yes-no-touch"),
+    yesNoContextTip: doc.getElementById("yes-no-context-tip"),
+    yesNoStatus: doc.getElementById("yes-no-status"),
+    yesNoCardImage: doc.getElementById("yes-no-card-image"),
+    yesNoResult: doc.getElementById("yes-no-result"),
+    yesNoCardName: doc.getElementById("yes-no-card-name"),
+    yesNoAnswer: doc.getElementById("yes-no-answer"),
+    yesNoDirectionCopy: doc.getElementById("yes-no-direction-copy"),
     settingsSection: doc.getElementById("settings-screen"),
     remindersSection: doc.getElementById("reminders-screen"),
     appInfoSection: doc.getElementById("app-info-screen"),
@@ -174,11 +184,6 @@ export function createRenderer(elements) {
     { x: 78, y: 89 },
   ];
   const forestPlaceholderContent = {
-    [SCENES.YES_NO]: {
-      kicker: "Нет или Да",
-      title: "Короткий ответ духов",
-      copy: "Скоро здесь появится карта рубашкой вверх: коснись её, и духи вернут краткий знак.",
-    },
     [SCENES.NIGHT_IMAGES]: {
       kicker: "Образы ночи",
       title: "То, что пришло во сне",
@@ -191,6 +196,7 @@ export function createRenderer(elements) {
     renderForestAvatar(state);
     renderForestPlaceholder(uiState);
     renderLunarDay();
+    renderYesNo(state, uiState);
     renderSettings(state, uiState);
     renderAboutYou(state, uiState);
     renderReminders(state, uiState);
@@ -213,7 +219,7 @@ export function createRenderer(elements) {
     const targetMap = {
       forest: elements.forestSection,
       "lunar-day": elements.lunarDaySection,
-      "yes-no": elements.forestPlaceholder,
+      "yes-no": elements.yesNoSection,
       "night-images": elements.forestPlaceholder,
       settings: elements.settingsSection,
       "about-you": elements.aboutYouSection,
@@ -306,6 +312,70 @@ export function createRenderer(elements) {
     renderLunarReading(elements.lunarDayReading, reading.text);
     renderLunarGuidanceList(elements.lunarDayEasyList, reading.easy);
     renderLunarGuidanceList(elements.lunarDayWaitList, reading.wait);
+  }
+
+  function renderYesNo(state, uiState) {
+    if (!elements.yesNoSection || !elements.yesNoDeck) {
+      return;
+    }
+
+    const stage = uiState.yesNoStage || "ready";
+    const card = uiState.yesNoCardId ? cardsById.get(uiState.yesNoCardId) : null;
+    const direction = uiState.yesNoDirection;
+    const isReady = stage === "ready";
+    const isResult = stage === "result" && Boolean(card && direction);
+    const showContextTip = isReady && !state.contextTipsSeen.includes("yes-no-deck-v1");
+
+    elements.yesNoSection.dataset.stage = stage;
+    elements.yesNoSection.dataset.face = uiState.yesNoFace || "back";
+    elements.yesNoDeck.setAttribute("aria-disabled", String(!isReady));
+    elements.yesNoDeck.setAttribute(
+      "aria-label",
+      isReady ? "Коснуться колоды" : isResult ? `Карта «${card.name}» раскрыта` : "Карта раскрывается",
+    );
+    elements.yesNoDeck.setAttribute(
+      "aria-describedby",
+      showContextTip ? "yes-no-context-tip-copy yes-no-status" : "yes-no-status",
+    );
+
+    if (elements.yesNoContextTip) {
+      elements.yesNoContextTip.hidden = !showContextTip;
+    }
+
+    if (elements.yesNoTouch) {
+      elements.yesNoTouch.textContent = isReady ? "Коснись колоды" : stage === "folding" ? "Знак собирается" : "Карта раскрывается";
+    }
+
+    if (elements.yesNoStatus) {
+      elements.yesNoStatus.textContent = isReady
+        ? "Колода готова."
+        : isResult
+          ? `${card.name}. ${direction === "open" ? "Да." : "Нет."}`
+          : "Карта раскрывается.";
+    }
+
+    if (elements.yesNoCardImage) {
+      if (card) {
+        elements.yesNoCardImage.src = getCardImage(card);
+      } else {
+        elements.yesNoCardImage.removeAttribute("src");
+      }
+    }
+
+    if (elements.yesNoResult) {
+      elements.yesNoResult.hidden = !isResult;
+      elements.yesNoResult.dataset.direction = direction || "";
+    }
+
+    if (!isResult) {
+      return;
+    }
+
+    elements.yesNoCardName.textContent = card.name;
+    elements.yesNoAnswer.textContent = direction === "open" ? "Да." : "Нет.";
+    elements.yesNoDirectionCopy.textContent = direction === "open"
+      ? "Сегодня стоит осуществить задуманное."
+      : "Сегодня лучше не спешить. Дай замыслу время и проверь его ещё раз.";
   }
 
   function renderTraces(state) {
@@ -1467,7 +1537,8 @@ export function createRenderer(elements) {
 
     elements.forestSection.hidden = scene !== SCENES.FOREST;
     elements.lunarDaySection.hidden = scene !== SCENES.LUNAR_DAY;
-    elements.forestPlaceholder.hidden = ![SCENES.YES_NO, SCENES.NIGHT_IMAGES].includes(scene);
+    elements.yesNoSection.hidden = scene !== SCENES.YES_NO;
+    elements.forestPlaceholder.hidden = scene !== SCENES.NIGHT_IMAGES;
     elements.settingsSection.hidden = scene !== SCENES.SETTINGS;
     elements.aboutYouSection.hidden = scene !== SCENES.ABOUT_YOU;
     elements.remindersSection.hidden = scene !== SCENES.REMINDERS;

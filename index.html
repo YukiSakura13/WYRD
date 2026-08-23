@@ -258,14 +258,14 @@
 
             <div class="forest-pair">
               <article class="forest-path forest-path--small" aria-labelledby="forest-yes-no-title">
-                <h2 class="sr-only" id="forest-yes-no-title">Нет или да</h2>
+                <h2 class="sr-only" id="forest-yes-no-title">Да или нет</h2>
                 <p class="sr-only" id="forest-yes-no-copy">короткий знак</p>
                 <button class="forest-path-action ui-card-action" data-action="open-yes-no" type="button" aria-labelledby="forest-yes-no-title" aria-describedby="forest-yes-no-copy">
                   <span class="forest-art-card forest-art-card--small forest-art-card--twinkle forest-art-card--poppy">
                     <img src="./assets/images/forest-home/silver/poppy-frame.png?v=forest-art-eager-20260716" alt="" loading="eager" />
                   </span>
                   <span class="forest-card-caption" aria-hidden="true">
-                    <span class="forest-tile-title">Нет или да</span>
+                    <span class="forest-tile-title">Да или нет</span>
                     <span class="forest-tile-copy">короткий знак</span>
                   </span>
                 </button>
@@ -363,6 +363,96 @@
               Спросить духов
             </button>
             <p class="sr-only" id="lunar-day-action-description">Открывает экран колоды и поле для вопроса.</p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="yes-no-screen ui-scene-shell ui-scene-shell--oracle"
+        id="yes-no-screen"
+        data-stage="ready"
+        hidden
+        aria-labelledby="yes-no-title"
+      >
+        <div class="yes-no-shell">
+          <header class="yes-no-header ui-app-header ui-app-header--inner">
+            <button
+              class="ui-icon-button ui-icon-button--back ui-icon-button--quiet-reading btn-back-circle yes-no-back"
+              data-action="back-to-forest"
+              type="button"
+              aria-label="Вернуться в Лес"
+            >
+              <svg class="ui-icon-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12H2M10 4l-8 8 8 8" /></svg>
+            </button>
+            <h1 class="ui-app-header__identity" id="yes-no-title">Да или нет</h1>
+          </header>
+
+          <div class="yes-no-content ui-scene-content--oracle">
+            <section class="yes-no-ritual wyrd-deck-composition" aria-label="Короткий знак через карту">
+              <div class="yes-no-artifact-zone wyrd-deck-composition__artifact-zone">
+                <aside class="yes-no-context-tip" id="yes-no-context-tip" role="note" hidden>
+                  <p id="yes-no-context-tip-copy">
+                    Задумай то, что хочешь сделать.<br />
+                    Духи Леса ответят через карту.
+                  </p>
+                  <button
+                    class="yes-no-context-tip-dismiss"
+                    data-action="dismiss-context-tip"
+                    data-context-tip-id="yes-no-deck-v1"
+                    type="button"
+                  >
+                    Понятно
+                  </button>
+                </aside>
+                <button
+                  class="yes-no-deck deck-interaction"
+                  id="yes-no-deck"
+                  data-action="yes-no-draw"
+                  type="button"
+                  aria-label="Коснуться колоды"
+                  aria-describedby="yes-no-status"
+                >
+                  <span class="yes-no-deck-artifact deck-card ui-card-action wyrd-deck-artifact" aria-hidden="true">
+                    <span class="yes-no-stack yes-no-stack--left wyrd-deck-artifact__stack wyrd-deck-artifact__stack--left"></span>
+                    <span class="yes-no-stack yes-no-stack--mid wyrd-deck-artifact__stack wyrd-deck-artifact__stack--mid"></span>
+                    <span class="yes-no-deck-plane wyrd-deck-artifact__face">
+                      <span class="yes-no-card-face yes-no-card-back">
+                        <img src="./assets/images/forest-home/silver/raven-arch.jpg" alt="" decoding="async" />
+                      </span>
+                      <span class="yes-no-card-face yes-no-card-front">
+                        <img id="yes-no-card-image" alt="" decoding="async" />
+                      </span>
+                    </span>
+                  </span>
+                  <span class="yes-no-touch deck-touch-copy wyrd-deck-composition__touch" id="yes-no-touch" aria-hidden="true">
+                    Коснись колоды
+                  </span>
+                </button>
+              </div>
+              <p class="sr-only" id="yes-no-status" aria-live="polite">Колода готова.</p>
+            </section>
+
+            <section class="yes-no-result" id="yes-no-result" hidden aria-live="polite" aria-atomic="true">
+              <h2 class="yes-no-card-name" id="yes-no-card-name"></h2>
+              <p class="yes-no-answer" id="yes-no-answer"></p>
+              <p class="yes-no-direction-copy" id="yes-no-direction-copy"></p>
+
+              <button class="yes-no-reset reading-new-question-link ui-action ui-action--quiet" data-action="yes-no-reset" type="button">
+                Задумать другое действие
+              </button>
+
+              <p class="yes-no-boundary">Знак не выбирает за тебя.</p>
+
+              <button
+                class="yes-no-ask-spirits reading-new-question-link ui-action ui-action--quiet"
+                data-action="ask-spirits"
+                type="button"
+                aria-describedby="yes-no-ask-description"
+              >
+                Спросить духов
+              </button>
+              <p class="sr-only" id="yes-no-ask-description">Открывает экран колоды и поле для вопроса.</p>
+            </section>
           </div>
         </div>
       </section>

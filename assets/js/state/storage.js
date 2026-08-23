@@ -103,6 +103,16 @@ export function createStateStore(storage = getSafeStorage()) {
         onboardingSeen: true,
       });
     },
+    markContextTipSeen(tipId) {
+      if (typeof tipId !== "string" || !tipId.trim()) {
+        return cloneState(state);
+      }
+
+      return commit({
+        ...state,
+        contextTipsSeen: [...state.contextTipsSeen, tipId.trim()],
+      });
+    },
     resetOnboardingSeen() {
       return commit({
         ...state,

@@ -27,6 +27,7 @@ export const DEFAULT_STATE = Object.freeze({
   vibrationEnabled: true,
   ambienceVolume: 0.58,
   onboardingSeen: false,
+  contextTipsSeen: [],
   selectedMode: "single",
   dailyFreeUsedAt: null,
   history: [],
@@ -83,6 +84,7 @@ export function normalizeState(value) {
   next.vibrationEnabled = typeof next.vibrationEnabled === "boolean" ? next.vibrationEnabled : base.vibrationEnabled;
   next.ambienceVolume = normalizeAmbienceVolume(next.ambienceVolume, base.ambienceVolume);
   next.onboardingSeen = Boolean(next.onboardingSeen);
+  next.contextTipsSeen = normalizeContextTipsSeen(next.contextTipsSeen);
   next.selectedMode = normalizeSelectedMode(next.selectedMode);
 
   return enforceStateInvariants(next);
@@ -287,6 +289,22 @@ function normalizeShortText(value, maxLength) {
   }
 
   return value.replace(/\s+/g, " ").trim().slice(0, maxLength);
+}
+
+function normalizeContextTipsSeen(value) {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return Array.from(
+    new Set(
+      value
+        .filter((tipId) => typeof tipId === "string")
+        .map((tipId) => tipId.trim())
+        .filter(Boolean)
+        .map((tipId) => tipId.slice(0, 80)),
+    ),
+  );
 }
 
 function createSingleRitualStack(reading) {

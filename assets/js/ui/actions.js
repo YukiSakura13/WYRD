@@ -13,6 +13,41 @@ const REMINDER_DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 export function createActionHandler(deps) {
   const { audio, cards, renderApp, renderer, setScene, store, uiState } = deps;
   const runTransition = createTransitionRunner(renderApp, uiState);
+  let yesNoPreviewTimers = [];
+
+  function clearYesNoPreviewTimers() {
+    yesNoPreviewTimers.forEach(function clearPreviewTimer(timer) {
+      window.clearTimeout(timer);
+    });
+    yesNoPreviewTimers = [];
+  }
+
+  function resetYesNoPreview(state, advance) {
+    clearYesNoPreviewTimers();
+    state.yesNoStage = "ready";
+    state.yesNoCardId = null;
+    state.yesNoDirection = null;
+    state.yesNoFace = "back";
+
+    if (advance) {
+      state.yesNoPreviewIndex = ((state.yesNoPreviewIndex || 0) + 1) % 2;
+    }
+  }
+
+  function getYesNoPreviewResult(cardPool, index) {
+    // Local visual-review fixtures only. The production shuffle bag and
+    // ritualAnswer passports remain deliberately out of scope for this pass.
+    const fixtures = [
+      { cardId: "wyrd_042", direction: "open" },
+      { cardId: "wyrd_034", direction: "hold" },
+    ];
+    const fixture = fixtures[(index || 0) % fixtures.length];
+    const card = cardPool.find(function findPreviewCard(candidate) {
+      return candidate.id === fixture.cardId;
+    });
+
+    return card ? { card, direction: fixture.direction } : null;
+  }
 
   return function onClick(event) {
     const trigger = event.target.closest("[data-action]");
@@ -67,7 +102,75 @@ export function createActionHandler(deps) {
     }
 
     if (action === "open-yes-no") {
+      resetYesNoPreview(uiState, false);
       openForestPath(SCENES.YES_NO, { audio, renderer, setScene, store, runTransition });
+      return;
+    }
+
+    if (action === "yes-no-draw") {
+      if (uiState.activeScene !== SCENES.YES_NO || uiState.yesNoStage !== "ready") {
+        return;
+      }
+
+      const preview = getYesNoPreviewResult(cards, uiState.yesNoPreviewIndex);
+      if (!preview) {
+        return;
+      }
+
+      clearYesNoPreviewTimers();
+      store.markContextTipSeen("yes-no-deck-v1");
+      audio.playSelect(store.getState().soundEnabled);
+      uiState.yesNoCardId = preview.card.id;
+      uiState.yesNoDirection = preview.direction;
+      uiState.yesNoFace = "back";
+      uiState.yesNoStage = "folding";
+      renderApp();
+
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        yesNoPreviewTimers.push(window.setTimeout(function completeReducedYesNoReveal() {
+          uiState.yesNoFace = "front";
+          uiState.yesNoStage = "result";
+          renderApp();
+          audio.playReveal(store.getState().soundEnabled);
+        }, 140));
+        return;
+      }
+
+      yesNoPreviewTimers.push(window.setTimeout(function revealYesNoCard() {
+        uiState.yesNoStage = "revealing";
+        renderApp();
+        audio.playReveal(store.getState().soundEnabled);
+      }, 400));
+
+      yesNoPreviewTimers.push(window.setTimeout(function showYesNoCardFront() {
+        uiState.yesNoFace = "front";
+        renderApp();
+      }, 800));
+
+      yesNoPreviewTimers.push(window.setTimeout(function completeYesNoReveal() {
+        uiState.yesNoStage = "result";
+        renderApp();
+      }, 1240));
+      return;
+    }
+
+    if (action === "dismiss-context-tip") {
+      store.markContextTipSeen(trigger.dataset.contextTipId || "");
+      renderApp();
+      window.requestAnimationFrame(function focusContextTipAnchor() {
+        document.getElementById("yes-no-deck")?.focus({ preventScroll: true });
+      });
+      return;
+    }
+
+    if (action === "yes-no-reset") {
+      audio.playSelect(store.getState().soundEnabled);
+      clearYesNoPreviewTimers();
+      resetYesNoPreview(uiState, true);
+      renderApp();
+      window.requestAnimationFrame(function focusReadyYesNoDeck() {
+        document.getElementById("yes-no-deck")?.focus({ preventScroll: true });
+      });
       return;
     }
 
@@ -502,6 +605,7 @@ export function createActionHandler(deps) {
     }
 
     if (action === "back-to-forest") {
+      clearYesNoPreviewTimers();
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function returnToForest() {
         uiState.soundSettingsOpen = false;
@@ -590,6 +694,7 @@ export function createActionHandler(deps) {
     }
 
     if (action === "new-question" || action === "ask-spirits") {
+      clearYesNoPreviewTimers();
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function backToDeck() {
         uiState.currentQuestion = "";
@@ -1087,6 +1192,11 @@ export function createInitialUIState(state) {
     historySheetOpenedWithKeyboard: false,
     pinCurrentReadingForSpread: false,
     recentCardNames: [],
+    yesNoStage: "ready",
+    yesNoCardId: null,
+    yesNoDirection: null,
+    yesNoFace: "back",
+    yesNoPreviewIndex: 0,
     transitioning: false,
   };
 }

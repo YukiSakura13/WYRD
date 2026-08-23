@@ -40,6 +40,15 @@ async function main() {
   assert.deepEqual(initialState.lastSpread, [], "default state should start without spread");
   assert.equal(initialState.soundEnabled, true, "default state should enable interface sounds");
   assert.equal(initialState.musicEnabled, true, "default state should enable music");
+  assert.deepEqual(initialState.contextTipsSeen, [], "default state should not pre-dismiss contextual help");
+
+  emptyStore.markContextTipSeen("yes-no-deck-v1");
+  emptyStore.markContextTipSeen("yes-no-deck-v1");
+  assert.deepEqual(
+    emptyStore.getState().contextTipsSeen,
+    ["yes-no-deck-v1"],
+    "contextual help must persist one versioned id without duplicates",
+  );
 
   const legacyAudioStore = createStateStore(
     createMemoryStorage(
@@ -143,6 +152,7 @@ async function main() {
   assert.deepEqual(afterReset.lastSpread, [], "reset should clear spread");
   assert.equal(afterReset.soundEnabled, true, "reset should restore default soundEnabled");
   assert.equal(afterReset.musicEnabled, true, "reset should restore default musicEnabled");
+  assert.deepEqual(afterReset.contextTipsSeen, [], "reset should restore contextual help visibility");
 
   console.log("WYRD state smoke tests passed");
 }

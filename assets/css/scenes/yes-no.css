@@ -1,0 +1,500 @@
+/* YUK-147 · Yes / No local review candidate.
+   The Raven deck is the same runtime Deck artifact; this scene only owns the
+   one-time context tip, the fan-close ritual and the answer composition. */
+
+.yes-no-screen[hidden],
+.yes-no-context-tip[hidden],
+.yes-no-result[hidden] {
+  display: none !important;
+}
+
+.yes-no-screen {
+  width: 100%;
+  min-height: 100svh;
+  color: var(--wyrd-text-secondary);
+  background: transparent;
+}
+
+body[data-scene="yes-no"] #main {
+  background: transparent;
+}
+
+.yes-no-shell {
+  position: relative;
+  width: min(100%, 48rem);
+  min-height: 100svh;
+  margin-inline: auto;
+  padding:
+    max(1rem, calc(var(--layout-safe-top) + 0.5rem))
+    max(1rem, var(--layout-safe-inline-end))
+    max(2rem, calc(var(--layout-safe-bottom) + 1.5rem))
+    max(1rem, var(--layout-safe-inline-start));
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.yes-no-header.ui-app-header {
+  min-height: 4.5rem;
+  padding-inline: 4.25rem;
+}
+
+.yes-no-header .ui-app-header__identity {
+  min-height: var(--control-icon-hit-size);
+  margin: 0;
+  color: var(--wyrd-text-heading);
+  display: grid;
+  place-items: center;
+  font-family: Forum, Georgia, serif;
+  font-size: 1.19rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  line-height: 1.1;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.yes-no-content {
+  width: min(100%, 34rem);
+  min-height: 0;
+  margin-inline: auto;
+}
+
+.yes-no-ritual.wyrd-deck-composition {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  overflow: visible;
+  background: transparent;
+}
+
+.yes-no-artifact-zone.wyrd-deck-composition__artifact-zone {
+  position: relative;
+  width: 100%;
+  min-height: clamp(31rem, calc(100svh - 8.5rem), 43rem);
+  padding: clamp(4.75rem, 11svh, 6.5rem) 0 clamp(1.5rem, 4svh, 2.5rem);
+  align-content: center;
+  gap: 0.25rem;
+}
+
+/* Reusable, nonmodal first-use help: quiet, anchored and layout-neutral. */
+.yes-no-context-tip {
+  position: absolute;
+  top: clamp(0.35rem, 2.5svh, 1.35rem);
+  left: 50%;
+  z-index: 8;
+  width: min(calc(100% - 1rem), 24rem);
+  padding: 0.85rem 0.9rem 0.35rem;
+  border: 1px solid rgba(205, 209, 207, 0.3);
+  border-radius: 2px;
+  background: rgba(10, 12, 17, 0.9);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.32);
+  color: rgba(225, 228, 225, 0.82);
+  text-align: center;
+  transform: translateX(-50%);
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
+  animation: yes-no-tip-enter var(--dur-fast) var(--ease-out-strong) both;
+}
+
+.yes-no-context-tip p {
+  margin: 0;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(1rem, 4.2vw, 1.12rem);
+  font-weight: 400;
+  letter-spacing: 0.012em;
+  line-height: 1.42;
+}
+
+.yes-no-context-tip-dismiss {
+  min-width: var(--control-touch-min);
+  min-height: var(--control-touch-min);
+  margin: 0.08rem auto 0;
+  padding: 0.45rem 0.7rem;
+  border: 0;
+  appearance: none;
+  background: transparent;
+  color: rgba(225, 228, 225, 0.7);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 0.96rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  text-decoration: underline;
+  text-decoration-color: rgba(225, 228, 225, 0.42);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.28em;
+  cursor: pointer;
+}
+
+.yes-no-context-tip-dismiss:focus-visible {
+  outline: 2px solid var(--control-focus-ring);
+  outline-offset: 2px;
+}
+
+.yes-no-context-tip-dismiss:active {
+  transform: translateY(var(--control-pressed-offset));
+}
+
+/* Dimensions, fan geometry, light well and focus treatment are shared
+   verbatim with #deck-wrap in reading-silver.css. */
+.yes-no-deck-artifact {
+  perspective: 1100px;
+  -webkit-perspective: 1100px;
+}
+
+.yes-no-deck[aria-disabled="true"] {
+  cursor: default;
+}
+
+#yes-no-screen .yes-no-deck-plane {
+  overflow: visible;
+  background: transparent;
+  backface-visibility: visible;
+  -webkit-backface-visibility: visible;
+  transform: rotateY(0deg);
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+}
+
+.yes-no-card-face {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  border-radius: inherit;
+  background: #090a0f;
+  backface-visibility: visible;
+  -webkit-backface-visibility: visible;
+}
+
+.yes-no-card-back {
+  z-index: 1;
+  opacity: 1;
+  transform: rotateY(0deg);
+  -webkit-transform: rotateY(0deg);
+}
+
+.yes-no-card-front {
+  z-index: 2;
+  opacity: 0;
+  transform: none;
+  -webkit-transform: none;
+}
+
+#yes-no-screen[data-face="front"] .yes-no-card-back {
+  opacity: 0;
+}
+
+#yes-no-screen[data-face="front"] .yes-no-card-front {
+  opacity: 1;
+}
+
+.yes-no-card-face img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* The physical plane completes one turn. The revealed artwork is mirrored
+   inside that plane so it reads normally after the parent reaches 180deg. */
+.yes-no-card-front img {
+  transform: scaleX(-1);
+}
+
+.yes-no-touch {
+  color: rgba(225, 228, 225, 0.66);
+  transition:
+    opacity var(--dur-fast) var(--ease-out-strong),
+    transform var(--dur-fast) var(--ease-out-strong);
+}
+
+.yes-no-screen:not([data-stage="ready"]) .yes-no-touch {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-2px);
+}
+
+#yes-no-screen:is([data-stage="folding"], [data-stage="revealing"], [data-stage="result"])
+  :is(.yes-no-stack, .yes-no-deck-plane) {
+  animation: none;
+  will-change: translate, rotate, transform, opacity;
+  transition:
+    translate var(--dur-slow) var(--ease-in-out-strong),
+    rotate var(--dur-slow) var(--ease-in-out-strong),
+    opacity var(--dur-fast) var(--ease-out-strong) 160ms,
+    transform var(--dur-ritual) var(--ease-in-out-strong);
+}
+
+#yes-no-screen:is([data-stage="folding"], [data-stage="revealing"], [data-stage="result"])
+  :is(.yes-no-stack, .yes-no-deck-plane) {
+  translate: 0 0;
+  rotate: 0deg;
+}
+
+#yes-no-screen:is([data-stage="folding"], [data-stage="revealing"], [data-stage="result"])
+  .yes-no-stack {
+  opacity: 0;
+}
+
+#yes-no-screen:is([data-stage="revealing"], [data-stage="result"]) .yes-no-deck-plane {
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+}
+
+.yes-no-screen[data-stage="result"] .yes-no-ritual.wyrd-deck-composition {
+  min-height: 0;
+  grid-template-rows: auto auto;
+}
+
+.yes-no-screen[data-stage="result"] .yes-no-artifact-zone.wyrd-deck-composition__artifact-zone {
+  min-height: 0;
+  padding: clamp(1.25rem, 3svh, 2rem) 0 0;
+  align-content: start;
+}
+
+.yes-no-result {
+  width: min(100%, 27rem);
+  margin: clamp(1rem, 3svh, 1.65rem) auto 0;
+  padding-bottom: max(0.5rem, var(--layout-safe-bottom));
+  text-align: center;
+  animation: yes-no-result-enter var(--dur-slow) var(--ease-out-strong) both;
+}
+
+.yes-no-card-name,
+.yes-no-answer,
+.yes-no-direction-copy,
+.yes-no-boundary {
+  margin: 0;
+}
+
+.yes-no-card-name {
+  color: rgba(220, 223, 220, 0.64);
+  font-family: Forum, Georgia, serif;
+  font-size: clamp(1rem, 4.2vw, 1.12rem);
+  font-weight: 400;
+  letter-spacing: 0.055em;
+  line-height: 1.3;
+}
+
+.yes-no-answer {
+  margin-top: 0.48rem;
+  color: var(--wyrd-text-heading);
+  font-family: Forum, Georgia, serif;
+  font-size: clamp(1.75rem, 7vw, 2rem);
+  font-weight: 400;
+  letter-spacing: 0.075em;
+  line-height: 1.12;
+}
+
+.yes-no-direction-copy {
+  max-width: 23rem;
+  margin: 0.68rem auto 0;
+  color: rgba(224, 226, 224, 0.82);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(1.04rem, 4.4vw, 1.18rem);
+  font-weight: 400;
+  line-height: 1.46;
+  text-wrap: balance;
+}
+
+.yes-no-reset.reading-new-question-link {
+  margin-top: clamp(1.15rem, 3svh, 1.6rem);
+}
+
+.yes-no-boundary {
+  margin-top: clamp(1.25rem, 3.5svh, 1.8rem);
+  color: var(--wyrd-text-quiet);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 0.94rem;
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0.012em;
+  line-height: 1.35;
+}
+
+.yes-no-ask-spirits.reading-new-question-link {
+  margin-top: 0.72rem;
+  padding-inline: 0.5rem;
+  color: rgba(239, 241, 238, 0.9);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(1.1rem, 4.6vw, 1.24rem);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-decoration-color: currentColor;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.32em;
+}
+
+@keyframes yes-no-tip-enter {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 3px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes yes-no-result-enter {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (min-width: 35rem) {
+  .yes-no-shell {
+    padding-inline: max(2rem, var(--layout-safe-inline-end));
+  }
+}
+
+@media (max-height: 47.5rem) {
+  .yes-no-shell {
+    padding-top: max(0.75rem, calc(var(--layout-safe-top) + 0.25rem));
+  }
+
+  .yes-no-header.ui-app-header {
+    min-height: 3.75rem;
+  }
+
+  .yes-no-artifact-zone.wyrd-deck-composition__artifact-zone {
+    min-height: calc(100svh - 7.25rem);
+    padding-top: 4.2rem;
+  }
+
+  .yes-no-context-tip {
+    top: 0.2rem;
+    padding-top: 0.65rem;
+  }
+
+  .yes-no-screen[data-stage="result"] .yes-no-artifact-zone.wyrd-deck-composition__artifact-zone {
+    min-height: 0;
+    padding-top: 0.75rem;
+  }
+}
+
+@media (orientation: landscape) and (min-width: 40rem) and (max-height: 31rem) {
+  .yes-no-shell {
+    width: 100%;
+    max-width: 64rem;
+  }
+
+  .yes-no-content {
+    width: 100%;
+  }
+
+  .yes-no-ritual.wyrd-deck-composition {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+
+  .yes-no-artifact-zone.wyrd-deck-composition__artifact-zone {
+    min-height: calc(100svh - 5.5rem);
+    padding: 2.75rem 0 0;
+  }
+
+  .yes-no-context-tip {
+    top: 0;
+  }
+
+  #yes-no-screen[data-stage="result"] .yes-no-content {
+    display: grid;
+    grid-template-columns: minmax(18rem, 1fr) minmax(16rem, 0.8fr);
+    column-gap: clamp(1.5rem, 5vw, 4rem);
+    align-items: center;
+  }
+
+  #yes-no-screen[data-stage="result"] .yes-no-ritual.wyrd-deck-composition {
+    grid-column: 1;
+    min-width: 0;
+  }
+
+  #yes-no-screen[data-stage="result"] .yes-no-artifact-zone.wyrd-deck-composition__artifact-zone {
+    min-height: calc(100svh - 5.5rem);
+    padding: 0;
+    align-content: center;
+  }
+
+  #yes-no-screen[data-stage="result"] .yes-no-result {
+    grid-column: 2;
+    grid-row: 1;
+    margin: 0;
+    align-self: center;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .yes-no-context-tip-dismiss:hover {
+    color: rgba(239, 241, 238, 0.94);
+    text-decoration-color: currentColor;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yes-no-context-tip,
+  .yes-no-result,
+  .yes-no-touch,
+  #yes-no-screen :is(.yes-no-stack, .yes-no-deck-plane) {
+    animation: none;
+    transition: none;
+  }
+
+  .yes-no-deck-plane {
+    transform: none !important;
+  }
+
+  .yes-no-card-face {
+    transition: opacity 120ms linear;
+  }
+
+  .yes-no-card-front {
+    opacity: 0;
+    transform: none;
+  }
+
+  .yes-no-card-front img {
+    transform: none;
+  }
+
+  #yes-no-screen:is([data-stage="revealing"], [data-stage="result"]) .yes-no-card-back {
+    opacity: 0;
+  }
+
+  #yes-no-screen:is([data-stage="revealing"], [data-stage="result"]) .yes-no-card-front {
+    opacity: 1;
+  }
+}
+
+@media (forced-colors: active) {
+  .yes-no-screen {
+    color: CanvasText;
+    background: Canvas;
+  }
+
+  .yes-no-context-tip {
+    border-color: CanvasText;
+    background: Canvas;
+    color: CanvasText;
+  }
+
+  .yes-no-context-tip-dismiss {
+    color: LinkText;
+  }
+
+  .yes-no-card-face {
+    border: 1px solid CanvasText;
+  }
+}
