@@ -9,9 +9,10 @@ import {
   createLunarPhaseImage,
   createMoonIcon,
   formatFullTraceDate,
-  getLunarDayPhaseLabel,
   getLunarDayState,
-  getMoonPhase,
+  getMoonPhaseState,
+  getPublicMoonPhaseLabel,
+  isMoonPhaseType,
 } from "./moon.js";
 import { primeShareCard } from "./share.js";
 import { getDialogController } from "./dialog-controller.js";
@@ -300,7 +301,7 @@ export function createRenderer(elements) {
     elements.lunarDayMoon.replaceChildren(createLunarPhaseImage(lunar.phase.type));
     elements.lunarDayDate.textContent = formatFullTraceDate(lunar.reference);
     elements.lunarDayDate.dateTime = lunar.dateKey;
-    elements.lunarDayPhase.textContent = getLunarDayPhaseLabel(lunar.phase.type);
+    elements.lunarDayPhase.textContent = getPublicMoonPhaseLabel(lunar.phase.type);
     elements.lunarDayNumber.textContent = `${lunar.day}-й лунный день`;
     renderLunarReading(elements.lunarDayReading, reading.text);
     renderLunarGuidanceList(elements.lunarDayEasyList, reading.easy);
@@ -782,7 +783,7 @@ export function createRenderer(elements) {
 
     const card = trace.card;
     const date = new Date(trace.date);
-    const moon = getStoredMoon(trace, date);
+    const moonType = getStoredMoonType(trace, date);
     elements.historySheetQuestion.hidden = !trace.question;
     elements.historySheetQuestionText.textContent = trace.question;
     elements.historySheetImage.src = getCardImage(card);
@@ -796,8 +797,8 @@ export function createRenderer(elements) {
     const sheetMoonPhase = document.createElement("span");
     sheetMoonPhase.className = "history-sheet-footer-phase";
     const sheetMoonName = document.createElement("span");
-    sheetMoonName.textContent = moon.name;
-    sheetMoonPhase.append(createMoonIcon(moon.type), sheetMoonName);
+    sheetMoonName.textContent = getPublicMoonPhaseLabel(moonType);
+    sheetMoonPhase.append(createMoonIcon(moonType), sheetMoonName);
     const sheetDate = document.createElement("time");
     sheetDate.dateTime = date.toISOString();
     sheetDate.title = formatFullTraceDate(date);
@@ -1274,25 +1275,8 @@ export function createRenderer(elements) {
     return giftAliases[value.toLowerCase()] || null;
   }
 
-  function getStoredMoon(trace, fallbackDate) {
-    const moon = trace.moonPhase ? getMoonByType(trace.moonPhase) : null;
-
-    return moon || getMoonPhase(fallbackDate);
-  }
-
-  function getMoonByType(type) {
-    const names = {
-      nm: "новолуние",
-      wc: "растущий серп",
-      fq: "первая четверть",
-      wg: "растущая луна",
-      fm: "полнолуние",
-      wag: "убывающая луна",
-      lq: "последняя четверть",
-      wac: "убывающий серп",
-    };
-
-    return names[type] ? { type, name: names[type] } : null;
+  function getStoredMoonType(trace, fallbackDate) {
+    return isMoonPhaseType(trace.moonPhase) ? trace.moonPhase : getMoonPhaseState(fallbackDate).type;
   }
 
   function getGiftMeta(giftKey) {
@@ -1591,11 +1575,11 @@ export function createRenderer(elements) {
     }
 
     const date = new Date(reading.createdAt || Date.now());
-    const moon = getMoonPhase(date);
+    const moon = getMoonPhaseState(date);
     const phase = document.createElement("span");
     phase.className = "card-moon-phase";
     const phaseName = document.createElement("span");
-    phaseName.textContent = capitalizeFirst(moon.name);
+    phaseName.textContent = getPublicMoonPhaseLabel(moon.type);
     phase.append(createMoonIcon(moon.type), phaseName);
 
     const traceDate = document.createElement("time");
@@ -1604,14 +1588,6 @@ export function createRenderer(elements) {
     traceDate.textContent = formatFullTraceDate(date);
 
     elements.cardMoonMeta.replaceChildren(phase, traceDate);
-  }
-
-  function capitalizeFirst(value) {
-    if (!value) {
-      return "";
-    }
-
-    return value.charAt(0).toUpperCase() + value.slice(1);
   }
 
   function updateCopyDensity(element, classNames) {

@@ -1,5 +1,5 @@
 import { getCardImage } from "./render-helpers.js";
-import { formatFullTraceDate, getMoonPhase } from "./moon.js";
+import { formatFullTraceDate, getMoonPhaseState, getPublicMoonPhaseLabel } from "./moon.js";
 import { getDialogController } from "./dialog-controller.js";
 
 let isShareInProgress = false;
@@ -598,8 +598,8 @@ function drawHeroImage(context, image, rect) {
 function drawMoonMetaStacked(context, reading, options) {
   const { centerX, phaseY, dateY, color, dateColor, phaseFont, dateFont } = options;
   const date = new Date(reading.createdAt || Date.now());
-  const moon = getMoonPhase(date);
-  const phaseText = capitalizeFirst(moon.name);
+  const moon = getMoonPhaseState(date);
+  const phaseText = getPublicMoonPhaseLabel(moon.type);
   const dateText = formatFullTraceDate(date);
   const iconSize = 61;
   const gap = 23;
@@ -621,14 +621,6 @@ function drawMoonMetaStacked(context, reading, options) {
   context.fillStyle = dateColor;
   context.fillText(dateText, startX + iconSize + gap, dateY);
   context.restore();
-}
-
-function capitalizeFirst(value) {
-  if (!value) {
-    return "";
-  }
-
-  return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
 function drawMoonGlyph(context, type, x, y, size, color) {

@@ -74,6 +74,8 @@ The canonical card frame is a transparent `1086×1448` SVG overlay. Its left hal
 
 The shareable result card is the Result Artifact itself, not a second export-only composition: exact `1086×1448` dark outer artifact, warm unfiltered `3:4` image window, card name, silver moon phase, and full date. Native Share exports that same canonical Artifact at `1086×1448`; the story poster contains the same Artifact without gold export-only dividers, metadata, frames, or halo.
 
+Moon metadata keeps eight internal visual states but exposes only four lowercase public labels across Result, History, Lunar Day and Share: `новолуние`, `растущая луна`, `полнолуние`, `убывающая луна`. Quarter and crescent terminology belongs to calculation and asset taxonomy only; runtime copy must use the shared public-label resolver rather than a technical phase name.
+
 #### Result Reveal
 
 The one-card Result uses one ordered reveal instead of several competing

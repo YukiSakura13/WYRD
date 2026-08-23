@@ -30,7 +30,7 @@ const LUNAR_PHASE_ASSETS = Object.freeze({
   wac: "./assets/images/lunar-phases/moon-waning-crescent.webp",
 });
 
-const LUNAR_DAY_PHASE_LABELS = Object.freeze({
+const PUBLIC_MOON_PHASE_LABELS = Object.freeze({
   nm: "новолуние",
   wc: "растущая луна",
   fq: "растущая луна",
@@ -41,32 +41,32 @@ const LUNAR_DAY_PHASE_LABELS = Object.freeze({
   wac: "убывающая луна",
 });
 
-export function getMoonPhase(date) {
+export function getMoonPhaseState(date) {
   const phase = getMoonAge(date);
 
   if (phase < 1.85) {
-    return { name: "новолуние", type: "nm" };
+    return { type: "nm" };
   }
   if (phase < 7.38) {
-    return { name: "растущий серп", type: "wc" };
+    return { type: "wc" };
   }
   if (phase < 11.08) {
-    return { name: "первая четверть", type: "fq" };
+    return { type: "fq" };
   }
   if (phase < 14.77) {
-    return { name: "растущая луна", type: "wg" };
+    return { type: "wg" };
   }
   if (phase < 16.62) {
-    return { name: "полнолуние", type: "fm" };
+    return { type: "fm" };
   }
   if (phase < 20.31) {
-    return { name: "убывающая луна", type: "wag" };
+    return { type: "wag" };
   }
   if (phase < 24) {
-    return { name: "последняя четверть", type: "lq" };
+    return { type: "lq" };
   }
 
-  return { name: "убывающий серп", type: "wac" };
+  return { type: "wac" };
 }
 
 export function getLunarDayState(date = new Date()) {
@@ -78,13 +78,17 @@ export function getLunarDayState(date = new Date()) {
     age,
     dateKey: formatLocalDateKey(reference),
     day,
-    phase: getMoonPhase(reference),
+    phase: getMoonPhaseState(reference),
     reference,
   };
 }
 
-export function getLunarDayPhaseLabel(type) {
-  return LUNAR_DAY_PHASE_LABELS[type] || LUNAR_DAY_PHASE_LABELS.nm;
+export function getPublicMoonPhaseLabel(type) {
+  return PUBLIC_MOON_PHASE_LABELS[type] || PUBLIC_MOON_PHASE_LABELS.nm;
+}
+
+export function isMoonPhaseType(type) {
+  return Object.hasOwn(PUBLIC_MOON_PHASE_LABELS, type);
 }
 
 export function createLunarPhaseImage(type) {

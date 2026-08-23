@@ -11,8 +11,10 @@ import {
 } from "../assets/js/ui/notification-center.js";
 import {
   formatFullTraceDate,
-  getLunarDayPhaseLabel,
   getLunarDayState,
+  getMoonPhaseState,
+  getPublicMoonPhaseLabel,
+  isMoonPhaseType,
 } from "../assets/js/ui/moon.js";
 import { LUNAR_DAY_READINGS } from "../assets/js/data/lunar-days.js";
 import {
@@ -184,8 +186,33 @@ const lunarMorning = getLunarDayState(new Date(2026, 7, 21, 1, 0));
 const lunarEvening = getLunarDayState(new Date(2026, 7, 21, 23, 0));
 assert.equal(lunarMorning.day, lunarEvening.day, "Lunar Day must remain stable for the local calendar date");
 assert.equal(lunarMorning.dateKey, "2026-08-21", "Lunar Day must use the local date key");
-assert.equal(getLunarDayPhaseLabel("fq"), "растущая луна", "Lunar Day must use the approved public waxing label");
-assert.equal(getLunarDayPhaseLabel("lq"), "убывающая луна", "Lunar Day must use the approved public waning label");
+
+const publicMoonPhaseLabels = Object.freeze({
+  nm: "новолуние",
+  wc: "растущая луна",
+  fq: "растущая луна",
+  wg: "растущая луна",
+  fm: "полнолуние",
+  wag: "убывающая луна",
+  lq: "убывающая луна",
+  wac: "убывающая луна",
+});
+
+for (const [type, label] of Object.entries(publicMoonPhaseLabels)) {
+  assert.equal(isMoonPhaseType(type), true, `Moon state ${type} must remain a supported internal state`);
+  assert.equal(
+    getPublicMoonPhaseLabel(type),
+    label,
+    `Moon state ${type} must resolve to the approved public label`,
+  );
+}
+assert.equal(isMoonPhaseType("legacy-quarter"), false, "unknown stored moon states must not reach public UI");
+
+assert.deepEqual(
+  Object.keys(getMoonPhaseState(new Date(2026, 7, 21, 12))),
+  ["type"],
+  "the calculated moon state must not carry a competing public name",
+);
 
 const lunarScreenMarkup = runtimeHtml.match(/<section class="lunar-day-screen[\s\S]*?<\/section>\s*<section class="forest-placeholder"/)?.[0] || "";
 assert.match(lunarScreenMarkup, /<h1[^>]*>Лунный день<\/h1>/, "Lunar Day must expose its own App Header heading");
@@ -206,6 +233,28 @@ assert.equal(
   8,
   "Lunar Day must retain eight distinct phase assets",
 );
+assert.match(
+  runtimeMoon,
+  /export function getPublicMoonPhaseLabel\(type\)/,
+  "all public moon copy must resolve through one shared helper",
+);
+assert.match(
+  runtimeRender,
+  /getPublicMoonPhaseLabel/,
+  "Result, Reading and History must consume the shared public moon vocabulary",
+);
+assert.match(
+  runtimeShare,
+  /getPublicMoonPhaseLabel/,
+  "Share export must consume the shared public moon vocabulary",
+);
+for (const publicSurface of [runtimeRender, runtimeShare, kitHtml]) {
+  assert.doesNotMatch(
+    publicSurface,
+    /растущий серп|убывающий серп|первая четверть|последняя четверть/i,
+    "public moon surfaces must not expose technical phase names",
+  );
+}
 assert.match(
   runtimeActions,
   /action === "new-question" \|\| action === "ask-spirits"[\s\S]*?questionEl\.focus\(\)/,
