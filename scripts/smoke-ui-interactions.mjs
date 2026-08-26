@@ -173,6 +173,10 @@ const yesNoCss = await readFile(
   new URL("../assets/css/scenes/yes-no.css", import.meta.url),
   "utf8",
 );
+const nightImagesCss = await readFile(
+  new URL("../assets/css/scenes/night-images.css", import.meta.url),
+  "utf8",
+);
 
 assert.equal(LUNAR_DAY_READINGS.length, 30, "Lunar Day must ship all 30 editorial states");
 LUNAR_DAY_READINGS.forEach(function validateLunarDayReading(reading, index) {
@@ -266,8 +270,8 @@ assert.match(
 );
 assert.match(
   runtimeRender,
-  /elements\.lunarDaySection\.hidden = scene !== SCENES\.LUNAR_DAY;[\s\S]*?elements\.yesNoSection\.hidden = scene !== SCENES\.YES_NO;[\s\S]*?elements\.forestPlaceholder\.hidden = scene !== SCENES\.NIGHT_IMAGES;/,
-  "Lunar Day and Yes / No must remain dedicated scenes rather than shared placeholders",
+  /elements\.lunarDaySection\.hidden = scene !== SCENES\.LUNAR_DAY;[\s\S]*?elements\.yesNoSection\.hidden = scene !== SCENES\.YES_NO;[\s\S]*?elements\.nightImagesSection\.hidden = scene !== SCENES\.NIGHT_IMAGES;/,
+  "Lunar Day, Yes / No and Night Images must remain dedicated scenes rather than shared placeholders",
 );
 assert.match(
   lunarDayCss,
@@ -318,6 +322,51 @@ assert.match(
   yesNoCss,
   /@media \(prefers-reduced-motion: reduce\)/,
   "Yes / No must provide a reduced-motion state",
+);
+assert.match(
+  runtimeHtml,
+  /id="night-images-screen"[\s\S]*?id="night-images-input"[\s\S]*?data-action="night-images-submit"[\s\S]*?id="night-images-reading"[\s\S]*?data-action="night-images-reset"/,
+  "Night Images must expose the approved input, reading and repeat states in one dedicated scene",
+);
+assert.match(
+  runtimeActions,
+  /nightImagesStage = "carrying"[\s\S]*?prefers-reduced-motion: reduce[\s\S]*?150 : 2800[\s\S]*?nightImagesStage = "reading"/,
+  "Night Images must preserve the approved carrying transition before revealing the reading",
+);
+assert.match(
+  runtimeActions,
+  /event\.target\?\.id === "night-images-input"[\s\S]*?Math\.min\(event\.target\.scrollHeight, 167\)/,
+  "Night Images textarea must expand with long dream copy without submitting on Enter",
+);
+assert.match(
+  runtimeRender,
+  /elements\.nightImagesForm\.hidden = isReading;[\s\S]*?elements\.nightImagesReading\.hidden = !isReading;/,
+  "Night Images must replace the input ritual with the interpretation rather than stack both surfaces",
+);
+assert.match(
+  runtimeStyles,
+  /@import "\.\/scenes\/night-images\.css";/,
+  "the approved Night Images scene stylesheet must be part of the runtime bundle",
+);
+assert.match(
+  nightImagesCss,
+  /\.night-images-field-shell\.wyrd-question-field__shell::before\s*\{[\s\S]*?content:\s*none;/,
+  "Night Images must keep the approved single-contour field rather than a doubled inset frame",
+);
+assert.match(
+  nightImagesCss,
+  /night-images-field-pulse 3\.8s linear infinite/,
+  "Night Images must retain the restrained silver perimeter pulse",
+);
+assert.match(
+  nightImagesCss,
+  /night-moth-wing-left 3\.8s[\s\S]*?night-moth-wing-right 3\.8s[\s\S]*?night-moth-carry 2\.72s/,
+  "the moth must flap calmly before carrying the dream instead of launching as a rigid image",
+);
+assert.match(
+  nightImagesCss,
+  /@media \(prefers-reduced-motion: reduce\)/,
+  "Night Images must provide a reduced-motion state",
 );
 
 assert.doesNotMatch(

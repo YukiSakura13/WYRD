@@ -52,6 +52,13 @@ export function getElements(doc = document) {
     yesNoCardName: doc.getElementById("yes-no-card-name"),
     yesNoAnswer: doc.getElementById("yes-no-answer"),
     yesNoDirectionCopy: doc.getElementById("yes-no-direction-copy"),
+    nightImagesSection: doc.getElementById("night-images-screen"),
+    nightImagesForm: doc.getElementById("night-images-form"),
+    nightImagesInput: doc.getElementById("night-images-input"),
+    nightImagesSubmit: doc.querySelector("[data-action='night-images-submit']"),
+    nightImagesError: doc.getElementById("night-images-error"),
+    nightImagesStatus: doc.getElementById("night-images-status"),
+    nightImagesReading: doc.getElementById("night-images-reading"),
     settingsSection: doc.getElementById("settings-screen"),
     remindersSection: doc.getElementById("reminders-screen"),
     appInfoSection: doc.getElementById("app-info-screen"),
@@ -183,13 +190,7 @@ export function createRenderer(elements) {
     { x: 82, y: 76 },
     { x: 78, y: 89 },
   ];
-  const forestPlaceholderContent = {
-    [SCENES.NIGHT_IMAGES]: {
-      kicker: "Образы ночи",
-      title: "То, что пришло во сне",
-      copy: "Здесь можно будет описать образ ночи и получить короткий отклик духов леса.",
-    },
-  };
+  const forestPlaceholderContent = {};
 
   function render(state, uiState) {
     renderShell(uiState);
@@ -197,6 +198,7 @@ export function createRenderer(elements) {
     renderForestPlaceholder(uiState);
     renderLunarDay();
     renderYesNo(state, uiState);
+    renderNightImages(uiState);
     renderSettings(state, uiState);
     renderAboutYou(state, uiState);
     renderReminders(state, uiState);
@@ -220,7 +222,7 @@ export function createRenderer(elements) {
       forest: elements.forestSection,
       "lunar-day": elements.lunarDaySection,
       "yes-no": elements.yesNoSection,
-      "night-images": elements.forestPlaceholder,
+      "night-images": elements.nightImagesSection,
       settings: elements.settingsSection,
       "about-you": elements.aboutYouSection,
       reminders: elements.remindersSection,
@@ -376,6 +378,44 @@ export function createRenderer(elements) {
     elements.yesNoDirectionCopy.textContent = direction === "open"
       ? "Сегодня стоит осуществить задуманное."
       : "Сегодня лучше не спешить. Дай замыслу время и проверь его ещё раз.";
+  }
+
+  function renderNightImages(uiState) {
+    if (!elements.nightImagesSection || !elements.nightImagesForm || !elements.nightImagesInput) {
+      return;
+    }
+
+    const stage = uiState.nightImagesStage || "input";
+    const isCarrying = stage === "carrying";
+    const isReading = stage === "reading";
+
+    elements.nightImagesSection.dataset.stage = stage;
+    elements.nightImagesSection.setAttribute("aria-busy", String(isCarrying));
+    elements.nightImagesForm.hidden = isReading;
+    elements.nightImagesInput.disabled = isCarrying;
+    elements.nightImagesInput.setAttribute("aria-invalid", String(Boolean(uiState.nightImagesError)));
+    if (elements.nightImagesSubmit) {
+      elements.nightImagesSubmit.disabled = isCarrying;
+    }
+
+    if (elements.nightImagesInput.value !== (uiState.nightImagesDream || "")) {
+      elements.nightImagesInput.value = uiState.nightImagesDream || "";
+      if (!uiState.nightImagesDream) {
+        elements.nightImagesInput.style.height = "auto";
+      }
+    }
+
+    if (elements.nightImagesError) {
+      elements.nightImagesError.textContent = uiState.nightImagesError || "";
+    }
+
+    if (elements.nightImagesStatus) {
+      elements.nightImagesStatus.textContent = isCarrying ? "Духи Леса слушают сон." : "";
+    }
+
+    if (elements.nightImagesReading) {
+      elements.nightImagesReading.hidden = !isReading;
+    }
   }
 
   function renderTraces(state) {
@@ -1538,7 +1578,8 @@ export function createRenderer(elements) {
     elements.forestSection.hidden = scene !== SCENES.FOREST;
     elements.lunarDaySection.hidden = scene !== SCENES.LUNAR_DAY;
     elements.yesNoSection.hidden = scene !== SCENES.YES_NO;
-    elements.forestPlaceholder.hidden = scene !== SCENES.NIGHT_IMAGES;
+    elements.nightImagesSection.hidden = scene !== SCENES.NIGHT_IMAGES;
+    elements.forestPlaceholder.hidden = true;
     elements.settingsSection.hidden = scene !== SCENES.SETTINGS;
     elements.aboutYouSection.hidden = scene !== SCENES.ABOUT_YOU;
     elements.remindersSection.hidden = scene !== SCENES.REMINDERS;

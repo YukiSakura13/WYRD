@@ -1,0 +1,573 @@
+/* YUK-148 · «Образы ночи» approved runtime scene.
+   This screen intentionally keeps its reviewed single-contour dream field as
+   a local exception; no canonical Silver UI Kit source is changed here. */
+
+.night-images-screen[hidden],
+.night-images-form[hidden],
+.night-images-reading[hidden] {
+  display: none !important;
+}
+
+.night-images-screen {
+  position: relative;
+  width: 100%;
+  min-height: 100svh;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: #07090c;
+  color: #d9d9d7;
+  isolation: isolate;
+}
+
+body[data-scene="night-images"] #main {
+  background: #07090c;
+}
+
+.night-images-background {
+  position: absolute;
+  z-index: -3;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+  opacity: 0.68;
+  pointer-events: none;
+}
+
+.night-images-screen::after {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  background: rgba(3, 5, 8, 0.28);
+  content: "";
+  pointer-events: none;
+}
+
+.night-images-shell {
+  position: relative;
+  width: min(100%, 48rem);
+  min-height: 100svh;
+  min-height: 100dvh;
+  margin-inline: auto;
+  padding:
+    max(1rem, calc(var(--layout-safe-top) + 0.5rem))
+    max(1rem, var(--layout-safe-inline-end))
+    max(2rem, calc(var(--layout-safe-bottom) + 1.5rem))
+    max(1rem, var(--layout-safe-inline-start));
+}
+
+.night-images-header.ui-app-header {
+  position: relative;
+  z-index: 8;
+  min-height: 4.5rem;
+  padding-inline: 4.25rem;
+}
+
+.night-images-header .ui-app-header__identity {
+  min-height: var(--control-icon-hit-size);
+  margin: 0;
+  color: var(--wyrd-text-heading);
+  display: grid;
+  place-items: center;
+  font-family: Forum, Georgia, serif;
+  font-size: 1.19rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  line-height: 1.1;
+  text-align: center;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.night-images-content {
+  position: relative;
+  width: min(100%, 21rem);
+  margin-inline: auto;
+}
+
+.night-images-moth-stage {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 20rem);
+  height: 7.375rem;
+  margin: 0.875rem auto 0;
+  pointer-events: none;
+}
+
+.night-images-moth {
+  position: absolute;
+  z-index: 3;
+  top: 0.625rem;
+  left: 58%;
+  width: 6.75rem;
+  aspect-ratio: 3 / 2;
+  opacity: 0.76;
+  filter: drop-shadow(0 0 10px rgba(205, 211, 212, 0.08));
+  transform: translate3d(-50%, 0, 0) rotate(-7deg) scale(0.92);
+  transform-origin: 55% 53%;
+  animation: night-moth-appear 900ms cubic-bezier(0.23, 1, 0.32, 1) both;
+  transition:
+    transform 1200ms cubic-bezier(0.77, 0, 0.175, 1),
+    opacity 700ms ease,
+    filter 700ms ease;
+  will-change: transform, opacity, filter;
+}
+
+.night-images-moth-drift,
+.night-images-moth-part {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.night-images-moth-drift {
+  transform-origin: 55% 56%;
+  animation: night-moth-drift 9.6s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+  will-change: transform;
+}
+
+.night-images-moth-part {
+  background: #c8cccd;
+  -webkit-mask-image: url("../../images/night-images/moth-night-guide.webp");
+  mask-image: url("../../images/night-images/moth-night-guide.webp");
+  -webkit-mask-mode: luminance;
+  mask-mode: luminance;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.night-images-moth-wing {
+  z-index: 1;
+  will-change: transform;
+}
+
+.night-images-moth-wing--left {
+  clip-path: polygon(0 0, 56% 0, 58% 100%, 0 100%);
+  transform-origin: 54% 62%;
+  animation: night-moth-wing-left 3.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+.night-images-moth-wing--right {
+  z-index: 2;
+  clip-path: polygon(52% 0, 100% 0, 100% 100%, 57% 100%);
+  transform-origin: 54% 62%;
+  animation: night-moth-wing-right 3.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+.night-images-moth-body {
+  z-index: 3;
+  clip-path: polygon(31% 12%, 61% 12%, 62% 49%, 75% 100%, 44% 100%, 43% 76%, 33% 60%);
+}
+
+.night-images-screen:has(.night-images-input:focus) .night-images-moth {
+  opacity: 0.88;
+  filter: drop-shadow(0 0 13px rgba(215, 221, 222, 0.14));
+  transform: translate3d(calc(-50% - 8px), 8px, 0) rotate(-8deg) scale(0.91);
+}
+
+.night-images-form.wyrd-question-field {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: min(100%, 20rem);
+  margin: 0 auto;
+  gap: 0;
+}
+
+.night-images-field-shell.wyrd-question-field__shell {
+  position: relative;
+  min-height: 5.75rem;
+  border: 1px solid rgba(205, 209, 207, 0.46);
+  border-radius: 0.75rem;
+  background: rgba(9, 11, 16, 0.78);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+  transition:
+    border-color 220ms ease,
+    box-shadow 220ms ease,
+    opacity 480ms ease,
+    transform 480ms ease;
+}
+
+/* The reviewed scene has one authored contour. Disable the canonical inset
+   contour locally so the field does not become a doubled frame. */
+.night-images-field-shell.wyrd-question-field__shell::before {
+  content: none;
+}
+
+.night-images-field-shell.wyrd-question-field__shell::after {
+  position: absolute;
+  inset: -1px;
+  border-radius: 0.75rem;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--night-images-pulse-angle, 0deg),
+    transparent 0deg,
+    transparent 304deg,
+    rgba(225, 228, 225, 0.08) 316deg,
+    rgba(238, 240, 239, 0.76) 329deg,
+    rgba(225, 228, 225, 0.1) 342deg,
+    transparent 360deg
+  );
+  content: "";
+  filter: drop-shadow(0 0 9px rgba(225, 228, 225, 0.16));
+  opacity: 0.72;
+  pointer-events: none;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: night-images-field-pulse 3.8s linear infinite;
+}
+
+.night-images-field-shell.wyrd-question-field__shell:focus-within {
+  border-color: rgba(225, 228, 225, 0.7);
+  box-shadow:
+    0 0 18px rgba(225, 228, 225, 0.055),
+    0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+.night-images-field-shell.wyrd-question-field__shell:focus-within::after {
+  opacity: 0.9;
+}
+
+.night-images-input.wyrd-question-field__input {
+  display: block;
+  width: 100%;
+  min-height: 5.75rem;
+  max-height: 10.45rem;
+  resize: none;
+  overflow-y: auto;
+  padding: 1rem 1.05rem;
+  border: 0;
+  border-radius: 0.75rem;
+  outline: 0;
+  background: transparent;
+  color: #f3ecdd;
+  caret-color: #e1e4e1;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.08rem;
+  font-weight: 500;
+  line-height: 1.45;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(197, 201, 202, 0.34) transparent;
+}
+
+.night-images-input::placeholder {
+  color: rgba(232, 222, 203, 0.68);
+  font-style: italic;
+  opacity: 0.82;
+}
+
+.night-images-input:disabled {
+  -webkit-text-fill-color: rgba(218, 220, 219, 0.44);
+}
+
+.night-images-error {
+  min-height: 1.375rem;
+  margin: 0.5rem 0.875rem 0;
+  color: rgba(205, 210, 210, 0.82);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1rem;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.night-images-action.reading-new-question-link {
+  align-self: center;
+  margin-top: 0.3125rem;
+  color: #dad7d1;
+  font-size: 1.1875rem;
+  font-weight: 500;
+  letter-spacing: 0.018em;
+  line-height: 1.25;
+  text-decoration-color: rgba(208, 211, 211, 0.6);
+  text-underline-offset: 0.5rem;
+}
+
+.night-images-action:disabled {
+  opacity: 0.28;
+}
+
+.night-images-screen[data-stage="carrying"] .night-images-field-shell {
+  opacity: 0;
+  filter: blur(6px);
+  transform: translate3d(0, -6px, 0) scale(0.99);
+  transition-duration: 1200ms;
+}
+
+.night-images-screen[data-stage="carrying"] .night-images-error,
+.night-images-screen[data-stage="carrying"] .night-images-action {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 260ms ease;
+}
+
+.night-images-screen[data-stage="carrying"] .night-images-moth {
+  animation: night-moth-carry 2.72s cubic-bezier(0.32, 0.02, 0.18, 1) both;
+}
+
+.night-images-screen[data-stage="carrying"] .night-images-moth-drift {
+  animation-duration: 6.4s;
+}
+
+.night-images-screen[data-stage="carrying"] .night-images-moth-wing {
+  animation-duration: 1.55s;
+}
+
+.night-images-reading {
+  position: relative;
+  z-index: 5;
+  width: min(100%, 21rem);
+  margin: 0.25rem auto 0;
+  padding: 0 0 2.625rem;
+  outline: none;
+}
+
+.night-images-reading-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1.375rem;
+  padding: 0 0.5rem;
+  color: #ddd9d0;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(1.3125rem, 5.4vw, 1.4375rem);
+  font-weight: 500;
+  line-height: 1.58;
+  text-wrap: pretty;
+}
+
+.night-images-reading-copy p {
+  margin: 0;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+}
+
+.night-images-reading-copy .night-images-reading-question {
+  margin-top: 0.25rem;
+  color: rgba(205, 203, 197, 0.7);
+  font-size: 0.8em;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.night-images-reading-beat {
+  opacity: 0;
+  filter: blur(5px);
+  animation: night-images-reading-beat 620ms cubic-bezier(0.2, 0.72, 0.2, 1) forwards;
+}
+
+.night-images-reading-beat--1 { animation-delay: 160ms; }
+.night-images-reading-beat--2 { animation-delay: 440ms; }
+.night-images-reading-beat--3 { animation-delay: 720ms; }
+
+.night-images-reading .night-images-action {
+  display: block;
+  margin-top: 3rem;
+  margin-right: auto;
+  margin-left: auto;
+  color: rgba(218, 216, 210, 0.66);
+  font-size: 1rem;
+  font-weight: 400;
+  opacity: 0;
+  animation: night-images-reading-beat 620ms 980ms cubic-bezier(0.2, 0.72, 0.2, 1) forwards;
+}
+
+.night-images-screen[data-stage="reading"] .night-images-moth-stage {
+  width: min(100%, 21rem);
+  height: 5.375rem;
+  margin: 0.75rem auto 0.125rem;
+}
+
+.night-images-screen[data-stage="reading"] .night-images-moth {
+  top: 0.25rem;
+  left: 54%;
+  width: 5.875rem;
+  opacity: 0.66;
+  filter: drop-shadow(0 0 10px rgba(205, 211, 212, 0.08));
+  transform: translate3d(-50%, 0, 0) rotate(3deg) scale(0.88);
+  animation: night-moth-return 1300ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.night-images-screen[data-stage="reading"] .night-images-moth-drift {
+  animation: night-moth-result-drift 10.8s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+}
+
+.night-images-screen[data-stage="reading"] .night-images-moth-wing {
+  animation-duration: 5.1s;
+}
+
+@property --night-images-pulse-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes night-moth-appear {
+  from { opacity: 0; }
+  to { opacity: 0.76; }
+}
+
+@keyframes night-moth-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  26% { transform: translate3d(-4px, -4px, 0) rotate(1.2deg); }
+  54% { transform: translate3d(-1px, -8px, 0) rotate(-0.8deg); }
+  78% { transform: translate3d(4px, -3px, 0) rotate(0.7deg); }
+}
+
+@keyframes night-moth-wing-left {
+  0%, 10%, 43%, 100% { transform: scaleX(1) rotate(0deg); }
+  18% { transform: scaleX(0.68) rotate(4deg); }
+  25% { transform: scaleX(0.96) rotate(0.6deg); }
+  32% { transform: scaleX(0.74) rotate(3deg); }
+  40% { transform: scaleX(1) rotate(0deg); }
+}
+
+@keyframes night-moth-wing-right {
+  0%, 10%, 43%, 100% { transform: scaleX(1) rotate(0deg); }
+  18% { transform: scaleX(0.68) rotate(-4deg); }
+  25% { transform: scaleX(0.96) rotate(-0.6deg); }
+  32% { transform: scaleX(0.74) rotate(-3deg); }
+  40% { transform: scaleX(1) rotate(0deg); }
+}
+
+@keyframes night-images-field-pulse {
+  from { --night-images-pulse-angle: 0deg; }
+  to { --night-images-pulse-angle: 360deg; }
+}
+
+@keyframes night-moth-result-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  36% { transform: translate3d(-3px, -4px, 0) rotate(0.8deg); }
+  70% { transform: translate3d(3px, -7px, 0) rotate(-0.7deg); }
+}
+
+@keyframes night-moth-carry {
+  0% {
+    opacity: 0.88;
+    filter: drop-shadow(0 0 13px rgba(215, 221, 222, 0.14));
+    transform: translate3d(calc(-50% - 12px), 12px, 0) rotate(-9deg) scale(0.9);
+  }
+  28% {
+    opacity: 0.92;
+    transform: translate3d(calc(-50% - 23px), 15px, 0) rotate(-6deg) scale(0.89);
+  }
+  58% {
+    opacity: 0.82;
+    filter: drop-shadow(0 0 16px rgba(220, 225, 226, 0.18));
+    transform: translate3d(calc(-50% - 42px), 2px, 0) rotate(-2deg) scale(0.86);
+  }
+  82% {
+    opacity: 0.58;
+    transform: translate3d(calc(-50% - 53px), -9px, 0) rotate(2deg) scale(0.82);
+  }
+  100% {
+    opacity: 0;
+    filter: drop-shadow(0 0 20px rgba(220, 225, 226, 0));
+    transform: translate3d(calc(-50% - 49px), -14px, 0) rotate(3deg) scale(0.79);
+  }
+}
+
+@keyframes night-moth-return {
+  from {
+    opacity: 0;
+    transform: translate3d(calc(-50% + 14px), -10px, 0) rotate(-2deg) scale(0.82);
+  }
+  to {
+    opacity: 0.66;
+    transform: translate3d(-50%, 0, 0) rotate(3deg) scale(0.88);
+  }
+}
+
+@keyframes night-images-reading-beat {
+  to { opacity: 1; filter: blur(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .night-images-moth,
+  .night-images-moth-drift,
+  .night-images-moth-wing,
+  .night-images-reading-beat,
+  .night-images-reading .night-images-action,
+  .night-images-field-shell.wyrd-question-field__shell::after {
+    animation: none !important;
+    transition-duration: 1ms !important;
+  }
+
+  .night-images-screen[data-stage="carrying"] .night-images-moth {
+    opacity: 0;
+  }
+
+  .night-images-reading-beat,
+  .night-images-reading .night-images-action {
+    opacity: 1;
+    transform: none;
+  }
+
+  .night-images-field-shell::after {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 350px) {
+  .night-images-shell {
+    padding-right: 0.875rem;
+    padding-left: 0.875rem;
+  }
+
+  .night-images-header.ui-app-header {
+    min-height: 3.75rem;
+    padding-inline: 3.75rem;
+  }
+
+  .night-images-header .ui-app-header__identity {
+    font-size: 1.05rem;
+    letter-spacing: 0.1em;
+  }
+
+  .night-images-action.reading-new-question-link {
+    font-size: 1.125rem;
+  }
+}
+
+@media (min-width: 431px) {
+  .night-images-shell {
+    padding-right: 1.5rem;
+    padding-left: 1.5rem;
+  }
+}
+
+@media (forced-colors: active) {
+  .night-images-background,
+  .night-images-moth-stage,
+  .night-images-field-shell::after {
+    display: none;
+  }
+
+  .night-images-screen,
+  .night-images-field-shell.wyrd-question-field__shell {
+    background: Canvas;
+    color: CanvasText;
+  }
+
+  .night-images-field-shell.wyrd-question-field__shell {
+    border: 1px solid CanvasText;
+  }
+
+  .night-images-input.wyrd-question-field__input,
+  .night-images-action.reading-new-question-link,
+  .night-images-reading-copy,
+  .night-images-reading-copy .night-images-reading-question {
+    color: CanvasText;
+  }
+}

@@ -30,7 +30,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <meta name="wyrd-build" content="silver-20260820-yuk138-thorn-seal-restored-yuk49-cover" />
+    <meta name="wyrd-build" content="silver-20260826-yuk148-night-images" />
     <title>WYRD — Оракул духов леса</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -38,8 +38,8 @@
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Forum&family=IM+Fell+English:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="manifest" href="./manifest.webmanifest?v=silver-20260820-yuk138-thorn-seal-restored-yuk49-cover" />
-    <link rel="stylesheet" href="./assets/css/styles.css?v=silver-20260820-yuk138-thorn-seal-restored-yuk49-cover" />
+    <link rel="manifest" href="./manifest.webmanifest?v=silver-20260826-yuk148-night-images" />
+    <link rel="stylesheet" href="./assets/css/styles.css?v=silver-20260826-yuk148-night-images" />
   </head>
   <body>
     <div class="scene-fog scene-fog--back" aria-hidden="true"></div>
@@ -452,6 +452,99 @@
                 Спросить духов
               </button>
               <p class="sr-only" id="yes-no-ask-description">Открывает экран колоды и поле для вопроса.</p>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="night-images-screen ui-scene-shell ui-scene-shell--oracle"
+        id="night-images-screen"
+        data-stage="input"
+        hidden
+        aria-labelledby="night-images-title"
+      >
+        <img
+          class="night-images-background"
+          src="./assets/images/night-images/night-forest-background.webp"
+          alt=""
+          aria-hidden="true"
+          decoding="async"
+        />
+
+        <div class="night-images-shell">
+          <header class="night-images-header ui-app-header ui-app-header--inner">
+            <button
+              class="ui-icon-button ui-icon-button--back ui-icon-button--quiet-reading btn-back-circle night-images-back"
+              data-action="back-to-forest"
+              type="button"
+              aria-label="Вернуться в Лес"
+            >
+              <svg class="ui-icon-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12H2M10 4l-8 8 8 8" /></svg>
+            </button>
+            <h1 class="ui-app-header__identity" id="night-images-title">Образы ночи</h1>
+          </header>
+
+          <div class="night-images-content ui-scene-content--oracle">
+            <section class="night-images-moth-stage" aria-hidden="true">
+              <span class="night-images-moth">
+                <span class="night-images-moth-drift">
+                  <span class="night-images-moth-part night-images-moth-wing night-images-moth-wing--left"></span>
+                  <span class="night-images-moth-part night-images-moth-wing night-images-moth-wing--right"></span>
+                  <span class="night-images-moth-part night-images-moth-body"></span>
+                </span>
+              </span>
+            </section>
+
+            <form class="night-images-form wyrd-question-field" id="night-images-form" novalidate>
+              <label class="sr-only" for="night-images-input">Описание сна</label>
+              <div class="night-images-field-shell wyrd-question-field__shell">
+                <textarea
+                  class="night-images-input wyrd-question-field__input"
+                  id="night-images-input"
+                  rows="2"
+                  maxlength="2000"
+                  aria-describedby="night-images-error night-images-status"
+                  placeholder="Опиши сон, отдельный образ или чувство…"
+                ></textarea>
+              </div>
+              <p class="night-images-error" id="night-images-error" role="status" aria-live="polite"></p>
+              <button
+                class="night-images-action reading-new-question-link ui-action ui-action--quiet"
+                data-action="night-images-submit"
+                type="button"
+              >
+                Рассказать сон Духам Леса
+              </button>
+              <p class="sr-only" id="night-images-status" aria-live="polite"></p>
+            </form>
+
+            <section
+              class="night-images-reading"
+              id="night-images-reading"
+              hidden
+              tabindex="-1"
+              aria-label="Толкование сна"
+              aria-live="polite"
+            >
+              <div class="night-images-reading-copy">
+                <p class="night-images-reading-beat night-images-reading-beat--1">
+                  Змея часто появляется во сне рядом с переменой: прежняя форма уже тесна, а новая ещё не определилась.
+                </p>
+                <p class="night-images-reading-beat night-images-reading-beat--2">
+                  Важен не только сам образ, но и чувство, которое осталось рядом с ним.
+                </p>
+                <p class="night-images-reading-question night-images-reading-beat night-images-reading-beat--3">
+                  Какие перемены сейчас происходят в твоей жизни?
+                </p>
+              </div>
+              <button
+                class="night-images-action reading-new-question-link ui-action ui-action--quiet"
+                data-action="night-images-reset"
+                type="button"
+              >
+                Описать другой сон
+              </button>
             </section>
           </div>
         </div>
@@ -1237,6 +1330,6 @@
       window.WYRD_BUILD_ID =
         document.querySelector('meta[name="wyrd-build"]')?.content || "dev";
     </script>
-    <script type="module" src="./assets/js/main.js?v=silver-20260820-yuk138-thorn-seal-restored-yuk49-cover"></script>
+    <script type="module" src="./assets/js/main.js?v=silver-20260826-yuk148-night-images"></script>
   </body>
 </html>

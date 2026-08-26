@@ -14,6 +14,7 @@ export function createActionHandler(deps) {
   const { audio, cards, renderApp, renderer, setScene, store, uiState } = deps;
   const runTransition = createTransitionRunner(renderApp, uiState);
   let yesNoPreviewTimers = [];
+  let nightImagesTimers = [];
 
   function clearYesNoPreviewTimers() {
     yesNoPreviewTimers.forEach(function clearPreviewTimer(timer) {
@@ -47,6 +48,20 @@ export function createActionHandler(deps) {
     });
 
     return card ? { card, direction: fixture.direction } : null;
+  }
+
+  function clearNightImagesTimers() {
+    nightImagesTimers.forEach(function clearNightImagesTimer(timer) {
+      window.clearTimeout(timer);
+    });
+    nightImagesTimers = [];
+  }
+
+  function resetNightImages() {
+    clearNightImagesTimers();
+    uiState.nightImagesStage = "input";
+    uiState.nightImagesDream = "";
+    uiState.nightImagesError = "";
   }
 
   return function onClick(event) {
@@ -175,7 +190,57 @@ export function createActionHandler(deps) {
     }
 
     if (action === "open-night-images") {
+      resetNightImages();
       openForestPath(SCENES.NIGHT_IMAGES, { audio, renderer, setScene, store, runTransition });
+      return;
+    }
+
+    if (action === "night-images-submit") {
+      if (uiState.activeScene !== SCENES.NIGHT_IMAGES || uiState.nightImagesStage !== "input") {
+        return;
+      }
+
+      const input = document.getElementById("night-images-input");
+      const dream = String(input?.value || uiState.nightImagesDream || "").trim();
+      uiState.nightImagesDream = input?.value || uiState.nightImagesDream || "";
+
+      if (!dream) {
+        uiState.nightImagesError = "Поле пока пусто.";
+        renderApp();
+        window.requestAnimationFrame(function focusEmptyNightImagesField() {
+          document.getElementById("night-images-input")?.focus({ preventScroll: true });
+        });
+        return;
+      }
+
+      clearNightImagesTimers();
+      uiState.nightImagesError = "";
+      uiState.nightImagesStage = "carrying";
+      input?.blur();
+      audio.playSelect(store.getState().soundEnabled);
+      renderApp();
+
+      const duration = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 150 : 2800;
+      nightImagesTimers.push(window.setTimeout(function revealNightImagesReading() {
+        uiState.nightImagesStage = "reading";
+        renderApp();
+        renderer.scrollTo(SCENES.NIGHT_IMAGES);
+        window.requestAnimationFrame(function focusNightImagesReading() {
+          document.getElementById("night-images-reading")?.focus({ preventScroll: true });
+        });
+        nightImagesTimers = [];
+      }, duration));
+      return;
+    }
+
+    if (action === "night-images-reset") {
+      audio.playSelect(store.getState().soundEnabled);
+      resetNightImages();
+      renderApp();
+      renderer.scrollTo(SCENES.NIGHT_IMAGES);
+      window.requestAnimationFrame(function focusResetNightImagesField() {
+        document.getElementById("night-images-input")?.focus({ preventScroll: true });
+      });
       return;
     }
 
@@ -606,6 +671,7 @@ export function createActionHandler(deps) {
 
     if (action === "back-to-forest") {
       clearYesNoPreviewTimers();
+      clearNightImagesTimers();
       audio.playSelect(store.getState().soundEnabled);
       runTransition(function returnToForest() {
         uiState.soundSettingsOpen = false;
@@ -967,6 +1033,16 @@ export function createInputChangeHandler(deps) {
   const { audio, renderApp, store, uiState } = deps;
 
   return function onInputChange(event) {
+    if (event.target?.id === "night-images-input") {
+      uiState.nightImagesDream = event.target.value;
+      uiState.nightImagesError = "";
+      event.target.style.height = "auto";
+      event.target.style.height = `${Math.min(event.target.scrollHeight, 167)}px`;
+      event.target.setAttribute("aria-invalid", "false");
+      document.getElementById("night-images-error")?.replaceChildren();
+      return;
+    }
+
     if (event.target?.id === "about-name-input" || event.target?.id === "about-zodiac-select") {
       uiState.aboutDraft = readAboutDraftFromForm(store, uiState);
       renderApp();
@@ -1197,6 +1273,9 @@ export function createInitialUIState(state) {
     yesNoDirection: null,
     yesNoFace: "back",
     yesNoPreviewIndex: 0,
+    nightImagesStage: "input",
+    nightImagesDream: "",
+    nightImagesError: "",
     transitioning: false,
   };
 }
