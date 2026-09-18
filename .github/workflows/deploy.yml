@@ -25,6 +25,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Build UI Kit downloads
+        run: python3 scripts/build_ui_kit_downloads.py
+
       - name: Run smoke tests
         run: |
           node scripts/smoke-domain.mjs

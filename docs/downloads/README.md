@@ -46,7 +46,8 @@ SVG рамки не содержит надпись или интерактив�
 
 ## Для разработчиков репозитория
 
-После изменений UI Kit запустите `python3 scripts/build_ui_kit_downloads.py`.
+После изменений UI Kit и перед проверкой ссылок/asset integrity запустите
+`python3 scripts/build_ui_kit_downloads.py`.
 Архив собирается заново в `scripts/prepare_pages.py` и не хранится в Git.
 `python3 scripts/validate_ui_kit_downloads.py .dist-pages` проверяет все ссылки
 скачивания, SVG и полноту архива в опубликованном артефакте.
