@@ -9,6 +9,8 @@ import subprocess
 from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit
 
+from build_ui_kit_downloads import build_downloads
+
 
 ROOT = Path(__file__).resolve().parent.parent
 DIST = ROOT / ".dist-pages"
@@ -45,6 +47,7 @@ SITE_FILES = [
 SITE_DIRS = [
     "assets",
     "public",
+    "docs/downloads",
 ]
 
 
@@ -52,6 +55,8 @@ def copy_tree(src: Path, dest: Path) -> None:
     ignored_names = [".DS_Store", "Thumbs.db"]
     if src == ROOT / "assets":
         ignored_names.append("brand")
+    if src == ROOT / "docs/downloads":
+        ignored_names.append("*.zip")
 
     shutil.copytree(
         src,
@@ -82,7 +87,7 @@ def replace_kit_build_markers(path: Path) -> None:
         text,
     )
     text = re.sub(
-        r'((?:\.\./)assets/[^"\']+\.(?:css|webp|png|jpe?g|gif|svg))(?:\?v=[^"\']+)?',
+        r'((?:\.\./assets/|downloads/)[^"\']+\.(?:css|webp|png|jpe?g|gif|svg|zip|md))(?:\?v=[^"\']+)?',
         lambda match: f"{match.group(1)}?v={BUILD_ID}",
         text,
     )
@@ -225,6 +230,8 @@ def main() -> None:
 
     for relative in SITE_DIRS:
         copy_tree(ROOT / relative, DIST / relative)
+
+    build_downloads(DIST)
 
     replace_build_markers(DIST / "index.html")
     replace_kit_build_markers(DIST / "docs/wyrd-ui-kit.html")
