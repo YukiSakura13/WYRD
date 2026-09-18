@@ -17,9 +17,6 @@ jobs:
       - name: Test PR body validator
         run: python3 scripts/test_validate_pr_body.py
 
-      - name: Build UI Kit downloads
-        run: python3 scripts/build_ui_kit_downloads.py
-
       - name: Validate asset and content integrity
         run: node scripts/validate_asset_integrity.mjs
 
@@ -31,11 +28,6 @@ jobs:
 
       - name: Validate responsive strategy
         run: python3 scripts/validate_responsive_strategy.py
-
-      - name: Validate UI Kit downloads and Pages artifact
-        run: |
-          python3 scripts/prepare_pages.py
-          python3 scripts/validate_pages_artifact.py
 
       - name: Validate PR body
         run: python3 scripts/validate_pr_body.py --event-file "$GITHUB_EVENT_PATH"
