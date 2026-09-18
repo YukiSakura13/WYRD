@@ -6,8 +6,6 @@ import json
 import re
 from pathlib import Path
 
-from validate_ui_kit_downloads import validate_downloads
-
 
 ROOT = Path(__file__).resolve().parent.parent
 DIST = ROOT / ".dist-pages"
@@ -17,9 +15,6 @@ REQUIRED_FILES = [
     DIST / "manifest.webmanifest",
     DIST / "sw.js",
     DIST / ".nojekyll",
-    DIST / "docs/wyrd-ui-kit.html",
-    DIST / "docs/wyrd-ui-kit.css",
-    DIST / "docs/wyrd-ui-kit.js",
     DIST / "assets/css/styles.css",
     DIST / "assets/js/main.js",
     DIST / "assets/images/forest-home/silver/raven-arch.jpg",
@@ -166,63 +161,10 @@ def main() -> None:
         "Bundled Pages CSS lost required runtime rules or versioned assets",
     )
 
-    kit_html = (DIST / "docs/wyrd-ui-kit.html").read_text(encoding="utf-8")
     require(
-        "../assets/images/forest-home/silver/raven-arch.jpg" in kit_html
-        and "rubashka.webp" not in kit_html,
-        "Silver UI Kit reveal must use the approved Raven Arch card back",
+        not (DIST / "docs").exists(),
+        "GitHub Pages must publish only WYRD; the UI Kit is hosted separately in Sites",
     )
-    require(
-        re.search(r'href=["\'](?:\./)?wyrd-ui-kit\.css(?:\?v=[^"\']+)?["\']', kit_html) is not None,
-        "Silver UI Kit lost its local stylesheet reference",
-    )
-    require(
-        re.search(r'src=["\'](?:\./)?wyrd-ui-kit\.js(?:\?v=[^"\']+)?["\']', kit_html) is not None,
-        "Silver UI Kit lost its local script reference",
-    )
-    ensure_versioned_reference(kit_html, "wyrd-ui-kit.css", build_id)
-    ensure_versioned_reference(kit_html, "wyrd-ui-kit.js", build_id)
-    ensure_versioned_reference(kit_html, "downloads/wyrd-ui-kit.zip", build_id)
-    ensure_versioned_reference(kit_html, "downloads/icons/wyrd-moon-nm.svg", build_id)
-    ensure_versioned_reference(kit_html, "../assets/css/tokens.css", build_id)
-    require(
-        (DIST / "assets/ui/action-buttons/continuous/wyrd-action-hero.svg").exists(),
-        "Silver UI Kit canonical Hero asset is missing from the Pages artifact",
-    )
-    require(
-        (DIST / "assets/ui/card-frames/approved/wyrd-card-frame-artifact.svg").exists(),
-        "Silver UI Kit canonical Artifact Frame is missing from the Pages artifact",
-    )
-    require(
-        "../public/apple-touch-icon-wyrd-thorn-seal.png" in kit_html,
-        "Silver UI Kit Feedback lost the canonical Forest Seal",
-    )
-    for scenario in ("breath", "reveal", "drift", "success"):
-        require(
-            f'data-motion-preview="{scenario}"' in kit_html,
-            f"Silver UI Kit Motion Lab lost the {scenario} scenario",
-        )
-    require(
-        "data-motion-play" in kit_html and "data-motion-reduced" in kit_html,
-        "Silver UI Kit Motion Lab lost play or reduced-motion controls",
-    )
-    require(
-        "data-deck-composition" in kit_html
-        and "data-deck-composition-card" in kit_html,
-        "Silver UI Kit lost the approved Deck composition specimen",
-    )
-    require(
-        'id="implementation"' in kit_html,
-        "Silver UI Kit implementation handoff is missing",
-    )
-    kit_js = (DIST / "docs/wyrd-ui-kit.js").read_text(encoding="utf-8")
-    ensure_versioned_reference(
-        kit_js,
-        "../assets/js/ui/cover-cta.js",
-        build_id,
-    )
-
-    validate_downloads(DIST)
     print(f"Artifact validation passed for build {build_id}")
 
 

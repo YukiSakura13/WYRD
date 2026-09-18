@@ -9,8 +9,6 @@ import subprocess
 from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit
 
-from build_ui_kit_downloads import build_downloads
-
 
 ROOT = Path(__file__).resolve().parent.parent
 DIST = ROOT / ".dist-pages"
@@ -40,14 +38,10 @@ SITE_FILES = [
     "index.html",
     "manifest.webmanifest",
     "sw.js",
-    "docs/wyrd-ui-kit.html",
-    "docs/wyrd-ui-kit.css",
-    "docs/wyrd-ui-kit.js",
 ]
 SITE_DIRS = [
     "assets",
     "public",
-    "docs/downloads",
 ]
 
 
@@ -55,8 +49,6 @@ def copy_tree(src: Path, dest: Path) -> None:
     ignored_names = [".DS_Store", "Thumbs.db"]
     if src == ROOT / "assets":
         ignored_names.append("brand")
-    if src == ROOT / "docs/downloads":
-        ignored_names.append("*.zip")
 
     shutil.copytree(
         src,
@@ -71,26 +63,6 @@ def replace_build_markers(path: Path) -> None:
     text = re.sub(r"manifest\.webmanifest(?:\?v=[^\"']+)?", f"manifest.webmanifest?v={BUILD_ID}", text)
     text = re.sub(r"assets/css/styles\.css(?:\?v=[^\"']+)?", f"assets/css/styles.css?v={BUILD_ID}", text)
     text = re.sub(r"assets/js/main\.js(?:\?v=[^\"']+)?", f"assets/js/main.js?v={BUILD_ID}", text)
-    path.write_text(text, encoding="utf-8")
-
-
-def replace_kit_build_markers(path: Path) -> None:
-    text = path.read_text(encoding="utf-8")
-    text = re.sub(
-        r"wyrd-ui-kit\.css(?:\?v=[^\"']+)?",
-        f"wyrd-ui-kit.css?v={BUILD_ID}",
-        text,
-    )
-    text = re.sub(
-        r"wyrd-ui-kit\.js(?:\?v=[^\"']+)?",
-        f"wyrd-ui-kit.js?v={BUILD_ID}",
-        text,
-    )
-    text = re.sub(
-        r'((?:\.\./assets/|downloads/)[^"\']+\.(?:css|webp|png|jpe?g|gif|svg|zip|md))(?:\?v=[^"\']+)?',
-        lambda match: f"{match.group(1)}?v={BUILD_ID}",
-        text,
-    )
     path.write_text(text, encoding="utf-8")
 
 
@@ -231,11 +203,7 @@ def main() -> None:
     for relative in SITE_DIRS:
         copy_tree(ROOT / relative, DIST / relative)
 
-    build_downloads(DIST)
-
     replace_build_markers(DIST / "index.html")
-    replace_kit_build_markers(DIST / "docs/wyrd-ui-kit.html")
-    version_relative_js_imports(DIST / "docs/wyrd-ui-kit.js")
 
     for js_file in (DIST / "assets/js").rglob("*.js"):
         version_relative_js_imports(js_file)
