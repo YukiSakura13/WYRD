@@ -6,6 +6,8 @@ import json
 import re
 from pathlib import Path
 
+from validate_ui_kit_downloads import validate_downloads
+
 
 ROOT = Path(__file__).resolve().parent.parent
 DIST = ROOT / ".dist-pages"
@@ -180,6 +182,8 @@ def main() -> None:
     )
     ensure_versioned_reference(kit_html, "wyrd-ui-kit.css", build_id)
     ensure_versioned_reference(kit_html, "wyrd-ui-kit.js", build_id)
+    ensure_versioned_reference(kit_html, "downloads/wyrd-ui-kit.zip", build_id)
+    ensure_versioned_reference(kit_html, "downloads/icons/wyrd-moon-nm.svg", build_id)
     ensure_versioned_reference(kit_html, "../assets/css/tokens.css", build_id)
     require(
         (DIST / "assets/ui/action-buttons/continuous/wyrd-action-hero.svg").exists(),
@@ -218,6 +222,7 @@ def main() -> None:
         build_id,
     )
 
+    validate_downloads(DIST)
     print(f"Artifact validation passed for build {build_id}")
 
 
